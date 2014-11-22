@@ -1,4 +1,4 @@
-#2D platformer sample v1.0.0
+#2D platformer sample v1.1.0
 
 A 2D platformer made using the open source game framework Gameplay3D, other freely available cross platform tools and free to use assets.
 
