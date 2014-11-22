@@ -121,6 +121,15 @@ namespace platformer
         lua_RegisterAllBindings();
 #endif
         setMultiTouch(true);
+
+        if(gameplay::Properties * windowSettings = getConfig()->getNamespace("window"))
+        {
+            char const * vsyncOption = "vysnc";
+            if(windowSettings->exists(vsyncOption))
+            {
+                setVsync(windowSettings->getBool(vsyncOption));
+            }
+        }
     }
 
     void Platformer::finalize()
