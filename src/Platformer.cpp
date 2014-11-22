@@ -122,9 +122,9 @@ namespace platformer
 #endif
         setMultiTouch(true);
 
-        if(gameplay::Properties * windowSettings = getConfig()->getNamespace("window"))
+        if(gameplay::Properties * windowSettings = getConfig()->getNamespace("window", true))
         {
-            char const * vsyncOption = "vysnc";
+            char const * vsyncOption = "vsync";
             if(windowSettings->exists(vsyncOption))
             {
                 setVsync(windowSettings->getBool(vsyncOption));
