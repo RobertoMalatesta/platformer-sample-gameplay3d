@@ -20,10 +20,9 @@ cmake ..
 make
 ```
 
-Build the game objects library:
+Build the gameplay game objects library:
 ```
 cd ../gameobjects-gameplay3d
-./install.sh
 mkdir build
 cd build
 cmake ..
@@ -31,6 +30,7 @@ make
 ```
 
 Build the sample:
+```
 cd ../..
 mkdir build
 cd build
