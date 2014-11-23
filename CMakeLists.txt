@@ -148,14 +148,17 @@ ENDIF (TARGET_OS STREQUAL "LINUX")
 # this by creating symlinks in the build folder that point the actual resources in the parent folder.
 if(WIN32)
     if(NOT EXISTS "game.config")
-        execute_process(COMMAND cmd /C ${CMAKE_SOURCE_DIR}/mklink_win32.bat)
+        execute_process(COMMAND cmd /C ${CMAKE_SOURCE_DIR}/mklink_win32.bat $
+{TARGET_OS_DIR})
     endif()
 else()
     if(NOT EXISTS res)
         execute_process(COMMAND ln -s ../res res)
+        execute_process(COMMAND ln -s ../../../res bin/${TARGET_OS_DIR}/res)
     endif()
     if(NOT EXISTS game.config)
         execute_process(COMMAND ln -s ../game.config game.config)
+        execute_process(COMMAND ln -s ../../../game.config bin/${TARGET_OS_DIR}/game.config)
     endif()
 endif()
 

@@ -12,10 +12,13 @@ cd external/GamePlay
 mkdir build
 cd build
 cmake ..
+make
 cd ../..
 mkdir build
 cd build
 cmake ..
+make
+./platformer
 ```
 - Building the sample for android requires that you build Gameplay3D for android with the following in Application.mk:
 
