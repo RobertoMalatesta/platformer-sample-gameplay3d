@@ -9,7 +9,7 @@ else( CMAKE_SIZEOF_VOID_P EQUAL 8 )
     set(ARCH_DIR "x86" )
 endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 
-set(GAMEPLAY_SRC_PATH "../GamePlay") 
+set(GAMEPLAY_SRC_PATH "external/GamePlay")
 set(GAMEPLAY_EXT_LIBS_PATH "${GAMEPLAY_SRC_PATH}/external-deps")
 
 IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
