@@ -1,6 +1,6 @@
 [submodule "external/GamePlay"]
 	path = external/GamePlay
 	url = https://github.com/gameplay3d/GamePlay.git
-[submodule "json-to-gameplay3d"]
-	path = json-to-gameplay3d
+[submodule "external/json-to-gameplay3d"]
+	path = external/json-to-gameplay3d
 	url = https://github.com/louis-mclaughlin/json-to-gameplay3d.git
