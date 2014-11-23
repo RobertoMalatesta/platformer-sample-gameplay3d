@@ -12,7 +12,7 @@ namespace platformer
      *
      * @script{ignore}
     */
-    class PlayerAudioComponent : public Component
+    class PlayerAudioComponent : public gameobjects::Component
     {
     public:
         explicit PlayerAudioComponent();

@@ -2,11 +2,11 @@
 
 #include "CameraControlComponent.h"
 #include "CollisionObjectComponent.h"
+#include "Common.h"
 #include "EnemyComponent.h"
 #include "GameObjectController.h"
 #include "LevelComponent.h"
 #include "MessagesInput.h"
-#include "lua/lua_all_bindings.h"
 #include "PlayerAudioComponent.h"
 #include "PlayerComponent.h"
 #include "PlayerHandOfGodComponent.h"
@@ -40,6 +40,15 @@ namespace platformer
     Platformer::~Platformer()
     {
     }
+
+    class PlatformerGameObjectCallbackHandler : public gameobjects::GameObjectCallbackHandler
+    {
+    public:
+        virtual void OnPreCreateProperties(const char * url) override
+        {
+            PLATFORMER_LOG("Loading properties '%s'", url);
+        }
+    };
 
     void Platformer::initialize()
     {
@@ -98,28 +107,27 @@ namespace platformer
         }
 
         // Register the component types so the GameObject system will know how to serialize them from the .go files
-        GameObjectController::getInstance().registerComponent<CameraControlComponent>("camera_control");
-        GameObjectController::getInstance().registerComponent<CollisionObjectComponent>("collision_object");
-        GameObjectController::getInstance().registerComponent<EnemyComponent>("enemy");
-        GameObjectController::getInstance().registerComponent<LevelComponent>("level");
-        GameObjectController::getInstance().registerComponent<LevelRendererComponent>("level_renderer");
-        GameObjectController::getInstance().registerComponent<PlayerAudioComponent>("player_audio");
-        GameObjectController::getInstance().registerComponent<PlayerComponent>("player");
-        GameObjectController::getInstance().registerComponent<PlayerHandOfGodComponent>("player_hand_of_god");
-        GameObjectController::getInstance().registerComponent<PlayerInputComponent>("player_input");
-        GameObjectController::getInstance().registerComponent<PlatformerEventForwarderComponent>("platformer_event_forwarder");
-        GameObjectController::getInstance().registerComponent<SpriteAnimationComponent>("sprite_animation");
-        GameObjectController::getInstance().registerComponent<CollisionHandlerComponent>("collision_handler");
-        GameObjectController::getInstance().initialize();
+        gameobjects::GameObjectController::getInstance().registerComponent<CameraControlComponent>("camera_control");
+        gameobjects::GameObjectController::getInstance().registerComponent<CollisionObjectComponent>("collision_object");
+        gameobjects::GameObjectController::getInstance().registerComponent<EnemyComponent>("enemy");
+        gameobjects::GameObjectController::getInstance().registerComponent<LevelComponent>("level");
+        gameobjects::GameObjectController::getInstance().registerComponent<LevelRendererComponent>("level_renderer");
+        gameobjects::GameObjectController::getInstance().registerComponent<PlayerAudioComponent>("player_audio");
+        gameobjects::GameObjectController::getInstance().registerComponent<PlayerComponent>("player");
+        gameobjects::GameObjectController::getInstance().registerComponent<PlayerHandOfGodComponent>("player_hand_of_god");
+        gameobjects::GameObjectController::getInstance().registerComponent<PlayerInputComponent>("player_input");
+        gameobjects::GameObjectController::getInstance().registerComponent<PlatformerEventForwarderComponent>("platformer_event_forwarder");
+        gameobjects::GameObjectController::getInstance().registerComponent<SpriteAnimationComponent>("sprite_animation");
+        gameobjects::GameObjectController::getInstance().registerComponent<CollisionHandlerComponent>("collision_handler");
+        PlatformerGameObjectCallbackHandler * callbackHandler = new PlatformerGameObjectCallbackHandler();
+        gameobjects::GameObjectController::getInstance().registerCallbackHandler(callbackHandler);
+        gameobjects::GameObjectController::getInstance().initialize();
 
         _keyMessage = KeyMessage::create();
         _touchMessage = TouchMessage::create();
         _mouseMessage = MouseMessage::create();
         _gamepadMessage = GamepadMessage::create();
 
-#ifdef LUA_ALL_BINDINGS_H_
-        lua_RegisterAllBindings();
-#endif
         setMultiTouch(true);
 
         if(gameplay::Properties * windowSettings = getConfig()->getNamespace("window", true))
@@ -134,7 +142,7 @@ namespace platformer
 
     void Platformer::finalize()
     {
-        GameObjectController::getInstance().finalize();
+        gameobjects::GameObjectController::getInstance().finalize();
 
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_keyMessage);
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_touchMessage);
@@ -178,7 +186,7 @@ namespace platformer
     void Platformer::broadcastKeyEvent(gameplay::Keyboard::KeyEvent evt, int key)
     {
         KeyMessage::setMessage(_keyMessage, evt, key);
-        GameObjectController::getInstance().broadcastGameObjectMessage(_keyMessage);
+        gameobjects::GameObjectController::getInstance().broadcastGameObjectMessage(_keyMessage);
     }
 
     void Platformer::keyEvent(gameplay::Keyboard::KeyEvent evt, int key)
@@ -214,7 +222,7 @@ namespace platformer
         if (_touchMessage)
         {
             TouchMessage::setMessage(_touchMessage, evt, x, y, contactIndex);
-            GameObjectController::getInstance().broadcastGameObjectMessage(_touchMessage);
+            gameobjects::GameObjectController::getInstance().broadcastGameObjectMessage(_touchMessage);
         }
     }
 
@@ -223,7 +231,7 @@ namespace platformer
         if (_mouseMessage)
         {
             MouseMessage::setMessage(_mouseMessage, evt, x, y, wheelDelta);
-            GameObjectController::getInstance().broadcastGameObjectMessage(_mouseMessage);
+            gameobjects::GameObjectController::getInstance().broadcastGameObjectMessage(_mouseMessage);
         }
         
         return false;
@@ -238,7 +246,7 @@ namespace platformer
                 if(gamepad == getGamepad(i))
                 {
                     GamepadMessage::setMessage(_gamepadMessage, evt, i);
-                    GameObjectController::getInstance().broadcastGameObjectMessage(_gamepadMessage);
+                    gameobjects::GameObjectController::getInstance().broadcastGameObjectMessage(_gamepadMessage);
                     break;
                 }
             }
@@ -260,12 +268,12 @@ namespace platformer
             }
         }
 
-        GameObjectController::getInstance().independentUpdate(abs(elapsedTime));
+        gameobjects::GameObjectController::getInstance().independentUpdate(abs(elapsedTime));
 
         if (getState() == gameplay::Game::State::RUNNING)
         {
-            GameObjectController::getInstance().update(elapsedTime);
-            GameObjectController::getInstance().updatePostPhysics(elapsedTime);
+            gameobjects::GameObjectController::getInstance().update(elapsedTime);
+            gameobjects::GameObjectController::getInstance().updatePostPhysics(elapsedTime);
         }
 
         _splashScreenAlpha = MATH_CLAMP(_splashScreenAlpha + _splashScreenAlphaIncrement, 0.0f, 1.0f);
@@ -274,16 +282,16 @@ namespace platformer
     void Platformer::render(float elapsedTime)
     {
         clear(gameplay::Game::CLEAR_COLOR_DEPTH, gameplay::Vector4::zero(), 1.0f, 0);
-        GameObjectController::getInstance().render(elapsedTime);
+        gameobjects::GameObjectController::getInstance().render(elapsedTime);
         renderSplashScreen();
 
 #ifndef _FINAL
-        GameObjectController::getInstance().renderDebug(elapsedTime, _debugFont);
+        gameobjects::GameObjectController::getInstance().renderDebug(elapsedTime, _debugFont);
 
         if (gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_physics"))
         {
             gameplay::Game::getInstance()->getPhysicsController()->drawDebug(
-                        GameObjectController::getInstance().getScene()->getActiveCamera()->getViewProjectionMatrix());
+                        gameobjects::GameObjectController::getInstance().getScene()->getActiveCamera()->getViewProjectionMatrix());
         }
 
         if (gameplay::Game::getInstance()->getConfig()->getBool("debug_show_fps"))

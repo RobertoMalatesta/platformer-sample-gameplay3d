@@ -16,7 +16,7 @@ namespace platformer
      *
      * @script{ignore}
     */
-    class SpriteAnimationComponent : public Component
+    class SpriteAnimationComponent : public gameobjects::Component
     {
     public:
         /** @script{ignore} */

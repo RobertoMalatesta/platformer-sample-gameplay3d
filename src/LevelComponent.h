@@ -21,7 +21,7 @@ namespace platformer
      *
      * @script{ignore}
     */
-    class LevelComponent : public Component
+    class LevelComponent : public gameobjects::Component
     {
     public:
         static int const EMPTY_TILE = 0;
@@ -66,7 +66,7 @@ namespace platformer
         std::vector<std::vector<Tile>> _grid;
         gameplay::AIMessage * _loadedMessage;
         gameplay::AIMessage * _unloadedMessage;
-        std::vector<GameObject*> _children;
+        std::vector<gameobjects::GameObject*> _children;
     };
 }
 

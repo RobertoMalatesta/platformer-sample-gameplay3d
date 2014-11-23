@@ -48,23 +48,6 @@ namespace platformer
     */
     void forceReleaseRef(gameplay::Ref * ref);
 
-    /**
-     * Defines an interface which serves to categorise data that is attached to a node via
-     * gameplay::Node::setUserPointer. This allows multiple systems to make safe use of node
-     * data caching at the same time.
-     *
-     * @script{ignore}
-    */
-    class INodeUserData
-    {
-    public:
-        virtual int getNodeUserDataId() const = 0;
-    };
-
-    template<typename NodeUserDataType>
-    /** @script{ignore} */
-    NodeUserDataType * getNodeUserData(gameplay::Node const * node, int id);
-
 #ifndef _FINAL
     #define PLATFORMER_ON_SCREEN_LOG_HISTORY_CAPACITY 25
 
@@ -72,7 +55,5 @@ namespace platformer
     void clearLogHistory();
 #endif
 }
-
-#include "Common.inl"
 
 #endif

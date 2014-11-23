@@ -14,7 +14,7 @@ namespace platformer
     {
         enum Enum
         {
-            TerrainInfo = GameObject::GAMEOBJECT_NODE_USER_DATA_ID + 1
+            TerrainInfo = gameobjects::GameObject::GAMEOBJECT_NODE_USER_DATA_ID + 1
         };
     };
 }

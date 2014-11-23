@@ -1,6 +1,7 @@
 #include "PlayerHandOfGodComponent.h"
 
 #include "CollisionObjectComponent.h"
+#include "Common.h"
 #include "GameObject.h"
 #include "LevelComponent.h"
 #include "Messages.h"

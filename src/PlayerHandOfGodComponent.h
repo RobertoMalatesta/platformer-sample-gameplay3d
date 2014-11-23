@@ -12,7 +12,7 @@ namespace platformer
      *
      * @script{ignore}
     */
-    class PlayerHandOfGodComponent : public Component
+    class PlayerHandOfGodComponent : public gameobjects::Component
     {
     public:
         explicit PlayerHandOfGodComponent();

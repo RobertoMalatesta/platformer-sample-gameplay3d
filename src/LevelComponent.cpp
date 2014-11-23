@@ -237,7 +237,7 @@ namespace platformer
                 while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
                 {
                     char const * gameObjectTypeName = objectNamespace->getString("name");
-                    GameObject * gameObject = GameObjectController::getInstance().createGameObject(gameObjectTypeName, getParent());
+                    gameobjects::GameObject * gameObject = gameobjects::GameObjectController::getInstance().createGameObject(gameObjectTypeName, getParent());
                     gameplay::Vector2 spawnPos(objectNamespace->getInt("x"), -objectNamespace->getInt("y"));
                     spawnPos *= PLATFORMER_UNIT_SCALAR;
 
@@ -298,7 +298,7 @@ namespace platformer
 
         for(auto childItr = _children.begin(); childItr != _children.end(); ++childItr)
         {
-            GameObjectController::getInstance().destroyGameObject(*childItr);
+            gameobjects::GameObjectController::getInstance().destroyGameObject(*childItr);
         }
 
         _children.clear();

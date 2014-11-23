@@ -19,7 +19,7 @@ namespace platformer
      *
      * @script{ignore}
     */
-    class PlayerComponent : public Component
+    class PlayerComponent : public gameobjects::Component
     {
     public:
         /** @script{ignore} */

@@ -18,7 +18,7 @@ namespace platformer
      *
      * @script{ignore}
     */
-    class LevelRendererComponent : public Component
+    class LevelRendererComponent : public gameobjects::Component
     {
     public:
         explicit LevelRendererComponent();

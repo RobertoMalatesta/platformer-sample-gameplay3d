@@ -17,7 +17,7 @@ namespace platformer
 
     void CameraControlComponent::onStart()
     {
-        _camera = GameObjectController::getInstance().getScene()->getActiveCamera();
+        _camera = gameobjects::GameObjectController::getInstance().getScene()->getActiveCamera();
         _camera->addRef();
     }
 

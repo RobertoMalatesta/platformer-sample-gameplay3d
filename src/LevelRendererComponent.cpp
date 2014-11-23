@@ -2,6 +2,7 @@
 
 #include "CameraControlComponent.h"
 #include "CollisionObjectComponent.h"
+#include "Common.h"
 #include "EnemyComponent.h"
 #include "GameObject.h"
 #include "GameObjectController.h"
@@ -45,7 +46,7 @@ namespace platformer
 
     void LevelRendererComponent::onLevelLoaded()
     {
-        _camera = GameObjectController::getInstance().getScene()->getActiveCamera();
+        _camera = gameobjects::GameObjectController::getInstance().getScene()->getActiveCamera();
         _camera->addRef();
         _level = getRootParent()->getComponentInChildren<LevelComponent>();
         _level->addRef();

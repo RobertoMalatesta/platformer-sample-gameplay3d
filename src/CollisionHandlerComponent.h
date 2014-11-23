@@ -19,7 +19,7 @@ namespace platformer
      *
      * @script{ignore}
     */
-    class CollisionHandlerComponent : public Component, public gameplay::PhysicsRigidBody::CollisionListener
+    class CollisionHandlerComponent : public gameobjects::Component, public gameplay::PhysicsRigidBody::CollisionListener
     {
     public:
         explicit CollisionHandlerComponent();

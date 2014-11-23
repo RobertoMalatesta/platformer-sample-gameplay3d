@@ -1,5 +1,6 @@
 #include "PlayerAudioComponent.h"
 
+#include "Common.h"
 #include "GameObjectController.h"
 #include "MessagesPlayer.h"
 
@@ -53,7 +54,7 @@ namespace platformer
         case(Messages::Type::PlayerNodeChangedMessage):
             {
                 gameplay::Node * jumpAudioNode = _audioNodes[_jumpAudioSourcePath];
-                GameObjectController::getInstance().getScene()->getActiveCamera()->getNode()->addChild(jumpAudioNode);
+                gameobjects::GameObjectController::getInstance().getScene()->getActiveCamera()->getNode()->addChild(jumpAudioNode);
             }
             break;
         }

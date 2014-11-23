@@ -2,6 +2,7 @@
 #define PLATFORMER_TERRAIN_INFO_H
 
 #include "Common.h"
+#include "GameObjectCommon.h"
 
 namespace platformer
 {
@@ -26,7 +27,7 @@ namespace platformer
     };
 
     /** @script{ignore} */
-    class TerrainInfo : public INodeUserData
+    class TerrainInfo : public gameobjects::INodeUserData
     {
     public:
         static TerrainInfo * getTerrainInfo(gameplay::Node * node);

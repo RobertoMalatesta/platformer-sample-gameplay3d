@@ -5,32 +5,43 @@ A 2D platformer made using the open source game framework Gameplay3D, other free
 ![ScreenShot](https://raw.githubusercontent.com/louis-mclaughlin/platformer-sample-gameplay3d/master/raw/textures/platformer_big.jpg)
 
 ### Usage
+Download the external dependencies:
 ```
 git submodule update --init
+```
+
+Build gameplay:
+```
 cd external/GamePlay
 ./install.sh
 mkdir build
 cd build
 cmake ..
 make
+```
+
+Build the game objects library:
+```
+cd ../gameobjects-gameplay3d
+./install.sh
+mkdir build
+cd build
+cmake ..
+make
+```
+
+Build the sample:
 cd ../..
 mkdir build
 cd build
 cmake ..
 make
+```
+
+Run the sample:
+```
 ./platformer
 ```
-- Building the sample for android requires that you build Gameplay3D for android with the following in Application.mk:
-
-```
-APP_PLATFORM := android-10
-APP_STL := gnustl_static
-APP_ABI := armeabi-v7a
-APP_CPPFLAGS += -frtti -std=gnu++11
-NDK_TOOLCHAIN_VERSION := clang
-APP_MODULES := libgameplay
-```
-
 - See 'game.config' for configuarable debug options and tools
 - Use either a gamepad or the keyboard (directional arrows/WASD + space) to make the player move and jump
 

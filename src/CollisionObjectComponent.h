@@ -16,7 +16,7 @@ namespace platformer
      *
      * @script{ignore}
     */
-    class CollisionObjectComponent : public Component
+    class CollisionObjectComponent : public gameobjects::Component
     {
     public:
         explicit CollisionObjectComponent();

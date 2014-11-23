@@ -18,7 +18,7 @@ namespace platformer
      *
      * @script{ignore}
     */
-    class PlayerInputComponent : public Component
+    class PlayerInputComponent : public gameobjects::Component
     {
     public:
         explicit PlayerInputComponent();

@@ -45,7 +45,6 @@ function runTool(toolName)
     end
 end
 
-runTool("generate_lua_bindings")
 runTool("generate_android")
 runTool("clean_android")
 runTool("build_android")

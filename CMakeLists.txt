@@ -11,6 +11,7 @@ endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
 
 set(GAMEPLAY_SRC_PATH "external/GamePlay")
 set(GAMEPLAY_EXT_LIBS_PATH "${GAMEPLAY_SRC_PATH}/external-deps")
+set(PLATFORMER_EXT_LIBS_PATH "external")
 
 IF(CMAKE_SYSTEM_NAME MATCHES "Linux")
     ADD_DEFINITIONS(-D__linux__)
@@ -64,29 +65,18 @@ macro (append_gameplay_ext_lib listToAppend libName libDirName)
     message(STATUS "Library Found: ${libName} Path: ${FOUND_LIB_${libName}}")
 endmacro (append_gameplay_ext_lib)
 
+macro (append_platformer_ext_lib listToAppend libName libDirName)
+    IF("${libDirName}" STREQUAL "")
+        find_library(FOUND_LIB_${libName} NAMES ${libName} ${ARGN})
+    ELSE("${libDirName}" STREQUAL "")
+        set(pathToSearch
+            "${PLATFORMER_EXT_LIBS_PATH}/${libDirName}/lib/${TARGET_OS_DIR}/${ARCH_DIR}")
+        find_library(FOUND_LIB_${libName} NAMES ${libName} ${ARGN} HINTS ${pathToSearch})
+    ENDIF("${libDirName}" STREQUAL "")
 
-macro(copy_files TARGET_NAME GLOBPAT SOURCE DESTINATION RECUR)
-    get_filename_component(REALPATH_SOURCE ${SOURCE} REALPATH)
-    IF(${RECUR})
-        SET(RECURSE_PARAM GLOB_RECURSE)
-    ELSEIF(NOT ${RECUR})
-        SET(RECURSE_PARAM GLOB)
-    ENDIF(${RECUR})
-    file(${RECURSE_PARAM} COPY_FILES RELATIVE ${REALPATH_SOURCE} "${REALPATH_SOURCE}/${GLOBPAT}")
-
-  add_custom_target(${TARGET_NAME} ALL COMMENT "Copying files: ${REALPATH_SOURCE}/${GLOBPAT}")
-
-  foreach(FILENAME ${COPY_FILES})
-    set(SRC "${REALPATH_SOURCE}/${FILENAME}")
-    set(DST "${DESTINATION}/${FILENAME}")
-
-    IF(IS_DIRECTORY ${SRC})
-        add_custom_command(TARGET ${TARGET_NAME} COMMAND ${CMAKE_COMMAND} -E make_directory ${DST})
-    ELSE(IS_DIRECTORY ${SRC})
-        add_custom_command(TARGET ${TARGET_NAME} COMMAND ${CMAKE_COMMAND} -E copy ${SRC} ${DST})
-    ENDIF(IS_DIRECTORY ${SRC})
-  endforeach(FILENAME)
-endmacro(copy_files)
+    set(${listToAppend} ${${listToAppend}} ${FOUND_LIB_${libName}})
+    message(STATUS "Library Found: ${libName} Path: ${FOUND_LIB_${libName}}")
+endmacro (append_platformer_ext_lib)
 
 macro(add_source_group SOURCE_PATH SOURCES)
     if(WIN32)
@@ -106,6 +96,7 @@ include_directories(
     ${GAMEPLAY_SRC_PATH}/external-deps/openal/include
     ${GAMEPLAY_SRC_PATH}/external-deps/openal/include/AL
     ${GAMEPLAY_SRC_PATH}/external-deps/glew/include
+    ${PLATFORMER_EXT_LIBS_PATH}/gameobjects-gameplay3d/src
 )
 
 append_gameplay_lib(GAMEPLAY_LIBRARIES)
@@ -119,6 +110,7 @@ append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "openal" "openal" "openal32")
 append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "vorbis" "oggvorbis" "libvorbis")
 append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "ogg" "oggvorbis" "libogg")
 append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "z" "zlib" "zlib")
+append_platformer_ext_lib(GAMEPLAY_LIBRARIES "gameobjects" "gameobjects-gameplay3d")
 
 IF (TARGET_OS STREQUAL "LINUX")
     append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "GL" "")
@@ -179,13 +171,11 @@ file(GLOB RES_SHADERS ./res/shaders/*)
 file(GLOB RES_SPRITESHEETS ./res/spritesheets/*)
 file(GLOB RES_UI ./res/ui/*)
 file(GLOB GAME_SRC ./src/*.cpp ./src/*.h ./src/*.inl)
-file(GLOB GAME_SRC_LUA ./src/lua/*.cpp ./src/lua/*.h)
 
 # How the project files will be presented in an IDE, not all of them support this, some will just
 # display the file structure as it appears on disk
 set(SG_ANDROID "android")
 set(SG_GAME_SRC "src")
-set(SG_GAME_SRC_LUA "src/lua")
 set(SG_GAME_CONFIG "res")
 set(SG_RAW_LEVELS "raw/levels")
 set(SG_RAW_TEMPLATES "raw/templates")
@@ -210,7 +200,6 @@ if(WIN32)
 
     add_source_group(${SG_ANDROID} "${ANDROID}")
     add_source_group(${SG_GAME_SRC} "${GAME_SRC}")
-    add_source_group(${SG_GAME_SRC_LUA} "${GAME_SRC_LUA}")
     add_source_group(${SG_GAME_CONFIG} "${GAME_CONFIG}")
     add_source_group(${SG_RAW_LEVELS} "${RAW_LEVELS}")
     add_source_group(${SG_RAW_TEMPLATES} "${RAW_TEMPLATES}")
@@ -228,7 +217,6 @@ if(WIN32)
 else()
     add_source_group(${SG_ANDROID} ${ANDROID})
     add_source_group(${SG_GAME_SRC} ${GAME_SRC})
-    add_source_group(${SG_GAME_SRC_LUA} ${GAME_SRC_LUA})
     add_source_group(${SG_GAME_CONFIG} ${GAME_CONFIG})
     add_source_group(${SG_RAW_LEVELS} ${RAW_LEVELS})
     add_source_group(${SG_RAW_TEMPLATES} ${RAW_TEMPLATES})
@@ -248,7 +236,6 @@ endif()
 add_executable(${GAME_NAME}
     WIN32
     ${GAME_SRC}
-    ${GAME_SRC_LUA}
     ${ANDROID}
     ${GAME_CONFIG}
     ${RES_GAME_OBJECTS}

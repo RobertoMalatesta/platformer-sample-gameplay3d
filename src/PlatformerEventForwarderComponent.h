@@ -10,7 +10,7 @@ namespace platformer
      *
      * @script{ignore}
     */
-    class PlatformerEventForwarderComponent : public Component
+    class PlatformerEventForwarderComponent : public gameobjects::Component
     {
     public:
         explicit PlatformerEventForwarderComponent();

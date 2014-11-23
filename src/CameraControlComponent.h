@@ -10,7 +10,7 @@ namespace platformer
      *
      * @script{ignore}
     */
-    class CameraControlComponent : public Component
+    class CameraControlComponent : public gameobjects::Component
     {
     public:
         explicit CameraControlComponent();

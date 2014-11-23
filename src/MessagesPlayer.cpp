@@ -35,10 +35,10 @@ namespace platformer
 
         if(!message->getBoolean(PlayerNodeChangedMessagergs::IgnorePreviousNode))
         {
-            _previousNode = GameObjectController::getInstance().getScene()->findNode(message->getString(PlayerNodeChangedMessagergs::PreviousNode));
+            _previousNode = gameobjects::GameObjectController::getInstance().getScene()->findNode(message->getString(PlayerNodeChangedMessagergs::PreviousNode));
         }
 
-        _currentNode = GameObjectController::getInstance().getScene()->findNode(message->getString(PlayerNodeChangedMessagergs::CurrentNode));
+        _currentNode = gameobjects::GameObjectController::getInstance().getScene()->findNode(message->getString(PlayerNodeChangedMessagergs::CurrentNode));
     }
 
     gameplay::AIMessage * PlayerNodeChangedMessage::create()
