@@ -6,8 +6,6 @@ scene gameobjects
     {
         camera
         {
-            zoomX = 12.8
-            zoomY = 7.2
             type = ORTHOGRAPHIC
         }
     }

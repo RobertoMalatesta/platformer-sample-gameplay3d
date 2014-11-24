@@ -19,6 +19,9 @@ namespace platformer
     {
         _camera = gameobjects::GameObjectController::getInstance().getScene()->getActiveCamera();
         _camera->addRef();
+        float const zoomScale = .01f;
+        _camera->setZoomX(gameplay::Game::getInstance()->getWidth() * zoomScale);
+        _camera->setZoomY(gameplay::Game::getInstance()->getHeight() * zoomScale);
     }
 
     void CameraControlComponent::finalize()
