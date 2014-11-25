@@ -239,8 +239,8 @@ add_executable(${GAME_NAME}
     ${RES_SHADERS}
 )
 
-add_subdirectory(external/${GAMEPLAY_LIB_DIR_NAME})
-add_subdirectory(external/${GAMEOBJECTS_LIB_DIR_NAME})
+add_subdirectory(${PLATFORMER_EXT_LIBS_PATH}/${GAMEPLAY_LIB_DIR_NAME})
+add_subdirectory(${PLATFORMER_EXT_LIBS_PATH}/${GAMEOBJECTS_LIB_DIR_NAME})
 add_dependencies(${GAME_NAME} ${GAMEPLAY_LIB_DIR_NAME} ${GAMEOBJECTS_LIB_NAME})
 target_link_libraries(${GAME_NAME} ${GAMEPLAY_LIB_NAME} ${GAMEPLAY_LIBRARIES} ${GAMEOBJECTS_LIB_NAME})
 
