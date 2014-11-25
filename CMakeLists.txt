@@ -29,17 +29,16 @@ ENDIF(CMAKE_SYSTEM_NAME MATCHES "Linux")
 
 set(GAME_OUTPUT_DIR "${CMAKE_BINARY_DIR}/bin/${TARGET_OS_DIR}")
 
-macro (append_gameplay_lib listToAppend)
-    set(libName gameplay)
+macro (append_lib listToAppend libName libDirPath)
     IF (TARGET_OS STREQUAL "WINDOWS")
         FIND_LIBRARY(${libName}_LIBRARY_RELEASE
             NAMES ${libName}
-            PATHS "${GAMEPLAY_SRC_PATH}/gameplay/${TARGET_OS_DIR}/${ARCH_DIR}/Release"
+            PATHS "${libDirPath}/${TARGET_OS_DIR}/${ARCH_DIR}/Release"
         )
 
         FIND_LIBRARY(${libName}_LIBRARY_DEBUG
             NAMES ${libName}
-            PATHS "${GAMEPLAY_SRC_PATH}/gameplay/${TARGET_OS_DIR}/${ARCH_DIR}/Debug"
+            PATHS "${libDirPath}/${TARGET_OS_DIR}/${ARCH_DIR}/Debug"
         )
         SET(FOUND_LIB_${libName}
             debug ${${libName}_LIBRARY_DEBUG}
@@ -47,10 +46,11 @@ macro (append_gameplay_lib listToAppend)
         )
     ELSE (TARGET_OS STREQUAL "WINDOWS")
         find_library(FOUND_LIB_${libName} ${libName} HINTS
-            "${GAMEPLAY_SRC_PATH}/cmake/gameplay" "${GAMEPLAY_SRC_PATH}/build/gameplay" "${GAMEPLAY_SRC_PATH}/gameplay/src")
+            "${libDirPath}")
     ENDIF (TARGET_OS STREQUAL "WINDOWS")
+	message(STATUS "Library Found: ${libName} Path: ${FOUND_LIB_${libName}}")
     set(${listToAppend} ${${listToAppend}} ${FOUND_LIB_${libName}})
-endmacro(append_gameplay_lib)
+endmacro(append_lib)
 
 macro (append_gameplay_ext_lib listToAppend libName libDirName)
     IF("${libDirName}" STREQUAL "")
@@ -64,19 +64,6 @@ macro (append_gameplay_ext_lib listToAppend libName libDirName)
     set(${listToAppend} ${${listToAppend}} ${FOUND_LIB_${libName}})
     message(STATUS "Library Found: ${libName} Path: ${FOUND_LIB_${libName}}")
 endmacro (append_gameplay_ext_lib)
-
-macro (append_platformer_ext_lib listToAppend libName libDirName)
-    IF("${libDirName}" STREQUAL "")
-        find_library(FOUND_LIB_${libName} NAMES ${libName} ${ARGN})
-    ELSE("${libDirName}" STREQUAL "")
-        set(pathToSearch
-            "${PLATFORMER_EXT_LIBS_PATH}/${libDirName}/lib/${TARGET_OS_DIR}/${ARCH_DIR}")
-        find_library(FOUND_LIB_${libName} NAMES ${libName} ${ARGN} HINTS ${pathToSearch})
-    ENDIF("${libDirName}" STREQUAL "")
-
-    set(${listToAppend} ${${listToAppend}} ${FOUND_LIB_${libName}})
-    message(STATUS "Library Found: ${libName} Path: ${FOUND_LIB_${libName}}")
-endmacro (append_platformer_ext_lib)
 
 macro(add_source_group SOURCE_PATH SOURCES)
     if(WIN32)
@@ -99,7 +86,8 @@ include_directories(
     ${PLATFORMER_EXT_LIBS_PATH}/gameobjects-gameplay3d/src
 )
 
-append_gameplay_lib(GAMEPLAY_LIBRARIES)
+append_lib(GAMEPLAY_LIBRARIES "gameplay" "${GAMEPLAY_SRC_PATH}/gameplay")
+append_lib(GAMEPLAY_LIBRARIES "gameobjects" "${PLATFORMER_EXT_LIBS_PATH}/gameobjects-gameplay3d/lib")
 append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "GLEW" "glew" "glew32")
 append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "lua" "lua")
 append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "png" "png" "libpng")
@@ -110,7 +98,6 @@ append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "openal" "openal" "openal32")
 append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "vorbis" "oggvorbis" "libvorbis")
 append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "ogg" "oggvorbis" "libogg")
 append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "z" "zlib" "zlib")
-append_platformer_ext_lib(GAMEPLAY_LIBRARIES "gameobjects" "gameobjects-gameplay3d")
 
 IF (TARGET_OS STREQUAL "LINUX")
     append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "GL" "")
@@ -140,8 +127,7 @@ ENDIF (TARGET_OS STREQUAL "LINUX")
 # this by creating symlinks in the build folder that point the actual resources in the parent folder.
 if(WIN32)
     if(NOT EXISTS "game.config")
-        execute_process(COMMAND cmd /C ${CMAKE_SOURCE_DIR}/mklink_win32.bat $
-{TARGET_OS_DIR})
+        execute_process(COMMAND cmd /C "${CMAKE_SOURCE_DIR}/mklink_win32.bat ${TARGET_OS_DIR}")
     endif()
 else()
     if(NOT EXISTS res)
@@ -269,6 +255,7 @@ endif()
 if(MSVC)
     # Enable multi-processor compilation for faster compile times
     add_definitions(/MP)
+	add_definitions(/Gm-)
 else()
     # Enable C++11
     set(CMAKE_CXX_FLAGS "-std=c++11")
