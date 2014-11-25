@@ -10,25 +10,11 @@ Download the external dependencies:
 git submodule update --init
 ```
 
-Build gameplay:
+Download the gameplay dependencies:
 ```
 cd external/GamePlay
 ./install.sh
-mkdir build
-cd build
-cmake ..
-make
 ```
-
-Build the gameplay game objects library:
-```
-cd ../gameobjects-gameplay3d
-mkdir build
-cd build
-cmake ..
-make
-```
-
 Build the sample:
 ```
 cd ../..
