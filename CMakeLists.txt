@@ -52,7 +52,7 @@ macro (append_lib listToAppend libName libDirPath)
         find_library(FOUND_LIB_${libName} ${libName} HINTS
             "${libDirPath}")
     ENDIF (TARGET_OS STREQUAL "WINDOWS")
-	message(STATUS "Library Found: ${libName} Path: ${FOUND_LIB_${libName}}")
+    message(STATUS "Library Found: ${libName} Path: ${FOUND_LIB_${libName}}")
     set(${listToAppend} ${${listToAppend}} ${FOUND_LIB_${libName}})
 endmacro(append_lib)
 
@@ -248,7 +248,7 @@ if(MSVC)
     # Enable multi-processor compilation for faster compile times
     add_definitions(/MP)
     add_definitions(/Gm-)
-	add_definitions(-DUNICODE)
+    add_definitions(-DUNICODE)
 else()
     # Enable C++11
     set(CMAKE_CXX_FLAGS "-std=c++11")
