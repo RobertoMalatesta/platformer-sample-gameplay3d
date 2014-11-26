@@ -27,7 +27,7 @@ make
 
 Run the sample:
 ```
-./platformer
+./bin/linux/platformer
 ```
 - See 'game.config' for configuarable debug options and tools
 - Use either a gamepad or the keyboard (directional arrows/WASD + space) to make the player move and jump
