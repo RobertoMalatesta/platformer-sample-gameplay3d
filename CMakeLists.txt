@@ -239,17 +239,6 @@ add_executable(${GAME_NAME}
     ${RES_SHADERS}
 )
 
-add_subdirectory(${PLATFORMER_EXT_LIBS_PATH}/${GAMEPLAY_LIB_DIR_NAME})
-add_subdirectory(${PLATFORMER_EXT_LIBS_PATH}/${GAMEOBJECTS_LIB_DIR_NAME})
-add_dependencies(${GAME_NAME} ${GAMEPLAY_LIB_DIR_NAME} ${GAMEOBJECTS_LIB_NAME})
-target_link_libraries(${GAME_NAME} ${GAMEPLAY_LIB_NAME} ${GAMEPLAY_LIBRARIES} ${GAMEOBJECTS_LIB_NAME})
-
-set_target_properties(${GAME_NAME} PROPERTIES
-    OUTPUT_NAME "${GAME_NAME}"
-    RUNTIME_OUTPUT_DIRECTORY "${GAME_OUTPUT_DIR}"
-    LIBRARY_OUTPUT_DIRECTORY "${GAME_OUTPUT_DIR}"
-)
-
 if ( "${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG" )
     # add_definitions(-DGP_USE_MEM_LEAK_DETECTION)
     add_definitions(-D_DEBUG)
@@ -259,8 +248,20 @@ if(MSVC)
     # Enable multi-processor compilation for faster compile times
     add_definitions(/MP)
     add_definitions(/Gm-)
+	add_definitions(-DUNICODE)
 else()
     # Enable C++11
     set(CMAKE_CXX_FLAGS "-std=c++11")
     add_definitions(-lstdc++)
 endif()
+
+add_subdirectory(${PLATFORMER_EXT_LIBS_PATH}/${GAMEPLAY_LIB_DIR_NAME})
+add_subdirectory(${PLATFORMER_EXT_LIBS_PATH}/${GAMEOBJECTS_LIB_DIR_NAME})
+add_dependencies(${GAME_NAME} ${GAMEPLAY_LIB_NAME} ${GAMEOBJECTS_LIB_NAME})
+target_link_libraries(${GAME_NAME} ${GAMEPLAY_LIB_NAME} ${GAMEPLAY_LIBRARIES} ${GAMEOBJECTS_LIB_NAME})
+
+set_target_properties(${GAME_NAME} PROPERTIES
+    OUTPUT_NAME "${GAME_NAME}"
+    RUNTIME_OUTPUT_DIRECTORY "${GAME_OUTPUT_DIR}"
+    LIBRARY_OUTPUT_DIRECTORY "${GAME_OUTPUT_DIR}"
+)
