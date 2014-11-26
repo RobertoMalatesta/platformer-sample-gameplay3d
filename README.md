@@ -12,6 +12,7 @@ git submodule update --init
 
 Download the gameplay dependencies:
 ```
+sudo apt-get install build-essential gcc cmake libglu1-mesa-dev libogg-dev libopenal-dev libgtk2.0-dev curl libpcrecpp0:i386 lib32z1-dev
 cd external/GamePlay
 ./install.sh
 ```
