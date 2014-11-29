@@ -52,6 +52,7 @@ namespace platformer
         _level->addRef();
         _tileBatch = gameplay::SpriteBatch::create(_level->getTexturePath().c_str());
         _tileBatch->getSampler()->setFilterMode(gameplay::Texture::Filter::NEAREST, gameplay::Texture::Filter::NEAREST);
+        _tileBatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::CLAMP, gameplay::Texture::Wrap::CLAMP);
         _player = _level->getParent()->getComponentInChildren<PlayerComponent>();
         _playerInput = _player->getParent()->getComponent<PlayerInputComponent>();
         _player->addRef();
@@ -62,7 +63,10 @@ namespace platformer
         _player->forEachAnimation([this](PlayerComponent::State::Enum state, SpriteAnimationComponent * animation) -> bool
         {
             SpriteSheet * animSheet = SpriteSheet::create(animation->getSpriteSheetPath());
-            _playerAnimationBatches[state] = gameplay::SpriteBatch::create(animSheet->getTexture());
+             gameplay::SpriteBatch * spriteBatch = gameplay::SpriteBatch::create(animSheet->getTexture());
+            spriteBatch->getSampler()->setFilterMode(gameplay::Texture::Filter::NEAREST, gameplay::Texture::Filter::NEAREST);
+            spriteBatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::CLAMP, gameplay::Texture::Wrap::CLAMP);
+            _playerAnimationBatches[state] = spriteBatch;
             SAFE_RELEASE(animSheet);
             return false;
         });
@@ -89,6 +93,8 @@ namespace platformer
                 else
                 {
                     spriteBatch = gameplay::SpriteBatch::create(animSheet->getTexture());
+                    spriteBatch->getSampler()->setFilterMode(gameplay::Texture::Filter::NEAREST, gameplay::Texture::Filter::NEAREST);
+                    spriteBatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::CLAMP, gameplay::Texture::Wrap::CLAMP);
                     enemySpriteBatches[animation->getSpriteSheetPath()] = spriteBatch;
                 }
 
@@ -202,7 +208,9 @@ namespace platformer
                         int const tileIndex = tile - 1;
                         int const tileX = (tileIndex % numSpritesX) * tileWidth;
                         int const tileY = (tileIndex / numSpritesX) * tileHeight;
-                        _tileBatch->draw(gameplay::Rectangle(x * tileWidth, y * tileHeight, tileWidth, tileHeight), gameplay::Rectangle(tileX, tileY, tileWidth, tileHeight));
+                        static int const fpPrecisionPadding = 1;
+                        _tileBatch->draw(gameplay::Rectangle(x * tileWidth, y * tileHeight, tileWidth, tileHeight),
+                                         gameplay::Rectangle(tileX + fpPrecisionPadding, tileY + fpPrecisionPadding, tileWidth - fpPrecisionPadding, tileHeight - fpPrecisionPadding));
                     }
                 }
             }
