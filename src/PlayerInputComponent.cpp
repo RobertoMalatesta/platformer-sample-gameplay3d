@@ -23,8 +23,8 @@ namespace platformer
 
     void PlayerInputComponent::initialize()
     {
-        memset(_previousGamepadButtonState, 0, GamepadButtons::EnumCount * sizeof(bool));
-        memset(_gamepadButtonState, 0, GamepadButtons::EnumCount * sizeof(bool));
+        _previousGamepadButtonState.fill(false);
+        _gamepadButtonState.fill(false);
         _joystickMovementDirections[PlayerComponent::MovementDirection::Up] = gameplay::Vector2(0, 1);
         _joystickMovementDirections[PlayerComponent::MovementDirection::Down] = gameplay::Vector2(0, -1);
         _joystickMovementDirections[PlayerComponent::MovementDirection::Left] = gameplay::Vector2(-1, 0);
@@ -68,7 +68,7 @@ namespace platformer
             }
         }
 
-        memcpy(_previousGamepadButtonState, _gamepadButtonState, sizeof(_previousGamepadButtonState));
+        _previousGamepadButtonState = _gamepadButtonState;
         _previousJoystickValue = joystickValue;
     }
 

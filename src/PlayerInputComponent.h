@@ -49,10 +49,10 @@ namespace platformer
 
         PlayerComponent * _player;
         gameplay::Gamepad * _gamePad;
-        bool _gamepadButtonState[GamepadButtons::EnumCount];
-        bool _previousGamepadButtonState[GamepadButtons::EnumCount];
-        int _gamepadButtonMapping[GamepadButtons::EnumCount];
-        gameplay::Vector2 _joystickMovementDirections[PlayerComponent::MovementDirection::EnumCount];
+        std::array<bool, GamepadButtons::EnumCount> _gamepadButtonState;
+        std::array<bool, GamepadButtons::EnumCount> _previousGamepadButtonState;
+        std::array<int, GamepadButtons::EnumCount> _gamepadButtonMapping;
+        std::array<gameplay::Vector2, PlayerComponent::MovementDirection::EnumCount> _joystickMovementDirections;
         gameplay::Vector2 _previousJoystickValue;
     };
 }
