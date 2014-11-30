@@ -27,7 +27,7 @@ namespace platformer
         SpriteSheet * spriteSheet = SpriteSheet::create(_spriteSheetPath);
 
         int frames = 0;
-        char str[UCHAR_MAX];
+        std::array<char, UCHAR_MAX> str;
 
         if(_spriteNames.empty())
         {
@@ -37,16 +37,16 @@ namespace platformer
 
                 if (strstr(_spritePrefix.c_str(), "__"))
                 {
-                    sprintf(str, "%s%.2d", _spritePrefix.c_str(), frames++);
+                    sprintf(&str[0], "%s%.2d", _spritePrefix.c_str(), frames++);
                 }
                 else
                 {
-                    sprintf(str, "%s", _spritePrefix.c_str());
+                    sprintf(&str[0], "%s", _spritePrefix.c_str());
                     ++frames;
                     done = true;
                 }
 
-                Sprite * sprite = spriteSheet->getSprite(str);
+                Sprite * sprite = spriteSheet->getSprite(&str[0]);
 
                 if (sprite)
                 {

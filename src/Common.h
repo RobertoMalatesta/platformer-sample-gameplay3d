@@ -11,9 +11,9 @@ namespace platformer
 
     #define PLATFORMER_LOG(message, ...)                                                                                                            \
     {                                                                                                                                               \
-        char logTimeStamp[UCHAR_MAX];                                                                                                               \
-        sprintf(logTimeStamp, "[%.2f] ", gameplay::Game::getAbsoluteTime() / 1000.0f);                                                              \
-        gameplay::Logger::log(gameplay::Logger::Level::LEVEL_INFO, (std::string(logTimeStamp) + std::string(message) + "\n").c_str(), __VA_ARGS__); \
+        std::array<char, UCHAR_MAX> logTimeStamp;                                                                                                               \
+        sprintf(&logTimeStamp[0], "[%.2f] ", gameplay::Game::getAbsoluteTime() / 1000.0f);                                                              \
+        gameplay::Logger::log(gameplay::Logger::Level::LEVEL_INFO, (std::string(&logTimeStamp[0]) + std::string(message) + "\n").c_str(), __VA_ARGS__); \
     }
 
     #define PLATFORMER_RANDOM_RANGE(min, max) min + (fabs(min - max) * MATH_RANDOM_0_1())

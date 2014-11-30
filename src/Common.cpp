@@ -36,10 +36,10 @@ namespace platformer
             int x = margin;
             int y = margin;
             int const yPadding = font->getSize();
-            char buffer[UCHAR_MAX];
-            sprintf(buffer, "%s! Resuming in %d", msg->_level == gameplay::Logger::LEVEL_ERROR ? "ERROR" : "WARNING", msg->_secondsRemaining);
+            std::array<char, UCHAR_MAX> buffer;
+            sprintf(&buffer[0], "%s! Resuming in %d", msg->_level == gameplay::Logger::LEVEL_ERROR ? "ERROR" : "WARNING", msg->_secondsRemaining);
             font->start();
-            font->drawText(buffer, x, y += yPadding, gameplay::Vector4(1, 0, 0, 1));
+            font->drawText(&buffer[0], x, y += yPadding, gameplay::Vector4(1, 0, 0, 1));
             font->drawText(msg->_message, x, y += yPadding, gameplay::Vector4::one());
             y += yPadding;
             font->drawText("Recent log history:", x, y += yPadding, gameplay::Vector4::one());

@@ -300,11 +300,11 @@ namespace platformer
 #ifndef _FINAL
     void renderCharacterPositionDebug(gameplay::Vector2 const & position, gameplay::Vector2 const & renderPosition, gameplay::Font * font)
     {
-        char buffer[32];
-        sprintf(buffer, "{%.2f, %.2f}", position.x, position.y);
+        std::array<char, 32> buffer;
+        sprintf(&buffer[0], "{%.2f, %.2f}", position.x, position.y);
         unsigned int width, height = 0;
-        font->measureText(buffer, font->getSize(PLATFORMER_FONT_SIZE_LARGE_INDEX), &width, &height);
-        font->drawText(buffer, renderPosition.x - (width / 4), -renderPosition.y, gameplay::Vector4(1,0,0,1));
+        font->measureText(&buffer[0], font->getSize(PLATFORMER_FONT_SIZE_LARGE_INDEX), &width, &height);
+        font->drawText(&buffer[0], renderPosition.x - (width / 4), -renderPosition.y, gameplay::Vector4(1,0,0,1));
     }
 
     void LevelRendererComponent::renderDebug(float, gameplay::Font * font)

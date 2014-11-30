@@ -313,10 +313,10 @@ namespace platformer
 
         if (gameplay::Game::getInstance()->getConfig()->getBool("debug_show_fps"))
         {
-            char buffer[CHAR_MAX];
-            sprintf(buffer, "%d FPS", gameplay::Game::getInstance()->getFrameRate());
+            std::array<char, CHAR_MAX> buffer;
+            sprintf(&buffer[0], "%d FPS", gameplay::Game::getInstance()->getFrameRate());
             _debugFont->start();
-            _debugFont->drawText(buffer, 5, 5, gameplay::Vector4(1, 0, 0, 1));
+            _debugFont->drawText(&buffer[0], 5, 5, gameplay::Vector4(1, 0, 0, 1));
             _debugFont->finish();
         }
 #endif
