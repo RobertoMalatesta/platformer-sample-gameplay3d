@@ -27,12 +27,15 @@ namespace platformer
         virtual void update(float elapsedTime) override;
         virtual void onStart() override;
         virtual void finalize() override;
+        virtual void onMessageReceived(gameplay::AIMessage * message) override;
     private:
         CameraControlComponent(CameraControlComponent const &);
 
         gameplay::Camera * _camera;
         float _minZoom;
         float _maxZoom;
+        float _initialCurrentZoom;
+        float _initialTargetZoom;
         float _currentZoom;
         float _targetZoom;
     };

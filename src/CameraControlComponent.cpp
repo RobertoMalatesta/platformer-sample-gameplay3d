@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "GameObjectController.h"
 #include "Common.h"
+#include "MessagesPlatformer.h"
 
 namespace platformer
 {
@@ -23,6 +24,19 @@ namespace platformer
     {
         _camera = gameobjects::GameObjectController::getInstance().getScene()->getActiveCamera();
         _camera->addRef();
+        _initialCurrentZoom = _currentZoom;
+        _initialTargetZoom = _targetZoom;
+    }
+
+    void CameraControlComponent::onMessageReceived(gameplay::AIMessage * message)
+    {
+        switch (message->getId())
+        {
+        case(Messages::Type::PlatformerSplashScreenChangeRequestMessage):
+            _currentZoom = _initialCurrentZoom;
+            _targetZoom = _initialTargetZoom;
+            break;
+        }
     }
 
     void CameraControlComponent::update(float elapsedTime)
