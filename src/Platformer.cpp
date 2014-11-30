@@ -22,6 +22,7 @@ namespace platformer
 {
     Platformer::Platformer()
         : _keyMessage(nullptr)
+        , _pinchMessage(nullptr)
         , _touchMessage(nullptr)
         , _mouseMessage(nullptr)
         , _gamepadMessage(nullptr)
@@ -123,12 +124,18 @@ namespace platformer
         gameobjects::GameObjectController::getInstance().registerCallbackHandler(callbackHandler);
         gameobjects::GameObjectController::getInstance().initialize();
 
+        _pinchMessage = PinchMessage::create();
         _keyMessage = KeyMessage::create();
         _touchMessage = TouchMessage::create();
         _mouseMessage = MouseMessage::create();
         _gamepadMessage = GamepadMessage::create();
 
         setMultiTouch(true);
+
+        if (isGestureSupported(gameplay::Gesture::GESTURE_PINCH))
+        {
+            registerGesture(gameplay::Gesture::GESTURE_PINCH);
+        }
 
         if(gameplay::Properties * windowSettings = getConfig()->getNamespace("window", true))
         {
@@ -144,6 +151,7 @@ namespace platformer
     {
         gameobjects::GameObjectController::getInstance().finalize();
 
+        PLATFORMER_SAFE_DELETE_AI_MESSAGE(_pinchMessage);
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_keyMessage);
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_touchMessage);
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_mouseMessage);
@@ -187,6 +195,15 @@ namespace platformer
     {
         KeyMessage::setMessage(_keyMessage, evt, key);
         gameobjects::GameObjectController::getInstance().broadcastGameObjectMessage(_keyMessage);
+    }
+
+    void Platformer::gesturePinchEvent(int x, int y, float scale)
+    {
+        if(_pinchMessage)
+        {
+            PinchMessage::setMessage(_pinchMessage, x, y, scale);
+            gameobjects::GameObjectController::getInstance().broadcastGameObjectMessage(_pinchMessage);
+        }
     }
 
     void Platformer::keyEvent(gameplay::Keyboard::KeyEvent evt, int key)

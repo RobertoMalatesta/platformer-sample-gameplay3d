@@ -8,6 +8,10 @@ namespace platformer
 {
     CameraControlComponent::CameraControlComponent()
         : _camera(nullptr)
+        , _minZoom(PLATFORMER_UNIT_SCALAR / 2)
+        , _maxZoom(PLATFORMER_UNIT_SCALAR * 2)
+        , _currentZoom(_maxZoom)
+        , _targetZoom(PLATFORMER_UNIT_SCALAR)
     {
     }
 
@@ -19,9 +23,16 @@ namespace platformer
     {
         _camera = gameobjects::GameObjectController::getInstance().getScene()->getActiveCamera();
         _camera->addRef();
-        float const zoomScale = .01f;
-        _camera->setZoomX(gameplay::Game::getInstance()->getWidth() * zoomScale);
-        _camera->setZoomY(gameplay::Game::getInstance()->getHeight() * zoomScale);
+    }
+
+    void CameraControlComponent::update(float elapsedTime)
+    {
+        if(_currentZoom != _targetZoom)
+        {
+            _currentZoom = MATH_CLAMP(gameplay::Curve::lerp(elapsedTime / 333.0f, _currentZoom, _targetZoom) , _minZoom, _maxZoom);
+            _camera->setZoomX(gameplay::Game::getInstance()->getWidth() * _currentZoom);
+            _camera->setZoomY(gameplay::Game::getInstance()->getHeight() * _currentZoom);
+        }
     }
 
     void CameraControlComponent::finalize()
@@ -32,5 +43,35 @@ namespace platformer
     void CameraControlComponent::setTargetPosition(gameplay::Vector2 const & target)
     {
         _camera->getNode()->setTranslation(std::move(gameplay::Vector3(target.x, target.y, 0.0f)));
+    }
+
+    float CameraControlComponent::getMinZoom() const
+    {
+        return _minZoom;
+    }
+
+    float CameraControlComponent::getMaxZoom() const
+    {
+        return _maxZoom;
+    }
+
+    float CameraControlComponent::getZoom() const
+    {
+        return _currentZoom;
+    }
+
+    float CameraControlComponent::getTargetZoom() const
+    {
+        return _targetZoom;
+    }
+
+    gameplay::Matrix & CameraControlComponent::getViewProjectionMatrix() const
+    {
+        _camera->getViewProjectionMatrix();
+    }
+
+    float CameraControlComponent::setZoom(float zoom)
+    {
+        _targetZoom = zoom;
     }
 }

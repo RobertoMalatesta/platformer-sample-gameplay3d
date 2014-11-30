@@ -1,9 +1,10 @@
 #include "PlayerInputComponent.h"
 
+#include "CameraControlComponent.h"
+#include "CameraControlComponent.h"
 #include "Common.h"
 #include "GameObject.h"
 #include "GameObjectController.h"
-#include "MessagesInput.h"
 
 namespace platformer
 {
@@ -19,6 +20,8 @@ namespace platformer
     {
         _player = getParent()->getComponent<PlayerComponent>();
         _player->addRef();
+        _camera = getRootParent()->getComponent<CameraControlComponent>();
+        _camera->addRef();
     }
 
     void PlayerInputComponent::initialize()
@@ -36,6 +39,7 @@ namespace platformer
     void PlayerInputComponent::finalize()
     {
         SAFE_RELEASE(_player);
+        SAFE_RELEASE(_camera);
     }
 
     void PlayerInputComponent::update(float)
@@ -94,7 +98,31 @@ namespace platformer
         case(Messages::Type::Key) :
             onKeyboardInput(std::move(KeyMessage(message)));
             break;
+        case(Messages::Type::Mouse):
+            onMouseInput(std::move(MouseMessage(message)));
+            break;
+        case(Messages::Type::Pinch):
+            onPinchInput(std::move(PinchMessage(message)));
+            break;
         }
+    }
+
+    float PlayerInputComponent::calculateCameraZoomStep(bool increase) const
+    {
+        float const zoomDelta = ((_camera->getMaxZoom() - _camera->getMinZoom()) / 10.0f) * (increase ? -1.0f : 1.0f);
+        return _camera->getZoom() + zoomDelta;
+    }
+
+    void PlayerInputComponent::onMouseInput(MouseMessage mouseMessage)
+    {
+        if(mouseMessage._wheelDelta != 0)
+        {
+            _camera->setZoom(calculateCameraZoomStep(mouseMessage._wheelDelta > 0));
+        }
+    }
+
+    void PlayerInputComponent::onPinchInput(PinchMessage pinchMessage)
+    {
     }
 
     void PlayerInputComponent::onKeyboardInput(KeyMessage keyMessage)
@@ -126,6 +154,15 @@ namespace platformer
                 if(enable)
                 {
                     _player->jump();
+                }
+                break;
+            case gameplay::Keyboard::Key::KEY_PG_UP:
+            case gameplay::Keyboard::Key::KEY_PG_DOWN:
+                {
+                    if(enable)
+                    {
+                        _camera->setZoom(calculateCameraZoomStep(keyMessage._key == gameplay::Keyboard::Key::KEY_PG_UP));
+                    }
                 }
                 break;
             }

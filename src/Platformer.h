@@ -23,6 +23,7 @@ namespace platformer
     protected:
         virtual void initialize() override;
         virtual void finalize() override;
+        virtual void gesturePinchEvent(int x, int y, float scale) override;
         virtual void keyEvent(gameplay::Keyboard::KeyEvent evt, int key) override;
         virtual void touchEvent(gameplay::Touch::TouchEvent evt, int x, int y, unsigned int contactIndex) override;
         virtual bool mouseEvent(gameplay::Mouse::MouseEvent evt, int x, int y, int wheelDelta) override;
@@ -41,6 +42,7 @@ namespace platformer
 #ifndef _FINAL
         gameplay::Font * _debugFont;
 #endif
+        gameplay::AIMessage * _pinchMessage;
         gameplay::AIMessage * _keyMessage;
         gameplay::AIMessage * _touchMessage;
         gameplay::AIMessage * _mouseMessage;

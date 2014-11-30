@@ -71,6 +71,40 @@ namespace platformer
     }
 
     /** @script{ignore} */
+    struct PinchMessageArgs
+    {
+        enum Enum
+        {
+            X,
+            Y,
+            Scale,
+
+            ArgCount
+        };
+    };
+
+    PinchMessage::PinchMessage(gameplay::AIMessage * message)
+    {
+        GP_ASSERT(message->getId() == Messages::Type::Pinch);
+        _x = message->getInt(PinchMessageArgs::X);
+        _y = message->getInt(PinchMessageArgs::Y);
+        _scale = message->getFloat(PinchMessageArgs::Scale);
+    }
+
+    gameplay::AIMessage * PinchMessage::create()
+    {
+        return gameplay::AIMessage::create(Messages::Type::Pinch, "", "", PinchMessageArgs::ArgCount);
+    }
+
+    void PinchMessage::setMessage(gameplay::AIMessage * message, int x, int y, float scale)
+    {
+        GP_ASSERT(message->getId() == Messages::Type::Touch);
+        message->setInt(PinchMessageArgs::X, x);
+        message->setInt(PinchMessageArgs::Y, y);
+        message->setFloat(PinchMessageArgs::Scale, scale);
+    }
+
+    /** @script{ignore} */
     struct MouseMessageArgs
     {
         enum Enum

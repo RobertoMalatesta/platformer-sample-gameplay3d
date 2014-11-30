@@ -31,6 +31,18 @@ namespace platformer
     };
 
     /** @script{ignore} */
+    struct PinchMessage
+    {
+        PinchMessage(gameplay::AIMessage * message);
+        static gameplay::AIMessage * create();
+        static void setMessage(gameplay::AIMessage * message, int x, int y, float scale);
+
+        int _x;
+        int _y;
+        float _scale;
+    };
+
+    /** @script{ignore} */
     struct MouseMessage
     {
         MouseMessage(gameplay::AIMessage * message);

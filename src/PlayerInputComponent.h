@@ -2,6 +2,7 @@
 #define PLATFORMER_INPUT_COMPONENT_H
 
 #include "Component.h"
+#include "MessagesInput.h"
 #include "PlayerComponent.h"
 
 namespace gameplay
@@ -11,7 +12,7 @@ namespace gameplay
 
 namespace platformer
 {
-    struct KeyMessage;
+    class CameraControlComponent;
 
     /**
      * Applies keyboard and gamepad input to a sibling PlayerComponent
@@ -44,9 +45,13 @@ namespace platformer
         PlayerInputComponent(PlayerInputComponent const &);
         bool isGamepadButtonPressed(GamepadButtons::Enum button) const;
         bool isGamepadButtonReleased(GamepadButtons::Enum button) const;
+        float calculateCameraZoomStep(bool increase) const;
 
         void onKeyboardInput(KeyMessage keyMessage);
+        void onMouseInput(MouseMessage mouseMessage);
+        void onPinchInput(PinchMessage pinchMessage);
 
+        CameraControlComponent * _camera;
         PlayerComponent * _player;
         gameplay::Gamepad * _gamePad;
         std::array<bool, GamepadButtons::EnumCount> _gamepadButtonState;

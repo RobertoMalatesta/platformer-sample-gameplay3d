@@ -15,6 +15,7 @@ namespace platformer
             Key,
             Mouse,
             Touch,
+            Pinch,
             Gamepad,
             PlayerJump,
             PlayerForceHandOfGodReset,
