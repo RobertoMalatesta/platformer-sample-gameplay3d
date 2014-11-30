@@ -17,7 +17,6 @@ namespace platformer
 {
     LevelRendererComponent::LevelRendererComponent()
         : _levelLoaded(false)
-        , _camera(nullptr)
         , _player(nullptr)
         , _playerInput(nullptr)
         , _level(nullptr)
@@ -46,8 +45,6 @@ namespace platformer
 
     void LevelRendererComponent::onLevelLoaded()
     {
-        _camera = gameobjects::GameObjectController::getInstance().getScene()->getActiveCamera();
-        _camera->addRef();
         _level = getRootParent()->getComponentInChildren<LevelComponent>();
         _level->addRef();
         _tileBatch = gameplay::SpriteBatch::create(_level->getTexturePath().c_str());
@@ -113,7 +110,6 @@ namespace platformer
 
     void LevelRendererComponent::onLevelUnloaded()
     {
-        SAFE_RELEASE(_camera);
         SAFE_RELEASE(_cameraControl);
         SAFE_RELEASE(_level);
         SAFE_RELEASE(_player);
@@ -183,7 +179,7 @@ namespace platformer
             // Set the screen to the colour of the sky
             gameplay::Game::getInstance()->clear(gameplay::Game::ClearFlags::CLEAR_COLOR_DEPTH, gameplay::Vector4::fromColor(SKY_COLOR), 1.0f, 0);
 
-            gameplay::Matrix spriteBatchProjection = _camera->getViewProjectionMatrix();
+            gameplay::Matrix spriteBatchProjection = _cameraControl->getViewProjectionMatrix();
             spriteBatchProjection.rotateX(MATH_DEG_TO_RAD(180));
             float const unitToPixelScale = 1.0f / (gameplay::Game::getInstance()->getHeight()) * (gameplay::Game::getInstance()->getHeight() * PLATFORMER_UNIT_SCALAR);
             spriteBatchProjection.scale(unitToPixelScale, unitToPixelScale, 0);
@@ -315,7 +311,7 @@ namespace platformer
 
             font->drawText("",0,0, gameplay::Vector4::one());
 
-            gameplay::Matrix spriteBatchProjection = _camera->getViewProjectionMatrix();
+            gameplay::Matrix spriteBatchProjection = _cameraControl->getViewProjectionMatrix();
             spriteBatchProjection.rotateX(MATH_DEG_TO_RAD(180));
             float const unitToPixelScale = 1.0f / (gameplay::Game::getInstance()->getHeight()) / (gameplay::Game::getInstance()->getHeight() * PLATFORMER_UNIT_SCALAR)
                     * font->getSize(PLATFORMER_FONT_SIZE_LARGE_INDEX);

@@ -53,7 +53,6 @@ namespace platformer
         void onLevelLoaded();
         void onLevelUnloaded();
 
-        gameplay::Camera * _camera;
         PlayerComponent * _player;
         PlayerInputComponent * _playerInput;
         LevelComponent * _level;

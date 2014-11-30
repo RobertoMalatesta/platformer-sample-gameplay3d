@@ -65,13 +65,13 @@ namespace platformer
         return _targetZoom;
     }
 
-    gameplay::Matrix & CameraControlComponent::getViewProjectionMatrix() const
+    gameplay::Matrix const & CameraControlComponent::getViewProjectionMatrix() const
     {
-        _camera->getViewProjectionMatrix();
+        return _camera->getViewProjectionMatrix();
     }
 
     float CameraControlComponent::setZoom(float zoom)
     {
-        _targetZoom = zoom;
+        return _targetZoom = zoom;
     }
 }
