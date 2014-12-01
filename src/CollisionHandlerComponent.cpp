@@ -146,7 +146,7 @@ namespace platformer
         {
             switch(collisionPair.objectB->getType())
             {
-            case(gameplay::PhysicsCollisionObject::Type::RIGID_BODY):
+            case gameplay::PhysicsCollisionObject::Type::RIGID_BODY:
                 {
                     auto itr = _enemies.find(collisionPair.objectA);
 
@@ -158,11 +158,16 @@ namespace platformer
                     }
                 }
                 break;
-            case(gameplay::PhysicsCollisionObject::Type::CHARACTER):
+            case gameplay::PhysicsCollisionObject::Type::CHARACTER:
                 {
                     getRootParent()->broadcastMessage(_forceHandOfGodMessage);
                     return true;
                 }
+                break;
+            case gameplay::PhysicsCollisionObject::Type::GHOST_OBJECT:
+            case gameplay::PhysicsCollisionObject::Type::VEHICLE:
+            case gameplay::PhysicsCollisionObject::Type::VEHICLE_WHEEL:
+            case gameplay::PhysicsCollisionObject::Type::NONE:
                 break;
             default:
                 PLATFORMER_ASSERTFAIL("Unhandled PhysicsCollisionObject type %d", collisionPair.objectB->getType());
