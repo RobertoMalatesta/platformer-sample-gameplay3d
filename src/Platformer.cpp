@@ -334,7 +334,7 @@ namespace platformer
 
             _splashScreenAlpha = MATH_CLAMP(_splashScreenAlpha + splashScreenAlphaDelta, minAlpha, maxAlpha);
 
-            if((_splashScreenAlpha == minAlpha && _splashScreenFadeDirection < 0) || _splashScreenAlpha == maxAlpha && _splashScreenFadeDirection > 0)
+            if((_splashScreenAlpha == minAlpha && _splashScreenFadeDirection < 0) || (_splashScreenAlpha == maxAlpha && _splashScreenFadeDirection > 0))
             {
                 _splashScreenFadeActive = false;
                 _splashScreenFadeDuration = 0.0f;

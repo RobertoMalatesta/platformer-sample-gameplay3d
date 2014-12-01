@@ -164,6 +164,8 @@ namespace platformer
                     return true;
                 }
                 break;
+            default:
+                PLATFORMER_ASSERTFAIL("Unhandled PhysicsCollisionObject type %d", collisionPair.objectB->getType());
             }
 
 
