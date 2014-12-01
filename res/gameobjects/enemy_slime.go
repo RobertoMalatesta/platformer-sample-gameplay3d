@@ -2,16 +2,16 @@ enemy
 {
     walk_anim = walk
     speed = 1.0
-    physics = collision_object
-    collision_trigger = trigger
+    physics = enemy_slime_collision
+    collision_trigger = enemy_slime_trigger
 }
 
-collision_object collision_object
+collision_object enemy_slime_collision
 {
     physics = res/physics/characters.physics#enemy_slime
 }
 
-collision_object trigger
+collision_object enemy_slime_trigger
 {
     physics = res/physics/characters.physics#enemy_slime_trigger
 }

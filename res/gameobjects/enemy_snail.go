@@ -2,16 +2,16 @@ enemy
 {
     walk_anim = walk
     speed = 0.5
-    physics = collision_object
-    collision_trigger = trigger
+    physics = enemy_snail_collision
+    collision_trigger = enemy_snail_trigger
 }
 
-collision_object collision_object
+collision_object enemy_snail_collision
 {
     physics = res/physics/characters.physics#enemy_snail
 }
 
-collision_object trigger
+collision_object enemy_snail_trigger
 {
     physics = res/physics/characters.physics#enemy_snail_trigger
 }
