@@ -15,10 +15,10 @@ namespace platformer
     {
         PlatformerSplashScreenChangeRequestMessage(gameplay::AIMessage * message);
         static gameplay::AIMessage * create();
-        static void setMessage(gameplay::AIMessage * message, float increment, bool applyOverTime);
+        static void setMessage(gameplay::AIMessage * message, float duration, bool isFadingIn);
 
-        float _increment;
-        bool _applyOverTime;
+        float _duration;
+        bool _isFadingIn;
     };
 }
 

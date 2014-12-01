@@ -52,11 +52,11 @@ namespace platformer
                 {
                     if(character->isPhysicsEnabled())
                     {
-                        float const instantFadeIn = 1.0f;
-                        PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, instantFadeIn, false);
+                        float const fadeInDuration = 0.0f;
+                        PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, fadeInDuration, true);
                         getRootParent()->broadcastMessage(_splashScreenFadeMessage);
-                        float const fastFadeOut = -0.02f;
-                        PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, fastFadeOut, true);
+                        float const fadeOutDuration = 1.0f;
+                        PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, fadeOutDuration, false);
                         getRootParent()->broadcastMessage(_splashScreenFadeMessage);
                         collisionComponent->getNode()->setTranslation(_resetPosition.x, _resetPosition.y, 0);
                     }

@@ -103,8 +103,8 @@ namespace platformer
 
         _levelLoaded = true;
 
-        float const fastFadeOutDecrement = -0.01f;
-        PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, fastFadeOutDecrement, true);
+        float const fadeOutDuration = 1.0f;
+        PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, fadeOutDuration, false);
         this->getRootParent()->broadcastMessage(_splashScreenFadeMessage);
     }
 
@@ -146,8 +146,8 @@ namespace platformer
 
         if(_splashScreenFadeMessage)
         {
-            float const immediateFadeInIncrement = 1.0f;
-            PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, immediateFadeInIncrement, false);
+            float const fadeInDuration = 0.0f;
+            PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, fadeInDuration, true);
             getRootParent()->broadcastMessage(_splashScreenFadeMessage);
         }
     }

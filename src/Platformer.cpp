@@ -27,12 +27,14 @@ namespace platformer
         , _mouseMessage(nullptr)
         , _gamepadMessage(nullptr)
         , _splashScreenAlpha(1.0f)
-        , _splashScreenAlphaIncrement(0.0f)
+        , _splashScreenFadeDuration(0.0f)
+        , _splashScreenFadeActive(false)
         , _splashForegroundSpriteBatch(nullptr)
         , _splashBackgroundSpriteBatch(nullptr)
+        , _splashScreenFadeDirection(0.0f)
 #ifndef WIN32
-		, _previousReleasedKey(gameplay::Keyboard::Key::KEY_NONE)
-		, _framesSinceKeyReleaseEvent(0)
+        , _previousReleasedKey(gameplay::Keyboard::Key::KEY_NONE)
+        , _framesSinceKeyReleaseEvent(0)
 #endif
 #ifndef _FINAL
         , _debugFont(nullptr)
@@ -301,7 +303,43 @@ namespace platformer
             gameobjects::GameObjectController::getInstance().updatePostPhysics(elapsedTime);
         }
 
-        _splashScreenAlpha = MATH_CLAMP(_splashScreenAlpha + _splashScreenAlphaIncrement, 0.0f, 1.0f);
+        if(!_splashScreenFadeActive && !_splashScreenFadeRequests.empty())
+        {
+            auto & request = _splashScreenFadeRequests.front();
+            _splashScreenFadeRequests.pop();
+            _splashScreenFadeDuration = request.first;
+            _splashScreenFadeDirection = request.second;
+            _splashScreenFadeActive = true;
+        }
+
+        if(_splashScreenFadeActive)
+        {
+            static float const minAlpha = 0.0f;
+            static float const maxAlpha = 1.0f;
+
+            float splashScreenAlphaDelta = 0.0f;
+
+            if(_splashScreenFadeDuration != 0)
+            {
+                if(getFrameRate() != 0)
+                {
+                    float const durationInFrames = static_cast<float>(getFrameRate()) * _splashScreenFadeDuration;
+                    splashScreenAlphaDelta = (1.0f / durationInFrames) * _splashScreenFadeDirection;
+                }
+            }
+            else
+            {
+                splashScreenAlphaDelta = _splashScreenFadeDirection;
+            }
+
+            _splashScreenAlpha = MATH_CLAMP(_splashScreenAlpha + splashScreenAlphaDelta, minAlpha, maxAlpha);
+
+            if((_splashScreenAlpha == minAlpha && _splashScreenFadeDirection < 0) || _splashScreenAlpha == maxAlpha && _splashScreenFadeDirection > 0)
+            {
+                _splashScreenFadeActive = false;
+                _splashScreenFadeDuration = 0.0f;
+            }
+        }
     }
 
     void Platformer::render(float elapsedTime)
@@ -366,9 +404,10 @@ namespace platformer
         }
     }
 
-    void Platformer::setSplashScreenAlphaIncrement(float increment, bool applyOverTime)
+    void Platformer::setSplashScreenFade(float duration, bool isFadingIn)
     {
-        _splashScreenAlphaIncrement = increment;
-        _splashScreenAlpha = applyOverTime ? _splashScreenAlpha : increment;
+        static const float fadeInDirection = 1.0f;
+        static const float fadeOutDirection = -1.0f;
+        _splashScreenFadeRequests.push(std::make_pair(duration, isFadingIn ? fadeInDirection : fadeOutDirection));
     }
 }

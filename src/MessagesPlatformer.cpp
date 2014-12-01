@@ -9,20 +9,20 @@ namespace platformer
     {
         enum Enum
         {
-            Increment,
-            ApplyOverTime,
+            IsFadingIn,
+            Duration,
 
             ArgCount
         };
     };
 
     PlatformerSplashScreenChangeRequestMessage::PlatformerSplashScreenChangeRequestMessage(gameplay::AIMessage * message)
-        : _increment(0.0f)
-        , _applyOverTime(true)
+        : _duration(0.0f)
+        , _isFadingIn(true)
     {
         GP_ASSERT(message->getId() == Messages::Type::PlatformerSplashScreenChangeRequestMessage);
-        _increment = message->getFloat(PlatformerSplashScreenChangeRequestMessageArgs::Increment);
-        _applyOverTime = message->getBoolean(PlatformerSplashScreenChangeRequestMessageArgs::ApplyOverTime);
+        _duration = message->getFloat(PlatformerSplashScreenChangeRequestMessageArgs::Duration);
+        _isFadingIn = message->getBoolean(PlatformerSplashScreenChangeRequestMessageArgs::IsFadingIn);
     }
 
     gameplay::AIMessage * PlatformerSplashScreenChangeRequestMessage::create()
@@ -30,10 +30,10 @@ namespace platformer
         return gameplay::AIMessage::create(Messages::Type::PlatformerSplashScreenChangeRequestMessage, "", "", PlatformerSplashScreenChangeRequestMessageArgs::ArgCount);
     }
 
-    void PlatformerSplashScreenChangeRequestMessage::setMessage(gameplay::AIMessage * message, float increment, bool applyOverTime)
+    void PlatformerSplashScreenChangeRequestMessage::setMessage(gameplay::AIMessage * message, float duration, bool isFadingIn)
     {
         GP_ASSERT(message->getId() == Messages::Type::PlatformerSplashScreenChangeRequestMessage);
-        message->setFloat(PlatformerSplashScreenChangeRequestMessageArgs::Increment, increment);
-        message->setBoolean(PlatformerSplashScreenChangeRequestMessageArgs::ApplyOverTime, applyOverTime);
+        message->setFloat(PlatformerSplashScreenChangeRequestMessageArgs::Duration, duration);
+        message->setBoolean(PlatformerSplashScreenChangeRequestMessageArgs::IsFadingIn, isFadingIn);
     }
 }
