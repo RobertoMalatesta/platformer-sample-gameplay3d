@@ -51,10 +51,12 @@ namespace platformer
         gameplay::SpriteBatch * _splashBackgroundSpriteBatch;
         std::vector<gameplay::Texture *> _cachedTextures;
         std::vector<SpriteSheet *> _cachedSpriteSheets;
-        int _framesSinceKeyReleaseEvent;
-        int _previousReleasedKey;
         float _splashScreenAlpha;
         float _splashScreenAlphaIncrement;
+#ifndef WIN32
+		int _previousReleasedKey;
+		int _framesSinceKeyReleaseEvent;
+#endif
     };
 }
 

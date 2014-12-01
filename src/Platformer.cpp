@@ -26,12 +26,14 @@ namespace platformer
         , _touchMessage(nullptr)
         , _mouseMessage(nullptr)
         , _gamepadMessage(nullptr)
-        , _framesSinceKeyReleaseEvent(0)
-        , _previousReleasedKey(gameplay::Keyboard::Key::KEY_NONE)
         , _splashScreenAlpha(1.0f)
         , _splashScreenAlphaIncrement(0.0f)
         , _splashForegroundSpriteBatch(nullptr)
         , _splashBackgroundSpriteBatch(nullptr)
+#ifndef WIN32
+		, _previousReleasedKey(gameplay::Keyboard::Key::KEY_NONE)
+		, _framesSinceKeyReleaseEvent(0)
+#endif
 #ifndef _FINAL
         , _debugFont(nullptr)
 #endif
@@ -210,6 +212,7 @@ namespace platformer
     {
         if (_keyMessage)
         {
+#ifndef WIN32
             if(evt != gameplay::Keyboard::KeyEvent::KEY_RELEASE)
             {
                 if(key != _previousReleasedKey || _framesSinceKeyReleaseEvent > 1)
@@ -226,6 +229,9 @@ namespace platformer
             {
                 _previousReleasedKey = key;
             }
+#else
+			broadcastKeyEvent(evt, key);
+#endif
         }
 
         if (evt == gameplay::Keyboard::KEY_PRESS && key == gameplay::Keyboard::KEY_ESCAPE)
@@ -273,6 +279,7 @@ namespace platformer
     void Platformer::update(float elapsedTime)
     {
         // Work-around for receiving false key release events due to auto repeat in x11
+#ifndef WIN32
         if(_previousReleasedKey != gameplay::Keyboard::Key::KEY_NONE)
         {
             ++_framesSinceKeyReleaseEvent;
@@ -284,6 +291,7 @@ namespace platformer
                 _previousReleasedKey = gameplay::Keyboard::Key::KEY_NONE;
             }
         }
+#endif
 
         gameobjects::GameObjectController::getInstance().independentUpdate(abs(elapsedTime));
 
