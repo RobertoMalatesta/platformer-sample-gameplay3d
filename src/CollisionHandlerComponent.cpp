@@ -130,7 +130,7 @@ namespace platformer
                         gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
                         gameplay::Vector3 const & contactPointA, gameplay::Vector3 const & contactPointB)
     {
-        if(!_waitForPhysicsCleanup)
+        if(!_waitForPhysicsCleanup && collisionPair.objectA->getNode()->getParent() != collisionPair.objectB->getNode()->getParent())
         {
             if(!onEnemyCollision(type, collisionPair))
             {
