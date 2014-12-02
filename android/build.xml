@@ -55,7 +55,7 @@
             <fileset dir="../res" />
         </copy>
         <copy todir="assets/res/shaders">
-            <fileset dir="../../GamePlay/gameplay/res/shaders" />
+            <fileset dir="../external/GamePlay/gameplay/res/shaders" />
        </copy>
        <copy todir="assets">
             <fileset file="../game.config" />

@@ -11,7 +11,7 @@ function getCppsInDirectory(path, relPath)
     return cppList
 end
 
-local cppList = getCppsInDirectory("src", "") .. getCppsInDirectory("src/lua", "lua/")
+local cppList = getCppsInDirectory("src", "")
 local androidMakefileData =  io.open(_androidTemplatePath):read('*all')
 androidMakefileData = string.gsub(androidMakefileData, "###INSERT_AUTO_GENERATED_CPP_LIST###", cppList)
 local androidMakefile = io.open(_toolsRoot .. "/android/jni/Android.mk", "w")
