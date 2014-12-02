@@ -29,7 +29,7 @@ LOCAL_MODULE    := libgameplay
 LOCAL_SRC_FILES := libgameplay.a
 include $(PREBUILT_STATIC_LIBRARY)
 
-# v
+# gameobjects
 LOCAL_PATH :=  ../external/gameobjects-gameplay3d/android/obj/local/armeabi-v7a
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libgameobjects
