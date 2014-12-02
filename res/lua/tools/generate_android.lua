@@ -1,4 +1,4 @@
-_androidTemplateRelPath = "raw/templates/Android.mk"
+_androidTemplateRelPath = "raw/automation/Android.mk"
 _androidTemplatePath = _toolsRoot .. "/" .. _androidTemplateRelPath
 
 function getCppsInDirectory(path, relPath)
