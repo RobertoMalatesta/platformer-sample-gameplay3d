@@ -221,9 +221,9 @@ namespace platformer
                             int const tileIndex = tile - 1;
                             int const tileX = (tileIndex % numSpritesX) * tileWidth;
                             int const tileY = (tileIndex / numSpritesX) * tileHeight;
-                            static int const fpPrecisionPadding = 1;
+                            static float const fpPrecisionPadding = 0.5f;
                             _tileBatch->draw(gameplay::Rectangle(x * tileWidth, y * tileHeight, tileWidth, tileHeight),
-                                gameplay::Rectangle(tileX + fpPrecisionPadding, tileY + fpPrecisionPadding, tileWidth - fpPrecisionPadding, tileHeight - fpPrecisionPadding));
+                                gameplay::Rectangle(tileX + fpPrecisionPadding, tileY + fpPrecisionPadding, tileWidth - (fpPrecisionPadding * 2), tileHeight - (fpPrecisionPadding * 2)));
                         }
                     }
                 }
