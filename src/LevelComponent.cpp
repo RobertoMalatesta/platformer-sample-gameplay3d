@@ -237,30 +237,37 @@ namespace platformer
                 while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
                 {
                     char const * gameObjectTypeName = objectNamespace->getString("name");
-                    gameobjects::GameObject * gameObject = gameobjects::GameObjectController::getInstance().createGameObject(gameObjectTypeName, getParent());
-                    gameplay::Vector2 spawnPos(objectNamespace->getInt("x"), -objectNamespace->getInt("y"));
-                    spawnPos *= PLATFORMER_UNIT_SCALAR;
+                    bool const isPlayer = strcmp(gameObjectTypeName, "player") == 0;
 
-                    if(strcmp(gameObjectTypeName, "player") == 0)
+#ifndef _FINAL
+                    if(gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_enemy_spawn") || isPlayer)
+#endif
                     {
-                        _playerSpawnPosition = spawnPos;
-                    }
+                        gameobjects::GameObject * gameObject = gameobjects::GameObjectController::getInstance().createGameObject(gameObjectTypeName, getParent());
+                        gameplay::Vector2 spawnPos(objectNamespace->getInt("x"), -objectNamespace->getInt("y"));
+                        spawnPos *= PLATFORMER_UNIT_SCALAR;
 
-                    std::vector<CollisionObjectComponent*> collisionComponents;
-                    gameObject->getComponents(collisionComponents);
-
-                    for(CollisionObjectComponent * collisionComponent : collisionComponents)
-                    {
-                        if(gameplay::PhysicsCharacter * character = collisionComponent->getNode()->getCollisionObject()->asCharacter())
+                        if(isPlayer)
                         {
-                            if(character->isPhysicsEnabled())
+                            _playerSpawnPosition = spawnPos;
+                        }
+
+                        std::vector<CollisionObjectComponent*> collisionComponents;
+                        gameObject->getComponents(collisionComponents);
+
+                        for(CollisionObjectComponent * collisionComponent : collisionComponents)
+                        {
+                            if(gameplay::PhysicsCharacter * character = collisionComponent->getNode()->getCollisionObject()->asCharacter())
                             {
-                                collisionComponent->getNode()->setTranslation(spawnPos.x, spawnPos.y, 0);
+                                if(character->isPhysicsEnabled())
+                                {
+                                    collisionComponent->getNode()->setTranslation(spawnPos.x, spawnPos.y, 0);
+                                }
                             }
                         }
-                    }
 
-                    _children.push_back(gameObject);
+                        _children.push_back(gameObject);
+                    }
                 }
             }
         }

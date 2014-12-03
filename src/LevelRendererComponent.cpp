@@ -193,8 +193,15 @@ namespace platformer
             gameplay::Rectangle const spriteLevelBounds = gameplay::Rectangle(0, -(tileHeight * _level->getHeight()), tileWidth * _level->getWidth(), tileHeight * _level->getHeight());
             gameplay::Rectangle spriteScreenDimensions = screenDimensions;
             float const spriteCameraZoomScale = (1.0f / PLATFORMER_UNIT_SCALAR) * _cameraControl->getZoom();
-            spriteScreenDimensions.width *= spriteCameraZoomScale;
-            spriteScreenDimensions.height *= spriteCameraZoomScale;
+
+#ifndef _FINAL
+            if(gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_zoom_draw_culling"))
+#endif
+            {
+                spriteScreenDimensions.width *= spriteCameraZoomScale;
+                spriteScreenDimensions.height *= spriteCameraZoomScale;
+            }
+
             gameplay::Rectangle const spriteViewport(spriteCameraPostion.x - (spriteScreenDimensions.width / 2),
                                                spriteCameraPostion.y - (spriteScreenDimensions.height / 2),
                                                spriteScreenDimensions.width, spriteScreenDimensions.height);
