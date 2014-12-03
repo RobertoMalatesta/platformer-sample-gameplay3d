@@ -163,15 +163,6 @@ namespace platformer
         onLevelUnloaded();
     }
 
-    void LevelRendererComponent::updatePostPhysics(float)
-    {
-        if(_levelLoaded)
-        {
-            // Make the camera follow the player
-            _cameraControl->setTargetPosition(_player->getPosition());
-        }
-    }
-
     void LevelRendererComponent::render(float)
     {
         if(_levelLoaded)
@@ -232,7 +223,7 @@ namespace platformer
                             int const tileY = (tileIndex / numSpritesX) * tileHeight;
                             static int const fpPrecisionPadding = 1;
                             _tileBatch->draw(gameplay::Rectangle(x * tileWidth, y * tileHeight, tileWidth, tileHeight),
-                                             gameplay::Rectangle(tileX + fpPrecisionPadding, tileY + fpPrecisionPadding, tileWidth - fpPrecisionPadding, tileHeight - fpPrecisionPadding));
+                                gameplay::Rectangle(tileX + fpPrecisionPadding, tileY + fpPrecisionPadding, tileWidth - fpPrecisionPadding, tileHeight - fpPrecisionPadding));
                         }
                     }
                 }

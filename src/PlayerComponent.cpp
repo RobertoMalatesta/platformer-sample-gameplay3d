@@ -1,5 +1,6 @@
 #include "PlayerComponent.h"
 
+#include "CameraControlComponent.h"
 #include "Common.h"
 #include "CollisionObjectComponent.h"
 #include "GameObject.h"
@@ -46,6 +47,8 @@ namespace platformer
         _jumpMessage = PlayerJumpMessage::create();
         _nodeChangedMessage = PlayerNodeChangedMessage::create();
         _state = State::Idle;
+        _camera = getRootParent()->getComponent<CameraControlComponent>();
+        _camera->addRef();
         PlayerNodeChangedMessage::setMessage(_nodeChangedMessage, nullptr, _characterNode);
         getParent()->broadcastMessage(_nodeChangedMessage);
     }
@@ -53,6 +56,7 @@ namespace platformer
     void PlayerComponent::finalize()
     {
         _characterNode = nullptr;
+        SAFE_RELEASE(_camera);
         SAFE_RELEASE(_characterNormalNode);
         SAFE_RELEASE(_characterDuckingNode);
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_jumpMessage);
@@ -203,6 +207,8 @@ namespace platformer
         _characterNode->setTranslationZ(0);
 
         _previousState = _state;
+
+        _camera->setTargetPosition(getPosition());
     }
 
     SpriteAnimationComponent * PlayerComponent::getCurrentAnimation()

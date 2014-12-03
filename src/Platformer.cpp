@@ -300,7 +300,6 @@ namespace platformer
         if (getState() == gameplay::Game::State::RUNNING)
         {
             gameobjects::GameObjectController::getInstance().update(elapsedTime);
-            gameobjects::GameObjectController::getInstance().updatePostPhysics(elapsedTime);
         }
 
         if(!_splashScreenFadeActive && !_splashScreenFadeRequests.empty())

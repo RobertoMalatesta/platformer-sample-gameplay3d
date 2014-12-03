@@ -27,7 +27,6 @@ namespace platformer
     protected:
         virtual void initialize() override;
         virtual void finalize() override;
-        virtual void updatePostPhysics(float);
         virtual void render(float);
 #ifndef _FINAL
         virtual void renderDebug(float, gameplay::Font * font);

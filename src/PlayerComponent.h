@@ -10,6 +10,7 @@ namespace gameplay
 
 namespace platformer
 {
+    class CameraControlComponent;
     class CollisionObjectComponent;
     class SpriteAnimationComponent;
 
@@ -101,6 +102,7 @@ namespace platformer
 
         gameplay::AIMessage * _jumpMessage;
         gameplay::AIMessage * _nodeChangedMessage;
+        CameraControlComponent * _camera;
     };
 }
 
