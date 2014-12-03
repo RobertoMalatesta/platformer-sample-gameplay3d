@@ -393,7 +393,7 @@ namespace platformer
                                                gameplay::Vector4(1, 1, 1, _splashScreenAlpha));
             _splashForegroundSpriteBatch->finish();
 
-#if !defined(FINAL) && !defined(__ANDROID__)
+#if !defined(_FINAL) && !defined(__ANDROID__)
             if(_splashScreenAlpha == 1.0f && getConfig()->getBool("debug_enable_tools"))
             {
                 _debugFont->start();
