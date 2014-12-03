@@ -23,6 +23,7 @@ namespace platformer
         float getMaxZoom() const;
         float setZoom(float zoom);
         gameplay::Matrix const & getViewProjectionMatrix() const;
+        gameplay::Vector2 getPosition() const;
     protected:
         virtual void update(float elapsedTime) override;
         virtual void onStart() override;

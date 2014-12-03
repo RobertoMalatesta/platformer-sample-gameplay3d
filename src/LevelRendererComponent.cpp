@@ -179,39 +179,59 @@ namespace platformer
             // Set the screen to the colour of the sky
             gameplay::Game::getInstance()->clear(gameplay::Game::ClearFlags::CLEAR_COLOR_DEPTH, gameplay::Vector4::fromColor(SKY_COLOR), 1.0f, 0);
 
+            gameplay::Rectangle const & screenDimensions = gameplay::Game::getInstance()->getViewport();
             gameplay::Matrix spriteBatchProjection = _cameraControl->getViewProjectionMatrix();
             spriteBatchProjection.rotateX(MATH_DEG_TO_RAD(180));
-            float const unitToPixelScale = 1.0f / (gameplay::Game::getInstance()->getHeight()) * (gameplay::Game::getInstance()->getHeight() * PLATFORMER_UNIT_SCALAR);
+            float const unitToPixelScale = (1.0f / screenDimensions.height) * (screenDimensions.height * PLATFORMER_UNIT_SCALAR);
             spriteBatchProjection.scale(unitToPixelScale, unitToPixelScale, 0);
             _tileBatch->setProjectionMatrix(spriteBatchProjection);
 
-            // Draw the level
-           _tileBatch->start();
-
-            int const tileSheetWidth = _tileBatch->getSampler()->getTexture()->getWidth();
             int const tileWidth = _level->getTileWidth();
             int const tileHeight = _level->getTileHeight();
-            int const numSpritesX = tileSheetWidth / tileWidth;
 
-            for (int x = 0; x < _level->getWidth(); ++x)
+            gameplay::Vector2 const spriteCameraPostion(_cameraControl->getPosition().x / PLATFORMER_UNIT_SCALAR, _cameraControl->getPosition().y / PLATFORMER_UNIT_SCALAR);
+            gameplay::Rectangle const spriteLevelBounds = gameplay::Rectangle(0, -(tileHeight * _level->getHeight()), tileWidth * _level->getWidth(), tileHeight * _level->getHeight());
+            gameplay::Rectangle spriteScreenDimensions = screenDimensions;
+            float const spriteCameraZoomScale = (1.0f / PLATFORMER_UNIT_SCALAR) * _cameraControl->getZoom();
+            spriteScreenDimensions.width *= spriteCameraZoomScale;
+            spriteScreenDimensions.height *= spriteCameraZoomScale;
+            gameplay::Rectangle const spriteViewport(spriteCameraPostion.x - (spriteScreenDimensions.width / 2),
+                                               spriteCameraPostion.y - (spriteScreenDimensions.height / 2),
+                                               spriteScreenDimensions.width, spriteScreenDimensions.height);
+
+            if(spriteLevelBounds.intersects(spriteViewport))
             {
-               for (int y = 0; y < _level->getHeight(); ++y)
-                {
-                   int tile = _level->getTile(x, y);
+                // Draw the level
+               _tileBatch->start();
 
-                    if (tile != LevelComponent::EMPTY_TILE)
+                int const minX = spriteViewport.x > 0 ? MATH_CLAMP(ceil((spriteViewport.x - tileWidth) / tileWidth), 0, _level->getWidth() - 1) : 0;
+                int const maxX = MATH_CLAMP(minX + ((spriteViewport.width + (tileWidth * 2)) / tileWidth), 0, _level->getWidth());
+                float const spriteViewPortY = spriteViewport.y + spriteViewport.height;
+                int const minY = spriteViewPortY < 0 ? MATH_CLAMP(fabs(ceil((spriteViewPortY + tileHeight) / tileHeight)), 0, _level->getHeight()) : 0;
+                int const maxY = MATH_CLAMP(minY + ((spriteViewport.height + (tileHeight * 3)) / tileHeight), 0, _level->getHeight());
+
+                int const numSpritesX = _tileBatch->getSampler()->getTexture()->getWidth() / tileWidth;
+
+                for (int y = minY; y < maxY; ++y)
+                {
+                    for (int x = minX; x < maxX; ++x)
                     {
-                        int const tileIndex = tile - 1;
-                        int const tileX = (tileIndex % numSpritesX) * tileWidth;
-                        int const tileY = (tileIndex / numSpritesX) * tileHeight;
-                        static int const fpPrecisionPadding = 1;
-                        _tileBatch->draw(gameplay::Rectangle(x * tileWidth, y * tileHeight, tileWidth, tileHeight),
-                                         gameplay::Rectangle(tileX + fpPrecisionPadding, tileY + fpPrecisionPadding, tileWidth - fpPrecisionPadding, tileHeight - fpPrecisionPadding));
+                        int tile = _level->getTile(x, y);
+
+                        if (tile != LevelComponent::EMPTY_TILE)
+                        {
+                            int const tileIndex = tile - 1;
+                            int const tileX = (tileIndex % numSpritesX) * tileWidth;
+                            int const tileY = (tileIndex / numSpritesX) * tileHeight;
+                            static int const fpPrecisionPadding = 1;
+                            _tileBatch->draw(gameplay::Rectangle(x * tileWidth, y * tileHeight, tileWidth, tileHeight),
+                                             gameplay::Rectangle(tileX + fpPrecisionPadding, tileY + fpPrecisionPadding, tileWidth - fpPrecisionPadding, tileHeight - fpPrecisionPadding));
+                        }
                     }
                 }
-            }
 
-            _tileBatch->finish();
+                _tileBatch->finish();
+            }
 
             _characterRenderer.start();
 
@@ -219,7 +239,7 @@ namespace platformer
             _characterRenderer.render(_player->getCurrentAnimation(),
                             _playerAnimationBatches[_player->getState()], spriteBatchProjection,
                             _player->IsLeftFacing() ? SpriteAnimationComponent::Flip::Horizontal : SpriteAnimationComponent::Flip::None,
-                            _player->getPosition());
+                            _player->getPosition(), spriteViewport);
 
             // Draw the enemies
             for (auto & enemyAnimPairItr : _enemyAnimationBatches)
@@ -229,7 +249,7 @@ namespace platformer
                 _characterRenderer.render(enemy->getCurrentAnimation(),
                                 enemyBatches[enemy->getState()], spriteBatchProjection,
                                 enemy->IsLeftFacing() ? SpriteAnimationComponent::Flip::Horizontal : SpriteAnimationComponent::Flip::None,
-                                enemy->getPosition());
+                                enemy->getPosition(), spriteViewport);
             }
 
             _characterRenderer.finish();
@@ -268,29 +288,34 @@ namespace platformer
 
     void LevelRendererComponent::CharacterRenderer::render(SpriteAnimationComponent * animation, gameplay::SpriteBatch * spriteBatch,
                          gameplay::Matrix const & spriteBatchProjection, SpriteAnimationComponent::Flip::Enum orientation,
-                         gameplay::Vector2 const & position)
+                         gameplay::Vector2 const & position, gameplay::Rectangle const & viewport)
     {
-        if(_previousSpritebatch != spriteBatch)
-        {
-            if(_previousSpritebatch)
-            {
-                _previousSpritebatch->finish();
-            }
-
-            spriteBatch->start();
-        }
-
         SpriteAnimationComponent::DrawTarget drawTarget = animation->getDrawTarget(gameplay::Vector2::one(), 0.0f, orientation);
         gameplay::Vector2 playerDrawPosition = position / PLATFORMER_UNIT_SCALAR;
-        playerDrawPosition.x -= abs(drawTarget._scale.x / 2);
-        playerDrawPosition.y += abs(drawTarget._scale.y / 2);
+        playerDrawPosition.x -= fabs(drawTarget._scale.x / 2);
+        gameplay::Rectangle const playerBounds(playerDrawPosition.x, playerDrawPosition.y - fabs(drawTarget._scale.y / 2), fabs(drawTarget._scale.x), fabs(drawTarget._scale.y));
+        playerDrawPosition.y += fabs(drawTarget._scale.y / 2);
         playerDrawPosition.y *= -1.0f;
         drawTarget._dst.x += playerDrawPosition.x;
         drawTarget._dst.y += playerDrawPosition.y;
-        spriteBatch->setProjectionMatrix(spriteBatchProjection);
-        spriteBatch->draw(drawTarget._dst, drawTarget._src, drawTarget._scale);
 
-        _previousSpritebatch = spriteBatch;
+        if(playerBounds.intersects(viewport))
+        {
+            if(_previousSpritebatch != spriteBatch)
+            {
+                if(_previousSpritebatch)
+                {
+                    _previousSpritebatch->finish();
+                }
+
+                spriteBatch->start();
+            }
+
+            spriteBatch->setProjectionMatrix(spriteBatchProjection);
+            spriteBatch->draw(drawTarget._dst, drawTarget._src, drawTarget._scale);
+
+            _previousSpritebatch = spriteBatch;
+        }
     }
 
 #ifndef _FINAL

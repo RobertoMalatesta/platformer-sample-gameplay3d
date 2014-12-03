@@ -88,4 +88,10 @@ namespace platformer
     {
         return _targetZoom = zoom;
     }
+
+    gameplay::Vector2 CameraControlComponent::getPosition() const
+    {
+        gameplay::Vector3 const & position = _camera->getNode()->getTranslation();
+        return std::move(gameplay::Vector2(position.x, position.y));
+    }
 }
