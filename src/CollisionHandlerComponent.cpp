@@ -70,6 +70,11 @@ namespace platformer
             playerCharacterNode->getCollisionObject()->addCollisionListener(this, ladder->getCollisionObject());
         });
 
+        level->forEachCachedNode(TileType::RESET,[this, &playerCharacterNode](gameplay::Node * reset)
+        {
+            playerCharacterNode->getCollisionObject()->addCollisionListener(this, reset->getCollisionObject());
+        });
+
         playerCharacterNode->addRef();
         _playerCharacterNodes.insert(playerCharacterNode);
 

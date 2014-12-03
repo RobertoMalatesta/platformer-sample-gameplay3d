@@ -71,6 +71,7 @@ namespace platformer
         std::vector<gameobjects::GameObject*> _children;
         std::vector<gameplay::Node*> _cachedLadderNodes;
         std::vector<gameplay::Node*> _cachedBarrierNodes;
+        std::vector<gameplay::Node*> _cachedResetNodes;
     };
 }
 

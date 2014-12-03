@@ -210,6 +210,7 @@ namespace platformer
                                 break;
                             case TileType::RESET:
                                 tileNode->setCollisionObject(resetCollObjProperties);
+                                _cachedResetNodes.push_back(tileNode);
                                 break;
                             default:
                                 PLATFORMER_ASSERTFAIL("Unhandled tile type '%d'", tileType);
@@ -374,6 +375,9 @@ namespace platformer
             break;
         case TileType::BARRIER:
             nodes = &_cachedBarrierNodes;
+            break;
+        case TileType::RESET:
+            nodes = &_cachedResetNodes;
             break;
         default:
             PLATFORMER_ASSERTFAIL("Unhandled TileType %d", tileType);
