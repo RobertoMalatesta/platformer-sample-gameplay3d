@@ -2,6 +2,7 @@
 #define PLATFORMER_LEVEL_COMPONENT_H
 
 #include "Component.h"
+#include "TerrainInfo.h"
 
 namespace gameplay
 {
@@ -43,6 +44,7 @@ namespace platformer
         int getWidth() const;
         int getHeight() const;
         gameplay::Vector2 const & getPlayerSpawnPosition() const;
+        void forEachCachedNode(TileType::Enum tileType, std::function<void(gameplay::Node *)> func);
     private:
         struct Tile
         {
@@ -67,6 +69,8 @@ namespace platformer
         gameplay::AIMessage * _loadedMessage;
         gameplay::AIMessage * _unloadedMessage;
         std::vector<gameobjects::GameObject*> _children;
+        std::vector<gameplay::Node*> _cachedLadderNodes;
+        std::vector<gameplay::Node*> _cachedBarrierNodes;
     };
 }
 

@@ -1,4 +1,4 @@
-#include "LevelComponent.h"
+﻿#include "LevelComponent.h"
 
 #include "Common.h"
 #include "CollisionObjectComponent.h"
@@ -7,7 +7,6 @@
 #include "Messages.h"
 #include "MessagesInput.h"
 #include "MessagesLevel.h"
-#include "TerrainInfo.h"
 
 namespace platformer
 {
@@ -131,6 +130,10 @@ namespace platformer
                     {
                         tileType = TileType::RESET;
                     }
+                    else if (strcmp(tileTypeName, "BARRIER") == 0)
+                    {
+                        tileType = TileType::BARRIER;
+                    }
 
                     bool const isValidTileType = tileType != TileType::NONE;
 
@@ -180,6 +183,10 @@ namespace platformer
                             case TileType::BOX:
                                 tileNode->setCollisionObject(tileCollObjProperties);
                                 break;
+                            case TileType::BARRIER:
+                                tileNode->setCollisionObject(tileCollObjProperties);
+                                _cachedBarrierNodes.push_back(tileNode);
+                                break;
                             case TileType::SLOPE_45_L:
                                 tileNode->rotateZ(MATH_DEG_TO_RAD(45));
                                 tileNode->setCollisionObject(surfaceCollObjProperties);
@@ -191,6 +198,7 @@ namespace platformer
                             case TileType::LADDER:
                                 tileNode->translateY(tileHeightScaled / 2.0f);
                                 tileNode->setCollisionObject(ladderCollObjProperties);
+                                _cachedLadderNodes.push_back(tileNode);
                                 break;
                             case TileType::RECTANGLE_TOP:
                                 tileNode->translateY(tileHeightScaled / 4.0f);
@@ -283,6 +291,9 @@ namespace platformer
 
     void LevelComponent::unload()
     {
+        _cachedLadderNodes.clear();
+        _cachedBarrierNodes.clear();
+
         if(!_grid.empty())
         {
             for (int x = 0; x < getWidth(); ++x)
@@ -350,5 +361,30 @@ namespace platformer
     gameplay::Vector2 const & LevelComponent::getPlayerSpawnPosition() const
     {
         return _playerSpawnPosition;
+    }
+
+    void LevelComponent::forEachCachedNode(TileType::Enum tileType, std::function<void(gameplay::Node *)> func)
+    {
+        std::vector<gameplay::Node*> * nodes = nullptr;
+
+        switch(tileType)
+        {
+        case TileType::LADDER:
+            nodes = &_cachedLadderNodes;
+            break;
+        case TileType::BARRIER:
+            nodes = &_cachedBarrierNodes;
+            break;
+        default:
+            PLATFORMER_ASSERTFAIL("Unhandled TileType %d", tileType);
+        }
+
+        if(nodes)
+        {
+            for(gameplay::Node * node : *nodes)
+            {
+                func(node);
+            }
+        }
     }
 }

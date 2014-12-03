@@ -330,7 +330,7 @@ layers
             321 = 163
             322 = 0
             323 = 2
-            324 = 1
+            324 = 2
             325 = 10
             326 = 8
             327 = 0
@@ -507,7 +507,7 @@ layers
             498 = 0
             499 = 0
             500 = 0
-            501 = 1
+            501 = 2
             502 = 0
             503 = 7
             504 = 140
@@ -516,7 +516,7 @@ layers
             507 = 140
             508 = 140
             509 = 0
-            510 = 1
+            510 = 2
             511 = 1
             512 = 0
             513 = 163
@@ -637,7 +637,7 @@ layers
             628 = 163
             629 = 0
             630 = 1
-            631 = 1
+            631 = 2
             632 = 8
             633 = 163
             634 = 0
@@ -742,7 +742,7 @@ layers
             733 = 0
             734 = 0
             735 = 0
-            736 = 10
+            736 = 0
             737 = 0
             738 = 0
             739 = 0
@@ -761,9 +761,9 @@ layers
             752 = 0
             753 = 0
             754 = 0
-            755 = 155
-            756 = 160
-            757 = 157
+            755 = 0
+            756 = 0
+            757 = 0
             758 = 0
             759 = 0
             760 = 0
@@ -779,13 +779,13 @@ layers
             770 = 157
             771 = 0
             772 = 0
-            773 = 9
-            774 = 155
-            775 = 156
-            776 = 144
-            777 = 158
-            778 = 157
-            779 = 11
+            773 = 0
+            774 = 0
+            775 = 0
+            776 = 0
+            777 = 0
+            778 = 0
+            779 = 0
             780 = 146
             781 = 160
             782 = 160
@@ -797,15 +797,15 @@ layers
             788 = 144
             789 = 144
             790 = 158
-            791 = 160
-            792 = 160
-            793 = 160
-            794 = 156
-            795 = 144
-            796 = 144
-            797 = 144
-            798 = 158
-            799 = 148
+            791 = 148
+            792 = 0
+            793 = 0
+            794 = 0
+            795 = 0
+            796 = 0
+            797 = 0
+            798 = 0
+            799 = 0
         }
 
         height = 40
@@ -820,6 +820,7 @@ layers
 
     layers_1
     {
+        draworder = topdown
         height = 40
         name = objects
 
@@ -835,6 +836,7 @@ layers
                 {
                 }
 
+                rotation = 0
                 type = SPAWN
                 visible = true
                 width = 55
@@ -852,11 +854,12 @@ layers
                 {
                 }
 
+                rotation = 0
                 type = SPAWN
                 visible = true
                 width = 90
-                x = 763
-                y = 2450
+                x = 800.36222678871695
+                y = 2002.58733420512
             }
 
             objects_2
@@ -869,23 +872,7 @@ layers
                 {
                 }
 
-                type = SPAWN
-                visible = true
-                width = 99
-                x = 754
-                y = 2015
-            }
-
-            objects_3
-            {
-                ellipse = true
-                height = 25
-                name = enemy_spider
-
-                properties
-                {
-                }
-
+                rotation = 0
                 type = SPAWN
                 visible = true
                 width = 82
@@ -893,7 +880,7 @@ layers
                 y = 1629
             }
 
-            objects_4
+            objects_3
             {
                 ellipse = true
                 height = 30
@@ -903,6 +890,7 @@ layers
                 {
                 }
 
+                rotation = 0
                 type = SPAWN
                 visible = true
                 width = 90
@@ -927,6 +915,7 @@ properties
     texture = @res/textures/tiles
 }
 
+renderorder = right-down
 tileheight = 64
 
 tilesets
@@ -956,7 +945,7 @@ tilesets
 
             1
             {
-                tile = BOX
+                tile = BARRIER
             }
 
             100

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="20" height="40" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="40" tilewidth="64" tileheight="64">
  <properties>
   <property name="texture" value="@res/textures/tiles"/>
  </properties>
@@ -12,7 +12,7 @@
   </tile>
   <tile id="1">
    <properties>
-    <property name="tile" value="BOX"/>
+    <property name="tile" value="BARRIER"/>
    </properties>
   </tile>
   <tile id="17">
@@ -163,17 +163,14 @@
  </tileset>
  <layer name="terrain" width="20" height="40">
   <data encoding="base64" compression="zlib">
-   eJzdltsKwjAMhqc3m/NZxdNLeASR3aljoA9qAouEmDbp5hQM/EzX5Fvs0pgs+09bgNZOv/nAuaBtI2uzDjlseuQi7QJqQLcPsa6gE6hWmA8nZyJYJMm8O3lnhcWZlcHrWife/PrwvHuKdSbPBPFWbK1PzlrsULzxALwRqAQVbD32HG2NeFhzjaLqPeTFohysnC0jDgm/lxFeqAeFfgPKOjNd7dc86zyl8ix/L4/qwvInvxx0AB3bK4l8vLxYDXBp9YB9ZWnwLUvdb3xmrFf3qS+tNiwe762e2BDP0+8olt5vwe5NBCuF56mBUF/TeKkW2kPJi+21x77de0rl3p59lu8IeXmAFZrjdu2V/xdwfxkjZy+auaZZvA74fFVH1vjM9QRpb2G9
+   eJzdlusKwjAMhad/tvmu4u0lvILI/nlhoA9qAgvEmibp6hh44DCx7deunsYWxX9qCd44+y0GXgtqp7TNe6xhm7GWUFdwC77/iHUDn8EPgflycuqARQ6ZTyfvIrA4szF4fXPiXV8Oz7unmLPwTBBvzdpy1iyNHYo3HYCHnoEr1q7NI7URDzPXCm6+h3zMP3Gs2RJxyPReMV6sBsXeAW2dmb4am2edp1Se1d/Lo1xY/SmTJfgIPnVPMvXx8rQMcEt5wLqyMviWUvcb59RqdU6+pGxYPF5bPWNjPE+9o7F05iv2XR2wUnieDMTqmsRLVWwPQ5621x6NXXtQB/Y5/I2QVyby9t2T/xeg6N6H9t79tBzw+xW/U2l6A63yV/8=
   </data>
  </layer>
- <objectgroup name="objects" width="20" height="40">
+ <objectgroup name="objects">
   <object name="player" type="SPAWN" x="98" y="2458" width="55" height="24">
    <ellipse/>
   </object>
-  <object name="enemy_snail" type="SPAWN" x="763" y="2450" width="90" height="33">
-   <ellipse/>
-  </object>
-  <object name="enemy_spider" type="SPAWN" x="754" y="2015" width="99" height="25">
+  <object name="enemy_snail" type="SPAWN" x="800.362" y="2002.59" width="90" height="33">
    <ellipse/>
   </object>
   <object name="enemy_spider" type="SPAWN" x="500" y="1629" width="82" height="25">

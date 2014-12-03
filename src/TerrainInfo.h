@@ -22,7 +22,8 @@ namespace platformer
             SLOPE_45_L,
             SLOPE_45_R,
             LADDER,
-            RESET
+            RESET,
+            BARRIER
         };
     };
 

@@ -2,6 +2,7 @@
 
 #include "EnemyComponent.h"
 #include "GameObject.h"
+#include "LevelComponent.h"
 #include "PlayerComponent.h"
 #include "Messages.h"
 #include "MessagesLevel.h"
@@ -58,22 +59,36 @@ namespace platformer
         std::vector<EnemyComponent *> enemyComponents;
         getParent()->getComponentsInChildren(enemyComponents);
 
+        _player = getParent()->getComponentInChildren<PlayerComponent>();
+        _player->addRef();
+        gameplay::Node * playerCharacterNode = _player->getCharacterNode();
+
+        LevelComponent * level = getParent()->getComponent<LevelComponent>();
+
+        level->forEachCachedNode(TileType::LADDER,[this, &playerCharacterNode](gameplay::Node * ladder)
+        {
+            playerCharacterNode->getCollisionObject()->addCollisionListener(this, ladder->getCollisionObject());
+        });
+
+        playerCharacterNode->addRef();
+        _playerCharacterNodes.insert(playerCharacterNode);
+
         for(EnemyComponent * enemy  : enemyComponents)
         {
             enemy->addRef();
             gameplay::Node * enemyNode = enemy->getTerrainCollisionTriggerNode();
             enemyNode->addRef();
             gameplay::PhysicsCollisionObject * physics = enemyNode->getCollisionObject();
-            physics->addCollisionListener(this);
+
+            level->forEachCachedNode(TileType::BARRIER,[this, &physics](gameplay::Node * barrier)
+            {
+                physics->addCollisionListener(this, barrier->getCollisionObject());
+            });
+
+            physics->addCollisionListener(this, playerCharacterNode->getCollisionObject());
+
             _enemies[physics] = enemy;
         }
-
-        _player = getParent()->getComponentInChildren<PlayerComponent>();
-        _player->addRef();
-        gameplay::Node * playerCharacterNode = _player->getCharacterNode();
-        playerCharacterNode->getCollisionObject()->addCollisionListener(this);
-        playerCharacterNode->addRef();
-        _playerCharacterNodes.insert(playerCharacterNode);
     }
 
     void CollisionHandlerComponent::onLevelUnloaded()
@@ -130,6 +145,7 @@ namespace platformer
                         gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
                         gameplay::Vector3 const & contactPointA, gameplay::Vector3 const & contactPointB)
     {
+        PLATFORMER_LOG("%s -> %s", collisionPair.objectA->getNode()->getId(), collisionPair.objectB->getNode()->getId());
         if(!_waitForPhysicsCleanup && collisionPair.objectA->getNode()->getParent() != collisionPair.objectB->getNode()->getParent())
         {
             if(!onEnemyCollision(type, collisionPair))

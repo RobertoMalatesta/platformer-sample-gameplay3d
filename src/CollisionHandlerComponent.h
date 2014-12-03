@@ -12,6 +12,7 @@ namespace gameplay
 namespace platformer
 {
     class EnemyComponent;
+    class LevelComponent;
     class PlayerComponent;
 
     /**
@@ -47,6 +48,7 @@ namespace platformer
 
         std::map<gameplay::PhysicsCollisionObject *, EnemyComponent *> _enemies;
         PlayerComponent * _player;
+        LevelComponent * _level;
         std::set<gameplay::Node *> _playerCharacterNodes;
         gameplay::AIMessage * _forceHandOfGodMessage;
         int _playerClimbingTerrainRefCount;
