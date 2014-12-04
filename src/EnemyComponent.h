@@ -44,6 +44,7 @@ namespace platformer
         gameplay::Vector2 getPosition() const;
         SpriteAnimationComponent * getCurrentAnimation();
         gameplay::Node * getTerrainCollisionTriggerNode() const;
+        gameplay::Node * getCharacterCollisionTriggerNode() const;
 
         bool IsLeftFacing() const;
     private:

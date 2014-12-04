@@ -151,7 +151,7 @@ namespace platformer
         for (auto & enemyPair : _enemies)
         {
             EnemyComponent * enemyComponent = enemyPair.second;
-            enemyComponent->getTerrainCollisionTriggerNode()->getCollisionObject()->addCollisionListener(this, playerCollisionObject);
+            enemyComponent->getCharacterCollisionTriggerNode()->getCollisionObject()->addCollisionListener(this, playerCollisionObject);
         }
     }
 

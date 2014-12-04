@@ -106,6 +106,11 @@ namespace platformer
         return _triggerNode;
     }
 
+    gameplay::Node * EnemyComponent::getCharacterCollisionTriggerNode() const
+    {
+        return _characterNode;
+    }
+
     bool EnemyComponent::IsLeftFacing() const
     {
         return _isLeftFacing;
