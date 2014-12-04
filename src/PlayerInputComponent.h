@@ -54,8 +54,9 @@ namespace platformer
         CameraControlComponent * _camera;
         PlayerComponent * _player;
         gameplay::Gamepad * _gamePad;
-        std::array<bool, GamepadButtons::EnumCount> _gamepadButtonState;
-        std::array<bool, GamepadButtons::EnumCount> _previousGamepadButtonState;
+        std::bitset<GamepadButtons::EnumCount> _gamepadButtonState;
+        std::bitset<GamepadButtons::EnumCount> _previousGamepadButtonState;
+        std::bitset<gameplay::Keyboard::Key::KEY_SEARCH + 1> _keyState;
         std::array<int, GamepadButtons::EnumCount> _gamepadButtonMapping;
         std::array<gameplay::Vector2, PlayerComponent::MovementDirection::EnumCount> _joystickMovementDirections;
         gameplay::Vector2 _previousJoystickValue;

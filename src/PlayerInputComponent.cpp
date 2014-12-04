@@ -26,8 +26,6 @@ namespace platformer
 
     void PlayerInputComponent::initialize()
     {
-        _previousGamepadButtonState.fill(false);
-        _gamepadButtonState.fill(false);
         _joystickMovementDirections[PlayerComponent::MovementDirection::Up] = gameplay::Vector2(0, 1);
         _joystickMovementDirections[PlayerComponent::MovementDirection::Down] = gameplay::Vector2(0, -1);
         _joystickMovementDirections[PlayerComponent::MovementDirection::Left] = gameplay::Vector2(-1, 0);
@@ -132,39 +130,45 @@ namespace platformer
         {
             bool const enable = keyMessage._event == gameplay::Keyboard::KeyEvent::KEY_PRESS;
 
-            switch(keyMessage._key)
+            bool const keyWasDown = _keyState[keyMessage._key];
+            _keyState[keyMessage._key] = keyMessage._event == gameplay::Keyboard::KeyEvent::KEY_PRESS;
+
+            if (!enable || !keyWasDown)
             {
+                switch (keyMessage._key)
+                {
                 case gameplay::Keyboard::Key::KEY_LEFT_ARROW:
                 case gameplay::Keyboard::Key::KEY_A:
-                _player->setMovementEnabled(PlayerComponent::MovementDirection::Left, enable);
-                break;
-            case gameplay::Keyboard::Key::KEY_RIGHT_ARROW:
-            case gameplay::Keyboard::Key::KEY_D:
-                _player->setMovementEnabled(PlayerComponent::MovementDirection::Right, enable);
-                break;
-            case gameplay::Keyboard::Key::KEY_UP_ARROW:
-            case gameplay::Keyboard::Key::KEY_W:
-                _player->setMovementEnabled(PlayerComponent::MovementDirection::Up, enable);
-                break;
-            case gameplay::Keyboard::Key::KEY_DOWN_ARROW:
-            case gameplay::Keyboard::Key::KEY_S:
-                _player->setMovementEnabled(PlayerComponent::MovementDirection::Down, enable);
-                break;
-            case gameplay::Keyboard::Key::KEY_SPACE:
-                if(enable)
+                    _player->setMovementEnabled(PlayerComponent::MovementDirection::Left, enable);
+                    break;
+                case gameplay::Keyboard::Key::KEY_RIGHT_ARROW:
+                case gameplay::Keyboard::Key::KEY_D:
+                    _player->setMovementEnabled(PlayerComponent::MovementDirection::Right, enable);
+                    break;
+                case gameplay::Keyboard::Key::KEY_UP_ARROW:
+                case gameplay::Keyboard::Key::KEY_W:
+                    _player->setMovementEnabled(PlayerComponent::MovementDirection::Up, enable);
+                    break;
+                case gameplay::Keyboard::Key::KEY_DOWN_ARROW:
+                case gameplay::Keyboard::Key::KEY_S:
+                    _player->setMovementEnabled(PlayerComponent::MovementDirection::Down, enable);
+                    break;
+                case gameplay::Keyboard::Key::KEY_SPACE:
+                    if (enable)
+                    {
+                        _player->jump();
+                    }
+                    break;
+                case gameplay::Keyboard::Key::KEY_PG_UP:
+                case gameplay::Keyboard::Key::KEY_PG_DOWN:
                 {
-                    _player->jump();
-                }
-                break;
-            case gameplay::Keyboard::Key::KEY_PG_UP:
-            case gameplay::Keyboard::Key::KEY_PG_DOWN:
-                {
-                    if(enable)
+                    if (enable)
                     {
                         _camera->setZoom(calculateCameraZoomStep(keyMessage._key == gameplay::Keyboard::Key::KEY_PG_UP));
                     }
                 }
                 break;
+                }
             }
         }
     }
