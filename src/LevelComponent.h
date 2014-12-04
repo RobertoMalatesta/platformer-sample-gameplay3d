@@ -68,6 +68,7 @@ namespace platformer
         std::vector<std::vector<Tile>> _grid;
         gameplay::AIMessage * _loadedMessage;
         gameplay::AIMessage * _unloadedMessage;
+        gameplay::AIMessage * _preUnloadedMessage;
         std::vector<gameobjects::GameObject*> _children;
         std::vector<gameplay::Node*> _cachedLadderNodes;
         std::vector<gameplay::Node*> _cachedBarrierNodes;

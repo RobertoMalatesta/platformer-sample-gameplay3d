@@ -33,6 +33,7 @@ namespace platformer
             onLevelUnloaded();
             onLevelLoaded();
             break;
+        case(Messages::Type::PreLevelUnloaded):
         case(Messages::Type::LevelUnloaded):
             onLevelUnloaded();
             break;
@@ -43,7 +44,7 @@ namespace platformer
                 if(_playerCharacterNodes.insert(msg._currentNode).second)
                 {
                     msg._currentNode->addRef();
-                    msg._currentNode->getCollisionObject()->addCollisionListener(this);
+                    addPlayerCollisionListeners(msg._currentNode->getCollisionObject());
                 }
 
                 _playerClimbingTerrainRefCount = 0;
@@ -63,47 +64,48 @@ namespace platformer
         _player->addRef();
         gameplay::Node * playerCharacterNode = _player->getCharacterNode();
 
-        LevelComponent * level = getParent()->getComponent<LevelComponent>();
-
-        level->forEachCachedNode(TileType::LADDER,[this, &playerCharacterNode](gameplay::Node * ladder)
-        {
-            playerCharacterNode->getCollisionObject()->addCollisionListener(this, ladder->getCollisionObject());
-        });
-
-        level->forEachCachedNode(TileType::RESET,[this, &playerCharacterNode](gameplay::Node * reset)
-        {
-            playerCharacterNode->getCollisionObject()->addCollisionListener(this, reset->getCollisionObject());
-        });
-
         playerCharacterNode->addRef();
         _playerCharacterNodes.insert(playerCharacterNode);
+        LevelComponent * level = getParent()->getComponent<LevelComponent>();
 
         for(EnemyComponent * enemy  : enemyComponents)
         {
             enemy->addRef();
             gameplay::Node * enemyNode = enemy->getTerrainCollisionTriggerNode();
             enemyNode->addRef();
-            gameplay::PhysicsCollisionObject * physics = enemyNode->getCollisionObject();
+            gameplay::PhysicsCollisionObject * enemyPhysics = enemyNode->getCollisionObject();
 
-            level->forEachCachedNode(TileType::BARRIER,[this, &physics](gameplay::Node * barrier)
+            level->forEachCachedNode(TileType::BARRIER, [this, &enemyPhysics](gameplay::Node * barrier)
             {
-                physics->addCollisionListener(this, barrier->getCollisionObject());
+                enemyPhysics->addCollisionListener(this, barrier->getCollisionObject());
             });
 
-            physics->addCollisionListener(this, playerCharacterNode->getCollisionObject());
-
-            _enemies[physics] = enemy;
+            _enemies[enemyPhysics] = enemy;
         }
+
+        addPlayerCollisionListeners(playerCharacterNode->getCollisionObject());
     }
 
     void CollisionHandlerComponent::onLevelUnloaded()
     {
+        LevelComponent * level = getParent()->getComponent<LevelComponent>();
+
         for(auto & enemyPair  : _enemies)
         {
             EnemyComponent * enemyComponent = enemyPair.second;
             gameplay::PhysicsCollisionObject * enemyPhysics = enemyPair.first;
             gameplay::Node * enemyNode = enemyPhysics->getNode();
-            enemyPhysics->removeCollisionListener(this);
+
+            level->forEachCachedNode(TileType::BARRIER, [this, &enemyPhysics](gameplay::Node * barrier)
+            {
+                enemyPhysics->removeCollisionListener(this, barrier->getCollisionObject());
+            });
+
+            for (gameplay::Node * node : _playerCharacterNodes)
+            {
+                node->getCollisionObject()->removeCollisionListener(this, node->getCollisionObject());
+            }
+
             SAFE_RELEASE(enemyNode);
             SAFE_RELEASE(enemyComponent);
         }
@@ -112,13 +114,45 @@ namespace platformer
 
         for(gameplay::Node * node : _playerCharacterNodes)
         {
-            node->getCollisionObject()->removeCollisionListener(this);
+            gameplay::PhysicsCollisionObject * playerCollisionObject = node->getCollisionObject();
+
+            level->forEachCachedNode(TileType::LADDER, [this, &playerCollisionObject](gameplay::Node * ladder)
+            {
+                playerCollisionObject->removeCollisionListener(this, ladder->getCollisionObject());
+            });
+
+            level->forEachCachedNode(TileType::RESET, [this, &playerCollisionObject](gameplay::Node * reset)
+            {
+                playerCollisionObject->removeCollisionListener(this, reset->getCollisionObject());
+            });
+
             SAFE_RELEASE(node);
         }
 
         _playerCharacterNodes.clear();
 
         SAFE_RELEASE(_player);
+    }
+
+    void CollisionHandlerComponent::addPlayerCollisionListeners(gameplay::PhysicsCollisionObject * playerCollisionObject)
+    {
+        LevelComponent * level = getParent()->getComponent<LevelComponent>();
+
+        level->forEachCachedNode(TileType::LADDER, [this, &playerCollisionObject](gameplay::Node * ladder)
+        {
+            playerCollisionObject->addCollisionListener(this, ladder->getCollisionObject());
+        });
+
+        level->forEachCachedNode(TileType::RESET, [this, &playerCollisionObject](gameplay::Node * reset)
+        {
+            playerCollisionObject->addCollisionListener(this, reset->getCollisionObject());
+        });
+
+        for (auto & enemyPair : _enemies)
+        {
+            EnemyComponent * enemyComponent = enemyPair.second;
+            enemyComponent->getTerrainCollisionTriggerNode()->getCollisionObject()->addCollisionListener(this, playerCollisionObject);
+        }
     }
 
     void CollisionHandlerComponent::update(float elapsedTime)

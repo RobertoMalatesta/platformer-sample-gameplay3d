@@ -19,4 +19,9 @@ namespace platformer
     {
         return gameplay::AIMessage::create(Messages::Type::RequestLevelReloadMessage, "", "", 0);
     }
+
+    gameplay::AIMessage * PreLevelUnloadedMessage::create()
+    {
+        return gameplay::AIMessage::create(Messages::Type::PreLevelUnloaded, "", "", 0);
+    }
 }

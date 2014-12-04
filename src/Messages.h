@@ -21,6 +21,7 @@ namespace platformer
             PlayerForceHandOfGodReset,
             PlayerNodeChangedMessage,
             LevelLoaded,
+            PreLevelUnloaded,
             LevelUnloaded,
             RequestLevelReloadMessage,
             PlatformerSplashScreenChangeRequestMessage

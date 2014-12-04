@@ -13,6 +13,7 @@ namespace platformer
     LevelComponent::LevelComponent()
         : _loadedMessage(nullptr)
         , _unloadedMessage(nullptr)
+        , _preUnloadedMessage(nullptr)
         , _loadBroadcasted(false)
     {
     }
@@ -52,6 +53,7 @@ namespace platformer
     {
         if(!_loadBroadcasted)
         {
+            getRootParent()->broadcastMessage(_preUnloadedMessage);
             unload();
             getRootParent()->broadcastMessage(_unloadedMessage);
             load();
@@ -64,6 +66,7 @@ namespace platformer
     {
         _loadedMessage = LevelLoadedMessage::create();
         _unloadedMessage = LevelUnloadedMessage::create();
+        _preUnloadedMessage = PreLevelUnloadedMessage::create();
     }
 
     void LevelComponent::finalize()
@@ -71,6 +74,7 @@ namespace platformer
         unload();
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_loadedMessage);
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_unloadedMessage);
+        PLATFORMER_SAFE_DELETE_AI_MESSAGE(_preUnloadedMessage);
     }
 
     void LevelComponent::load()
@@ -294,6 +298,7 @@ namespace platformer
     {
         _cachedLadderNodes.clear();
         _cachedBarrierNodes.clear();
+        _cachedResetNodes.clear();
 
         if(!_grid.empty())
         {

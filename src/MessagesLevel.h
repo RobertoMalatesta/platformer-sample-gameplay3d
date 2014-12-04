@@ -25,6 +25,12 @@ namespace platformer
     {
         static gameplay::AIMessage * create();
     };
+
+    /** @script{ignore} */
+    struct PreLevelUnloadedMessage
+    {
+        static gameplay::AIMessage * create();
+    };
 }
 
 #endif

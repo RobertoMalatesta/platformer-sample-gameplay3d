@@ -38,6 +38,7 @@ namespace platformer
 
         void onLevelLoaded();
         void onLevelUnloaded();
+        void addPlayerCollisionListeners(gameplay::PhysicsCollisionObject * playerCollisionObject);
 
         bool onEnemyCollision(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
                               gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair);
