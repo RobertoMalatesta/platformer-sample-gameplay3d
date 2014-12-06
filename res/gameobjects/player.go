@@ -6,8 +6,8 @@ player
     cower_anim = cower
     jump_anim = jump
     climb_anim = climb
-    speed = 3.0
-    jump_height = 0.7
+    speed = 9.0
+    jump_height = 2.1
     normal_physics = character_normal
     ducking_physics = character_ducking
 }

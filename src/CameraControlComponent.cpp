@@ -14,7 +14,7 @@ namespace platformer
         , _currentZoom(_maxZoom)
         , _targetZoom(PLATFORMER_UNIT_SCALAR)
         , _zoomSpeedScale(0.003f)
-        , _smoothSpeedScale(0.003f)
+        , _smoothSpeedScale(0.001f)
         , _targetBoundaryScale(gameplay::Vector2(0.25f, 0.5))
     {
     }
@@ -74,24 +74,6 @@ namespace platformer
             _camera->setZoomX(gameplay::Game::getInstance()->getWidth() * _currentZoom);
             _camera->setZoomY(gameplay::Game::getInstance()->getHeight() * _currentZoom);
         }
-
-        gameplay::Vector2 scaledViewport(gameplay::Game::getInstance()->getWidth() * _currentZoom,
-                                         gameplay::Game::getInstance()->getHeight() * _currentZoom);
-        _targetBoundary.width = scaledViewport.x * _targetBoundaryScale.x;
-        _targetBoundary.height = scaledViewport.y * _targetBoundaryScale.y;
-        _targetBoundary.x = _currentPosition.x - (_targetBoundary.width / 2.0f);
-        _targetBoundary.y = _currentPosition.y - (_targetBoundary.height/ 2.0f);
-
-        float const scaledDimension = getPositionIntersectionDimension() * PLATFORMER_UNIT_SCALAR;
-        float smoothScale = _smoothSpeedScale;
-
-        if(!_targetBoundary.intersects(_targetPosition.x, _targetPosition.y, scaledDimension, scaledDimension))
-        {
-            smoothScale *= 5.0f;
-        }
-        _currentPosition.x = gameplay::Curve::lerp(elapsedTime * smoothScale, _currentPosition.x, _targetPosition.x);
-        _currentPosition.y = gameplay::Curve::lerp(elapsedTime * smoothScale, _currentPosition.y, _targetPosition.y);
-        _camera->getNode()->setTranslation(gameplay::Vector3(_currentPosition.x, _currentPosition.y, 0.0f));
     }
 
     void CameraControlComponent::finalize()
@@ -99,9 +81,12 @@ namespace platformer
         SAFE_RELEASE(_camera);
     }
 
-    void CameraControlComponent::setTargetPosition(gameplay::Vector2 const & target)
+    void CameraControlComponent::setTargetPosition(gameplay::Vector2 const & target, float elapsedTime)
     {
         _targetPosition = target;
+        _currentPosition.x = gameplay::Curve::lerp((elapsedTime) * _smoothSpeedScale, _currentPosition.x, _targetPosition.x);
+        _currentPosition.y = _targetPosition.y;
+        _camera->getNode()->setTranslation(gameplay::Vector3(_currentPosition.x, _currentPosition.y, 0.0f));
     }
 
     float CameraControlComponent::getMinZoom() const
@@ -129,9 +114,9 @@ namespace platformer
         return _camera->getViewProjectionMatrix();
     }
 
-    float CameraControlComponent::setZoom(float zoom)
+    void CameraControlComponent::setZoom(float zoom)
     {
-        return _targetZoom = zoom;
+        _targetZoom = zoom;
     }
 
     gameplay::Vector2 const & CameraControlComponent::getPosition() const
@@ -147,10 +132,5 @@ namespace platformer
     gameplay::Vector2 const & CameraControlComponent::getTargetPosition() const
     {
         return _targetPosition;
-    }
-
-    float CameraControlComponent::getPositionIntersectionDimension() const
-    {
-        return 10.0f;
     }
 }

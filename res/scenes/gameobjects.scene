@@ -12,6 +12,6 @@ scene gameobjects
 
     physics
     {
-        gravity = 0, -9.81, 0
+        gravity = 0, -31.392, 0
     }
 }

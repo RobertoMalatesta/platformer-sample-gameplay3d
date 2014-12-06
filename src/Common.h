@@ -26,7 +26,8 @@ namespace platformer
     #define PLATFORMER_FONT_SIZE_REGULAR_INDEX 0
     #define PLATFORMER_FONT_SIZE_LARGE_INDEX 1
     #define PLATFORMER_MAX_GAMEPADS 1
-    #define PLATFORMER_UNIT_SCALAR 0.01f
+    // 1 metre = 32 pixels
+    #define PLATFORMER_UNIT_SCALAR 0.03125f
 
     /**
      * @script{ignore}

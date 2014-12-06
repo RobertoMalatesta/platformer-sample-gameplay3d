@@ -1,7 +1,7 @@
 enemy
 {
     walk_anim = walk
-    speed = 1.0
+    speed = 3.0
     physics = enemy_slime_collision
     collision_trigger = enemy_slime_trigger
 }

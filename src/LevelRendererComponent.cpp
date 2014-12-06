@@ -364,7 +364,7 @@ namespace platformer
         }
 
 
-        if(gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_camera"))
+        if(gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_camera_target"))
         {
             gameplay::Rectangle const & screenDimensions = gameplay::Game::getInstance()->getViewport();
             gameplay::Matrix spriteBatchProjection = _cameraControl->getViewProjectionMatrix();
@@ -373,27 +373,14 @@ namespace platformer
             spriteBatchProjection.scale(unitToPixelScale, unitToPixelScale, 0);
             _pixelSpritebatch->setProjectionMatrix(spriteBatchProjection);
 
-            gameplay::Rectangle cameraTargetBounds = _cameraControl->getTargetBoundary();
-            cameraTargetBounds.width /= PLATFORMER_UNIT_SCALAR;
-            cameraTargetBounds.height /= PLATFORMER_UNIT_SCALAR;
-            cameraTargetBounds.x /= PLATFORMER_UNIT_SCALAR;
-            cameraTargetBounds.y /= PLATFORMER_UNIT_SCALAR;
-            cameraTargetBounds.y += cameraTargetBounds.height;
-            cameraTargetBounds.y *= -1.0f;
-
             _pixelSpritebatch->start();
 
-            gameplay::Rectangle colourFill(1,1);
-            gameplay::Vector4 boundsColour;
-            gameplay::Game::getInstance()->getConfig()->getVector4("debug_camera_target_boundary_colour", &boundsColour);
-            _pixelSpritebatch->draw(cameraTargetBounds, colourFill, boundsColour);
-
-            float const dimensions = _cameraControl->getPositionIntersectionDimension();
+            float const dimensions = 10.0f;
             gameplay::Vector4 targetColour;
-            gameplay::Game::getInstance()->getConfig()->getVector4("debug_camera_target_position_colour", &targetColour);
+            gameplay::Game::getInstance()->getConfig()->getVector4("debug_camera_target_colour", &targetColour);
             gameplay::Rectangle targetBounds(_cameraControl->getTargetPosition().x / PLATFORMER_UNIT_SCALAR,
                                           -_cameraControl->getTargetPosition().y / PLATFORMER_UNIT_SCALAR, dimensions, dimensions);
-            _pixelSpritebatch->draw(targetBounds, colourFill, targetColour);
+            _pixelSpritebatch->draw(targetBounds, gameplay::Rectangle(1,1), targetColour);
 
             _pixelSpritebatch->finish();
         }

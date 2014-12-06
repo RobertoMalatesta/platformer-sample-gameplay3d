@@ -208,7 +208,7 @@ namespace platformer
 
         _previousState = _state;
 
-        _camera->setTargetPosition(getPosition());
+        _camera->setTargetPosition(getPosition(), elapsedTime);
     }
 
     SpriteAnimationComponent * PlayerComponent::getCurrentAnimation()
