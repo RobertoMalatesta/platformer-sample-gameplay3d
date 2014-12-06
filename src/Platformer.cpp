@@ -78,11 +78,7 @@ namespace platformer
 
         // Display a splash screen during loading, consider displaying a loading progress indicator once initial load time lasts more
         // than a few seconds on weakest target hardware
-        std::array<unsigned char, 4> screenFillRGBA;
-        screenFillRGBA.fill(std::numeric_limits<unsigned char>::max());
-        gameplay::Texture * screenFillTexture = gameplay::Texture::create(gameplay::Texture::Format::RGBA, 1, 1, &screenFillRGBA.front());
-        _splashBackgroundSpriteBatch = gameplay::SpriteBatch::create(screenFillTexture);
-        screenFillTexture->release();
+        _splashBackgroundSpriteBatch = createSinglePixelSpritebatch();
         _splashForegroundSpriteBatch = gameplay::SpriteBatch::create("@res/textures/splash");
         renderOnce(this, &Platformer::renderSplashScreen, nullptr);
 

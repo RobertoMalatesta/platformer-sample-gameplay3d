@@ -8,6 +8,16 @@ namespace platformer
         return gameplay::Properties::create(url);
     }
 
+    gameplay::SpriteBatch * createSinglePixelSpritebatch()
+    {
+        std::array<unsigned char, 4> rgba;
+        rgba.fill(std::numeric_limits<unsigned char>::max());
+        gameplay::Texture * texture = gameplay::Texture::create(gameplay::Texture::Format::RGBA, 1, 1, &rgba.front());
+        gameplay::SpriteBatch * spriteBatch = gameplay::SpriteBatch::create(texture);
+        texture->release();
+        return spriteBatch;
+    }
+
 #ifndef _FINAL
     /** @script{ignore} */
     struct LogDisplayMessage

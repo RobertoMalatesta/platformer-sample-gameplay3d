@@ -22,6 +22,9 @@ namespace platformer
         , _level(nullptr)
         , _tileBatch(nullptr)
         , _cameraControl(nullptr)
+#ifndef _FINAL
+        , _pixelSpritebatch(nullptr)
+#endif
     {
     }
 
@@ -155,10 +158,16 @@ namespace platformer
     void LevelRendererComponent::initialize()
     {
         _splashScreenFadeMessage = PlatformerSplashScreenChangeRequestMessage::create();
+#ifndef _FINAL
+        _pixelSpritebatch = createSinglePixelSpritebatch();
+#endif
     }
 
     void LevelRendererComponent::finalize()
     {
+#ifndef _FINAL
+        SAFE_DELETE(_pixelSpritebatch);
+#endif
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_splashScreenFadeMessage);
         onLevelUnloaded();
     }
@@ -227,6 +236,7 @@ namespace platformer
                         }
                     }
                 }
+
 
                 _tileBatch->finish();
             }
@@ -351,6 +361,41 @@ namespace platformer
             }
 
             font->finish();
+        }
+
+
+        if(gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_camera"))
+        {
+            gameplay::Rectangle const & screenDimensions = gameplay::Game::getInstance()->getViewport();
+            gameplay::Matrix spriteBatchProjection = _cameraControl->getViewProjectionMatrix();
+            spriteBatchProjection.rotateX(MATH_DEG_TO_RAD(180));
+            float const unitToPixelScale = (1.0f / screenDimensions.height) * (screenDimensions.height * PLATFORMER_UNIT_SCALAR);
+            spriteBatchProjection.scale(unitToPixelScale, unitToPixelScale, 0);
+            _pixelSpritebatch->setProjectionMatrix(spriteBatchProjection);
+
+            gameplay::Rectangle cameraTargetBounds = _cameraControl->getTargetBoundary();
+            cameraTargetBounds.width /= PLATFORMER_UNIT_SCALAR;
+            cameraTargetBounds.height /= PLATFORMER_UNIT_SCALAR;
+            cameraTargetBounds.x /= PLATFORMER_UNIT_SCALAR;
+            cameraTargetBounds.y /= PLATFORMER_UNIT_SCALAR;
+            cameraTargetBounds.y += cameraTargetBounds.height;
+            cameraTargetBounds.y *= -1.0f;
+
+            _pixelSpritebatch->start();
+
+            gameplay::Rectangle colourFill(1,1);
+            gameplay::Vector4 boundsColour;
+            gameplay::Game::getInstance()->getConfig()->getVector4("debug_camera_target_boundary_colour", &boundsColour);
+            _pixelSpritebatch->draw(cameraTargetBounds, colourFill, boundsColour);
+
+            float const dimensions = _cameraControl->getPositionIntersectionDimension();
+            gameplay::Vector4 targetColour;
+            gameplay::Game::getInstance()->getConfig()->getVector4("debug_camera_target_position_colour", &targetColour);
+            gameplay::Rectangle targetBounds(_cameraControl->getTargetPosition().x / PLATFORMER_UNIT_SCALAR,
+                                          -_cameraControl->getTargetPosition().y / PLATFORMER_UNIT_SCALAR, dimensions, dimensions);
+            _pixelSpritebatch->draw(targetBounds, colourFill, targetColour);
+
+            _pixelSpritebatch->finish();
         }
     }
 #endif

@@ -23,8 +23,12 @@ namespace platformer
         float getMaxZoom() const;
         float setZoom(float zoom);
         gameplay::Matrix const & getViewProjectionMatrix() const;
-        gameplay::Vector2 getPosition() const;
+        gameplay::Vector2 const &  getPosition() const;
+        gameplay::Vector2 const & getTargetPosition() const;
+        gameplay::Rectangle const & getTargetBoundary() const;
+        float getPositionIntersectionDimension() const;
     protected:
+        virtual void readProperties(gameplay::Properties & properties) override;
         virtual void update(float elapsedTime) override;
         virtual void onStart() override;
         virtual void finalize() override;
@@ -39,6 +43,12 @@ namespace platformer
         float _initialTargetZoom;
         float _currentZoom;
         float _targetZoom;
+        float _zoomSpeedScale;
+        float _smoothSpeedScale;
+        gameplay::Rectangle _targetBoundary;
+        gameplay::Vector2 _targetBoundaryScale;
+        gameplay::Vector2 _targetPosition;
+        gameplay::Vector2 _currentPosition;
     };
 }
 

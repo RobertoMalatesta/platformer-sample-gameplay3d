@@ -29,6 +29,11 @@ namespace platformer
     #define PLATFORMER_UNIT_SCALAR 0.01f
 
     /**
+     * @script{ignore}
+    */
+    gameplay::SpriteBatch * createSinglePixelSpritebatch();
+
+    /**
      * Calls gameplay::Properties::create() and also logs the file url.
      *
      * Gameplay doesn't provide the file name when loading a properties files

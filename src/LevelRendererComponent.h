@@ -62,6 +62,10 @@ namespace platformer
         CameraControlComponent * _cameraControl;
         CharacterRenderer _characterRenderer;
         bool _levelLoaded;
+
+#ifndef _FINAL
+        gameplay::SpriteBatch * _pixelSpritebatch;
+#endif
     };
 }
 
