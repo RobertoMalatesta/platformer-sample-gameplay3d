@@ -107,7 +107,7 @@ namespace platformer
 
     float PlayerInputComponent::calculateCameraZoomStep(bool increase) const
     {
-        float const zoomDelta = ((_camera->getMaxZoom() - _camera->getMinZoom()) / 10.0f) * (increase ? -1.0f : 1.0f);
+        float const zoomDelta = ((_camera->getMaxZoom() - _camera->getMinZoom()) / 5.0f) * (increase ? -1.0f : 1.0f);
         return _camera->getZoom() + zoomDelta;
     }
 
