@@ -1,2 +1,9 @@
-os.execute(Game.getInstance():getConfig():getString("debug_android_sdk_tools_dir") .. "/" .. "android update project -t 1 -p ../android -s")
-os.execute(Game.getInstance():getConfig():getString("debug_android_ndk_dir") .. "/" ..  "ndk-build -C ../android -j " ..  Game.getInstance():getConfig():getInt("debug_num_android_compile_jobs"))
+local androidCommand = Game.getInstance():getConfig():getString("debug_android_sdk_tools_dir") .. "/" .. "android"
+local ndkCommand = Game.getInstance():getConfig():getString("debug_android_ndk_dir") .. "/" ..  "ndk-build"
+local numCompileThreads = Game.getInstance():getConfig():getInt("debug_num_android_compile_jobs")
+os.execute(androidCommand .. " update project -t 1 -p ../android -s")
+os.execute(androidCommand .. " update project -t 1 -p ../external/GamePlay/gameplay/android -s")
+os.execute(androidCommand .. " update project -t 1 -p ../external/gameobjects-gameplay3d/android -s")
+os.execute(ndkCommand .. " -C ../external/GamePlay/gameplay/android -j " ..  numCompileThreads)
+os.execute(ndkCommand .. " -C ../external/gameobjects-gameplay3d/android -j " ..  numCompileThreads)
+os.execute(ndkCommand .. " -C ../android -j " ..  numCompileThreads)
