@@ -84,9 +84,9 @@ namespace platformer
     void CameraControlComponent::setTargetPosition(gameplay::Vector2 const & target, float elapsedTime)
     {
         _targetPosition = target;
-        _currentPosition.x = gameplay::Curve::lerp((elapsedTime) * _smoothSpeedScale, _currentPosition.x, _targetPosition.x);
-        _currentPosition.y = _targetPosition.y;
-        _camera->getNode()->setTranslation(gameplay::Vector3(_currentPosition.x, _currentPosition.y, 0.0f));
+        _camera->getNode()->translateSmooth(gameplay::Vector3(target.x, target.y, 0), elapsedTime / 1000.0f, 0.25f);
+        _currentPosition.x = _camera->getNode()->getTranslationX();
+        _currentPosition.y = _camera->getNode()->getTranslationY();
     }
 
     float CameraControlComponent::getMinZoom() const
