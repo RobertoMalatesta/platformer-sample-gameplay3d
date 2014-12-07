@@ -48,11 +48,14 @@ namespace platformer
 
     void LevelRendererComponent::onLevelLoaded()
     {
+        std::vector<gameplay::SpriteBatch *> uninitialisedSpriteBatches;
+
         _level = getRootParent()->getComponentInChildren<LevelComponent>();
         _level->addRef();
         _tileBatch = gameplay::SpriteBatch::create(_level->getTexturePath().c_str());
         _tileBatch->getSampler()->setFilterMode(gameplay::Texture::Filter::NEAREST, gameplay::Texture::Filter::NEAREST);
         _tileBatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::CLAMP, gameplay::Texture::Wrap::CLAMP);
+        uninitialisedSpriteBatches.push_back(_tileBatch);
         _player = _level->getParent()->getComponentInChildren<PlayerComponent>();
         _playerInput = _player->getParent()->getComponent<PlayerInputComponent>();
         _player->addRef();
@@ -60,18 +63,19 @@ namespace platformer
         _cameraControl = getRootParent()->getComponentInChildren<CameraControlComponent>();
         _cameraControl->addRef();
 
-        _player->forEachAnimation([this](PlayerComponent::State::Enum state, SpriteAnimationComponent * animation) -> bool
+        _player->forEachAnimation([this, &uninitialisedSpriteBatches](PlayerComponent::State::Enum state, SpriteAnimationComponent * animation) -> bool
         {
             SpriteSheet * animSheet = SpriteSheet::create(animation->getSpriteSheetPath());
              gameplay::SpriteBatch * spriteBatch = gameplay::SpriteBatch::create(animSheet->getTexture());
             spriteBatch->getSampler()->setFilterMode(gameplay::Texture::Filter::NEAREST, gameplay::Texture::Filter::NEAREST);
             spriteBatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::CLAMP, gameplay::Texture::Wrap::CLAMP);
             _playerAnimationBatches[state] = spriteBatch;
+            uninitialisedSpriteBatches.push_back(spriteBatch);
             SAFE_RELEASE(animSheet);
             return false;
         });
 
-        std::map<std::string, gameplay::SpriteBatch *> enemySpriteBatches;
+        std::map<std::string, gameplay::SpriteBatch *> enemyuninitialisedSpriteBatches;
         std::vector<EnemyComponent *> enemies;
         _level->getParent()->getComponentsInChildren(enemies);
 
@@ -79,14 +83,14 @@ namespace platformer
         {
             enemy->addRef();
 
-            enemy->forEachAnimation([this, &enemySpriteBatches, &enemy](EnemyComponent::State::Enum state, SpriteAnimationComponent * animation) -> bool
+            enemy->forEachAnimation([this, &enemyuninitialisedSpriteBatches, &enemy, &uninitialisedSpriteBatches](EnemyComponent::State::Enum state, SpriteAnimationComponent * animation) -> bool
             {
                 SpriteSheet * animSheet = SpriteSheet::create(animation->getSpriteSheetPath());
                 gameplay::SpriteBatch * spriteBatch = nullptr;
 
-                auto enemyBatchItr = enemySpriteBatches.find(animation->getSpriteSheetPath());
+                auto enemyBatchItr = enemyuninitialisedSpriteBatches.find(animation->getSpriteSheetPath());
 
-                if(enemyBatchItr != enemySpriteBatches.end())
+                if(enemyBatchItr != enemyuninitialisedSpriteBatches.end())
                 {
                     spriteBatch = enemyBatchItr->second;
                 }
@@ -95,13 +99,22 @@ namespace platformer
                     spriteBatch = gameplay::SpriteBatch::create(animSheet->getTexture());
                     spriteBatch->getSampler()->setFilterMode(gameplay::Texture::Filter::NEAREST, gameplay::Texture::Filter::NEAREST);
                     spriteBatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::CLAMP, gameplay::Texture::Wrap::CLAMP);
-                    enemySpriteBatches[animation->getSpriteSheetPath()] = spriteBatch;
+                    enemyuninitialisedSpriteBatches[animation->getSpriteSheetPath()] = spriteBatch;
+                    uninitialisedSpriteBatches.push_back(spriteBatch);
                 }
 
                 _enemyAnimationBatches[enemy][state] = spriteBatch;
                 SAFE_RELEASE(animSheet);
                 return false;
             });
+        }
+
+        // The first call to draw will perform some lazy initialisation in Effect::Bind
+        for (gameplay::SpriteBatch * spriteBatch : uninitialisedSpriteBatches)
+        {
+            spriteBatch->start();
+            spriteBatch->draw(gameplay::Rectangle(), gameplay::Rectangle());
+            spriteBatch->finish();
         }
 
         _levelLoaded = true;
