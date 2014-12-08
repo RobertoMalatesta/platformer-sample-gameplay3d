@@ -1,5 +1,20 @@
-set GAME_DIR=bin/%1
 CALL mklink /H "game.config" "../game.config"
-CALL mklink /H "game.config" "./../../%GAME_DIR%/game.config"
 CALL mklink /J "res" "../res"
-CALL mklink /J "res" "../../../%GAME_DIR%/res"
+
+set GAME_DIR=bin/%1
+
+call :make_links Debug
+call :make_links MinSizeRel
+call :make_links Release
+call :make_links RelWithDebInfo
+
+goto :exit
+
+:make_links
+set CONFIG_BIN_DIR=%GAME_DIR%\%1
+mkdir "%CONFIG_BIN_DIR%"
+CALL mklink /H "%CONFIG_BIN_DIR%/game.config" "../game.config"
+CALL mklink /J "%CONFIG_BIN_DIR%/res" "../res"
+goto:eof
+
+:exit
