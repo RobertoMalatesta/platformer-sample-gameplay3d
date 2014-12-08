@@ -316,7 +316,8 @@ namespace platformer
 
             if(_splashScreenFadeDuration != 0)
             {
-                if(getFrameRate() != 0)
+                static int const minFpsToFade = 10;
+                if (getFrameRate() > minFpsToFade)
                 {
                     float const durationInFrames = static_cast<float>(getFrameRate()) * _splashScreenFadeDuration;
                     splashScreenAlphaDelta = (1.0f / durationInFrames) * _splashScreenFadeDirection;
