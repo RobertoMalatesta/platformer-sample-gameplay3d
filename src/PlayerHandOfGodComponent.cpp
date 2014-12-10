@@ -43,24 +43,17 @@ namespace platformer
         if(_levelLoaded && (_forceNextReset || !_boundary.intersects(_player->getPosition().x, _player->getPosition().y, 1, 1)))
         {
             _forceNextReset = false;
-            std::vector<CollisionObjectComponent*> collisionComponents;
-            _player->getParent()->getComponents<CollisionObjectComponent>(collisionComponents);
 
-            for(CollisionObjectComponent * collisionComponent : collisionComponents)
+            if (gameplay::Node * node = _player->getCharacterNode())
             {
-                if(gameplay::PhysicsCharacter * character = collisionComponent->getNode()->getCollisionObject()->asCharacter())
-                {
-                    if(character->isPhysicsEnabled())
-                    {
-                        float const fadeInDuration = 0.0f;
-                        PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, fadeInDuration, true);
-                        getRootParent()->broadcastMessage(_splashScreenFadeMessage);
-                        float const fadeOutDuration = 1.0f;
-                        PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, fadeOutDuration, false);
-                        getRootParent()->broadcastMessage(_splashScreenFadeMessage);
-                        collisionComponent->getNode()->setTranslation(_resetPosition.x, _resetPosition.y, 0);
-                    }
-                }
+                gameplay::PhysicsCharacter * character = node->getCollisionObject()->asCharacter();
+                float const fadeInDuration = 0.0f;
+                PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, fadeInDuration, true);
+                getRootParent()->broadcastMessage(_splashScreenFadeMessage);
+                float const fadeOutDuration = 1.0f;
+                PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, fadeOutDuration, false);
+                getRootParent()->broadcastMessage(_splashScreenFadeMessage);
+                node->setTranslation(_resetPosition.x, _resetPosition.y, 0);
             }
         }
     }
