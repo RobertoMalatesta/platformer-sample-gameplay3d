@@ -45,7 +45,7 @@ namespace platformer
         PlayerInputComponent(PlayerInputComponent const &);
         bool isGamepadButtonPressed(GamepadButtons::Enum button) const;
         bool isGamepadButtonReleased(GamepadButtons::Enum button) const;
-        float calculateCameraZoomStep(bool increase) const;
+        float calculateCameraZoomStep(float scale) const;
 
         void onKeyboardInput(KeyMessage keyMessage);
         void onMouseInput(MouseMessage mouseMessage);

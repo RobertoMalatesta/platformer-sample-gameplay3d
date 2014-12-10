@@ -105,9 +105,9 @@ namespace platformer
         }
     }
 
-    float PlayerInputComponent::calculateCameraZoomStep(bool increase) const
+    float PlayerInputComponent::calculateCameraZoomStep(float scale) const
     {
-        float const zoomDelta = ((_camera->getMaxZoom() - _camera->getMinZoom()) / 5.0f) * (increase ? -1.0f : 1.0f);
+        float const zoomDelta = ((_camera->getMaxZoom() - _camera->getMinZoom()) / 5.0f) * -scale;
         return _camera->getZoom() + zoomDelta;
     }
 
@@ -115,7 +115,7 @@ namespace platformer
     {
         if(mouseMessage._wheelDelta != 0)
         {
-            _camera->setZoom(calculateCameraZoomStep(mouseMessage._wheelDelta > 0));
+            _camera->setZoom(calculateCameraZoomStep(mouseMessage._wheelDelta));
         }
     }
 
@@ -164,7 +164,8 @@ namespace platformer
                 {
                     if (enable)
                     {
-                        _camera->setZoom(calculateCameraZoomStep(keyMessage._key == gameplay::Keyboard::Key::KEY_PG_UP));
+                        float inputScale = keyMessage._key == gameplay::Keyboard::Key::KEY_PG_UP ? 1.0f : -1.0f;
+                        _camera->setZoom(calculateCameraZoomStep(inputScale));
                     }
                 }
                 break;
