@@ -60,6 +60,7 @@ namespace platformer
         std::array<int, GamepadButtons::EnumCount> _gamepadButtonMapping;
         std::array<gameplay::Vector2, PlayerComponent::MovementDirection::EnumCount> _joystickMovementDirections;
         gameplay::Vector2 _previousJoystickValue;
+        bool _pinchEnabled;
     };
 }
 
