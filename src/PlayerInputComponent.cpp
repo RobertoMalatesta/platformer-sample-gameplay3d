@@ -9,6 +9,7 @@
 namespace platformer
 {
     PlayerInputComponent::PlayerInputComponent()
+        : _pinchEnabled(true)
     {
     }
 
@@ -42,9 +43,13 @@ namespace platformer
 
     void PlayerInputComponent::update(float)
     {
+        bool isAnyButtonDown = false;
+
         for(int i = 0; i < GamepadButtons::EnumCount; ++i)
         {
-            _gamepadButtonState[i] =_gamePad->isButtonDown(static_cast<gameplay::Gamepad::ButtonMapping>(_gamepadButtonMapping[i]));
+            bool const isButtonDown = _gamePad->isButtonDown(static_cast<gameplay::Gamepad::ButtonMapping>(_gamepadButtonMapping[i]));
+            _gamepadButtonState[i] = isButtonDown;
+            isAnyButtonDown |= isButtonDown;
         }
 
         if(isGamepadButtonPressed(GamepadButtons::Jump))
@@ -70,6 +75,7 @@ namespace platformer
             }
         }
 
+        _pinchEnabled = joystickValue.isZero() || !isAnyButtonDown;
         _previousGamepadButtonState = _gamepadButtonState;
         _previousJoystickValue = joystickValue;
     }
@@ -121,6 +127,12 @@ namespace platformer
 
     void PlayerInputComponent::onPinchInput(PinchMessage pinchMessage)
     {
+        if(_pinchEnabled)
+        {
+            static float const zoomFactor = 100.0f;
+            float const scale = (1.0f - pinchMessage._scale) * zoomFactor;
+            _camera->setZoom(calculateCameraZoomStep(scale));
+        }
     }
 
     void PlayerInputComponent::onKeyboardInput(KeyMessage keyMessage)

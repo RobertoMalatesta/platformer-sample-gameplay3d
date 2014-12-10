@@ -9,7 +9,7 @@ namespace platformer
 {
     CameraControlComponent::CameraControlComponent()
         : _camera(nullptr)
-        , _minZoom(PLATFORMER_UNIT_SCALAR)
+        , _minZoom(PLATFORMER_UNIT_SCALAR / 2)
         , _maxZoom(PLATFORMER_UNIT_SCALAR * 2)
         , _currentZoom(_maxZoom)
         , _targetZoom(PLATFORMER_UNIT_SCALAR)
