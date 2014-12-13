@@ -253,18 +253,26 @@ namespace platformer
             gameplay::Rectangle spriteScreenDimensions = screenDimensions;
             float const spriteCameraZoomScale = (1.0f / PLATFORMER_UNIT_SCALAR) * _cameraControl->getZoom();
 
+#ifndef _FINAL
+            if(gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_zoom_draw_culling"))
+#endif
+            {
+                spriteScreenDimensions.width *= spriteCameraZoomScale;
+                spriteScreenDimensions.height *= spriteCameraZoomScale;
+            }
+
             gameplay::Rectangle const spriteViewport(spriteCameraPostion.x - (spriteScreenDimensions.width / 2),
                                                spriteCameraPostion.y - (spriteScreenDimensions.height / 2),
                                                spriteScreenDimensions.width, spriteScreenDimensions.height);
 
             // Draw the parallax background
-            float const layerWidth = spriteCameraZoomScale * spriteScreenDimensions.width;
+            float const layerWidth = spriteScreenDimensions.width;
             float const layerPosX = spriteCameraPostion.x - (layerWidth / 2);
 
             gameplay::Rectangle parallaxFill(layerPosX,
                                                    spriteLevelBounds.y + _parallaxOffset.y,
                                                    layerWidth,
-                                                   (spriteLevelBounds.y + (spriteCameraZoomScale)) - spriteCameraPostion.y + (spriteCameraZoomScale * spriteScreenDimensions.height));
+                                                   (spriteLevelBounds.y + (spriteCameraZoomScale)) - spriteCameraPostion.y + (spriteScreenDimensions.height));
 
             if(parallaxFill.intersects(spriteViewport))
             {
@@ -289,14 +297,6 @@ namespace platformer
             }
 
             _parallaxSpritebatch->finish();
-
-#ifndef _FINAL
-            if(gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_zoom_draw_culling"))
-#endif
-            {
-                spriteScreenDimensions.width *= spriteCameraZoomScale;
-                spriteScreenDimensions.height *= spriteCameraZoomScale;
-            }
 
             if(spriteLevelBounds.intersects(spriteViewport))
             {
