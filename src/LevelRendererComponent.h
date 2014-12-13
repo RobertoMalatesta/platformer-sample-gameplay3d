@@ -28,10 +28,12 @@ namespace platformer
         virtual void initialize() override;
         virtual void finalize() override;
         virtual void render(float);
+        virtual void update(float elapsedTime);
 #ifndef _FINAL
         virtual void renderDebug(float, gameplay::Font * font);
 #endif
         virtual void onMessageReceived(gameplay::AIMessage * message) override;
+        virtual void readProperties(gameplay::Properties & properties) override;
     private:
         class CharacterRenderer
         {
@@ -45,6 +47,13 @@ namespace platformer
         private:
             gameplay::SpriteBatch * _previousSpritebatch;
             bool _started;
+        };
+
+        struct ParallaxLayer
+        {
+            float _speed;
+            gameplay::Rectangle _dst;
+            gameplay::Rectangle _src;
         };
 
         LevelRendererComponent(LevelRendererComponent const &);
@@ -62,10 +71,11 @@ namespace platformer
         CameraControlComponent * _cameraControl;
         CharacterRenderer _characterRenderer;
         bool _levelLoaded;
-
-#ifndef _FINAL
         gameplay::SpriteBatch * _pixelSpritebatch;
-#endif
+        std::vector<ParallaxLayer> _parallaxLayers;
+        gameplay::SpriteBatch * _parallaxSpritebatch;
+        gameplay::Vector4 _parallaxFillColor;
+        gameplay::Vector2 _parallaxOffset;
     };
 }
 

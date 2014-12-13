@@ -22,9 +22,8 @@ namespace platformer
         , _level(nullptr)
         , _tileBatch(nullptr)
         , _cameraControl(nullptr)
-#ifndef _FINAL
+        , _parallaxSpritebatch(nullptr)
         , _pixelSpritebatch(nullptr)
-#endif
     {
     }
 
@@ -109,12 +108,19 @@ namespace platformer
             });
         }
 
+        uninitialisedSpriteBatches.push_back(_parallaxSpritebatch);
+
         // The first call to draw will perform some lazy initialisation in Effect::Bind
         for (gameplay::SpriteBatch * spriteBatch : uninitialisedSpriteBatches)
         {
             spriteBatch->start();
             spriteBatch->draw(gameplay::Rectangle(), gameplay::Rectangle());
             spriteBatch->finish();
+        }
+
+        for(ParallaxLayer & layer : _parallaxLayers)
+        {
+            layer._dst.y += (_level->getHeight() * _level->getTileHeight()) - layer._src.height;
         }
 
         _levelLoaded = true;
@@ -171,18 +177,54 @@ namespace platformer
     void LevelRendererComponent::initialize()
     {
         _splashScreenFadeMessage = PlatformerSplashScreenChangeRequestMessage::create();
-#ifndef _FINAL
         _pixelSpritebatch = createSinglePixelSpritebatch();
-#endif
     }
 
     void LevelRendererComponent::finalize()
     {
-#ifndef _FINAL
         SAFE_DELETE(_pixelSpritebatch);
-#endif
+        SAFE_DELETE(_parallaxSpritebatch);
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_splashScreenFadeMessage);
         onLevelUnloaded();
+    }
+
+    void LevelRendererComponent::readProperties(gameplay::Properties & properties)
+    {
+        while (gameplay::Properties * ns = properties.getNextNamespace())
+        {
+            if (strcmp(ns->getNamespace(), "parallax") == 0)
+            {
+                SpriteSheet * spritesheet = SpriteSheet::create(ns->getString("spritesheet"));
+                ns->getVector4("fill", &_parallaxFillColor);
+                ns->getVector2("offset", &_parallaxOffset);
+                _parallaxSpritebatch = gameplay::SpriteBatch::create(spritesheet->getTexture());
+                _parallaxSpritebatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::REPEAT, gameplay::Texture::Wrap::CLAMP);
+                _parallaxSpritebatch->getSampler()->setFilterMode(gameplay::Texture::Filter::NEAREST, gameplay::Texture::Filter::NEAREST);
+
+                while (gameplay::Properties * childNs = ns->getNextNamespace())
+                {
+                    if (strcmp(childNs->getNamespace(), "layer") == 0)
+                    {
+                        ParallaxLayer layer;
+                        layer._src = spritesheet->getSprite(childNs->getString("id"))->_src;
+                        layer._dst = layer._src;
+                        gameplay::Vector2 offset;
+                        childNs->getVector2("offset", &offset);
+                        layer._dst.x = offset.x - _parallaxOffset.x;
+                        layer._dst.y = offset.y - _parallaxOffset.y;
+                        layer._speed = childNs->getFloat("speed");
+                        _parallaxLayers.push_back(layer);
+                    }
+                }
+
+                SAFE_RELEASE(spritesheet);
+            }
+        }
+    }
+
+    gameplay::Rectangle getSafeDrawRect(gameplay::Rectangle const & src, float paddingX = 0.5f, float paddingY = 0.5f)
+    {
+        return gameplay::Rectangle(src.x + paddingX, src.y + paddingY, src.width - (paddingX * 2), src.height - (paddingY * 2));
     }
 
     void LevelRendererComponent::render(float)
@@ -197,7 +239,6 @@ namespace platformer
             spriteBatchProjection.rotateX(MATH_DEG_TO_RAD(180));
             float const unitToPixelScale = (1.0f / screenDimensions.height) * (screenDimensions.height * PLATFORMER_UNIT_SCALAR);
             spriteBatchProjection.scale(unitToPixelScale, unitToPixelScale, 0);
-            _tileBatch->setProjectionMatrix(spriteBatchProjection);
 
             int const tileWidth = _level->getTileWidth();
             int const tileHeight = _level->getTileHeight();
@@ -207,6 +248,43 @@ namespace platformer
             gameplay::Rectangle spriteScreenDimensions = screenDimensions;
             float const spriteCameraZoomScale = (1.0f / PLATFORMER_UNIT_SCALAR) * _cameraControl->getZoom();
 
+            gameplay::Rectangle const spriteViewport(spriteCameraPostion.x - (spriteScreenDimensions.width / 2),
+                                               spriteCameraPostion.y - (spriteScreenDimensions.height / 2),
+                                               spriteScreenDimensions.width, spriteScreenDimensions.height);
+
+            // Draw the parallax background
+            float const layerWidth = spriteCameraZoomScale * spriteScreenDimensions.width;
+            float const layerPosX = spriteCameraPostion.x - (layerWidth / 2);
+
+            gameplay::Rectangle parallaxFill(layerPosX,
+                                                   spriteLevelBounds.y + _parallaxOffset.y,
+                                                   layerWidth,
+                                                   (spriteLevelBounds.y + (spriteCameraZoomScale)) - spriteCameraPostion.y + (spriteCameraZoomScale * spriteScreenDimensions.height));
+
+            if(parallaxFill.intersects(spriteViewport))
+            {
+                _pixelSpritebatch->setProjectionMatrix(spriteBatchProjection);
+                _pixelSpritebatch->start();
+                parallaxFill.y *= -1.0f;
+                _pixelSpritebatch->draw(parallaxFill, gameplay::Rectangle(), _parallaxFillColor);
+                _pixelSpritebatch->finish();
+            }
+
+            _parallaxSpritebatch->setProjectionMatrix(spriteBatchProjection);
+            _parallaxSpritebatch->start();
+
+            for(auto itr = _parallaxLayers.rbegin(); itr != _parallaxLayers.rend(); ++itr)
+            {
+                ParallaxLayer & layer = *itr;
+                layer._dst.width = layerWidth;
+                layer._src.width = layerWidth;
+                layer._dst.x = layerPosX;
+                layer._src.x = layerPosX + (spriteCameraPostion.x * layer._speed);
+                _parallaxSpritebatch->draw(layer._dst, getSafeDrawRect(layer._src, 0, 0.5f));
+            }
+
+            _parallaxSpritebatch->finish();
+
 #ifndef _FINAL
             if(gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_zoom_draw_culling"))
 #endif
@@ -215,13 +293,10 @@ namespace platformer
                 spriteScreenDimensions.height *= spriteCameraZoomScale;
             }
 
-            gameplay::Rectangle const spriteViewport(spriteCameraPostion.x - (spriteScreenDimensions.width / 2),
-                                               spriteCameraPostion.y - (spriteScreenDimensions.height / 2),
-                                               spriteScreenDimensions.width, spriteScreenDimensions.height);
-
             if(spriteLevelBounds.intersects(spriteViewport))
             {
-                // Draw the level
+                // Draw the tiles
+               _tileBatch->setProjectionMatrix(spriteBatchProjection);
                _tileBatch->start();
 
                 int const minX = spriteViewport.x > 0 ? MATH_CLAMP(ceil((spriteViewport.x - tileWidth) / tileWidth), 0, _level->getWidth() - 1) : 0;
@@ -245,7 +320,7 @@ namespace platformer
                             int const tileY = (tileIndex / numSpritesX) * tileHeight;
                             static float const fpPrecisionPadding = 0.5f;
                             _tileBatch->draw(gameplay::Rectangle(x * tileWidth, y * tileHeight, tileWidth, tileHeight),
-                                gameplay::Rectangle(tileX + fpPrecisionPadding, tileY + fpPrecisionPadding, tileWidth - (fpPrecisionPadding * 2), tileHeight - (fpPrecisionPadding * 2)));
+                                getSafeDrawRect(gameplay::Rectangle(tileX, tileY, tileWidth, tileHeight)));
                         }
                     }
                 }
@@ -280,6 +355,13 @@ namespace platformer
             {
                 gamepadForm->draw();
             }
+        }
+    }
+
+    void LevelRendererComponent::update(float elapsedTime)
+    {
+        for (ParallaxLayer & layer : _parallaxLayers)
+        {
         }
     }
 
@@ -333,7 +415,7 @@ namespace platformer
             }
 
             spriteBatch->setProjectionMatrix(spriteBatchProjection);
-            spriteBatch->draw(drawTarget._dst, drawTarget._src, drawTarget._scale);
+            spriteBatch->draw(drawTarget._dst, getSafeDrawRect(drawTarget._src), drawTarget._scale);
 
             _previousSpritebatch = spriteBatch;
         }
