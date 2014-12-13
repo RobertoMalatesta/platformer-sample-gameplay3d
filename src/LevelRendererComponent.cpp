@@ -17,6 +17,7 @@ namespace platformer
 {
     LevelRendererComponent::LevelRendererComponent()
         : _levelLoaded(false)
+        , _levelLoadedOnce(false)
         , _player(nullptr)
         , _playerInput(nullptr)
         , _level(nullptr)
@@ -108,7 +109,15 @@ namespace platformer
             });
         }
 
-        uninitialisedSpriteBatches.push_back(_parallaxSpritebatch);
+        if (!_levelLoadedOnce)
+        {
+            uninitialisedSpriteBatches.push_back(_parallaxSpritebatch);
+
+            for (ParallaxLayer & layer : _parallaxLayers)
+            {
+                layer._dst.y += (_level->getHeight() * _level->getTileHeight()) - layer._src.height;
+            }
+        }
 
         // The first call to draw will perform some lazy initialisation in Effect::Bind
         for (gameplay::SpriteBatch * spriteBatch : uninitialisedSpriteBatches)
@@ -118,12 +127,8 @@ namespace platformer
             spriteBatch->finish();
         }
 
-        for(ParallaxLayer & layer : _parallaxLayers)
-        {
-            layer._dst.y += (_level->getHeight() * _level->getTileHeight()) - layer._src.height;
-        }
-
         _levelLoaded = true;
+        _levelLoadedOnce = true;
 
         float const fadeOutDuration = 1.0f;
         PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, fadeOutDuration, false);

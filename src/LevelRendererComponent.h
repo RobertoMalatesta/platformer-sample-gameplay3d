@@ -71,6 +71,7 @@ namespace platformer
         CameraControlComponent * _cameraControl;
         CharacterRenderer _characterRenderer;
         bool _levelLoaded;
+        bool _levelLoadedOnce;
         gameplay::SpriteBatch * _pixelSpritebatch;
         std::vector<ParallaxLayer> _parallaxLayers;
         gameplay::SpriteBatch * _parallaxSpritebatch;
