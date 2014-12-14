@@ -202,6 +202,7 @@ namespace platformer
                 SpriteSheet * spritesheet = SpriteSheet::create(ns->getString("spritesheet"));
                 ns->getVector4("fill", &_parallaxFillColor);
                 ns->getVector2("offset", &_parallaxOffset);
+                _parallaxOffset *= -1.0f;
                 _parallaxSpritebatch = gameplay::SpriteBatch::create(spritesheet->getTexture());
                 _parallaxSpritebatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::REPEAT, gameplay::Texture::Wrap::CLAMP);
                 _parallaxSpritebatch->getSampler()->setFilterMode(gameplay::Texture::Filter::NEAREST, gameplay::Texture::Filter::NEAREST);
@@ -215,6 +216,7 @@ namespace platformer
                         layer._dst = layer._src;
                         gameplay::Vector2 offset;
                         childNs->getVector2("offset", &offset);
+                        offset *= -1.0f;
                         layer._dst.x = offset.x - _parallaxOffset.x;
                         layer._dst.y = offset.y - _parallaxOffset.y;
                         layer._speed = childNs->getFloat("speed");
