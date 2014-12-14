@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="20" height="40" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="200" height="15" tilewidth="64" tileheight="64">
  <properties>
   <property name="texture" value="@res/textures/tiles"/>
  </properties>
@@ -161,22 +161,16 @@
    </properties>
   </tile>
  </tileset>
- <layer name="terrain" width="20" height="40">
+ <layer name="terrain" width="200" height="15">
   <data encoding="base64" compression="zlib">
-   eJzdlusKwjAMhad/tvmu4u0lvILI/nlhoA9qAgvEmibp6hh44DCx7deunsYWxX9qCd44+y0GXgtqp7TNe6xhm7GWUFdwC77/iHUDn8EPgflycuqARQ6ZTyfvIrA4szF4fXPiXV8Oz7unmLPwTBBvzdpy1iyNHYo3HYCHnoEr1q7NI7URDzPXCm6+h3zMP3Gs2RJxyPReMV6sBsXeAW2dmb4am2edp1Se1d/Lo1xY/SmTJfgIPnVPMvXx8rQMcEt5wLqyMviWUvcb59RqdU6+pGxYPF5bPWNjPE+9o7F05iv2XR2wUnieDMTqmsRLVWwPQ5621x6NXXtQB/Y5/I2QVyby9t2T/xeg6N6H9t79tBzw+xW/U2l6A63yV/8=
+   eJzt1zEKgDAMBdDi/SfpAQp6UF061kzaUN+DPzVDlg9NKQAAAAAArOicvQAkdsxeABLr/diCuegdVtT7sd9pD6nfrgUp+F/BmH7AmH7wZ9FdIe/FzZbfBYmnRec=
   </data>
  </layer>
  <objectgroup name="objects">
-  <object name="player" type="SPAWN" x="98" y="2458" width="55" height="24">
+  <object name="player" type="SPAWN" x="114.103" y="806.763" width="55" height="24">
    <ellipse/>
   </object>
-  <object name="enemy_snail" type="SPAWN" x="800.362" y="2002.59" width="90" height="33">
-   <ellipse/>
-  </object>
-  <object name="enemy_spider" type="SPAWN" x="500" y="1629" width="82" height="25">
-   <ellipse/>
-  </object>
-  <object name="enemy_slime" type="SPAWN" x="456" y="1038" width="90" height="30">
+  <object name="enemy_slime" type="SPAWN" x="885.742" y="598.43" width="55" height="24">
    <ellipse/>
   </object>
  </objectgroup>
