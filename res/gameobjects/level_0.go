@@ -18,21 +18,21 @@ level_renderer
         layer
         {
             id = bg_0
-            speed = 0.05
+            speed = 0.25
             offset = 0, 0
         }
 
         layer
         {
             id = bg_1
-            speed = 0.025
+            speed = 0.125
             offset = 0, -170
         }
 
         layer
         {
             id = bg_2
-            speed = 0.005
+            speed = 0.065
             offset = 0, -200
         }
     }

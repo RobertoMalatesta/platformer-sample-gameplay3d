@@ -292,7 +292,7 @@ namespace platformer
                 layer._dst.width = layerWidth;
                 layer._src.width = layerWidth;
                 layer._dst.x = layerPosX;
-                layer._src.x = layerPosX + (spriteCameraPostion.x * layer._speed);
+                layer._src.x = spriteCameraPostion.x * layer._speed;
                 _parallaxSpritebatch->draw(layer._dst, getSafeDrawRect(layer._src, 0, 0.5f));
             }
 
