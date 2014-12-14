@@ -323,7 +323,6 @@ namespace platformer
                             int const tileIndex = tile - 1;
                             int const tileX = (tileIndex % numSpritesX) * tileWidth;
                             int const tileY = (tileIndex / numSpritesX) * tileHeight;
-                            static float const fpPrecisionPadding = 0.5f;
                             _tileBatch->draw(gameplay::Rectangle(x * tileWidth, y * tileHeight, tileWidth, tileHeight),
                                 getSafeDrawRect(gameplay::Rectangle(tileX, tileY, tileWidth, tileHeight)));
                         }
