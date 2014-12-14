@@ -283,8 +283,9 @@ namespace platformer
                 _pixelSpritebatch->finish();
             }
 
-            _parallaxSpritebatch->setProjectionMatrix(spriteBatchProjection);
-            _parallaxSpritebatch->start();
+            bool parallaxLayerDrawn = false;
+
+
 
             for(auto itr = _parallaxLayers.rbegin(); itr != _parallaxLayers.rend(); ++itr)
             {
@@ -293,10 +294,28 @@ namespace platformer
                 layer._src.width = layerWidth;
                 layer._dst.x = layerPosX;
                 layer._src.x = spriteCameraPostion.x * layer._speed;
-                _parallaxSpritebatch->draw(layer._dst, getSafeDrawRect(layer._src, 0, 0.5f));
+                
+                gameplay::Rectangle layerVisibilityTest = layer._dst;
+                layerVisibilityTest.y += layerVisibilityTest.height;
+                layerVisibilityTest.y *= -1.0f;
+
+                if (layerVisibilityTest.intersects(spriteViewport))
+                {
+                    if (!parallaxLayerDrawn)
+                    {
+                        _parallaxSpritebatch->setProjectionMatrix(spriteBatchProjection);
+                        _parallaxSpritebatch->start();
+                        parallaxLayerDrawn = true;
+                    }
+
+                    _parallaxSpritebatch->draw(layer._dst, getSafeDrawRect(layer._src, 0, 0.5f));
+                }
             }
 
-            _parallaxSpritebatch->finish();
+            if (parallaxLayerDrawn)
+            {
+                _parallaxSpritebatch->finish();
+            }
 
             if(spriteLevelBounds.intersects(spriteViewport))
             {
