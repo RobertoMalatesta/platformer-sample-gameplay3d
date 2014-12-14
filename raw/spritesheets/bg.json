@@ -2,29 +2,29 @@
 
 {
 	"filename": "bg_0.png",
-	"frame": {"x":0,"y":0,"w":1024,"h":346},
+	"frame": {"x":0,"y":0,"w":1024,"h":350},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":1024,"h":346},
-	"sourceSize": {"w":1024,"h":346},
+	"spriteSourceSize": {"x":0,"y":0,"w":1024,"h":350},
+	"sourceSize": {"w":1024,"h":350},
 	"pivot": {"x":0.5,"y":0.5}
 },
 {
 	"filename": "bg_1.png",
-	"frame": {"x":0,"y":346,"w":1024,"h":222},
+	"frame": {"x":0,"y":350,"w":1024,"h":224},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":1024,"h":222},
-	"sourceSize": {"w":1024,"h":222},
+	"spriteSourceSize": {"x":0,"y":0,"w":1024,"h":224},
+	"sourceSize": {"w":1024,"h":224},
 	"pivot": {"x":0.5,"y":0.5}
 },
 {
 	"filename": "bg_2.png",
-	"frame": {"x":0,"y":568,"w":1024,"h":149},
+	"frame": {"x":0,"y":574,"w":1024,"h":112},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":1024,"h":149},
-	"sourceSize": {"w":1024,"h":149},
+	"spriteSourceSize": {"x":0,"y":0,"w":1024,"h":112},
+	"sourceSize": {"w":1024,"h":112},
 	"pivot": {"x":0.5,"y":0.5}
 }],
 "meta": {
@@ -34,6 +34,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1024,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:c9a7c1f1969f0566ebc3ccf48f52f76f:58e4a8b8584d6b869279f6ff7eea01b4:fda475f1469833f402cd7f3119be2bc2$"
+	"smartupdate": "$TexturePacker:SmartUpdate:ae2bdad4a76c5eefbdd71f96bb7f45bf:c34bb1a0e753c089b958d3cb4f4c29a6:fda475f1469833f402cd7f3119be2bc2$"
 }
 }

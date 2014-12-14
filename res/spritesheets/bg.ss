@@ -6,7 +6,7 @@ frames
 
         frame
         {
-            h = 346
+            h = 350
             w = 1024
             x = 0
             y = 0
@@ -22,13 +22,13 @@ frames
 
         sourceSize
         {
-            h = 346
+            h = 350
             w = 1024
         }
 
         spriteSourceSize
         {
-            h = 346
+            h = 350
             w = 1024
             x = 0
             y = 0
@@ -43,10 +43,10 @@ frames
 
         frame
         {
-            h = 222
+            h = 224
             w = 1024
             x = 0
-            y = 346
+            y = 350
         }
 
         pivot
@@ -59,13 +59,13 @@ frames
 
         sourceSize
         {
-            h = 222
+            h = 224
             w = 1024
         }
 
         spriteSourceSize
         {
-            h = 222
+            h = 224
             w = 1024
             x = 0
             y = 0
@@ -80,10 +80,10 @@ frames
 
         frame
         {
-            h = 149
+            h = 112
             w = 1024
             x = 0
-            y = 568
+            y = 574
         }
 
         pivot
@@ -96,13 +96,13 @@ frames
 
         sourceSize
         {
-            h = 149
+            h = 112
             w = 1024
         }
 
         spriteSourceSize
         {
-            h = 149
+            h = 112
             w = 1024
             x = 0
             y = 0
@@ -125,6 +125,6 @@ meta
         w = 1024
     }
 
-    smartupdate = $TexturePacker:SmartUpdate:c9a7c1f1969f0566ebc3ccf48f52f76f:58e4a8b8584d6b869279f6ff7eea01b4:fda475f1469833f402cd7f3119be2bc2$
+    smartupdate = $TexturePacker:SmartUpdate:dd36395a2122ddc170e3da3619b7fc1a:203187a6afd39532026de28c4731f5ff:fda475f1469833f402cd7f3119be2bc2$
     version = 1.0
 }
