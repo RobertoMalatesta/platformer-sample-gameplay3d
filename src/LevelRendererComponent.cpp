@@ -285,15 +285,13 @@ namespace platformer
 
             bool parallaxLayerDrawn = false;
 
-
-
             for(auto itr = _parallaxLayers.rbegin(); itr != _parallaxLayers.rend(); ++itr)
             {
                 ParallaxLayer & layer = *itr;
                 layer._dst.width = layerWidth;
                 layer._src.width = layerWidth;
                 layer._dst.x = layerPosX;
-                layer._src.x = spriteCameraPostion.x * layer._speed;
+                layer._src.x = (layerPosX + spriteCameraPostion.x) * layer._speed;
                 
                 gameplay::Rectangle layerVisibilityTest = layer._dst;
                 layerVisibilityTest.y += layerVisibilityTest.height;
