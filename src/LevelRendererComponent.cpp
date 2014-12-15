@@ -456,6 +456,8 @@ namespace platformer
 
     void LevelRendererComponent::renderDebug(float, gameplay::Font * font)
     {
+        gameplay::Rectangle const & screenDimensions = gameplay::Game::getInstance()->getViewport();
+
         if(gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_character_positions"))
         {
             font->start();
@@ -464,8 +466,8 @@ namespace platformer
 
             gameplay::Matrix spriteBatchProjection = _cameraControl->getViewProjectionMatrix();
             spriteBatchProjection.rotateX(MATH_DEG_TO_RAD(180));
-            float const unitToPixelScale = 1.0f / (gameplay::Game::getInstance()->getHeight()) / (gameplay::Game::getInstance()->getHeight() * PLATFORMER_UNIT_SCALAR)
-                    * font->getSize(PLATFORMER_FONT_SIZE_LARGE_INDEX);
+            float const spriteCameraZoomScale = (1.0f / PLATFORMER_UNIT_SCALAR) * _cameraControl->getZoom();
+            float const unitToPixelScale = (1.0f / screenDimensions.height) * (screenDimensions.height * PLATFORMER_UNIT_SCALAR * spriteCameraZoomScale);
             spriteBatchProjection.scale(unitToPixelScale, unitToPixelScale, 0);
             gameplay::SpriteBatch * spriteBatch = font->getSpriteBatch(font->getSize());
             spriteBatch->setProjectionMatrix(spriteBatchProjection);
@@ -484,7 +486,6 @@ namespace platformer
 
         if(gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_camera_target"))
         {
-            gameplay::Rectangle const & screenDimensions = gameplay::Game::getInstance()->getViewport();
             gameplay::Matrix spriteBatchProjection = _cameraControl->getViewProjectionMatrix();
             spriteBatchProjection.rotateX(MATH_DEG_TO_RAD(180));
             float const unitToPixelScale = (1.0f / screenDimensions.height) * (screenDimensions.height * PLATFORMER_UNIT_SCALAR);
