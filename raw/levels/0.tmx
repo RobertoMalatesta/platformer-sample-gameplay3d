@@ -163,14 +163,14 @@
  </tileset>
  <layer name="terrain" width="50" height="15">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjIJRMJjAkoF2AJXA4oF2AJUAzB9MBNQRkh9oAPPHJCBegAdPoa+zSAbDLV0NdTBU/LFgmGAA0n8pQQ==
+   eJxjYBgFo4D+YMlAO4BKYPFAO4BKAOYPJgLqCMkPNID5YxIQL8CDp9DXWSSD4ZauhjoYKv5YMEzwhFE8ikcxTgwAdW2ZwQ==
   </data>
  </layer>
  <objectgroup name="objects">
-  <object name="player" type="SPAWN" x="114.103" y="806.763" width="55" height="24">
+  <object name="player" type="SPAWN" x="114.103" y="550.763" width="55" height="24">
    <ellipse/>
   </object>
-  <object name="enemy_slime" type="SPAWN" x="885.742" y="598.43" width="55" height="24">
+  <object name="enemy_slime" type="SPAWN" x="885.742" y="342.43" width="55" height="24">
    <ellipse/>
   </object>
  </objectgroup>
