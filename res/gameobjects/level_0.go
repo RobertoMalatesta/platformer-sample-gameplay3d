@@ -13,7 +13,7 @@ level_renderer
     {
         spritesheet = res/spritesheets/bg.ss
         fill = 0.470588, 0.627450, 0.643137, 1
-        offset = 0, 0
+        offset = 0, 256
 
         layer
         {

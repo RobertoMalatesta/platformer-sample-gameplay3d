@@ -62,6 +62,10 @@ namespace platformer
         _playerInput->addRef();
         _cameraControl = getRootParent()->getComponentInChildren<CameraControlComponent>();
         _cameraControl->addRef();
+        _cameraControl->setBoundary(gameplay::Rectangle(0,
+                                                        -(_level->getTileHeight() * _level->getHeight()) * PLATFORMER_UNIT_SCALAR,
+                                                        (_level->getTileWidth() * _level->getWidth())  * PLATFORMER_UNIT_SCALAR,
+                                                        (_level->getTileHeight() * _level->getHeight()) * PLATFORMER_UNIT_SCALAR));
 
         _player->forEachAnimation([this, &uninitialisedSpriteBatches](PlayerComponent::State::Enum state, SpriteAnimationComponent * animation) -> bool
         {
@@ -202,7 +206,6 @@ namespace platformer
                 SpriteSheet * spritesheet = SpriteSheet::create(ns->getString("spritesheet"));
                 ns->getVector4("fill", &_parallaxFillColor);
                 ns->getVector2("offset", &_parallaxOffset);
-                _parallaxOffset *= -1.0f;
                 _parallaxSpritebatch = gameplay::SpriteBatch::create(spritesheet->getTexture());
                 _parallaxSpritebatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::REPEAT, gameplay::Texture::Wrap::CLAMP);
                 _parallaxSpritebatch->getSampler()->setFilterMode(gameplay::Texture::Filter::NEAREST, gameplay::Texture::Filter::NEAREST);

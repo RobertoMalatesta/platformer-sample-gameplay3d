@@ -16,6 +16,7 @@ namespace platformer
         , _zoomSpeedScale(0.003f)
         , _smoothSpeedScale(0.25f)
         , _targetBoundaryScale(gameplay::Vector2(0.25f, 0.5))
+        , _boundary(std::numeric_limits<float>::max(), std::numeric_limits<float>::max())
     {
     }
 
@@ -84,8 +85,18 @@ namespace platformer
     void CameraControlComponent::setTargetPosition(gameplay::Vector2 const & target, float elapsedTime)
     {
         _targetPosition = target;
-        _currentPosition = target;
-        _camera->getNode()->setTranslation(gameplay::Vector3(target.x, target.y, 0));
+        float const offsetX = (gameplay::Game::getInstance()->getWidth() / 2) *  _currentZoom;
+        _targetPosition.x = MATH_CLAMP(_targetPosition.x, _boundary.x + offsetX, _boundary.x + _boundary.width - offsetX);
+        float const offsetY = (gameplay::Game::getInstance()->getHeight() / 2) *  _currentZoom;
+        _targetPosition.y = MATH_CLAMP(_targetPosition.y, _boundary.y + offsetY, _boundary.y + _boundary.height + offsetY);
+        _camera->getNode()->setTranslation(gameplay::Vector3(_targetPosition.x, _targetPosition.y, 0));
+        _currentPosition.x = _camera->getNode()->getTranslationX();
+        _currentPosition.y = _camera->getNode()->getTranslationY();
+    }
+
+    void CameraControlComponent::setBoundary(gameplay::Rectangle boundary)
+    {
+        _boundary = boundary;
     }
 
     float CameraControlComponent::getMinZoom() const
@@ -125,7 +136,7 @@ namespace platformer
 
     gameplay::Rectangle const & CameraControlComponent::getTargetBoundary() const
     {
-        return _targetBoundary;
+        return _boundary;
     }
 
     gameplay::Vector2 const & CameraControlComponent::getTargetPosition() const

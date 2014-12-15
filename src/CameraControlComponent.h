@@ -16,12 +16,13 @@ namespace platformer
         explicit CameraControlComponent();
         ~CameraControlComponent();
 
-        void setTargetPosition(gameplay::Vector2 const & target, float elapsedTime);
+        void setTargetPosition(gameplay::Vector2 const & target, float);
         float getZoom() const;
         float getTargetZoom() const;
         float getMinZoom() const;
         float getMaxZoom() const;
         void setZoom(float zoom);
+        void setBoundary(gameplay::Rectangle boundary);
         gameplay::Matrix const & getViewProjectionMatrix() const;
         gameplay::Vector2 const &  getPosition() const;
         gameplay::Vector2 const & getTargetPosition() const;
@@ -44,7 +45,7 @@ namespace platformer
         float _targetZoom;
         float _zoomSpeedScale;
         float _smoothSpeedScale;
-        gameplay::Rectangle _targetBoundary;
+        gameplay::Rectangle _boundary;
         gameplay::Vector2 _targetBoundaryScale;
         gameplay::Vector2 _targetPosition;
         gameplay::Vector2 _currentPosition;
