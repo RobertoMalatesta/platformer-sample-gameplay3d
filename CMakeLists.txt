@@ -2,12 +2,7 @@ cmake_minimum_required(VERSION 2.7)
 PROJECT(platformer)
 
 set(GAME_NAME platformer)
-
-if( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-    set(ARCH_DIR "x64" )
-else( CMAKE_SIZEOF_VOID_P EQUAL 8 )
-    set(ARCH_DIR "x86" )
-endif( CMAKE_SIZEOF_VOID_P EQUAL 8 )
+set(ARCH_DIR "x64" )
 
 set(GAMEPLAY_SRC_PATH "external/GamePlay")
 set(GAMEPLAY_EXT_LIBS_PATH "${GAMEPLAY_SRC_PATH}/external-deps")
@@ -60,9 +55,22 @@ macro (append_gameplay_ext_lib listToAppend libName libDirName)
     IF("${libDirName}" STREQUAL "")
         find_library(FOUND_LIB_${libName} NAMES ${libName} ${ARGN})
     ELSE("${libDirName}" STREQUAL "")
-        set(pathToSearch
-            "${GAMEPLAY_EXT_LIBS_PATH}/${libDirName}/lib/${TARGET_OS_DIR}/${ARCH_DIR}")
-        find_library(FOUND_LIB_${libName} NAMES ${libName} ${ARGN} HINTS ${pathToSearch})
+        IF (TARGET_OS STREQUAL "WINDOWS")
+            find_library(${libName}_LIBRARY_RELEASE
+                NAMES ${libName} ${ARGN}
+                PATHS "${GAMEPLAY_EXT_LIBS_PATH}/${libDirName}/lib/${TARGET_OS_DIR}/${ARCH_DIR}/Release")
+            find_library(${libName}_LIBRARY_DEBUG
+                NAMES ${libName} ${ARGN}
+                PATHS "${GAMEPLAY_EXT_LIBS_PATH}/${libDirName}/lib/${TARGET_OS_DIR}/${ARCH_DIR}/Debug")
+
+            set(FOUND_LIB_${libName}
+                debug ${${libName}_LIBRARY_DEBUG}
+                optimized ${${libName}_LIBRARY_RELEASE})
+        ELSE (TARGET_OS STREQUAL "WINDOWS")
+                set(pathToSearch
+                    "${GAMEPLAY_EXT_LIBS_PATH}/${libDirName}/lib/${TARGET_OS_DIR}/${ARCH_DIR}")
+                find_library(FOUND_LIB_${libName} NAMES ${libName} ${ARGN} HINTS ${pathToSearch})
+        ENDIF (TARGET_OS STREQUAL "WINDOWS")
     ENDIF("${libDirName}" STREQUAL "")
 
     set(${listToAppend} ${${listToAppend}} ${FOUND_LIB_${libName}})
@@ -116,7 +124,7 @@ IF (TARGET_OS STREQUAL "LINUX")
 ELSEIF (TARGET_OS STREQUAL "WINDOWS")
     set(GAMEPLAY_LIBRARIES ${GAMEPLAY_LIBRARIES} "OpenGL32")
     set(GAMEPLAY_LIBRARIES ${GAMEPLAY_LIBRARIES} "GLU32")
-    ADD_DEFINITIONS(-D_ITERATOR_DEBUG_LEVEL=0)
+    ADD_DEFINITIONS(-D_ITERATOR_DEBUG_LEVEL=2)
 ENDIF (TARGET_OS STREQUAL "LINUX")
 
 # CMake recommends that you generate projects that are 'out of source' meaning that you create a 'build'
