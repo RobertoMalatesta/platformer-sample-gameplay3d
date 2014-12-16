@@ -82,7 +82,8 @@ include_directories(
     ${GAMEPLAY_SRC_PATH}/external-deps/lua/include
     ${GAMEPLAY_SRC_PATH}/external-deps/bullet/include
     ${GAMEPLAY_SRC_PATH}/external-deps/png/include
-    ${GAMEPLAY_SRC_PATH}/external-deps/oggvorbis/include
+    ${GAMEPLAY_SRC_PATH}/external-deps/ogg/include
+    ${GAMEPLAY_SRC_PATH}/external-deps/vorbis/include
     ${GAMEPLAY_SRC_PATH}/external-deps/zlib/include
     ${GAMEPLAY_SRC_PATH}/external-deps/openal/include
     ${GAMEPLAY_SRC_PATH}/external-deps/openal/include/AL
@@ -97,8 +98,8 @@ append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "BulletDynamics" "bullet")
 append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "BulletCollision" "bullet")
 append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "LinearMath" "bullet")
 append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "openal" "openal" "openal32")
-append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "vorbis" "oggvorbis" "libvorbis")
-append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "ogg" "oggvorbis" "libogg")
+append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "vorbis" "vorbis" "libvorbis")
+append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "ogg" "ogg" "libogg")
 append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "z" "zlib" "zlib")
 
 IF (TARGET_OS STREQUAL "LINUX")
@@ -115,7 +116,6 @@ IF (TARGET_OS STREQUAL "LINUX")
 ELSEIF (TARGET_OS STREQUAL "WINDOWS")
     set(GAMEPLAY_LIBRARIES ${GAMEPLAY_LIBRARIES} "OpenGL32")
     set(GAMEPLAY_LIBRARIES ${GAMEPLAY_LIBRARIES} "GLU32")
-    append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "vorbisfile" "oggvorbis" "libvorbisfile")
     ADD_DEFINITIONS(-D_ITERATOR_DEBUG_LEVEL=0)
 ENDIF (TARGET_OS STREQUAL "LINUX")
 

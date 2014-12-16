@@ -50,7 +50,7 @@
      in between standard targets -->
 
     <target name="-pre-build">
-		<mkdir dir="src"/>
+        <mkdir dir="src"/>
         <copy todir="assets/res">
             <fileset dir="../res" />
         </copy>
@@ -59,6 +59,9 @@
        </copy>
        <copy todir="assets">
             <fileset file="../game.config" />
+       </copy>
+       <copy todir="src/org/gameplay3d">
+           <fileset dir="../external/GamePlay/gameplay/src/org/gameplay3d"/>
        </copy>
     </target>
 	
