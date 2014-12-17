@@ -13,6 +13,7 @@ goto :exit
 :make_links
 set CONFIG_BIN_DIR=%GAME_DIR%\%1
 mkdir "%CONFIG_BIN_DIR%"
+CALL mklink /H "%CONFIG_BIN_DIR%/OpenAL.dll" "../external/GamePlay/bin/windows/OpenAL.dll"
 CALL mklink /H "%CONFIG_BIN_DIR%/game.config" "../game.config"
 CALL mklink /J "%CONFIG_BIN_DIR%/res" "../res"
 goto:eof
