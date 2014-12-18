@@ -164,7 +164,7 @@ namespace platformer
                     _state = State::Walking;
                 }
 
-                float const minFallVelocity = -0.2f;
+                float const minFallVelocity = -2.0f;
 
                 if(velocity.y < minFallVelocity && (_state == State::Idle || _state == State::Walking))
                 {
