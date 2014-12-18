@@ -44,17 +44,20 @@ namespace platformer
         int getWidth() const;
         int getHeight() const;
         gameplay::Vector2 const & getPlayerSpawnPosition() const;
-        void forEachCachedNode(TileType::Enum tileType, std::function<void(gameplay::Node *)> func);
+        void forEachCachedNode(CollisionType::Enum terrainType, std::function<void(gameplay::Node *)> func);
     private:
         struct Tile
         {
+            Tile() : _tileId(0) {}
             int _tileId;
-            gameplay::Node * _node;
         };
 
         LevelComponent(LevelComponent const &);
 
         void load();
+        void loadTerrain(gameplay::Properties * layerNamespace);
+        void loadCharacters(gameplay::Properties * layerNamespace);
+        void loadCollision(gameplay::Properties * layerNamespace, CollisionType::Enum terrainType);
         void unload();
 
         std::string _level;
@@ -70,9 +73,7 @@ namespace platformer
         gameplay::AIMessage * _unloadedMessage;
         gameplay::AIMessage * _preUnloadedMessage;
         std::vector<gameobjects::GameObject*> _children;
-        std::vector<gameplay::Node*> _cachedLadderNodes;
-        std::vector<gameplay::Node*> _cachedBarrierNodes;
-        std::vector<gameplay::Node*> _cachedResetNodes;
+        std::map <CollisionType::Enum, std::vector<gameplay::Node*>> _collisionNodes;
     };
 }
 

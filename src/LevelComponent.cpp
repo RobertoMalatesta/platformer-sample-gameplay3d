@@ -77,246 +77,230 @@ namespace platformer
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_preUnloadedMessage);
     }
 
+    void LevelComponent::loadTerrain(gameplay::Properties * layerNamespace)
+    {
+        if (gameplay::Properties * dataNamespace = layerNamespace->getNamespace("data", true))
+        {
+            int x = 0;
+            int y = 0;
+
+            while (dataNamespace->getNextProperty())
+            {
+                int const currentTileId = _grid[y][x]._tileId;
+
+                if (currentTileId == EMPTY_TILE)
+                {
+                    int const newTileId = dataNamespace->getInt();
+                    PLATFORMER_ASSERT(currentTileId == EMPTY_TILE || newTileId == EMPTY_TILE, 
+                        "Multi layered tile rendering not isn't supported [%d][%d]", x, y);
+                    _grid[y][x]._tileId = newTileId;
+                }
+
+                ++x;
+
+                if (x == _width)
+                {
+                    x = 0;
+                    ++y;
+
+                    if (y == _height)
+                    {
+                        x = 0;
+                        y = 0;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    void LevelComponent::loadCharacters(gameplay::Properties * layerNamespace)
+    {
+        if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
+        {
+            while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
+            {
+                char const * gameObjectTypeName = objectNamespace->getString("name");
+                bool const isPlayer = strcmp(gameObjectTypeName, "player") == 0;
+
+#ifndef _FINAL
+                if (gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_enemy_spawn") || isPlayer)
+#endif
+                {
+                    gameobjects::GameObject * gameObject = gameobjects::GameObjectController::getInstance().createGameObject(gameObjectTypeName, getParent());
+                    gameplay::Vector2 spawnPos(objectNamespace->getInt("x"), -objectNamespace->getInt("y"));
+                    spawnPos *= PLATFORMER_UNIT_SCALAR;
+
+                    if (isPlayer)
+                    {
+                        _playerSpawnPosition = spawnPos;
+                    }
+
+                    std::vector<CollisionObjectComponent*> collisionComponents;
+                    gameObject->getComponents(collisionComponents);
+
+                    for (CollisionObjectComponent * collisionComponent : collisionComponents)
+                    {
+                        if (gameplay::PhysicsCharacter * character = collisionComponent->getNode()->getCollisionObject()->asCharacter())
+                        {
+                            if (character->isPhysicsEnabled())
+                            {
+                                collisionComponent->getNode()->setTranslation(spawnPos.x, spawnPos.y, 0);
+                            }
+                        }
+                    }
+
+                    _children.push_back(gameObject);
+                }
+            }
+        }
+    }
+
+    void LevelComponent::loadCollision(gameplay::Properties * layerNamespace, CollisionType::Enum terrainType)
+    {
+        if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
+        {
+            std::string collisionId;
+
+            switch (terrainType)
+            {
+            case CollisionType::COLLISION:
+                collisionId = "world_collision";
+                break;
+            case CollisionType::LADDER:
+                collisionId = "ladder";
+                break;
+            case CollisionType::RESET:
+                collisionId = "reset";
+                break;
+            default:
+                PLATFORMER_ASSERTFAIL("Unhandled CollisionType %d", terrainType);
+                break;
+            }
+
+            gameplay::Properties * collisionProperties = createProperties((std::string("res/physics/level.physics#") + collisionId).c_str());
+
+            while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
+            {
+                float rotationZ = 0.0f;
+                float width = objectNamespace->getInt("width") * PLATFORMER_UNIT_SCALAR;
+                float height = objectNamespace->getInt("height") * PLATFORMER_UNIT_SCALAR;
+                float x = objectNamespace->getInt("x") * PLATFORMER_UNIT_SCALAR;
+                float y = -objectNamespace->getInt("y") * PLATFORMER_UNIT_SCALAR;
+
+                if (gameplay::Properties * lineNamespace = objectNamespace->getNamespace("polyline", true))
+                {
+                    if (gameplay::Properties * lineVectorNamespace = objectNamespace->getNamespace("polyline_1", true))
+                    {
+                        gameplay::Vector2 const start(x, y);
+                        gameplay::Vector2 end(start.x + (lineVectorNamespace->getFloat("x")  * PLATFORMER_UNIT_SCALAR), 
+                            start.y + (lineVectorNamespace->getFloat("y") * PLATFORMER_UNIT_SCALAR));
+                        gameplay::Vector2 direction = start - end;
+                        direction.normalize();
+                        rotationZ = -acos(direction.dot(gameplay::Vector2::unitX()));
+                        gameplay::Vector2 tranlsation = start - (start + end) / 2;
+                        x -= tranlsation.x;
+                        y += tranlsation.y;
+                        static const float lineHeight = 0.05f;
+                        width = start.distance(end);
+                        height = lineHeight;
+                    }
+                }
+                else
+                {
+                    x += width / 2;
+                    y -= height / 2;
+                }
+
+                std::array<char, 255> extentsBuffer;
+                sprintf(&extentsBuffer[0], "%f, %f, 1", width, height);
+                collisionProperties->setString("extents", &extentsBuffer[0]);
+
+                gameplay::Node * node = gameplay::Node::create();
+                TerrainInfo * info = new TerrainInfo();
+                info->_CollisionType = terrainType;
+                node->setUserPointer(info);
+                node->translate(x, y, 0);
+                node->rotateZ(rotationZ);
+                getParent()->getNode()->addChild(node);
+                node->setCollisionObject(collisionProperties);
+                _collisionNodes[terrainType].push_back(node);
+            }
+
+            SAFE_DELETE(collisionProperties);
+        }
+    }
+
     void LevelComponent::load()
     {
         gameplay::Properties * root = createProperties(_level.c_str());
-        _width = root->getInt("width");
-        _height = root->getInt("height");
-        _tileWidth = root->getInt("tilewidth");
-        _tileHeight = root->getInt("tileheight");
-
-        int x = 0;
-        int y = 0;
-
-        gameplay::Properties * tileCollisionProperties = createProperties("res/physics/level.physics");
-        gameplay::Properties * tileCollObjProperties = tileCollisionProperties->getNamespace("tile");
-        gameplay::Properties * halfTileCollObjProperties = tileCollisionProperties->getNamespace("half_tile");
-        gameplay::Properties * surfaceCollObjProperties = tileCollisionProperties->getNamespace("slope_45");
-        gameplay::Properties * ladderCollObjProperties = tileCollisionProperties->getNamespace("ladder");
-        gameplay::Properties * resetCollObjProperties = tileCollisionProperties->getNamespace("reset");
-        std::map<int, TileType::Enum> tileIdTypes;
-
-        if (gameplay::Properties * tilesetNamespace = root->getNamespace("tilesets_0", true))
-        {
-            if (gameplay::Properties * tilesetPropertiesNamespace = tilesetNamespace->getNamespace("tileproperties", true))
-            {
-                while (gameplay::Properties * tileTypeNamespace = tilesetPropertiesNamespace->getNextNamespace())
-                {
-                    int const tileId = atoi(tileTypeNamespace->getNamespace()) + 1;
-                    TileType::Enum tileType = TileType::NONE;
-                    char const * tileTypeName = tileTypeNamespace->getString("tile");
-
-                    if(strcmp(tileTypeName, "BOX") == 0)
-                    {
-                        tileType = TileType::BOX;
-                    }
-                    else if(strcmp(tileTypeName, "SLOPE_45_L") == 0)
-                    {
-                        tileType = TileType::SLOPE_45_L;
-                    }
-                    else if(strcmp(tileTypeName, "SLOPE_45_R") == 0)
-                    {
-                        tileType = TileType::SLOPE_45_R;
-                    }
-                    else if(strcmp(tileTypeName, "LADDER") == 0)
-                    {
-                        tileType = TileType::LADDER;
-                    }
-                    else if(strcmp(tileTypeName, "RECTANGLE_TOP") == 0)
-                    {
-                        tileType = TileType::RECTANGLE_TOP;
-                    }
-                    else if (strcmp(tileTypeName, "RECTANGLE_BOTTOM") == 0)
-                    {
-                        tileType = TileType::RECTANGLE_BOTTOM;
-                    }
-                    else if (strcmp(tileTypeName, "RESET") == 0)
-                    {
-                        tileType = TileType::RESET;
-                    }
-                    else if (strcmp(tileTypeName, "BARRIER") == 0)
-                    {
-                        tileType = TileType::BARRIER;
-                    }
-
-                    bool const isValidTileType = tileType != TileType::NONE;
-
-                    PLATFORMER_ASSERT(isValidTileType, "Invalid tile type defined for tile %d : '%s'", tileId, tileTypeName);
-
-                    if(isValidTileType)
-                    {
-                        tileIdTypes[tileId] = tileType;
-                    }
-                }
-            }
-        }
-
-        if (gameplay::Properties * layerNamespace = root->getNamespace("layers_0", true))
-        {
-            if (gameplay::Properties * dataNamespace = layerNamespace->getNextNamespace())
-            {
-                while (dataNamespace->getNextProperty())
-                {
-                    if (x == 0)
-                    {
-                        _grid.push_back(std::vector<Tile>());
-                    }
-
-                    int data = dataNamespace->getInt();
-                    gameplay::Node * tileNode = nullptr;
-
-                    if (data != EMPTY_TILE)
-                    {
-                        tileNode = gameplay::Node::create();
-                        float const tileWidthScaled = _tileWidth * PLATFORMER_UNIT_SCALAR;
-                        float const tileHeightScaled = _tileHeight * PLATFORMER_UNIT_SCALAR;
-                        float const tilePosX = ((x * tileWidthScaled) + (tileWidthScaled / 2));
-                        float const tilePosY = (-((y * tileHeightScaled) + (tileHeightScaled / 2)));
-                        tileNode->translate(tilePosX, tilePosY, 0);
-                        getParent()->getNode()->addChild(tileNode);
-
-                        TileType::Enum tileType = TileType::NONE;
-                        auto tileIdTypeItr = tileIdTypes.find(data);
-
-                        if(tileIdTypeItr != tileIdTypes.end())
-                        {
-                            tileType = tileIdTypeItr->second;
-
-                            switch(tileType)
-                            {
-                            case TileType::BOX:
-                                tileNode->setCollisionObject(tileCollObjProperties);
-                                break;
-                            case TileType::BARRIER:
-                                tileNode->setCollisionObject(tileCollObjProperties);
-                                _cachedBarrierNodes.push_back(tileNode);
-                                break;
-                            case TileType::SLOPE_45_L:
-                                tileNode->rotateZ(MATH_DEG_TO_RAD(45));
-                                tileNode->setCollisionObject(surfaceCollObjProperties);
-                                break;
-                            case TileType::SLOPE_45_R:
-                                tileNode->rotateZ(MATH_DEG_TO_RAD(-45));
-                                tileNode->setCollisionObject(surfaceCollObjProperties);
-                                break;
-                            case TileType::LADDER:
-                                tileNode->translateY(tileHeightScaled / 2.0f);
-                                tileNode->setCollisionObject(ladderCollObjProperties);
-                                _cachedLadderNodes.push_back(tileNode);
-                                break;
-                            case TileType::RECTANGLE_TOP:
-                                tileNode->translateY(tileHeightScaled / 4.0f);
-                                tileNode->setCollisionObject(halfTileCollObjProperties);
-                                break;
-                            case TileType::RECTANGLE_BOTTOM:
-                                tileNode->translateY(-(tileHeightScaled / 4.0f));
-                                tileNode->setCollisionObject(halfTileCollObjProperties);
-                                break;
-                            case TileType::RESET:
-                                tileNode->setCollisionObject(resetCollObjProperties);
-                                _cachedResetNodes.push_back(tileNode);
-                                break;
-                            default:
-                                PLATFORMER_ASSERTFAIL("Unhandled tile type '%d'", tileType);
-                            }
-                        }
-
-                        TerrainInfo * info = new TerrainInfo();
-                        info->_tileType = tileType;
-                        tileNode->setUserPointer(info);
-                    }
-
-                    _grid[y].emplace_back(Tile{ data, tileNode });
-                    ++x;
-
-                    if (x == _width)
-                    {
-                        x = 0;
-                        ++y;
-
-                        if (y == _height)
-                        {
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (gameplay::Properties * layerNamespace = root->getNamespace("layers_1", true))
-        {
-            if (gameplay::Properties * objectsNamespace = layerNamespace->getNextNamespace())
-            {
-                while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
-                {
-                    char const * gameObjectTypeName = objectNamespace->getString("name");
-                    bool const isPlayer = strcmp(gameObjectTypeName, "player") == 0;
-
-#ifndef _FINAL
-                    if(gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_enemy_spawn") || isPlayer)
-#endif
-                    {
-                        gameobjects::GameObject * gameObject = gameobjects::GameObjectController::getInstance().createGameObject(gameObjectTypeName, getParent());
-                        gameplay::Vector2 spawnPos(objectNamespace->getInt("x"), -objectNamespace->getInt("y"));
-                        spawnPos *= PLATFORMER_UNIT_SCALAR;
-
-                        if(isPlayer)
-                        {
-                            _playerSpawnPosition = spawnPos;
-                        }
-
-                        std::vector<CollisionObjectComponent*> collisionComponents;
-                        gameObject->getComponents(collisionComponents);
-
-                        for(CollisionObjectComponent * collisionComponent : collisionComponents)
-                        {
-                            if(gameplay::PhysicsCharacter * character = collisionComponent->getNode()->getCollisionObject()->asCharacter())
-                            {
-                                if(character->isPhysicsEnabled())
-                                {
-                                    collisionComponent->getNode()->setTranslation(spawnPos.x, spawnPos.y, 0);
-                                }
-                            }
-                        }
-
-                        _children.push_back(gameObject);
-                    }
-                }
-            }
-        }
 
         if (gameplay::Properties * propertiesNamespace = root->getNamespace("properties", true, false))
         {
             _texturePath = propertiesNamespace->getString("texture");
         }
 
+        _width = root->getInt("width");
+        _height = root->getInt("height");
+        _tileWidth = root->getInt("tilewidth");
+        _tileHeight = root->getInt("tileheight");
+        _grid.resize(_height);
+        
+        for (std::vector<Tile> & horizontalTiles : _grid)
+        {
+            horizontalTiles.resize(_width);
+        }
+
+        if (gameplay::Properties * layersNamespace = root->getNamespace("layers", true))
+        {
+            while (gameplay::Properties * layerNamespace = layersNamespace->getNextNamespace())
+            {
+                std::string const layerName = layerNamespace->getString("name");
+
+                if (layerName == "terrain" || layerName == "props")
+                {
+                    loadTerrain(layerNamespace);
+                }
+                else if (layerName == "characters")
+                {
+                    loadCharacters(layerNamespace);
+                }
+                else if (layerName.find("collision") != std::string::npos)
+                {
+                    CollisionType::Enum terrainType = CollisionType::COLLISION;
+
+                    if (layerName == "collision_ladder")
+                    {
+                        terrainType = CollisionType::LADDER;
+                    }
+                    else if (layerName == "collision_hand_of_god")
+                    {
+                        terrainType = CollisionType::RESET;
+                    }
+
+                    loadCollision(layerNamespace, terrainType);
+                }
+            }
+        }
+
         SAFE_DELETE(root);
-        SAFE_DELETE(tileCollisionProperties);
     }
 
     void LevelComponent::unload()
     {
-        _cachedLadderNodes.clear();
-        _cachedBarrierNodes.clear();
-        _cachedResetNodes.clear();
-
-        if(!_grid.empty())
+        for (auto & listPair : _collisionNodes)
         {
-            for (int x = 0; x < getWidth(); ++x)
+            for (gameplay::Node* node : listPair.second)
             {
-                for (int y = 0; y < getHeight(); ++y)
-                {
-                    if(gameplay::Node * tileNode = _grid[y][x]._node)
-                    {
-                        TerrainInfo * info = TerrainInfo::getTerrainInfo(tileNode);
-                        tileNode->setUserPointer(nullptr);
-                        delete info;
-                        getParent()->getNode()->removeChild(tileNode);
-                        SAFE_RELEASE(tileNode);
-                    }
-                }
+                TerrainInfo * info = TerrainInfo::getTerrainInfo(node);
+                node->setUserPointer(nullptr);
+                delete info;
+                getParent()->getNode()->removeChild(node);
+                SAFE_RELEASE(node);
             }
         }
+
+        _collisionNodes.clear();
 
         _grid.clear();
 
@@ -369,31 +353,11 @@ namespace platformer
         return _playerSpawnPosition;
     }
 
-    void LevelComponent::forEachCachedNode(TileType::Enum tileType, std::function<void(gameplay::Node *)> func)
+    void LevelComponent::forEachCachedNode(CollisionType::Enum terrainType, std::function<void(gameplay::Node *)> func)
     {
-        std::vector<gameplay::Node*> * nodes = nullptr;
-
-        switch(tileType)
+        for (gameplay::Node * node : _collisionNodes[terrainType])
         {
-        case TileType::LADDER:
-            nodes = &_cachedLadderNodes;
-            break;
-        case TileType::BARRIER:
-            nodes = &_cachedBarrierNodes;
-            break;
-        case TileType::RESET:
-            nodes = &_cachedResetNodes;
-            break;
-        default:
-            PLATFORMER_ASSERTFAIL("Unhandled TileType %d", tileType);
-        }
-
-        if(nodes)
-        {
-            for(gameplay::Node * node : *nodes)
-            {
-                func(node);
-            }
+            func(node);
         }
     }
 }

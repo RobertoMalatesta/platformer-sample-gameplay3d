@@ -11,19 +11,13 @@ namespace platformer
      *
      * @script{ignore}
     */
-    struct TileType
+    struct CollisionType
     {
         enum Enum
         {
-            NONE,
-            BOX,
-            RECTANGLE_TOP,
-            RECTANGLE_BOTTOM,
-            SLOPE_45_L,
-            SLOPE_45_R,
+            COLLISION,
             LADDER,
-            RESET,
-            BARRIER
+            RESET
         };
     };
 
@@ -35,7 +29,7 @@ namespace platformer
 
         int getNodeUserDataId() const override;
 
-        TileType::Enum _tileType;
+        CollisionType::Enum _CollisionType;
     };
 }
 

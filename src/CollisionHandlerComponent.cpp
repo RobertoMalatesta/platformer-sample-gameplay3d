@@ -74,12 +74,6 @@ namespace platformer
             gameplay::Node * enemyNode = enemy->getTerrainCollisionTriggerNode();
             enemyNode->addRef();
             gameplay::PhysicsCollisionObject * enemyPhysics = enemyNode->getCollisionObject();
-
-            level->forEachCachedNode(TileType::BARRIER, [this, &enemyPhysics](gameplay::Node * barrier)
-            {
-                enemyPhysics->addCollisionListener(this, barrier->getCollisionObject());
-            });
-
             _enemies[enemyPhysics] = enemy;
         }
 
@@ -96,11 +90,6 @@ namespace platformer
             gameplay::PhysicsCollisionObject * enemyPhysics = enemyPair.first;
             gameplay::Node * enemyNode = enemyPhysics->getNode();
 
-            level->forEachCachedNode(TileType::BARRIER, [this, &enemyPhysics](gameplay::Node * barrier)
-            {
-                enemyPhysics->removeCollisionListener(this, barrier->getCollisionObject());
-            });
-
             for (gameplay::Node * node : _playerCharacterNodes)
             {
                 node->getCollisionObject()->removeCollisionListener(this, node->getCollisionObject());
@@ -116,12 +105,12 @@ namespace platformer
         {
             gameplay::PhysicsCollisionObject * playerCollisionObject = node->getCollisionObject();
 
-            level->forEachCachedNode(TileType::LADDER, [this, &playerCollisionObject](gameplay::Node * ladder)
+            level->forEachCachedNode(CollisionType::LADDER, [this, &playerCollisionObject](gameplay::Node * ladder)
             {
                 playerCollisionObject->removeCollisionListener(this, ladder->getCollisionObject());
             });
 
-            level->forEachCachedNode(TileType::RESET, [this, &playerCollisionObject](gameplay::Node * reset)
+            level->forEachCachedNode(CollisionType::RESET, [this, &playerCollisionObject](gameplay::Node * reset)
             {
                 playerCollisionObject->removeCollisionListener(this, reset->getCollisionObject());
             });
@@ -138,12 +127,12 @@ namespace platformer
     {
         LevelComponent * level = getParent()->getComponent<LevelComponent>();
 
-        level->forEachCachedNode(TileType::LADDER, [this, &playerCollisionObject](gameplay::Node * ladder)
+        level->forEachCachedNode(CollisionType::LADDER, [this, &playerCollisionObject](gameplay::Node * ladder)
         {
             playerCollisionObject->addCollisionListener(this, ladder->getCollisionObject());
         });
 
-        level->forEachCachedNode(TileType::RESET, [this, &playerCollisionObject](gameplay::Node * reset)
+        level->forEachCachedNode(CollisionType::RESET, [this, &playerCollisionObject](gameplay::Node * reset)
         {
             playerCollisionObject->addCollisionListener(this, reset->getCollisionObject());
         });
@@ -244,14 +233,14 @@ namespace platformer
             {
                 bool const isColliding = type == gameplay::PhysicsCollisionObject::CollisionListener::EventType::COLLIDING;
 
-                if(terrainInfo->_tileType == TileType::LADDER)
+                if(terrainInfo->_CollisionType == CollisionType::LADDER)
                 {
                     isColliding ? ++_playerClimbingTerrainRefCount : --_playerClimbingTerrainRefCount;
                     _playerClimbingTerrainRefCount = MATH_CLAMP(_playerClimbingTerrainRefCount, 0, std::numeric_limits<int>::max());
                     _player->setClimbingEnabled(_playerClimbingTerrainRefCount > 0);
                     return true;
                 }
-                else if(terrainInfo->_tileType == TileType::RESET && isColliding)
+                else if(terrainInfo->_CollisionType == CollisionType::RESET && isColliding)
                 {
                     getRootParent()->broadcastMessage(_forceHandOfGodMessage);
                     return true;
