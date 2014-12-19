@@ -52,7 +52,7 @@
         {
          "draworder":"topdown",
          "height":0,
-         "name":"collision_terrain",
+         "name":"collision_static",
          "objects":[
                 {
                  "height":320,
@@ -290,6 +290,20 @@
                  "width":0,
                  "x":2816,
                  "y":1280
+                }, 
+                {
+                 "height":128,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":384,
+                 "x":3008,
+                 "y":1472
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -304,7 +318,7 @@
          "name":"collision_hand_of_god",
          "objects":[
                 {
-                 "height":164.568,
+                 "height":26.5417750172533,
                  "name":"",
                  "properties":
                     {
@@ -313,7 +327,7 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":384.857,
+                 "width":377.955688750862,
                  "x":3005.82,
                  "y":1438.91
                 }, 
@@ -361,6 +375,104 @@
          "type":"objectgroup",
          "visible":true,
          "width":0,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":25,
+         "name":"interactive_props",
+         "objects":[
+                {
+                 "ellipse":true,
+                 "height":128,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":128,
+                 "x":2071.80982954912,
+                 "y":1146.9460698831
+                }, 
+                {
+                 "height":64,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":1906.87179487179,
+                 "y":954.782051282051
+                }, 
+                {
+                 "height":64,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":1984.15512039141,
+                 "y":949.312446656328
+                }, 
+                {
+                 "height":64,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":1945.28561554089,
+                 "y":878.319917775614
+                }, 
+                {
+                 "height":64,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":64,
+                 "x":1621.84615384615,
+                 "y":1203.57692307692
+                }, 
+                {
+                 "ellipse":true,
+                 "height":128,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":128,
+                 "x":2418.30849686194,
+                 "y":636.890339328215
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":70,
          "x":0,
          "y":0
         }],

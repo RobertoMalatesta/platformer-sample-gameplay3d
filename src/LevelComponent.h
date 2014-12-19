@@ -57,8 +57,12 @@ namespace platformer
         void load();
         void loadTerrain(gameplay::Properties * layerNamespace);
         void loadCharacters(gameplay::Properties * layerNamespace);
-        void loadCollision(gameplay::Properties * layerNamespace, CollisionType::Enum terrainType);
+        void loadStaticCollision(gameplay::Properties * layerNamespace, CollisionType::Enum terrainType);
+        void loadDynamicCollision(gameplay::Properties * layerNamespace);
         void unload();
+
+        gameplay::Rectangle getCollisionObjectBounds(gameplay::Properties * objectNamespace) const;
+        void createCollisionObject(CollisionType::Enum collisionType, gameplay::Properties * collisionProperties, gameplay::Rectangle const & bounds, float rotationZ = 0.0f);
 
         std::string _level;
         std::string _texturePath;

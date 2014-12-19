@@ -21,7 +21,7 @@
    <ellipse/>
   </object>
  </objectgroup>
- <objectgroup name="collision_terrain">
+ <objectgroup name="collision_static">
   <object x="0" y="1280" width="3008" height="320"/>
   <object x="3392" y="1280" width="1088" height="320"/>
   <object x="0" y="0" width="832" height="1280"/>
@@ -43,12 +43,25 @@
   <object x="2816" y="1280">
    <polyline points="0,0 -256,-256"/>
   </object>
+  <object x="3008" y="1472" width="384" height="128"/>
  </objectgroup>
  <objectgroup name="collision_hand_of_god">
-  <object x="3005.82" y="1438.91" width="384.857" height="164.568"/>
+  <object x="3005.82" y="1438.91" width="377.956" height="26.5418"/>
   <object x="3456" y="1152" width="64" height="128"/>
  </objectgroup>
  <objectgroup name="collision_ladder">
   <object x="1823" y="892" width="1.51206" height="365.583"/>
+ </objectgroup>
+ <objectgroup name="interactive_props">
+  <object x="2071.81" y="1146.95" width="128" height="128">
+   <ellipse/>
+  </object>
+  <object x="1906.87" y="954.782" width="64" height="64"/>
+  <object x="1984.16" y="949.312" width="64" height="64"/>
+  <object x="1945.29" y="878.32" width="64" height="64"/>
+  <object x="1621.85" y="1203.58" width="64" height="64"/>
+  <object x="2418.31" y="636.89" width="128" height="128">
+   <ellipse/>
+  </object>
  </objectgroup>
 </map>

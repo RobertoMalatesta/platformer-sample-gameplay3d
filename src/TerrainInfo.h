@@ -15,7 +15,8 @@ namespace platformer
     {
         enum Enum
         {
-            COLLISION,
+            COLLISION_STATIC,
+            COLLISION_DYNAMIC,
             LADDER,
             RESET
         };

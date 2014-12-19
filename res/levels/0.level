@@ -3573,7 +3573,7 @@ layers
     {
         draworder = topdown
         height = 0
-        name = collision_terrain
+        name = collision_static
 
         objects
         {
@@ -3876,6 +3876,23 @@ layers
                 x = 2816
                 y = 1280
             }
+
+            objects_15
+            {
+                height = 128
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 384
+                x = 3008
+                y = 1472
+            }
         }
 
         opacity = 1
@@ -3896,7 +3913,7 @@ layers
         {
             objects_0
             {
-                height = 164.56800000000001
+                height = 26.5417750172533
                 name = 
 
                 properties
@@ -3906,7 +3923,7 @@ layers
                 rotation = 0
                 type = 
                 visible = true
-                width = 384.85700000000003
+                width = 377.95568875086201
                 x = 3005.8200000000002
                 y = 1438.9100000000001
             }
@@ -3967,6 +3984,127 @@ layers
         type = objectgroup
         visible = true
         width = 0
+        x = 0
+        y = 0
+    }
+
+    layers_6
+    {
+        draworder = topdown
+        height = 25
+        name = interactive_props
+
+        objects
+        {
+            objects_0
+            {
+                ellipse = true
+                height = 128
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 128
+                x = 2071.80982954912
+                y = 1146.9460698831001
+            }
+
+            objects_1
+            {
+                height = 64
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 64
+                x = 1906.8717948717899
+                y = 954.78205128205104
+            }
+
+            objects_2
+            {
+                height = 64
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 64
+                x = 1984.15512039141
+                y = 949.31244665632801
+            }
+
+            objects_3
+            {
+                height = 64
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 64
+                x = 1945.2856155408899
+                y = 878.31991777561404
+            }
+
+            objects_4
+            {
+                height = 64
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 64
+                x = 1621.8461538461499
+                y = 1203.5769230769199
+            }
+
+            objects_5
+            {
+                ellipse = true
+                height = 128
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 128
+                x = 2418.3084968619401
+                y = 636.89033932821496
+            }
+        }
+
+        opacity = 1
+        type = objectgroup
+        visible = true
+        width = 70
         x = 0
         y = 0
     }

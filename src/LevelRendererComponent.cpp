@@ -24,7 +24,9 @@ namespace platformer
         , _tileBatch(nullptr)
         , _cameraControl(nullptr)
         , _parallaxSpritebatch(nullptr)
+        , _interactablesSpritebatch(nullptr)
         , _pixelSpritebatch(nullptr)
+        , _interactablesSpritesheet(nullptr)
     {
     }
 
@@ -44,6 +46,11 @@ namespace platformer
             onLevelUnloaded();
             break;
         }
+    }
+
+    gameplay::Rectangle getSafeDrawRect(gameplay::Rectangle const & src, float paddingX = 0.5f, float paddingY = 0.5f)
+    {
+        return gameplay::Rectangle(src.x + paddingX, src.y + paddingY, src.width - (paddingX * 2), src.height - (paddingY * 2));
     }
 
     void LevelRendererComponent::onLevelLoaded()
@@ -117,11 +124,24 @@ namespace platformer
         {
             uninitialisedSpriteBatches.push_back(_parallaxSpritebatch);
 
+
             for (ParallaxLayer & layer : _parallaxLayers)
             {
                 layer._dst.y += (_level->getHeight() * _level->getTileHeight()) - layer._src.height;
             }
+
+            _interactablesSpritesheet = SpriteSheet::create("res/spritesheets/interactables.ss");
+            _interactablesSpritebatch = gameplay::SpriteBatch::create(_interactablesSpritesheet->getTexture());
+            uninitialisedSpriteBatches.push_back(_interactablesSpritebatch);
         }
+
+        _level->forEachCachedNode(CollisionType::COLLISION_DYNAMIC, [this](gameplay::Node * node)
+        {
+            node->addRef();
+            bool const isBoulder = node->getCollisionObject()->getShapeType() == gameplay::PhysicsCollisionShape::SHAPE_SPHERE;
+            _dynamicCollisionNodes.emplace_back(node, getSafeDrawRect(isBoulder ? _interactablesSpritesheet->getSprite("boulder")->_src : 
+                _interactablesSpritesheet->getSprite("crate")->_src));
+        });
 
         // The first call to draw will perform some lazy initialisation in Effect::Bind
         for (gameplay::SpriteBatch * spriteBatch : uninitialisedSpriteBatches)
@@ -171,6 +191,12 @@ namespace platformer
             SAFE_DELETE(spriteBatch);
         }
 
+        for (auto & nodePair : _dynamicCollisionNodes)
+        {
+            SAFE_RELEASE(nodePair.first);
+        }
+
+        _dynamicCollisionNodes.clear();
         _playerAnimationBatches.clear();
         _enemyAnimationBatches.clear();
         _levelLoaded = false;
@@ -193,6 +219,8 @@ namespace platformer
     {
         SAFE_DELETE(_pixelSpritebatch);
         SAFE_DELETE(_parallaxSpritebatch);
+        SAFE_DELETE(_interactablesSpritebatch);
+        SAFE_RELEASE(_interactablesSpritesheet);
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_splashScreenFadeMessage);
         onLevelUnloaded();
     }
@@ -230,11 +258,6 @@ namespace platformer
                 SAFE_RELEASE(spritesheet);
             }
         }
-    }
-
-    gameplay::Rectangle getSafeDrawRect(gameplay::Rectangle const & src, float paddingX = 0.5f, float paddingY = 0.5f)
-    {
-        return gameplay::Rectangle(src.x + paddingX, src.y + paddingY, src.width - (paddingX * 2), src.height - (paddingY * 2));
     }
 
     void LevelRendererComponent::render(float)
@@ -355,6 +378,47 @@ namespace platformer
                 _tileBatch->finish();
             }
 
+            bool interactableDrawn = false;
+
+            for (auto & nodePair : _dynamicCollisionNodes)
+            {
+                gameplay::Node * dynamicCollisionNode = nodePair.first;
+                bool const isBoulder = dynamicCollisionNode->getCollisionObject()->getShapeType() == gameplay::PhysicsCollisionShape::SHAPE_SPHERE;
+                gameplay::Rectangle dst;
+                dst.width = dynamicCollisionNode->getScaleX() / PLATFORMER_UNIT_SCALAR;
+                dst.height = dynamicCollisionNode->getScaleY() / PLATFORMER_UNIT_SCALAR;
+                dst.x = dynamicCollisionNode->getTranslationX() / PLATFORMER_UNIT_SCALAR - (dst.width / 2);
+                dst.y = dynamicCollisionNode->getTranslationY() / PLATFORMER_UNIT_SCALAR + (dst.height / 2);
+                dst.y -= dst.height;
+
+                if (dst.intersects(spriteViewport))
+                {
+                    dst.y += dst.height;
+                    dst.y *= -1.0f;
+
+                    if (!interactableDrawn)
+                    {
+                        _interactablesSpritebatch->setProjectionMatrix(spriteBatchProjection);
+                        _interactablesSpritebatch->start();
+                        interactableDrawn = true;
+                    }
+
+                    gameplay::Quaternion const & q = dynamicCollisionNode->getRotation();
+                    float const rotation = -static_cast<float>(atan2f(2.0f * q.x * q.y + 2.0f * q.z * q.w, 1.0f - 2.0f * ((q.y * q.y) + (q.z * q.z))));
+                    _interactablesSpritebatch->draw(gameplay::Vector3(dst.x, dst.y, 0), // dst
+                        nodePair.second,
+                        gameplay::Vector2(dst.width, dst.height),
+                        gameplay::Vector4::one(),
+                        (gameplay::Vector2::one() / 2),
+                        rotation);
+                }
+            }
+
+            if (interactableDrawn)
+            {
+                _interactablesSpritebatch->finish();
+            }
+            
             _characterRenderer.start();
 
             // Draw the player

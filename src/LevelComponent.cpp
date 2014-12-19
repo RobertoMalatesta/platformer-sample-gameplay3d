@@ -156,15 +156,40 @@ namespace platformer
         }
     }
 
-    void LevelComponent::loadCollision(gameplay::Properties * layerNamespace, CollisionType::Enum terrainType)
+    gameplay::Rectangle LevelComponent::getCollisionObjectBounds(gameplay::Properties * objectNamespace) const
+    {
+        gameplay::Rectangle rect;
+        rect.width = objectNamespace->getInt("width") * PLATFORMER_UNIT_SCALAR;
+        rect.height = objectNamespace->getInt("height") * PLATFORMER_UNIT_SCALAR;
+        rect.x = objectNamespace->getInt("x") * PLATFORMER_UNIT_SCALAR;
+        rect.y = -objectNamespace->getInt("y") * PLATFORMER_UNIT_SCALAR;
+        return rect;
+    }
+
+    void LevelComponent::createCollisionObject(CollisionType::Enum collisionType, gameplay::Properties * collisionProperties, gameplay::Rectangle const & bounds, float rotationZ)
+    {
+        gameplay::Node * node = gameplay::Node::create();
+        TerrainInfo * info = new TerrainInfo();
+        info->_CollisionType = collisionType;
+        node->setUserPointer(info);
+        node->translate(bounds.x, bounds.y, 0);
+        node->rotateZ(rotationZ);
+        getParent()->getNode()->addChild(node);
+        node->setScaleX(bounds.width);
+        node->setScaleY(bounds.height);
+        node->setCollisionObject(collisionProperties);
+        _collisionNodes[collisionType].push_back(node);
+    }
+
+    void LevelComponent::loadStaticCollision(gameplay::Properties * layerNamespace, CollisionType::Enum collisionType)
     {
         if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
         {
             std::string collisionId;
 
-            switch (terrainType)
+            switch (collisionType)
             {
-            case CollisionType::COLLISION:
+            case CollisionType::COLLISION_STATIC:
                 collisionId = "world_collision";
                 break;
             case CollisionType::LADDER:
@@ -174,7 +199,7 @@ namespace platformer
                 collisionId = "reset";
                 break;
             default:
-                PLATFORMER_ASSERTFAIL("Unhandled CollisionType %d", terrainType);
+                PLATFORMER_ASSERTFAIL("Unhandled CollisionType %d", collisionType);
                 break;
             }
 
@@ -183,51 +208,72 @@ namespace platformer
             while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
             {
                 float rotationZ = 0.0f;
-                float width = objectNamespace->getInt("width") * PLATFORMER_UNIT_SCALAR;
-                float height = objectNamespace->getInt("height") * PLATFORMER_UNIT_SCALAR;
-                float x = objectNamespace->getInt("x") * PLATFORMER_UNIT_SCALAR;
-                float y = -objectNamespace->getInt("y") * PLATFORMER_UNIT_SCALAR;
+                gameplay::Rectangle bounds = getCollisionObjectBounds(objectNamespace);
 
                 if (gameplay::Properties * lineNamespace = objectNamespace->getNamespace("polyline", true))
                 {
                     if (gameplay::Properties * lineVectorNamespace = objectNamespace->getNamespace("polyline_1", true))
                     {
-                        gameplay::Vector2 const start(x, y);
+                        gameplay::Vector2 const start(bounds.x, bounds.y);
                         gameplay::Vector2 end(start.x + (lineVectorNamespace->getFloat("x")  * PLATFORMER_UNIT_SCALAR), 
                             start.y + (lineVectorNamespace->getFloat("y") * PLATFORMER_UNIT_SCALAR));
                         gameplay::Vector2 direction = start - end;
                         direction.normalize();
                         rotationZ = -acos(direction.dot(gameplay::Vector2::unitX()));
                         gameplay::Vector2 tranlsation = start - (start + end) / 2;
-                        x -= tranlsation.x;
-                        y += tranlsation.y;
+                        bounds.x -= tranlsation.x;
+                        bounds.y += tranlsation.y;
                         static const float lineHeight = 0.05f;
-                        width = start.distance(end);
-                        height = lineHeight;
+                        bounds.width = start.distance(end);
+                        bounds.height = lineHeight;
                     }
                 }
                 else
                 {
-                    x += width / 2;
-                    y -= height / 2;
+                    bounds.x += bounds.width / 2;
+                    bounds.y -= bounds.height / 2;
                 }
 
                 std::array<char, 255> extentsBuffer;
-                sprintf(&extentsBuffer[0], "%f, %f, 1", width, height);
+                sprintf(&extentsBuffer[0], "%f, %f, 1", bounds.width, bounds.height);
                 collisionProperties->setString("extents", &extentsBuffer[0]);
-
-                gameplay::Node * node = gameplay::Node::create();
-                TerrainInfo * info = new TerrainInfo();
-                info->_CollisionType = terrainType;
-                node->setUserPointer(info);
-                node->translate(x, y, 0);
-                node->rotateZ(rotationZ);
-                getParent()->getNode()->addChild(node);
-                node->setCollisionObject(collisionProperties);
-                _collisionNodes[terrainType].push_back(node);
+                createCollisionObject(collisionType, collisionProperties, bounds, rotationZ);
             }
 
             SAFE_DELETE(collisionProperties);
+        }
+    }
+
+    void LevelComponent::loadDynamicCollision(gameplay::Properties * layerNamespace)
+    {
+        if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
+        {
+            while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
+            {
+                bool const isBoulder = objectNamespace->exists("ellipse");
+                std::string collisionId = isBoulder ? "boulder" : "crate";
+
+                gameplay::Properties * collisionProperties = createProperties((std::string("res/physics/level.physics#") + collisionId).c_str());
+                gameplay::Rectangle bounds = getCollisionObjectBounds(objectNamespace);
+                std::array<char, 255> dimensionsBuffer;
+                std::string dimensionsId = "extents";
+                bounds.x += bounds.width / 2;
+                bounds.y -= bounds.height / 2;
+
+                if (isBoulder)
+                {
+                    dimensionsId = "radius";
+                    sprintf(&dimensionsBuffer[0], "%f", bounds.height / 2);
+                }
+                else
+                {
+                    sprintf(&dimensionsBuffer[0], "%f, %f, 1", bounds.width, bounds.height);
+                }
+
+                collisionProperties->setString(dimensionsId.c_str(), &dimensionsBuffer[0]);
+                createCollisionObject(CollisionType::COLLISION_DYNAMIC, collisionProperties, bounds);
+                SAFE_DELETE(collisionProperties);
+            }
         }
     }
 
@@ -267,18 +313,22 @@ namespace platformer
                 }
                 else if (layerName.find("collision") != std::string::npos)
                 {
-                    CollisionType::Enum terrainType = CollisionType::COLLISION;
+                    CollisionType::Enum collisionType = CollisionType::COLLISION_STATIC;
 
                     if (layerName == "collision_ladder")
                     {
-                        terrainType = CollisionType::LADDER;
+                        collisionType = CollisionType::LADDER;
                     }
                     else if (layerName == "collision_hand_of_god")
                     {
-                        terrainType = CollisionType::RESET;
+                        collisionType = CollisionType::RESET;
                     }
 
-                    loadCollision(layerNamespace, terrainType);
+                    loadStaticCollision(layerNamespace, collisionType);
+                }
+                else if (layerName == "interactive_props")
+                {
+                    loadDynamicCollision(layerNamespace);
                 }
             }
         }
@@ -353,9 +403,9 @@ namespace platformer
         return _playerSpawnPosition;
     }
 
-    void LevelComponent::forEachCachedNode(CollisionType::Enum terrainType, std::function<void(gameplay::Node *)> func)
+    void LevelComponent::forEachCachedNode(CollisionType::Enum collisionType, std::function<void(gameplay::Node *)> func)
     {
-        for (gameplay::Node * node : _collisionNodes[terrainType])
+        for (gameplay::Node * node : _collisionNodes[collisionType])
         {
             func(node);
         }

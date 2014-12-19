@@ -9,6 +9,7 @@ collisionObject world_collision
     restitution = 0
     linearDamping = 0
     angularDamping = 0
+    mass = 0
 }
 
 collisionObject ladder : world_collision
@@ -19,4 +20,20 @@ collisionObject ladder : world_collision
 collisionObject reset : world_collision
 {
     type = GHOST_OBJECT
+}
+
+collisionObject boulder : world_collision
+{
+    shape = SPHERE
+    kinematic = false
+    mass = 10
+    friction = 10
+    restitution = 0.1
+    anisotropicFriction = 1, 1, 1
+}
+
+collisionObject crate : boulder
+{
+    shape = BOX
+    friction = 5
 }

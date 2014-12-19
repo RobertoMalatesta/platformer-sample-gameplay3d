@@ -73,10 +73,13 @@ namespace platformer
         bool _levelLoaded;
         bool _levelLoadedOnce;
         gameplay::SpriteBatch * _pixelSpritebatch;
+        SpriteSheet * _interactablesSpritesheet;
         std::vector<ParallaxLayer> _parallaxLayers;
         gameplay::SpriteBatch * _parallaxSpritebatch;
+        gameplay::SpriteBatch * _interactablesSpritebatch;
         gameplay::Vector4 _parallaxFillColor;
         gameplay::Vector2 _parallaxOffset;
+        std::vector<std::pair<gameplay::Node *, gameplay::Rectangle>> _dynamicCollisionNodes;
     };
 }
 
