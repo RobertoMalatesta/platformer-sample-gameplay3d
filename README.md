@@ -23,8 +23,9 @@ TODO
 
 ### Tools used
 - [Audacity](http://audacity.sourceforge.net/)
-- [Paint.net](http://www.getpaint.net/)
+- [Inkscape](https://www.inkscape.org/en/download/)
 - [json-to-gameplay3d](https://github.com/louis-mclaughlin/json-to-gameplay3d)
+- [Paint.net](http://www.getpaint.net/)
 - [SFXR](http://www.drpetter.se/project_sfxr.html)
 - [TexturePacker (lite)](https://www.codeandweb.com/texturepacker)
 - [Tiled](http://www.mapeditor.org/)
