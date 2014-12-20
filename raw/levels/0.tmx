@@ -53,14 +53,22 @@
   <object x="1823" y="892" width="1.51206" height="365.583"/>
  </objectgroup>
  <objectgroup name="interactive_props">
-  <object x="2071.81" y="1146.95" width="128" height="128">
+  <object x="2105.73" y="1176.02" width="100" height="100">
    <ellipse/>
   </object>
-  <object x="1906.87" y="954.782" width="64" height="64"/>
   <object x="1984.16" y="949.312" width="64" height="64"/>
-  <object x="1945.29" y="878.32" width="64" height="64"/>
-  <object x="1621.85" y="1203.58" width="64" height="64"/>
+  <object x="1971.94" y="878.32" width="64" height="64"/>
+  <object x="1440.12" y="952.789" width="128" height="128"/>
   <object x="2418.31" y="636.89" width="128" height="128">
+   <ellipse/>
+  </object>
+  <object x="1730.84" y="854.089" width="32" height="32"/>
+  <object x="1718.73" y="900.128" width="48" height="48"/>
+  <object x="1714.24" y="958.417" width="64" height="64"/>
+  <object x="2837.5" y="1143.31" width="128" height="128">
+   <ellipse/>
+  </object>
+  <object x="2245.06" y="1223.27" width="50" height="50">
    <ellipse/>
   </object>
  </objectgroup>

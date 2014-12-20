@@ -3999,7 +3999,7 @@ layers
             objects_0
             {
                 ellipse = true
-                height = 128
+                height = 100
                 name = 
 
                 properties
@@ -4009,29 +4009,12 @@ layers
                 rotation = 0
                 type = 
                 visible = true
-                width = 128
-                x = 2071.80982954912
-                y = 1146.9460698831001
+                width = 100
+                x = 2105.73277599933
+                y = 1176.02288112613
             }
 
             objects_1
-            {
-                height = 64
-                name = 
-
-                properties
-                {
-                }
-
-                rotation = 0
-                type = 
-                visible = true
-                width = 64
-                x = 1906.8717948717899
-                y = 954.78205128205104
-            }
-
-            objects_2
             {
                 height = 64
                 name = 
@@ -4048,7 +4031,7 @@ layers
                 y = 949.31244665632801
             }
 
-            objects_3
+            objects_2
             {
                 height = 64
                 name = 
@@ -4061,13 +4044,13 @@ layers
                 type = 
                 visible = true
                 width = 64
-                x = 1945.2856155408899
+                x = 1971.93935918034
                 y = 878.31991777561404
             }
 
-            objects_4
+            objects_3
             {
-                height = 64
+                height = 128
                 name = 
 
                 properties
@@ -4077,12 +4060,12 @@ layers
                 rotation = 0
                 type = 
                 visible = true
-                width = 64
-                x = 1621.8461538461499
-                y = 1203.5769230769199
+                width = 128
+                x = 1440.11608357719
+                y = 952.78942610575803
             }
 
-            objects_5
+            objects_4
             {
                 ellipse = true
                 height = 128
@@ -4098,6 +4081,93 @@ layers
                 width = 128
                 x = 2418.3084968619401
                 y = 636.89033932821496
+            }
+
+            objects_5
+            {
+                height = 32
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 32
+                x = 1730.84413262352
+                y = 854.08924173975299
+            }
+
+            objects_6
+            {
+                height = 48
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 48
+                x = 1718.7287946055901
+                y = 900.12752620788899
+            }
+
+            objects_7
+            {
+                height = 64
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 64
+                x = 1714.2379203866999
+                y = 958.41665268742997
+            }
+
+            objects_8
+            {
+                ellipse = true
+                height = 128
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 128
+                x = 2837.4991922823401
+                y = 1143.3114684777199
+            }
+
+            objects_9
+            {
+                ellipse = true
+                height = 50
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 50
+                x = 2245.0591632055298
+                y = 1223.27269939606
             }
         }
 
