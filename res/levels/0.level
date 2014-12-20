@@ -869,7 +869,7 @@ layers
             860 = 0
             861 = 0
             862 = 0
-            863 = 8
+            863 = 0
             864 = 0
             865 = 0
             866 = 0
@@ -2500,7 +2500,7 @@ layers
             725 = 0
             726 = 0
             727 = 0
-            728 = 0
+            728 = 164
             729 = 0
             730 = 0
             731 = 0
@@ -2559,18 +2559,18 @@ layers
             784 = 0
             785 = 0
             786 = 0
-            787 = 0
-            788 = 0
-            789 = 0
-            790 = 0
-            791 = 0
-            792 = 0
-            793 = 0
-            794 = 0
-            795 = 0
-            796 = 151
-            797 = 153
-            798 = 0
+            787 = 73
+            788 = 74
+            789 = 74
+            790 = 74
+            791 = 74
+            792 = 74
+            793 = 74
+            794 = 74
+            795 = 74
+            796 = 74
+            797 = 75
+            798 = 163
             799 = 0
             800 = 0
             801 = 0
@@ -2640,7 +2640,7 @@ layers
             865 = 0
             866 = 0
             867 = 0
-            868 = 0
+            868 = 163
             869 = 0
             870 = 0
             871 = 0
@@ -2704,13 +2704,13 @@ layers
             929 = 0
             930 = 0
             931 = 0
-            932 = 151
-            933 = 152
-            934 = 152
-            935 = 153
+            932 = 0
+            933 = 0
+            934 = 0
+            935 = 0
             936 = 0
             937 = 0
-            938 = 164
+            938 = 163
             939 = 0
             940 = 0
             941 = 0
@@ -3559,6 +3559,24 @@ layers
                 x = 910.37300000000005
                 y = 1230.76
             }
+
+            objects_1
+            {
+                ellipse = true
+                height = 31.450600000000001
+                name = enemy_slime
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 36.373399999999997
+                x = 1420.4287305548801
+                y = 660.12757935546404
+            }
         }
 
         opacity = 1
@@ -3681,23 +3699,6 @@ layers
 
             objects_6
             {
-                height = 37.162700000000001
-                name = 
-
-                properties
-                {
-                }
-
-                rotation = 0
-                type = 
-                visible = true
-                width = 255.31200000000001
-                x = 1408
-                y = 832
-            }
-
-            objects_7
-            {
                 height = 37.086799999999997
                 name = 
 
@@ -3713,7 +3714,7 @@ layers
                 y = 1024
             }
 
-            objects_8
+            objects_7
             {
                 height = 37.167000000000002
                 name = 
@@ -3730,7 +3731,7 @@ layers
                 y = 1024
             }
 
-            objects_9
+            objects_8
             {
                 height = 37.162700000000001
                 name = 
@@ -3742,12 +3743,12 @@ layers
                 rotation = 0
                 type = 
                 visible = true
-                width = 128
-                x = 1664
+                width = 704.69008965350099
+                x = 1088
                 y = 704
             }
 
-            objects_10
+            objects_9
             {
                 height = 36.474499999999999
                 name = 
@@ -3764,7 +3765,7 @@ layers
                 y = 576
             }
 
-            objects_11
+            objects_10
             {
                 height = 64
                 name = 
@@ -3781,7 +3782,7 @@ layers
                 y = 768
             }
 
-            objects_12
+            objects_11
             {
                 height = 0
                 name = 
@@ -3810,6 +3811,38 @@ layers
                 visible = true
                 width = 0
                 x = 2304
+                y = 1280
+            }
+
+            objects_12
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = -256
+                        y = -256
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 2816
                 y = 1280
             }
 
@@ -3846,38 +3879,6 @@ layers
             }
 
             objects_14
-            {
-                height = 0
-                name = 
-
-                polyline
-                {
-                    polyline_0
-                    {
-                        x = 0
-                        y = 0
-                    }
-
-                    polyline_1
-                    {
-                        x = -256
-                        y = -256
-                    }
-                }
-
-                properties
-                {
-                }
-
-                rotation = 0
-                type = 
-                visible = true
-                width = 0
-                x = 2816
-                y = 1280
-            }
-
-            objects_15
             {
                 height = 128
                 name = 

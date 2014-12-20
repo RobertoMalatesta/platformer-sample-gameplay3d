@@ -8,16 +8,19 @@
  </tileset>
  <layer name="props" width="70" height="25">
   <data encoding="base64" compression="zlib">
-   eJzt1jsOgCAQRdHX+VmJrMJd6J500zYWNjITCx4x9yQEikm4FUECAABAxuAOAH6oPM67raKN0R2ArpV4BIHFHQB04HQHBFx9x73X/hqT6m/x9vHuOTGT6QMgrS8LaO0CbzMFxQ==
+   eJzt1jEOgCAQRNHpjJ5ETuEt8E5waRsLG9mNhWPMfwmBYhN+RZAAAACQMbkDgB8ql/NuqwD8SjyCwOoOAD6guwMCrr527qO/xqzxW1wf3r0kZjJ9AKTtZgFvOwAAUwW9
   </data>
  </layer>
  <layer name="terrain" width="70" height="25">
   <data encoding="base64" compression="zlib">
-   eJztllsKgCAQRd1DGw8iKnoQ2EKbIEkk0x46kvfA/Qu5HcYpIQAAAAAAAHhGQ2kpHXcRkCzbjGA+7lNRZiM1W5twqB1i7pGFp07ySO4CkfHdH7l5caHulRTH/XJ9q3vKGL5aNK7+T3znZXMyUCbxLzc2fLwoJ+WeHNy4vJhOuNzMieXMie5GfzbkOxU3YuvLFRtfnA0v772k6idE4OM8K/mzx9E=
+   eJztluEKgyAURn2Hnmrt5YIxatSG4B60KySEqLk2vZf5HTj0R+J2EG5KAQAAAAAAcI6RnMgH9yCCeHMPUJEL2Wd4JQ3TjNKJdbmR2vNeYyAh4L6Eaa2L3TE5+6W1Lke43Wy2pzPVciaf5UerRur/JPe+2CYL+VL/1SZGThfXZNhsoc1RF78JVxstzFCTfZv92ZLf1H1gbF4uY/zi3ejyfRepfUqIHmFXAybJWA==
   </data>
  </layer>
  <objectgroup name="characters">
   <object name="player" x="910.373" y="1230.76" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_slime" x="1420.43" y="660.128" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
  </objectgroup>
@@ -28,10 +31,9 @@
   <object x="3584" y="0" width="896" height="1280"/>
   <object x="1344" y="1088" width="191.398" height="37.5259"/>
   <object x="1152" y="960" width="128" height="37.2489"/>
-  <object x="1408" y="832" width="255.312" height="37.1627"/>
   <object x="1664" y="1024" width="128.241" height="37.0868"/>
   <object x="1856" y="1024" width="256" height="37.167"/>
-  <object x="1664" y="704" width="128" height="37.1627"/>
+  <object x="1088" y="704" width="704.69" height="37.1627"/>
   <object x="1856" y="576" width="192.688" height="36.4745"/>
   <object x="2176" y="768" width="384" height="64"/>
   <object x="2304" y="1280">
