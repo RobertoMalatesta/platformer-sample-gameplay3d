@@ -2,6 +2,7 @@
 
 #include "Common.h"
 #include "CollisionObjectComponent.h"
+#include "EnemyComponent.h"
 #include "GameObject.h"
 #include "GameObjectController.h"
 #include "Messages.h"
@@ -141,12 +142,16 @@ namespace platformer
 
                     for (CollisionObjectComponent * collisionComponent : collisionComponents)
                     {
+                        bool translate = true;
+
                         if (gameplay::PhysicsCharacter * character = collisionComponent->getNode()->getCollisionObject()->asCharacter())
                         {
-                            if (character->isPhysicsEnabled())
-                            {
-                                collisionComponent->getNode()->setTranslation(spawnPos.x, spawnPos.y, 0);
-                            }
+                            translate = character->isPhysicsEnabled();
+                        }
+
+                        if(translate)
+                        {
+                            collisionComponent->getNode()->setTranslation(spawnPos.x, spawnPos.y, 0);
                         }
                     }
 
@@ -329,6 +334,36 @@ namespace platformer
                 else if (layerName == "interactive_props")
                 {
                     loadDynamicCollision(layerNamespace);
+                }
+            }
+        }
+
+        for(gameobjects::GameObject * gameObject : _children)
+        {
+            if(EnemyComponent * enemyComponent = gameObject->getComponent<EnemyComponent>())
+            {
+                gameplay::Node * nearestCollisionNode = nullptr;
+                float nearestDistance = std::numeric_limits<float>::max();
+                gameplay::Vector3 const & enemyPosition = enemyComponent->getTriggerNode()->getTranslation();
+
+                forEachCachedNode(CollisionType::COLLISION_STATIC, [&nearestCollisionNode, &nearestDistance, &enemyPosition](gameplay::Node * collisionNode)
+                {
+                    float const distance = collisionNode->getTranslation().distanceSquared(enemyPosition);
+
+                    if(distance < nearestDistance)
+                    {
+                        nearestCollisionNode = collisionNode;
+                        nearestDistance = distance;
+                    }
+                });
+
+                if(nearestCollisionNode)
+                {
+                    enemyComponent->getTriggerNode()->setTranslationY(nearestCollisionNode->getTranslationY() +
+                                                                      nearestCollisionNode->getScaleY() / 2 +
+                                                                      enemyComponent->getTriggerNode()->getScaleY() / 2);
+                    enemyComponent->setHorizontalConstraints(nearestCollisionNode->getTranslationX() - nearestCollisionNode->getScaleX() / 2,
+                                                    nearestCollisionNode->getTranslationX() + nearestCollisionNode->getScaleX() / 2);
                 }
             }
         }

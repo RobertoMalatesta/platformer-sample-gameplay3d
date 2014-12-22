@@ -15,23 +15,11 @@ collisionObject player_ducking : player_normal
     height = 2.21875
 }
 
-collisionObject enemy_slime
-{
-    type = CHARACTER
-    shape = BOX
-    extents = 1.5625, 0.875, 0
-    mass = 3.2
-    maxStepHeight = 0
-    maxSlopeAngle = 0
-}
-
 collisionObject enemy_slime_trigger
 {
     type = GHOST_OBJECT
-    shape = CAPSULE
-    radius = 0.0625
-    height = 2.1875
-    mass = 3.2
+    shape = BOX
+    extents = 1.5625, 0.875, 0
 }
 
 collisionObject enemy_snail : enemy_slime

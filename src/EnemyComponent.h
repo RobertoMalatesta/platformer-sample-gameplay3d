@@ -14,7 +14,7 @@ namespace platformer
     class SpriteAnimationComponent;
 
     /**
-     * A simple enemy behaviour that walks horizontally along a surface until it encounters an obstruction,
+     * A simple enemy behaviour that walks horizontally along a surface until it reaches an edge,
      * after which, it will head in the opposite direciton.
      *
      * @script{ignore}
@@ -36,30 +36,28 @@ namespace platformer
 
         void onStart() override;
         void finalize() override;
-        void update(float) override;
+        void update(float elapsedTime) override;
         void readProperties(gameplay::Properties & properties) override;
         void forEachAnimation(std::function <bool(State::Enum, SpriteAnimationComponent *)> func);
+        void setHorizontalConstraints(float minX, float maxX);
         void onTerrainCollision();
         State::Enum getState() const;
         gameplay::Vector2 getPosition() const;
         SpriteAnimationComponent * getCurrentAnimation();
-        gameplay::Node * getTerrainCollisionTriggerNode() const;
-        gameplay::Node * getCharacterCollisionTriggerNode() const;
+        gameplay::Node * getTriggerNode() const;
 
         bool IsLeftFacing() const;
     private:
         EnemyComponent(EnemyComponent const &);
 
-        gameplay::Node * _characterNode;
         gameplay::Node * _triggerNode;
         std::map<State::Enum, SpriteAnimationComponent*> _animations;
         bool _isLeftFacing;
-        bool _wasPreviouslyLeftFacing;
         State::Enum _state;
         float _movementSpeed;
-
+        float _minX;
+        float _maxX;
         std::string _walkAnimComponentId;
-        std::string _characterComponentId;
         std::string _triggerComponentId;
     };
 }

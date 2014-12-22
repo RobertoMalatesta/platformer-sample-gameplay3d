@@ -71,7 +71,7 @@ namespace platformer
         for(EnemyComponent * enemy  : enemyComponents)
         {
             enemy->addRef();
-            gameplay::Node * enemyNode = enemy->getTerrainCollisionTriggerNode();
+            gameplay::Node * enemyNode = enemy->getTriggerNode();
             enemyNode->addRef();
             gameplay::PhysicsCollisionObject * enemyPhysics = enemyNode->getCollisionObject();
             _enemies[enemyPhysics] = enemy;
@@ -140,7 +140,7 @@ namespace platformer
         for (auto & enemyPair : _enemies)
         {
             EnemyComponent * enemyComponent = enemyPair.second;
-            enemyComponent->getCharacterCollisionTriggerNode()->getCollisionObject()->addCollisionListener(this, playerCollisionObject);
+            enemyComponent->getTriggerNode()->getCollisionObject()->addCollisionListener(this, playerCollisionObject);
         }
     }
 
@@ -189,24 +189,13 @@ namespace platformer
         {
             switch(collisionPair.objectB->getType())
             {
-            case gameplay::PhysicsCollisionObject::Type::RIGID_BODY:
-                {
-                    auto itr = _enemies.find(collisionPair.objectA);
-
-                    if(itr != _enemies.end())
-                    {
-                        EnemyComponent * enemyComponent = itr->second;
-                        enemyComponent->onTerrainCollision();
-                        return true;
-                    }
-                }
-                break;
             case gameplay::PhysicsCollisionObject::Type::CHARACTER:
                 {
                     getRootParent()->broadcastMessage(_forceHandOfGodMessage);
                     return true;
                 }
                 break;
+            case gameplay::PhysicsCollisionObject::Type::RIGID_BODY:
             case gameplay::PhysicsCollisionObject::Type::GHOST_OBJECT:
             case gameplay::PhysicsCollisionObject::Type::VEHICLE:
             case gameplay::PhysicsCollisionObject::Type::VEHICLE_WHEEL:
