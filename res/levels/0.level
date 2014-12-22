@@ -3574,8 +3574,44 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 1420.4287305548801
-                y = 660.12757935546404
+                x = 1420.4300000000001
+                y = 660.12800000000004
+            }
+
+            objects_2
+            {
+                ellipse = true
+                height = 31.450600000000001
+                name = enemy_snail
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 36.373399999999997
+                x = 1918.8133
+                y = 537.27470000000005
+            }
+
+            objects_3
+            {
+                ellipse = true
+                height = 31.450600000000001
+                name = enemy_spider
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 36.373399999999997
+                x = 2278.8132999999998
+                y = 729.27470000000005
             }
         }
 
@@ -3743,7 +3779,7 @@ layers
                 rotation = 0
                 type = 
                 visible = true
-                width = 704.69008965350099
+                width = 704.69000000000005
                 x = 1088
                 y = 704
             }
@@ -3914,7 +3950,7 @@ layers
         {
             objects_0
             {
-                height = 26.5417750172533
+                height = 26.541799999999999
                 name = 
 
                 properties
@@ -3924,7 +3960,7 @@ layers
                 rotation = 0
                 type = 
                 visible = true
-                width = 377.95568875086201
+                width = 377.95600000000002
                 x = 3005.8200000000002
                 y = 1438.9100000000001
             }
@@ -3965,7 +4001,7 @@ layers
         {
             objects_0
             {
-                height = 365.58300000000003
+                height = 544.58299999999997
                 name = 
 
                 properties
@@ -3975,9 +4011,9 @@ layers
                 rotation = 0
                 type = 
                 visible = true
-                width = 1.51206
+                width = 2.5120600000000199
                 x = 1823
-                y = 892
+                y = 704
             }
         }
 
@@ -3992,7 +4028,7 @@ layers
     layers_6
     {
         draworder = topdown
-        height = 25
+        height = 0
         name = interactive_props
 
         objects
@@ -4011,8 +4047,8 @@ layers
                 type = 
                 visible = true
                 width = 100
-                x = 2105.73277599933
-                y = 1176.02288112613
+                x = 2105.73
+                y = 1176.02
             }
 
             objects_1
@@ -4028,8 +4064,8 @@ layers
                 type = 
                 visible = true
                 width = 64
-                x = 1984.15512039141
-                y = 949.31244665632801
+                x = 1984.1600000000001
+                y = 949.31200000000001
             }
 
             objects_2
@@ -4045,80 +4081,11 @@ layers
                 type = 
                 visible = true
                 width = 64
-                x = 1971.93935918034
-                y = 878.31991777561404
+                x = 1971.9400000000001
+                y = 878.32000000000005
             }
 
             objects_3
-            {
-                height = 128
-                name = 
-
-                properties
-                {
-                }
-
-                rotation = 0
-                type = 
-                visible = true
-                width = 128
-                x = 1440.11608357719
-                y = 952.78942610575803
-            }
-
-            objects_4
-            {
-                ellipse = true
-                height = 128
-                name = 
-
-                properties
-                {
-                }
-
-                rotation = 0
-                type = 
-                visible = true
-                width = 128
-                x = 2418.3084968619401
-                y = 636.89033932821496
-            }
-
-            objects_5
-            {
-                height = 32
-                name = 
-
-                properties
-                {
-                }
-
-                rotation = 0
-                type = 
-                visible = true
-                width = 32
-                x = 1730.84413262352
-                y = 854.08924173975299
-            }
-
-            objects_6
-            {
-                height = 48
-                name = 
-
-                properties
-                {
-                }
-
-                rotation = 0
-                type = 
-                visible = true
-                width = 48
-                x = 1718.7287946055901
-                y = 900.12752620788899
-            }
-
-            objects_7
             {
                 height = 64
                 name = 
@@ -4131,11 +4098,62 @@ layers
                 type = 
                 visible = true
                 width = 64
-                x = 1714.2379203866999
-                y = 958.41665268742997
+                x = 1970.78666666667
+                y = 798.12233333333302
             }
 
-            objects_8
+            objects_4
+            {
+                height = 32
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 32
+                x = 1730.8399999999999
+                y = 854.08900000000006
+            }
+
+            objects_5
+            {
+                height = 48
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 48
+                x = 1718.73
+                y = 900.12800000000004
+            }
+
+            objects_6
+            {
+                height = 64
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 64
+                x = 1714.24
+                y = 958.41700000000003
+            }
+
+            objects_7
             {
                 ellipse = true
                 height = 128
@@ -4149,11 +4167,11 @@ layers
                 type = 
                 visible = true
                 width = 128
-                x = 2837.4991922823401
-                y = 1143.3114684777199
+                x = 2837.5
+                y = 1143.3099999999999
             }
 
-            objects_9
+            objects_8
             {
                 ellipse = true
                 height = 50
@@ -4167,15 +4185,15 @@ layers
                 type = 
                 visible = true
                 width = 50
-                x = 2245.0591632055298
-                y = 1223.27269939606
+                x = 2245.0599999999999
+                y = 1223.27
             }
         }
 
         opacity = 1
         type = objectgroup
         visible = true
-        width = 70
+        width = 0
         x = 0
         y = 0
     }
