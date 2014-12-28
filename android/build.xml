@@ -60,7 +60,8 @@
        <copy todir="assets">
             <fileset file="../game.config" />
        </copy>
-       <copy todir="src/org/gameplay3d">
+       <mkdir dir="../src/org/gameplay3d"/>
+       <copy todir="../src/org/gameplay3d">
            <fileset dir="../external/GamePlay/gameplay/src/org/gameplay3d"/>
        </copy>
     </target>
