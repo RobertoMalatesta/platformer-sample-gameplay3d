@@ -4,4 +4,3 @@
 [submodule "external/GamePlay"]
 	path = external/GamePlay
 	url = https://github.com/gameplay3d/GamePlay.git
-	branch = next
