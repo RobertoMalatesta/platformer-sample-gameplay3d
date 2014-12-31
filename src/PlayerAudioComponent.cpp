@@ -58,12 +58,6 @@ namespace platformer
                 source->play();
             }
             break;
-        case(Messages::Type::PlayerNodeChangedMessage):
-            {
-                gameplay::Node * jumpAudioNode = _audioNodes[_jumpAudioSourcePath];
-                gameobjects::GameObjectController::getInstance().getScene()->getActiveCamera()->getNode()->addChild(jumpAudioNode);
-            }
-            break;
         }
     }
 

@@ -30,7 +30,6 @@ namespace platformer
             {
                 Idle,
                 Walking,
-                Ducking,
                 Cowering,
                 Jumping,
                 Climbing
@@ -72,16 +71,12 @@ namespace platformer
         void setClimpingSnapPositionX(float posX);
         void setMovementEnabled(MovementDirection::Enum direction, bool enabled, float scale = 1.0f);
         void jump(float scale = 1.0f);
-        void duck();
         bool IsLeftFacing() const;
     private:
         PlayerComponent(PlayerComponent const &);
 
-        void swapCharacterPhysics();
-
         gameplay::Node * _characterNode;
         gameplay::Node * _characterNormalNode;
-        gameplay::Node * _characterDuckingNode;
         std::map<State::Enum, SpriteAnimationComponent*> _animations;
         State::Enum _state;
         bool _isLeftFacing;
@@ -95,15 +90,12 @@ namespace platformer
 
         std::string _idleAnimComponentId;
         std::string _walkAnimComponentId;
-        std::string _duckAnimComponentId;
         std::string _cowerAnimComponentId;
         std::string _jumpAnimComponentId;
         std::string _normalCharacterComponentId;
-        std::string _duckingCharacterComponentId;
         std::string _climbingCharacterComponentId;
 
         gameplay::AIMessage * _jumpMessage;
-        gameplay::AIMessage * _nodeChangedMessage;
         CameraControlComponent * _camera;
     };
 }

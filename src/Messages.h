@@ -19,7 +19,6 @@ namespace platformer
             Gamepad,
             PlayerJump,
             PlayerForceHandOfGodReset,
-            PlayerNodeChangedMessage,
             LevelLoaded,
             PreLevelUnloaded,
             LevelUnloaded,

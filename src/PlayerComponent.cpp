@@ -17,10 +17,8 @@ namespace platformer
         , _jumpHeight(1.0f)
         , _characterNode(nullptr)
         , _characterNormalNode(nullptr)
-        , _characterDuckingNode(nullptr)
         , _movementScale(0.0f)
         , _jumpMessage(nullptr)
-        , _nodeChangedMessage(nullptr)
         , _climbingEnabled(false)
         , _climbingSnapPositionX(0.0f)
     {
@@ -34,24 +32,17 @@ namespace platformer
     {
         _animations[State::Idle] = getParent()->findComponent<SpriteAnimationComponent>(_idleAnimComponentId);
         _animations[State::Walking] = getParent()->findComponent<SpriteAnimationComponent>(_walkAnimComponentId);
-        _animations[State::Ducking] = getParent()->findComponent<SpriteAnimationComponent>(_duckAnimComponentId);
         _animations[State::Cowering] = getParent()->findComponent<SpriteAnimationComponent>(_cowerAnimComponentId);
         _animations[State::Jumping] = getParent()->findComponent<SpriteAnimationComponent>(_jumpAnimComponentId);
         _animations[State::Climbing] = getParent()->findComponent<SpriteAnimationComponent>(_climbingCharacterComponentId);
 
         _characterNormalNode = getParent()->findComponent<CollisionObjectComponent>(_normalCharacterComponentId)->getNode();
-        _characterDuckingNode = getParent()->findComponent<CollisionObjectComponent>(_duckingCharacterComponentId)->getNode();
         _characterNormalNode->addRef();
-        _characterDuckingNode->addRef();
-        _characterDuckingNode->getCollisionObject()->asCharacter()->setPhysicsEnabled(false);
         _characterNode = _characterNormalNode;
         _jumpMessage = PlayerJumpMessage::create();
-        _nodeChangedMessage = PlayerNodeChangedMessage::create();
         _state = State::Idle;
         _camera = getRootParent()->getComponent<CameraControlComponent>();
         _camera->addRef();
-        PlayerNodeChangedMessage::setMessage(_nodeChangedMessage, nullptr, _characterNode);
-        getParent()->broadcastMessage(_nodeChangedMessage);
     }
 
     void PlayerComponent::finalize()
@@ -59,45 +50,19 @@ namespace platformer
         _characterNode = nullptr;
         SAFE_RELEASE(_camera);
         SAFE_RELEASE(_characterNormalNode);
-        SAFE_RELEASE(_characterDuckingNode);
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_jumpMessage);
-        PLATFORMER_SAFE_DELETE_AI_MESSAGE(_nodeChangedMessage);
     }
 
     void PlayerComponent::readProperties(gameplay::Properties & properties)
     {
         _idleAnimComponentId = properties.getString("idle_anim");
         _walkAnimComponentId = properties.getString("walk_anim");
-        _duckAnimComponentId = properties.getString("duck_anim");
         _cowerAnimComponentId = properties.getString("cower_anim");
         _jumpAnimComponentId = properties.getString("jump_anim");
         _climbingCharacterComponentId = properties.getString("climb_anim");
         _movementSpeed = properties.getFloat("speed");
         _jumpHeight = properties.getFloat("jump_height");
         _normalCharacterComponentId = properties.getString("normal_physics");
-        _duckingCharacterComponentId = properties.getString("ducking_physics");
-    }
-
-    void PlayerComponent::swapCharacterPhysics()
-    {
-        gameplay::PhysicsCharacter * previousCharacter = _characterNode->getCollisionObject()->asCharacter();
-        gameplay::Vector3 previousVelocity = previousCharacter->getCurrentVelocity();
-        gameplay::Vector3 previousTranslation = _characterNode->getTranslation();
-        _characterNode->setTranslation(gameplay::Vector3::zero());
-        previousCharacter->setPhysicsEnabled(false);
-        previousCharacter->setVelocity(gameplay::Vector3::zero());
-
-        float const heightOffset = ((_animations[_state]->getCurrentSpriteSrc().height -
-                _animations[_previousState]->getCurrentSpriteSrc().height) * PLATFORMER_UNIT_SCALAR) / 2.0f;
-        previousTranslation.y += heightOffset;
-
-        _characterNode = _characterNode == _characterNormalNode ? _characterDuckingNode : _characterNormalNode;
-        _characterNode->setTranslation(previousTranslation);
-        gameplay::PhysicsCharacter * currentCharacter = _characterNode->getCollisionObject()->asCharacter();
-        currentCharacter->setPhysicsEnabled(true);
-        currentCharacter->setVelocity(previousVelocity);
-        PlayerNodeChangedMessage::setMessage(_nodeChangedMessage, previousCharacter->getNode(), currentCharacter->getNode());
-        getRootParent()->broadcastMessage(_nodeChangedMessage);
     }
 
     PlayerComponent::State::Enum PlayerComponent::getState() const
@@ -137,23 +102,7 @@ namespace platformer
 
             if (velocity.isZero())
             {
-                if(_movementDirection == MovementDirection::Down)
-                {
-                    if(_previousState != State::Climbing)
-                    {
-                        _state = State::Ducking;
-
-                        if(_previousState != State::Ducking)
-                        {
-                            swapCharacterPhysics();
-                        }
-                    }
-                    else
-                    {
-                        _state = State::Idle;
-                    }
-                }
-                else if(_movementDirection == MovementDirection::None || _movementDirection == MovementDirection::Up)
+                if(_movementDirection == MovementDirection::None || _movementDirection == MovementDirection::Up)
                 {
                     _state = State::Idle;
                 }
@@ -200,11 +149,6 @@ namespace platformer
             getCurrentAnimation()->setSpeed(_movementScale);
         }
 
-        if(_previousState == State::Ducking && _state != State::Ducking)
-        {
-            swapCharacterPhysics();
-        }
-
         _characterNode->setTranslationZ(0);
 
         _previousState = _state;
@@ -226,9 +170,9 @@ namespace platformer
     {
         if(enabled)
         {
-            float const minDuckScale = 0.75f;
+            float const minDownScale = 0.75f;
 
-            if(direction != MovementDirection::Down || scale > minDuckScale)
+            if (direction != MovementDirection::Down || scale > minDownScale)
             {
                 _movementDirection = direction;
 
@@ -300,8 +244,7 @@ namespace platformer
 
     void PlayerComponent::jump(float scale)
     {
-        if(_characterNode->getCollisionObject()->asCharacter()->getCurrentVelocity().y == 0.0f &&
-                _state != State::Ducking && _state != State::Climbing)
+        if(_characterNode->getCollisionObject()->asCharacter()->getCurrentVelocity().y == 0.0f && _state != State::Climbing)
         {
             _state = State::Jumping;
             _characterNode->getCollisionObject()->asCharacter()->setPhysicsEnabled(true);

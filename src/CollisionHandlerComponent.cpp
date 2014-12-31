@@ -37,20 +37,6 @@ namespace platformer
         case(Messages::Type::LevelUnloaded):
             onLevelUnloaded();
             break;
-        case(Messages::Type::PlayerNodeChangedMessage):
-            {
-                PlayerNodeChangedMessage msg(message);
-
-                if(_playerCharacterNodes.insert(msg._currentNode).second)
-                {
-                    msg._currentNode->addRef();
-                    addPlayerCollisionListeners(msg._currentNode->getCollisionObject());
-                }
-
-                _playerClimbingTerrainRefCount = 0;
-                _player->setClimbingEnabled(false);
-            }
-            break;
         }
     }
 

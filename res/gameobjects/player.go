@@ -2,14 +2,12 @@ player
 {
     idle_anim = idle
     walk_anim = walk
-    duck_anim = duck
     cower_anim = cower
     jump_anim = jump
     climb_anim = climb
     speed = 9.0
     jump_height = 2.1
     normal_physics = character_normal
-    ducking_physics = character_ducking
 }
 
 player_input
@@ -31,11 +29,6 @@ collision_object character_normal
     physics = res/physics/characters.physics#player_normal
 }
 
-collision_object character_ducking
-{
-    physics = res/physics/characters.physics#player_ducking
-}
-
 sprite_animation walk
 {
     spritesheet = res/spritesheets/player.ss
@@ -49,12 +42,6 @@ sprite_animation climb : walk
     fps = 5
 }
 
-sprite_animation duck
-{
-    spritesheet = res/spritesheets/player.ss
-    spriteprefix = player_duck
-}
-
 sprite_animation idle
 {
     spritesheet = res/spritesheets/player.ss
@@ -65,8 +52,9 @@ sprite_animation idle
     autostart = true
 }
 
-sprite_animation cower : duck
+sprite_animation cower
 {
+    spritesheet = res/spritesheets/player.ss
     spriteprefix = player_hurt
 }
 
