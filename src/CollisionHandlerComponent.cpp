@@ -224,7 +224,16 @@ namespace platformer
 
                 if(terrainInfo->_CollisionType == CollisionType::LADDER)
                 {
-                    isColliding ? ++_playerClimbingTerrainRefCount : --_playerClimbingTerrainRefCount;
+                    if (isColliding)
+                    {
+                        _player->setClimpingSnapPositionX(collisionPair.objectB->getNode()->getTranslationX());
+                        ++_playerClimbingTerrainRefCount;
+                    }
+                    else
+                    {
+                        --_playerClimbingTerrainRefCount;
+                    }
+                    
                     _playerClimbingTerrainRefCount = MATH_CLAMP(_playerClimbingTerrainRefCount, 0, std::numeric_limits<int>::max());
                     _player->setClimbingEnabled(_playerClimbingTerrainRefCount > 0);
                     return true;

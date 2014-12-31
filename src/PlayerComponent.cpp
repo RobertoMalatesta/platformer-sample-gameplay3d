@@ -22,6 +22,7 @@ namespace platformer
         , _jumpMessage(nullptr)
         , _nodeChangedMessage(nullptr)
         , _climbingEnabled(false)
+        , _climbingSnapPositionX(0.0f)
     {
     }
 
@@ -233,6 +234,8 @@ namespace platformer
 
                 if(direction == MovementDirection::Up && _climbingEnabled)
                 {
+                    _characterNode->setTranslationX(_climbingSnapPositionX);
+
                     float const velocityY =  _characterNode->getCollisionObject()->asCharacter()->getCurrentVelocity().y;
                     float const maxVelocityYDelta = 0.1f;
 
@@ -288,6 +291,11 @@ namespace platformer
         }
 
         _climbingEnabled = enabled;
+    }
+
+    void PlayerComponent::setClimpingSnapPositionX(float posX)
+    {
+        _climbingSnapPositionX = posX;
     }
 
     void PlayerComponent::jump(float scale)

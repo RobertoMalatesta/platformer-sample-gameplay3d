@@ -69,6 +69,7 @@ namespace platformer
         SpriteAnimationComponent * getCurrentAnimation();
         gameplay::Node * getCharacterNode() const;
         void setClimbingEnabled(bool enabled);
+        void setClimpingSnapPositionX(float posX);
         void setMovementEnabled(MovementDirection::Enum direction, bool enabled, float scale = 1.0f);
         void jump(float scale = 1.0f);
         void duck();
@@ -90,6 +91,7 @@ namespace platformer
         State::Enum _previousState;
         float _movementSpeed;
         float _jumpHeight;
+        float _climbingSnapPositionX;
 
         std::string _idleAnimComponentId;
         std::string _walkAnimComponentId;
