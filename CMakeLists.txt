@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.7)
 PROJECT(platformer)
 
 set(GAME_NAME platformer)
-set(ARCH_DIR "x64" )
+set(ARCH_DIR "x86_64" )
 
 set(GAMEPLAY_SRC_PATH "external/GamePlay")
 set(GAMEPLAY_EXT_LIBS_PATH "${GAMEPLAY_SRC_PATH}/external-deps")
@@ -58,17 +58,17 @@ macro (append_gameplay_ext_lib listToAppend libName libDirName)
         IF (TARGET_OS STREQUAL "WINDOWS")
             find_library(${libName}_LIBRARY_RELEASE
                 NAMES ${libName} ${ARGN}
-                PATHS "${GAMEPLAY_EXT_LIBS_PATH}/${libDirName}/lib/${TARGET_OS_DIR}/${ARCH_DIR}/Release")
+                PATHS "${GAMEPLAY_EXT_LIBS_PATH}/lib/${TARGET_OS_DIR}/${ARCH_DIR}/Release")
             find_library(${libName}_LIBRARY_DEBUG
                 NAMES ${libName} ${ARGN}
-                PATHS "${GAMEPLAY_EXT_LIBS_PATH}/${libDirName}/lib/${TARGET_OS_DIR}/${ARCH_DIR}/Debug")
+                PATHS "${GAMEPLAY_EXT_LIBS_PATH}/lib/${TARGET_OS_DIR}/${ARCH_DIR}/Debug")
 
             set(FOUND_LIB_${libName}
                 debug ${${libName}_LIBRARY_DEBUG}
                 optimized ${${libName}_LIBRARY_RELEASE})
         ELSE (TARGET_OS STREQUAL "WINDOWS")
                 set(pathToSearch
-                    "${GAMEPLAY_EXT_LIBS_PATH}/${libDirName}/lib/${TARGET_OS_DIR}/${ARCH_DIR}")
+                    "${GAMEPLAY_EXT_LIBS_PATH}/lib/${TARGET_OS_DIR}/${ARCH_DIR}")
                 find_library(FOUND_LIB_${libName} NAMES ${libName} ${ARGN} HINTS ${pathToSearch})
         ENDIF (TARGET_OS STREQUAL "WINDOWS")
     ENDIF("${libDirName}" STREQUAL "")
@@ -87,28 +87,11 @@ endmacro(add_source_group)
 include_directories(
     ${GAMEPLAY_SRC_PATH}/gameplay/src
     ${CMAKE_SOURCE_DIR}/src
-    ${GAMEPLAY_SRC_PATH}/external-deps/lua/include
-    ${GAMEPLAY_SRC_PATH}/external-deps/bullet/include
-    ${GAMEPLAY_SRC_PATH}/external-deps/png/include
-    ${GAMEPLAY_SRC_PATH}/external-deps/ogg/include
-    ${GAMEPLAY_SRC_PATH}/external-deps/vorbis/include
-    ${GAMEPLAY_SRC_PATH}/external-deps/zlib/include
-    ${GAMEPLAY_SRC_PATH}/external-deps/openal/include
-    ${GAMEPLAY_SRC_PATH}/external-deps/openal/include/AL
-    ${GAMEPLAY_SRC_PATH}/external-deps/glew/include
+    ${GAMEPLAY_SRC_PATH}/external-deps/include
     ${PLATFORMER_EXT_LIBS_PATH}/${GAMEOBJECTS_LIB_DIR_NAME}/src
 )
 
-append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "GLEW" "glew" "glew32")
-append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "lua" "lua")
-append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "png" "png" "libpng")
-append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "BulletDynamics" "bullet")
-append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "BulletCollision" "bullet")
-append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "LinearMath" "bullet")
-append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "openal" "openal" "openal32")
-append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "vorbis" "vorbis" "libvorbis")
-append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "ogg" "ogg" "libogg")
-append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "z" "zlib" "zlib")
+append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "gameplay-deps" "libs")
 
 IF (TARGET_OS STREQUAL "LINUX")
     append_gameplay_ext_lib(GAMEPLAY_LIBRARIES "GL" "")
