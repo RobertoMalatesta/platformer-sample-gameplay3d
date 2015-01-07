@@ -43,41 +43,44 @@ namespace platformer
 
     void PlayerInputComponent::update(float)
     {
-        bool isAnyButtonDown = false;
-
-        for(int i = 0; i < GamepadButtons::EnumCount; ++i)
+        if(_gamePad)
         {
-            bool const isButtonDown = _gamePad->isButtonDown(static_cast<gameplay::Gamepad::ButtonMapping>(_gamepadButtonMapping[i]));
-            _gamepadButtonState[i] = isButtonDown;
-            isAnyButtonDown |= isButtonDown;
-        }
+            bool isAnyButtonDown = false;
 
-        if(isGamepadButtonPressed(GamepadButtons::Jump))
-        {
-            _player->jump();
-        }
-
-        gameplay::Vector2 joystickValue;
-        _gamePad->getJoystickValues(0, &joystickValue);
-
-        if(_previousJoystickValue != joystickValue)
-        {
-            gameplay::Vector2 joystickValueUnit = joystickValue;
-            joystickValueUnit.normalize();
-
-            float const maxDirectionDelta = cos(MATH_DEG_TO_RAD(25));
-
-            for(int i = PlayerComponent::MovementDirection::None + 1; i < PlayerComponent::MovementDirection::EnumCount; ++i)
+            for(int i = 0; i < GamepadButtons::EnumCount; ++i)
             {
-                _player->setMovementEnabled(static_cast<PlayerComponent::MovementDirection::Enum>(i),
-                                         joystickValueUnit.dot(_joystickMovementDirections[i]) > maxDirectionDelta,
-                                         joystickValue.length());
+                bool const isButtonDown = _gamePad->isButtonDown(static_cast<gameplay::Gamepad::ButtonMapping>(_gamepadButtonMapping[i]));
+                _gamepadButtonState[i] = isButtonDown;
+                isAnyButtonDown |= isButtonDown;
             }
-        }
 
-        _pinchEnabled = joystickValue.isZero() || !isAnyButtonDown;
-        _previousGamepadButtonState = _gamepadButtonState;
-        _previousJoystickValue = joystickValue;
+            if(isGamepadButtonPressed(GamepadButtons::Jump))
+            {
+                _player->jump();
+            }
+
+            gameplay::Vector2 joystickValue;
+            _gamePad->getJoystickValues(0, &joystickValue);
+
+            if(_previousJoystickValue != joystickValue)
+            {
+                gameplay::Vector2 joystickValueUnit = joystickValue;
+                joystickValueUnit.normalize();
+
+                float const maxDirectionDelta = cos(MATH_DEG_TO_RAD(25));
+
+                for(int i = PlayerComponent::MovementDirection::None + 1; i < PlayerComponent::MovementDirection::EnumCount; ++i)
+                {
+                    _player->setMovementEnabled(static_cast<PlayerComponent::MovementDirection::Enum>(i),
+                                             joystickValueUnit.dot(_joystickMovementDirections[i]) > maxDirectionDelta,
+                                             joystickValue.length());
+                }
+            }
+
+            _pinchEnabled = joystickValue.isZero() || !isAnyButtonDown;
+            _previousGamepadButtonState = _gamepadButtonState;
+            _previousJoystickValue = joystickValue;
+        }
     }
 
     bool PlayerInputComponent::isGamepadButtonPressed(GamepadButtons::Enum button) const
@@ -92,7 +95,7 @@ namespace platformer
 
     gameplay::Form * PlayerInputComponent::getGamepadForm() const
     {
-        return _gamePad->getForm();
+        return _gamePad ? _gamePad->getForm() : nullptr;
     }
 
     void PlayerInputComponent::onMessageReceived(gameplay::AIMessage * message)
