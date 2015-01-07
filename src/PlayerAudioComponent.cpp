@@ -3,10 +3,12 @@
 #include "Common.h"
 #include "GameObjectController.h"
 #include "MessagesPlayer.h"
+#include "PlayerComponent.h"
 
 namespace platformer
 {
     PlayerAudioComponent::PlayerAudioComponent()
+        : _player(nullptr)
     {
     }
 
@@ -16,6 +18,8 @@ namespace platformer
 
     void PlayerAudioComponent::initialize()
     {
+        _player = getParent()->getComponent<PlayerComponent>();
+        _player->addRef();
         addAudioNode(_jumpAudioSourcePath);
     }
 
@@ -33,6 +37,8 @@ namespace platformer
             PLATFORMER_ASSERT_SINGLE_REF(node);
             SAFE_RELEASE(node);
         }
+
+        SAFE_RELEASE(_player);
     }
 
     void PlayerAudioComponent::addAudioNode(std::string const & audioSourcePath)
@@ -40,6 +46,7 @@ namespace platformer
         gameplay::Node * node = gameplay::Node::create();
         gameplay::AudioSource * audioSource = gameplay::AudioSource::create(audioSourcePath.c_str());
         node->setAudioSource(audioSource);
+        _player->getParent()->getNode()->addChild(node);
         // Play it silently so that it performs lazy initialisation
         audioSource->setGain(0.0f);
         audioSource->play();
@@ -53,7 +60,9 @@ namespace platformer
         {
         case(Messages::Type::PlayerJump) :
             {
-                gameplay::AudioSource * source = _audioNodes[_jumpAudioSourcePath]->getAudioSource();
+                gameplay::Node * audioNode = _audioNodes[_jumpAudioSourcePath];
+                audioNode->setTranslation(_player->getCharacterNode()->getTranslation());
+                gameplay::AudioSource * source = audioNode->getAudioSource();
                 source->setGain(1.0f);
                 source->play();
             }

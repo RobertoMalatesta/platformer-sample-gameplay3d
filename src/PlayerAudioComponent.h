@@ -5,6 +5,7 @@
 
 namespace platformer
 {
+    class PlayerComponent;
     struct PlayerJumpMessage;
 
     /**
@@ -28,6 +29,7 @@ namespace platformer
         void addAudioNode(std::string const & audioSourcePath);
         std::string _jumpAudioSourcePath;
         std::map<std::string, gameplay::Node *> _audioNodes;
+        PlayerComponent * _player;
     };
 }
 
