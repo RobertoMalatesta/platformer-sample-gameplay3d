@@ -359,7 +359,7 @@ namespace platformer
             sprintf(&buffer[0], "%d FPS", getFrameRate());
             _debugFont->start();
             static const int padding = 5;
-            _debugFont->drawText(&buffer[0], padding, getHeight() - (padding * 4), gameplay::Vector4(1, 0, 0, 1));
+            _debugFont->drawText(&buffer[0], padding, padding, gameplay::Vector4(1, 0, 0, 1));
             _debugFont->finish();
         }
 #endif
