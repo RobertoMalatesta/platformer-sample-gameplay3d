@@ -176,10 +176,11 @@ namespace platformer
             {
                 _movementDirection = direction;
 
-                if(direction == MovementDirection::Up && _climbingEnabled)
-                {
-                    _characterNode->setTranslationX(_climbingSnapPositionX);
+                float const minDistToLadderCentre = std::pow(_characterNode->getScaleX() / 2.0f, 2);
+                gameplay::Vector3 const ladderPos = gameplay::Vector3(_climbingSnapPositionX, _characterNode->getTranslationY(), 0.0f);
 
+                if(direction == MovementDirection::Up && _climbingEnabled && _characterNode->getTranslation().distanceSquared(ladderPos) <= minDistToLadderCentre)
+                {
                     float const velocityY =  _characterNode->getCollisionObject()->asCharacter()->getCurrentVelocity().y;
                     float const maxVelocityYDelta = 0.1f;
 
