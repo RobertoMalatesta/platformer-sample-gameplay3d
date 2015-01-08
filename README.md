@@ -6,37 +6,28 @@ A 2D platformer made using the open source game framework Gameplay3D, other free
 
 ### Usage
 
-#### Windows [64 bit]
+#### Windows [64-bit only]
 ```
 TODO
 ```
 
-#### Linux [64 bit]
+#### Linux [64-bit only]
 ```
 TODO
 ```
 
-#### Android
+#### Android [4.1 onwards]
 ```
 TODO
 ```
-
-### Tools used
-- [Audacity](http://audacity.sourceforge.net/)
-- [Inkscape](https://www.inkscape.org/en/download/)
-- [json-to-gameplay3d](https://github.com/louis-mclaughlin/json-to-gameplay3d)
-- [Paint.net](http://www.getpaint.net/)
-- [SFXR](http://www.drpetter.se/project_sfxr.html)
-- [TexturePacker (lite)](https://www.codeandweb.com/texturepacker)
-- [Tiled](http://www.mapeditor.org/)
 
 ### Content pipeline
-- Audio:            SFXR -> (.wav)          ->  Audacity (.ogg)
-- Fonts:            (.ttf)                  ->  gameplay-encoder (.gpb)
-- Levels:           Tiled (.json)           ->  json-to-gameplay3d (.level)
-- Spritesheets:     TexturePacker (.json)   ->  json-to-gameplay3d (.ss)
+- Audio:            [SFXR](http://www.drpetter.se/project_sfxr.html) -> (.wav)          ->  [Audacity](http://audacity.sourceforge.net/) (.ogg)
+- Fonts:            (.ttf)                  ->  [gameplay-encoder](https://github.com/gameplay3d/GamePlay/wiki/Building-gameplay-encoder) (.gpb)
+- Levels:           [Tiled](http://www.mapeditor.org/) (.json)           ->  [json-to-gameplay3d](https://github.com/louis-mclaughlin/json-to-gameplay3d) (.level)
+- Spritesheets:     [TexturePacker lite](https://www.codeandweb.com/texturepacker) (.json)   ->  [json-to-gameplay3d](https://github.com/louis-mclaughlin/json-to-gameplay3d) (.ss)
 
-### External assets used
+### External content used
 - [https://www.google.com/fonts/specimen/Open+Sans](https://www.google.com/fonts/specimen/Open+Sans)
 - [http://kenney.nl/assets](http://kenney.nl/assets)
 - [https://github.com/blackberry/GamePlay/blob/master/gameplay/res/logo_black.png](https://github.com/blackberry/GamePlay/blob/master/gameplay/res/logo_black.png)
