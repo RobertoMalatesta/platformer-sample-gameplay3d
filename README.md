@@ -7,9 +7,9 @@ A 2D physics based platformer made using the open source game framework Gameplay
 ### Try it
 
 ```
-[TODO:Google play]()
-[TODO:Windows]()
-[TODO:Linux]()
+TODO:Google Play
+TODO:Windows
+TODO:Linux
 ```
 
 ### Build it
