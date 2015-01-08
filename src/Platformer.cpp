@@ -149,17 +149,19 @@ namespace platformer
 
     void Platformer::finalize()
     {
+        // Always cleanup game objects in case any components need to serialse game state
         gameobjects::GameObjectController::getInstance().finalize();
 
+        // Only perform cleanup in non final builds for the purposes of detecting memory leaks,
+        // in final builds we want to shutdown as fast as possible, the platform will free up
+        // all resources used by this process
+#ifndef _FINAL
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_pinchMessage);
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_keyMessage);
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_touchMessage);
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_mouseMessage);
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_gamepadMessage);
-        
-#ifndef _FINAL
         SAFE_RELEASE(_debugFont);
-#endif
         SAFE_DELETE(_splashBackgroundSpriteBatch);
         SAFE_DELETE(_splashForegroundSpriteBatch);
 
@@ -182,13 +184,12 @@ namespace platformer
         _cachedTextures.clear();
 
         // Removing log handlers once everything else has been torn down
-#ifndef _FINAL
         clearLogHistory();
-#endif
         void(*nullFuncPtr) (gameplay::Logger::Level, const char*) = nullptr;
         gameplay::Logger::set(gameplay::Logger::Level::LEVEL_INFO, nullFuncPtr);
         gameplay::Logger::set(gameplay::Logger::Level::LEVEL_WARN, nullFuncPtr);
         gameplay::Logger::set(gameplay::Logger::Level::LEVEL_ERROR, nullFuncPtr);
+#endif
     }
 
     void Platformer::broadcastKeyEvent(gameplay::Keyboard::KeyEvent evt, int key)
