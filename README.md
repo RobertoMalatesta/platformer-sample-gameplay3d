@@ -1,10 +1,18 @@
 #2D platformer sample v2.0.0
 
-A 2D platformer made using the open source game framework Gameplay3D, other freely available tools and free to use assets.
+A 2D physics based platformer made using the open source game framework Gameplay3D, other freely available libraries, tools and free to use assets.
 
 ![ScreenShot](https://raw.githubusercontent.com/louis-mclaughlin/platformer-sample-gameplay3d/master/raw/textures/platformer_big.jpg)
 
-### Usage
+### Try it
+
+```
+[TODO:Google play]()
+[TODO:Windows]()
+[TODO:Linux]()
+```
+
+### Build it
 
 #### Windows [64-bit only]
 ```
