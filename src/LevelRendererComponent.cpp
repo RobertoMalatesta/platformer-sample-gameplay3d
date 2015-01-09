@@ -431,11 +431,14 @@ namespace platformer
             for (auto & enemyAnimPairItr : _enemyAnimationBatches)
             {
                 EnemyComponent * enemy = enemyAnimPairItr.first;
-                std::map<int, gameplay::SpriteBatch *> & enemyBatches = enemyAnimPairItr.second;
-                _characterRenderer.render(enemy->getCurrentAnimation(),
-                                enemyBatches[enemy->getState()], spriteBatchProjection,
-                                enemy->IsLeftFacing() ? SpriteAnimationComponent::Flip::Horizontal : SpriteAnimationComponent::Flip::None,
-                                enemy->getPosition(), spriteViewport);
+                if(enemy->getTriggerNode()->isEnabled())
+                {
+                    std::map<int, gameplay::SpriteBatch *> & enemyBatches = enemyAnimPairItr.second;
+                    _characterRenderer.render(enemy->getCurrentAnimation(),
+                                    enemyBatches[enemy->getState()], spriteBatchProjection,
+                                    enemy->IsLeftFacing() ? SpriteAnimationComponent::Flip::Horizontal : SpriteAnimationComponent::Flip::None,
+                                    enemy->getPosition(), spriteViewport);
+                }
             }
 
             _characterRenderer.finish();

@@ -161,7 +161,7 @@ namespace platformer
     {
         if(!_waitForPhysicsCleanup && collisionPair.objectA->getNode()->getParent() != collisionPair.objectB->getNode()->getParent())
         {
-            if(!onEnemyCollision(type, collisionPair))
+            if(!onEnemyCollision(type, collisionPair, contactPointA, contactPointB))
             {
                 onPlayerCollision(type, collisionPair, contactPointA, contactPointB);
             }
@@ -169,7 +169,8 @@ namespace platformer
     }
 
     bool CollisionHandlerComponent::onEnemyCollision(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
-                                                     gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair)
+                                                     gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
+                                                     gameplay::Vector3 const & contactPointA, gameplay::Vector3 const & contactPointB)
     {
         if(type == gameplay::PhysicsCollisionObject::CollisionListener::EventType::COLLIDING)
         {
@@ -177,7 +178,17 @@ namespace platformer
             {
             case gameplay::PhysicsCollisionObject::Type::CHARACTER:
                 {
-                    getRootParent()->broadcastMessage(_forceHandOfGodMessage);
+                    float const playerVelY = collisionPair.objectB->asCharacter()->getCurrentVelocity().y;
+                    if((contactPointB.y >= contactPointA.y && playerVelY != 0) || playerVelY)
+                    {
+                        EnemyComponent * enemy = gameobjects::GameObject::getGameObject(collisionPair.objectA->getNode()->getParent())->getComponent<EnemyComponent>();
+                        enemy->kill();
+                    }
+                    else
+                    {
+                        getRootParent()->broadcastMessage(_forceHandOfGodMessage);
+                    }
+
                     return true;
                 }
                 break;

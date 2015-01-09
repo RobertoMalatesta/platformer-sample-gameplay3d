@@ -41,7 +41,8 @@ namespace platformer
         void addPlayerCollisionListeners(gameplay::PhysicsCollisionObject * playerCollisionObject);
 
         bool onEnemyCollision(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
-                              gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair);
+                              gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
+                              gameplay::Vector3 const & contactPointA, gameplay::Vector3 const & contactPointB);
 
         bool onPlayerCollision(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
                             gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,

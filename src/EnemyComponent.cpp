@@ -110,4 +110,10 @@ namespace platformer
         _minX = minX;
         _maxX = maxX;
     }
+
+    void EnemyComponent::kill()
+    {
+        _triggerNode->setTranslation(gameplay::Vector3::zero());
+        _triggerNode->setEnabled(false);
+    }
 }
