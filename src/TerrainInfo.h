@@ -18,7 +18,8 @@ namespace platformer
             COLLISION_STATIC,
             COLLISION_DYNAMIC,
             LADDER,
-            RESET
+            RESET,
+            COLLECTABLE
         };
     };
 

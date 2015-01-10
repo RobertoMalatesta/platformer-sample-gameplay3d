@@ -40,10 +40,16 @@ namespace platformer
         void onLevelUnloaded();
         void addPlayerCollisionListeners(gameplay::PhysicsCollisionObject * playerCollisionObject);
 
+        /**
+         * Handles collision events between an enemy (contact A) and the player (contact B)
+         */
         bool onEnemyCollision(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
                               gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
                               gameplay::Vector3 const & contactPointA, gameplay::Vector3 const & contactPointB);
 
+        /**
+         * Handles collision events between the player (contact A) and the terrain (contact B)
+         */
         bool onPlayerCollision(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
                             gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
                             gameplay::Vector3 const & contactPointA, gameplay::Vector3 const & contactPointB);

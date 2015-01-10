@@ -36,6 +36,7 @@ namespace platformer
         virtual void readProperties(gameplay::Properties & properties) override;
         virtual void update(float) override;
 
+        void consumeCollectable(gameplay::Node * collectableNode);
         void reload();
         std::string const & getTexturePath() const;
         int getTileWidth() const;
@@ -50,6 +51,7 @@ namespace platformer
             gameplay::Rectangle _src;
             gameplay::Node * _node;
             gameplay::Vector3 _startPosition;
+            bool _active;
         };
 
         void forEachActiveCollectable(std::function<void(Collectable const &)> func);
@@ -72,7 +74,7 @@ namespace platformer
         void unload();
 
         gameplay::Rectangle getObjectBounds(gameplay::Properties * objectNamespace) const;
-        void createCollisionObject(CollisionType::Enum collisionType, gameplay::Properties * collisionProperties, gameplay::Rectangle const & bounds, float rotationZ = 0.0f);
+        gameplay::Node * createCollisionObject(CollisionType::Enum collisionType, gameplay::Properties * collisionProperties, gameplay::Rectangle const & bounds, float rotationZ = 0.0f);
         void placeEnemies();
 
         std::string _level;
@@ -89,7 +91,7 @@ namespace platformer
         gameplay::AIMessage * _preUnloadedMessage;
         std::vector<gameobjects::GameObject*> _children;
         std::map <CollisionType::Enum, std::vector<gameplay::Node*>> _collisionNodes;
-        std::vector<Collectable> _collectables;
+        std::map<gameplay::Node *, Collectable> _collectables;
     };
 }
 

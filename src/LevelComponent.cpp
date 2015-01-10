@@ -65,8 +65,9 @@ namespace platformer
 
         if(!_collectables.empty())
         {
-            for(Collectable & collectable : _collectables)
+            for(auto & collectablePair : _collectables)
             {
+                Collectable & collectable = collectablePair.second;
                 float const speed = 2.75f;
                 float const height = collectable._node->getScaleY() * 0.15f;
                 float bounce = sin((gameplay::Game::getAbsoluteTime() / 1000.0f) * speed + (collectable._node->getTranslationX())) * height;
@@ -173,7 +174,7 @@ namespace platformer
         return rect;
     }
 
-    void LevelComponent::createCollisionObject(CollisionType::Enum collisionType, gameplay::Properties * collisionProperties, gameplay::Rectangle const & bounds, float rotationZ)
+    gameplay::Node * LevelComponent::createCollisionObject(CollisionType::Enum collisionType, gameplay::Properties * collisionProperties, gameplay::Rectangle const & bounds, float rotationZ)
     {
         gameplay::Node * node = gameplay::Node::create();
         TerrainInfo * info = new TerrainInfo();
@@ -182,10 +183,10 @@ namespace platformer
         node->translate(bounds.x, bounds.y, 0);
         node->rotateZ(rotationZ);
         getParent()->getNode()->addChild(node);
-        node->setScaleX(bounds.width);
-        node->setScaleY(bounds.height);
+        node->setScale(bounds.width, bounds.height, 1.0f);
         node->setCollisionObject(collisionProperties);
         _collisionNodes[collisionType].push_back(node);
+        return node;
     }
 
     void LevelComponent::loadStaticCollision(gameplay::Properties * layerNamespace, CollisionType::Enum collisionType)
@@ -323,17 +324,14 @@ namespace platformer
                                 std::array<char, 255> radiusBuffer;
                                 sprintf(&radiusBuffer[0], "%f", collectableWidth / 2);
                                 collisionProperties->setString("radius", &radiusBuffer[0]);
-                                gameplay::Node * collectableNode =
-                                        gameplay::Node::create((std::string("collectable_") + std::to_string(_collectables.size())).c_str());
-                                collectableNode->setTranslation(position.x, position.y, 0);
-                                collectableNode->setScale(collectableWidth);
-                                getParent()->getNode()->addChild(collectableNode);
-                                collectableNode->setCollisionObject(collisionProperties);
+                                gameplay::Rectangle bounds(position.x, position.y, collectableWidth, collectableWidth);
+                                gameplay::Node * collectableNode = createCollisionObject(CollisionType::COLLECTABLE, collisionProperties, bounds);
                                 Collectable collectable;
                                 collectable._src = sprite._src;
                                 collectable._node = collectableNode;
                                 collectable._startPosition = collectableNode->getTranslation();
-                                _collectables.push_back(collectable);
+                                collectable._active = true;
+                                _collectables[collectableNode] = collectable;
                                 float const padding = 1.25f;
                                 position += direction * (collectableWidth * padding);
                             }
@@ -464,10 +462,10 @@ namespace platformer
             }
         }
 
-        for(Collectable & collectable : _collectables)
+        for(auto & collectablePair : _collectables)
         {
-            getParent()->getNode()->removeChild(collectable._node);
-            SAFE_RELEASE(collectable._node);
+            getParent()->getNode()->removeChild(collectablePair.second._node);
+            SAFE_RELEASE(collectablePair.second._node);
         }
 
         _collectables.clear();
@@ -487,6 +485,17 @@ namespace platformer
     {
         _level = properties.getString("level", _level.c_str());
         PLATFORMER_ASSERT(gameplay::FileSystem::fileExists(_level.c_str()), "Level '%s' not found", _level.c_str());
+    }
+
+    void LevelComponent::consumeCollectable(gameplay::Node * collectableNode)
+    {
+        auto itr = _collectables.find(collectableNode);
+
+        if(itr != _collectables.end())
+        {
+            Collectable & collectable = itr->second;
+            collectable._active = false;
+        }
     }
 
     std::string const & LevelComponent::getTexturePath() const
@@ -534,9 +543,12 @@ namespace platformer
 
     void LevelComponent::forEachActiveCollectable(std::function<void(Collectable const &)> func)
     {
-        for (Collectable & collectable : _collectables)
+        for (auto & collectablePair : _collectables)
         {
-            func(collectable);
+            if(collectablePair.second._active)
+            {
+                func(collectablePair.second);
+            }
         }
     }
 }

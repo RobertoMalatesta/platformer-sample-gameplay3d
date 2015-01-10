@@ -66,6 +66,26 @@ namespace platformer
         addPlayerCollisionListeners(playerCharacterNode->getCollisionObject());
     }
 
+    void addOrRemoveCollisionListener(CollisionType::Enum collisionType,
+                                      gameplay::PhysicsRigidBody::CollisionListener * listener,
+                                      LevelComponent * level,
+                                      gameplay::PhysicsCollisionObject * collisionObject,
+                                      bool add)
+    {
+        level->forEachCachedNode(collisionType, [&add, listener, &collisionObject](gameplay::Node * node)
+        {
+            if(add)
+            {
+                collisionObject->addCollisionListener(listener, node->getCollisionObject());
+            }
+            else
+            {
+                collisionObject->removeCollisionListener(listener, node->getCollisionObject());
+            }
+
+        });
+    }
+
     void CollisionHandlerComponent::onLevelUnloaded()
     {
         LevelComponent * level = getParent()->getComponent<LevelComponent>();
@@ -90,16 +110,9 @@ namespace platformer
         for(gameplay::Node * node : _playerCharacterNodes)
         {
             gameplay::PhysicsCollisionObject * playerCollisionObject = node->getCollisionObject();
-
-            level->forEachCachedNode(CollisionType::LADDER, [this, &playerCollisionObject](gameplay::Node * ladder)
-            {
-                playerCollisionObject->removeCollisionListener(this, ladder->getCollisionObject());
-            });
-
-            level->forEachCachedNode(CollisionType::RESET, [this, &playerCollisionObject](gameplay::Node * reset)
-            {
-                playerCollisionObject->removeCollisionListener(this, reset->getCollisionObject());
-            });
+            addOrRemoveCollisionListener(CollisionType::LADDER, this, level, playerCollisionObject, false);
+            addOrRemoveCollisionListener(CollisionType::RESET, this, level, playerCollisionObject, false);
+            addOrRemoveCollisionListener(CollisionType::COLLECTABLE, this, level, playerCollisionObject, false);
 
             SAFE_RELEASE(node);
         }
@@ -112,16 +125,9 @@ namespace platformer
     void CollisionHandlerComponent::addPlayerCollisionListeners(gameplay::PhysicsCollisionObject * playerCollisionObject)
     {
         LevelComponent * level = getParent()->getComponent<LevelComponent>();
-
-        level->forEachCachedNode(CollisionType::LADDER, [this, &playerCollisionObject](gameplay::Node * ladder)
-        {
-            playerCollisionObject->addCollisionListener(this, ladder->getCollisionObject());
-        });
-
-        level->forEachCachedNode(CollisionType::RESET, [this, &playerCollisionObject](gameplay::Node * reset)
-        {
-            playerCollisionObject->addCollisionListener(this, reset->getCollisionObject());
-        });
+        addOrRemoveCollisionListener(CollisionType::LADDER, this, level, playerCollisionObject, true);
+        addOrRemoveCollisionListener(CollisionType::RESET, this, level, playerCollisionObject, true);
+        addOrRemoveCollisionListener(CollisionType::COLLECTABLE, this, level, playerCollisionObject, true);
 
         for (auto & enemyPair : _enemies)
         {
@@ -244,6 +250,12 @@ namespace platformer
                 else if(terrainInfo->_CollisionType == CollisionType::RESET && isColliding)
                 {
                     getRootParent()->broadcastMessage(_forceHandOfGodMessage);
+                    return true;
+                }
+                else if(terrainInfo->_CollisionType == CollisionType::COLLECTABLE)
+                {
+                    LevelComponent * level = getParent()->getComponent<LevelComponent>();
+                    level->consumeCollectable(collisionPair.objectB->getNode());
                     return true;
                 }
             }
