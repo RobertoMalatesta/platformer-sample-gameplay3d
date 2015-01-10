@@ -28,7 +28,6 @@ namespace platformer
         virtual void initialize() override;
         virtual void finalize() override;
         virtual void render(float);
-        virtual void update(float elapsedTime);
 #ifndef _FINAL
         virtual void renderDebug(float, gameplay::Font * font);
 #endif
@@ -77,6 +76,7 @@ namespace platformer
         std::vector<ParallaxLayer> _parallaxLayers;
         gameplay::SpriteBatch * _parallaxSpritebatch;
         gameplay::SpriteBatch * _interactablesSpritebatch;
+        gameplay::SpriteBatch * _collectablesSpritebatch;
         gameplay::Vector4 _parallaxFillColor;
         gameplay::Vector2 _parallaxOffset;
         std::vector<std::pair<gameplay::Node *, gameplay::Rectangle>> _dynamicCollisionNodes;

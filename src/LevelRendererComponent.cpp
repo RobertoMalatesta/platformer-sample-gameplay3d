@@ -25,6 +25,7 @@ namespace platformer
         , _cameraControl(nullptr)
         , _parallaxSpritebatch(nullptr)
         , _interactablesSpritebatch(nullptr)
+        , _collectablesSpritebatch(nullptr)
         , _pixelSpritebatch(nullptr)
         , _interactablesSpritesheet(nullptr)
     {
@@ -124,7 +125,6 @@ namespace platformer
         {
             uninitialisedSpriteBatches.push_back(_parallaxSpritebatch);
 
-
             for (ParallaxLayer & layer : _parallaxLayers)
             {
                 layer._dst.y += (_level->getHeight() * _level->getTileHeight()) - layer._src.height;
@@ -133,6 +133,11 @@ namespace platformer
             _interactablesSpritesheet = SpriteSheet::create("res/spritesheets/interactables.ss");
             _interactablesSpritebatch = gameplay::SpriteBatch::create(_interactablesSpritesheet->getTexture());
             uninitialisedSpriteBatches.push_back(_interactablesSpritebatch);
+
+            SpriteSheet * collectablesSpriteSheet = SpriteSheet::create("res/spritesheets/collectables.ss");
+            _collectablesSpritebatch = gameplay::SpriteBatch::create(collectablesSpriteSheet->getTexture());
+            SAFE_RELEASE(collectablesSpriteSheet);
+            uninitialisedSpriteBatches.push_back(_collectablesSpritebatch);
         }
 
         _level->forEachCachedNode(CollisionType::COLLISION_DYNAMIC, [this](gameplay::Node * node)
@@ -220,6 +225,7 @@ namespace platformer
         SAFE_DELETE(_pixelSpritebatch);
         SAFE_DELETE(_parallaxSpritebatch);
         SAFE_DELETE(_interactablesSpritebatch);
+        SAFE_DELETE(_collectablesSpritebatch);
         SAFE_RELEASE(_interactablesSpritesheet);
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_splashScreenFadeMessage);
         onLevelUnloaded();
@@ -384,10 +390,10 @@ namespace platformer
 
             bool interactableDrawn = false;
 
+            // Draw dynamic collision (crates, boulders etc)
             for (auto & nodePair : _dynamicCollisionNodes)
             {
                 gameplay::Node * dynamicCollisionNode = nodePair.first;
-                bool const isBoulder = dynamicCollisionNode->getCollisionObject()->getShapeType() == gameplay::PhysicsCollisionShape::SHAPE_SPHERE;
                 gameplay::Rectangle dst;
                 dst.width = dynamicCollisionNode->getScaleX() / PLATFORMER_UNIT_SCALAR;
                 dst.height = dynamicCollisionNode->getScaleY() / PLATFORMER_UNIT_SCALAR;
@@ -422,6 +428,38 @@ namespace platformer
             {
                 _interactablesSpritebatch->finish();
             }
+
+            // Draw collectables (coins, gems etc)
+            bool collectableDrawn = false;
+
+            _level->forEachActiveCollectable([&spriteViewport, &spriteBatchProjection, &collectableDrawn, this](LevelComponent::Collectable const & collectable)
+            {
+                if(!collectableDrawn)
+                {
+                    _collectablesSpritebatch->setProjectionMatrix(spriteBatchProjection);
+                    _collectablesSpritebatch->start();
+                    collectableDrawn = true;
+                }
+
+                gameplay::Rectangle dst;
+                dst.width = collectable._node->getScaleX() / PLATFORMER_UNIT_SCALAR;
+                dst.height = collectable._node->getScaleY() / PLATFORMER_UNIT_SCALAR;
+                dst.x = (collectable._node->getTranslationX() / PLATFORMER_UNIT_SCALAR) - dst.width / 2;
+                dst.y = collectable._node->getTranslationY() / PLATFORMER_UNIT_SCALAR + dst.height / 2;
+                dst.y -= dst.height;
+
+                if (dst.intersects(spriteViewport))
+                {
+                    dst.y += dst.height;
+                    dst.y *= -1.0f;
+                    _collectablesSpritebatch->draw(dst, getSafeDrawRect(collectable._src));
+                }
+            });
+
+            if(collectableDrawn)
+            {
+                _collectablesSpritebatch->finish();
+            }
             
             _characterRenderer.start();
 
@@ -454,13 +492,6 @@ namespace platformer
             {
                 gamepadForm->draw();
             }
-        }
-    }
-
-    void LevelRendererComponent::update(float elapsedTime)
-    {
-        for (ParallaxLayer & layer : _parallaxLayers)
-        {
         }
     }
 

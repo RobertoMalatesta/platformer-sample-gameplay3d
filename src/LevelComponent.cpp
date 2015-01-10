@@ -8,6 +8,7 @@
 #include "Messages.h"
 #include "MessagesInput.h"
 #include "MessagesLevel.h"
+#include "SpriteSheet.h"
 
 namespace platformer
 {
@@ -60,6 +61,17 @@ namespace platformer
             load();
             getRootParent()->broadcastMessage(_loadedMessage);
             _loadBroadcasted = true;
+        }
+
+        if(!_collectables.empty())
+        {
+            for(Collectable & collectable : _collectables)
+            {
+                float const speed = 2.75f;
+                float const height = collectable._node->getScaleY() * 0.15f;
+                float bounce = sin((gameplay::Game::getAbsoluteTime() / 1000.0f) * speed + (collectable._node->getTranslationX())) * height;
+                collectable._node->setTranslation(collectable._startPosition + gameplay::Vector3(0,bounce,0));
+            }
         }
     }
 
@@ -151,7 +163,7 @@ namespace platformer
         }
     }
 
-    gameplay::Rectangle LevelComponent::getCollisionObjectBounds(gameplay::Properties * objectNamespace) const
+    gameplay::Rectangle LevelComponent::getObjectBounds(gameplay::Properties * objectNamespace) const
     {
         gameplay::Rectangle rect;
         rect.width = objectNamespace->getInt("width") * PLATFORMER_UNIT_SCALAR;
@@ -203,7 +215,7 @@ namespace platformer
             while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
             {
                 float rotationZ = 0.0f;
-                gameplay::Rectangle bounds = getCollisionObjectBounds(objectNamespace);
+                gameplay::Rectangle bounds = getObjectBounds(objectNamespace);
 
                 if (objectNamespace->getNamespace("polyline", true))
                 {
@@ -249,7 +261,7 @@ namespace platformer
                 std::string collisionId = isBoulder ? "boulder" : "crate";
 
                 gameplay::Properties * collisionProperties = createProperties((std::string("res/physics/level.physics#") + collisionId).c_str());
-                gameplay::Rectangle bounds = getCollisionObjectBounds(objectNamespace);
+                gameplay::Rectangle bounds = getObjectBounds(objectNamespace);
                 std::array<char, 255> dimensionsBuffer;
                 std::string dimensionsId = "extents";
                 bounds.x += bounds.width / 2;
@@ -269,6 +281,74 @@ namespace platformer
                 createCollisionObject(CollisionType::COLLISION_DYNAMIC, collisionProperties, bounds);
                 SAFE_DELETE(collisionProperties);
             }
+        }
+    }
+
+    void LevelComponent::loadCollectables(gameplay::Properties * layerNamespace)
+    {
+        if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
+        {
+            SpriteSheet * spriteSheet = SpriteSheet::create("res/spritesheets/collectables.ss");
+            gameplay::Properties * collisionProperties = createProperties("res/physics/level.physics#collectable");
+            std::vector<Sprite> sprites;
+
+            spriteSheet->forEachSprite([&sprites](Sprite const & sprite)
+            {
+                sprites.push_back(sprite);
+            });
+
+            while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
+            {
+                gameplay::Rectangle const dst = getObjectBounds(objectNamespace);
+                gameplay::Vector2 position(dst.x, dst.y);
+
+                if (objectNamespace->getNamespace("polyline", true))
+                {
+                    if (gameplay::Properties * lineVectorNamespace = objectNamespace->getNamespace("polyline_1", true))
+                    {
+                        gameplay::Vector2 line(lineVectorNamespace->getFloat("x")  * PLATFORMER_UNIT_SCALAR,
+                                              -lineVectorNamespace->getFloat("y") * PLATFORMER_UNIT_SCALAR);
+                        float lineLength = line.length();
+                        gameplay::Vector2 direction = line;
+                        direction.normalize();
+
+                        while(true)
+                        {
+                            Sprite & sprite = sprites[PLATFORMER_RANDOM_RANGE_INT(0, sprites.size() - 1)];
+                            float const collectableWidth = sprite._src.width * PLATFORMER_UNIT_SCALAR;
+                            lineLength -= collectableWidth;
+
+                            if(lineLength > 0)
+                            {
+                                std::array<char, 255> radiusBuffer;
+                                sprintf(&radiusBuffer[0], "%f", collectableWidth / 2);
+                                collisionProperties->setString("radius", &radiusBuffer[0]);
+                                gameplay::Node * collectableNode =
+                                        gameplay::Node::create((std::string("collectable_") + std::to_string(_collectables.size())).c_str());
+                                collectableNode->setTranslation(position.x, position.y, 0);
+                                collectableNode->setScale(collectableWidth);
+                                getParent()->getNode()->addChild(collectableNode);
+                                collectableNode->setCollisionObject(collisionProperties);
+                                Collectable collectable;
+                                collectable._src = sprite._src;
+                                collectable._node = collectableNode;
+                                collectable._startPosition = collectableNode->getTranslation();
+                                _collectables.push_back(collectable);
+                                float const padding = 1.25f;
+                                position += direction * (collectableWidth * padding);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+            sprites.clear();
+            SAFE_DELETE(collisionProperties);
+            SAFE_RELEASE(spriteSheet);
         }
     }
 
@@ -325,9 +405,20 @@ namespace platformer
                 {
                     loadDynamicCollision(layerNamespace);
                 }
+                else if(layerName == "collectables")
+                {
+                    loadCollectables(layerNamespace);
+                }
             }
         }
 
+        placeEnemies();
+
+        SAFE_DELETE(root);
+    }
+
+    void LevelComponent::placeEnemies()
+    {
         for(gameobjects::GameObject * gameObject : _children)
         {
             if(EnemyComponent * enemyComponent = gameObject->getComponent<EnemyComponent>())
@@ -357,8 +448,6 @@ namespace platformer
                 }
             }
         }
-
-        SAFE_DELETE(root);
     }
 
     void LevelComponent::unload()
@@ -375,6 +464,13 @@ namespace platformer
             }
         }
 
+        for(Collectable & collectable : _collectables)
+        {
+            getParent()->getNode()->removeChild(collectable._node);
+            SAFE_RELEASE(collectable._node);
+        }
+
+        _collectables.clear();
         _collisionNodes.clear();
 
         _grid.clear();
@@ -433,6 +529,14 @@ namespace platformer
         for (gameplay::Node * node : _collisionNodes[collisionType])
         {
             func(node);
+        }
+    }
+
+    void LevelComponent::forEachActiveCollectable(std::function<void(Collectable const &)> func)
+    {
+        for (Collectable & collectable : _collectables)
+        {
+            func(collectable);
         }
     }
 }

@@ -109,4 +109,12 @@ namespace platformer
         static SpriteFactory instance;
         return instance;
     }
+
+    void SpriteSheet::forEachSprite(std::function<void(Sprite const &)> func)
+    {
+        for(auto & spritePair : _sprites)
+        {
+            func(spritePair.second);
+        }
+    }
 }

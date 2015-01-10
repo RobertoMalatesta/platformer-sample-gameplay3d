@@ -37,3 +37,10 @@ collisionObject crate : boulder
     shape = BOX
     friction = 5
 }
+
+collisionObject collectable
+{
+    type = GHOST_OBJECT
+    shape = SPHERE
+    radius = 0
+}

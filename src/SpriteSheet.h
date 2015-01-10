@@ -34,6 +34,7 @@ namespace platformer
         gameplay::Rectangle const & getSrc();
         gameplay::Texture * getTexture();
         std::string const & getName() const;
+        void forEachSprite(std::function<void(Sprite const &)> func);
     private:
         struct SpriteFactory
         {

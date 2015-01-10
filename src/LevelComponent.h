@@ -44,6 +44,15 @@ namespace platformer
         int getWidth() const;
         int getHeight() const;
         gameplay::Vector2 const & getPlayerSpawnPosition() const;
+
+        struct Collectable
+        {
+            gameplay::Rectangle _src;
+            gameplay::Node * _node;
+            gameplay::Vector3 _startPosition;
+        };
+
+        void forEachActiveCollectable(std::function<void(Collectable const &)> func);
         void forEachCachedNode(CollisionType::Enum terrainType, std::function<void(gameplay::Node *)> func);
     private:
         struct Tile
@@ -59,10 +68,12 @@ namespace platformer
         void loadCharacters(gameplay::Properties * layerNamespace);
         void loadStaticCollision(gameplay::Properties * layerNamespace, CollisionType::Enum terrainType);
         void loadDynamicCollision(gameplay::Properties * layerNamespace);
+        void loadCollectables(gameplay::Properties * layerNamespace);
         void unload();
 
-        gameplay::Rectangle getCollisionObjectBounds(gameplay::Properties * objectNamespace) const;
+        gameplay::Rectangle getObjectBounds(gameplay::Properties * objectNamespace) const;
         void createCollisionObject(CollisionType::Enum collisionType, gameplay::Properties * collisionProperties, gameplay::Rectangle const & bounds, float rotationZ = 0.0f);
+        void placeEnemies();
 
         std::string _level;
         std::string _texturePath;
@@ -78,6 +89,7 @@ namespace platformer
         gameplay::AIMessage * _preUnloadedMessage;
         std::vector<gameobjects::GameObject*> _children;
         std::map <CollisionType::Enum, std::vector<gameplay::Node*>> _collisionNodes;
+        std::vector<Collectable> _collectables;
     };
 }
 
