@@ -32,13 +32,13 @@
   <object name="enemy_snail" x="1606.57" y="661.999" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_spider" x="1415.17" y="1553.9" width="36.3734" height="31.4506">
+  <object name="enemy_spider" x="1734.34" y="1250.53" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_slime" x="1093.96" y="1544.58" width="36.3734" height="31.4506">
+  <object name="enemy_slime" x="1661.46" y="1247.43" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_snail" x="1280.1" y="1546.45" width="36.3734" height="31.4506">
+  <object name="enemy_snail" x="1599.26" y="1243.09" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
   <object name="enemy_snail" x="1408.6" y="1034.75" width="36.3734" height="31.4506">
@@ -56,9 +56,21 @@
   <object name="enemy_slime" x="2419.68" y="729.876" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
+  <object name="enemy_slime" x="1981.51" y="536.902" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_spider" x="3163.58" y="1429.31" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_slime" x="1107.65" y="660.64" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_snail" x="1293.79" y="662.511" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
  </objectgroup>
  <objectgroup name="collision_static">
-  <object x="832" y="1280" width="1472" height="320"/>
+  <object x="832" y="1280" width="1473.28" height="14.1597"/>
   <object x="3392" y="1280" width="192" height="320"/>
   <object x="0" y="0" width="832" height="1280"/>
   <object x="3584" y="0" width="896" height="1280"/>
