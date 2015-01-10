@@ -46,7 +46,6 @@ namespace platformer
 
             if (gameplay::Node * node = _player->getCharacterNode())
             {
-                gameplay::PhysicsCharacter * character = node->getCollisionObject()->asCharacter();
                 float const fadeInDuration = 0.0f;
                 PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, fadeInDuration, true);
                 getRootParent()->broadcastMessage(_splashScreenFadeMessage);

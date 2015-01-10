@@ -142,17 +142,7 @@ namespace platformer
 
                     for (CollisionObjectComponent * collisionComponent : collisionComponents)
                     {
-                        bool translate = true;
-
-                        if (gameplay::PhysicsCharacter * character = collisionComponent->getNode()->getCollisionObject()->asCharacter())
-                        {
-                            translate = character->isPhysicsEnabled();
-                        }
-
-                        if(translate)
-                        {
-                            collisionComponent->getNode()->setTranslation(spawnPos.x, spawnPos.y, 0);
-                        }
+                        collisionComponent->getNode()->setTranslation(spawnPos.x, spawnPos.y, 0);
                     }
 
                     _children.push_back(gameObject);
@@ -176,7 +166,7 @@ namespace platformer
         gameplay::Node * node = gameplay::Node::create();
         TerrainInfo * info = new TerrainInfo();
         info->_CollisionType = collisionType;
-        node->setUserPointer(info);
+        node->setDrawable(info);
         node->translate(bounds.x, bounds.y, 0);
         node->rotateZ(rotationZ);
         getParent()->getNode()->addChild(node);
@@ -215,7 +205,7 @@ namespace platformer
                 float rotationZ = 0.0f;
                 gameplay::Rectangle bounds = getCollisionObjectBounds(objectNamespace);
 
-                if (gameplay::Properties * lineNamespace = objectNamespace->getNamespace("polyline", true))
+                if (objectNamespace->getNamespace("polyline", true))
                 {
                     if (gameplay::Properties * lineVectorNamespace = objectNamespace->getNamespace("polyline_1", true))
                     {
@@ -378,7 +368,7 @@ namespace platformer
             for (gameplay::Node* node : listPair.second)
             {
                 TerrainInfo * info = TerrainInfo::getTerrainInfo(node);
-                node->setUserPointer(nullptr);
+                node->setDrawable(nullptr);
                 delete info;
                 getParent()->getNode()->removeChild(node);
                 SAFE_RELEASE(node);

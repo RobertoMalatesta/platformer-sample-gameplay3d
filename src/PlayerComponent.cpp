@@ -88,9 +88,11 @@ namespace platformer
 
     void PlayerComponent::update(float elapsedTime)
     {
-        if(_characterNode->getCollisionObject()->asCharacter()->isPhysicsEnabled())
+        gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
+
+        if(character->isPhysicsEnabled())
         {
-            gameplay::Vector3 velocity = _characterNode->getCollisionObject()->asCharacter()->getCurrentVelocity();
+            gameplay::Vector3 velocity = character->getCurrentVelocity();
 
             if(_movementDirection == MovementDirection::None || (_movementDirection & MovementDirection::Vertical) != MovementDirection::None)
             {
@@ -122,10 +124,10 @@ namespace platformer
                 }
             }
 
-            if(velocity != _characterNode->getCollisionObject()->asCharacter()->getCurrentVelocity())
+            if(velocity != character->getCurrentVelocity())
             {
                 velocity.z = 0.0f;
-                _characterNode->getCollisionObject()->asCharacter()->setVelocity(velocity);
+                character->setVelocity(velocity);
             }
         }
         else
@@ -178,24 +180,25 @@ namespace platformer
 
                 float const minDistToLadderCentre = std::pow(_characterNode->getScaleX() / 2.0f, 2);
                 gameplay::Vector3 const ladderPos = gameplay::Vector3(_climbingSnapPositionX, _characterNode->getTranslationY(), 0.0f);
+                gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
 
                 if(direction == MovementDirection::Up && _climbingEnabled && _characterNode->getTranslation().distanceSquared(ladderPos) <= minDistToLadderCentre)
                 {
-                    float const velocityY =  _characterNode->getCollisionObject()->asCharacter()->getCurrentVelocity().y;
+                    float const velocityY =  character->getCurrentVelocity().y;
                     float const maxVelocityYDelta = 0.1f;
 
                     if(velocityY >= 0.0f && velocityY <= (velocityY + maxVelocityYDelta))
                     {
                         _state = State::Climbing;
-                        _characterNode->getCollisionObject()->asCharacter()->setVelocity(gameplay::Vector3::zero());
-                        _characterNode->getCollisionObject()->asCharacter()->setPhysicsEnabled(false);
+                        character->setVelocity(gameplay::Vector3::zero());
+                        character->setPhysicsEnabled(false);
                     }
                 }
                 else
                 {
                     if(_state == State::Climbing)
                     {
-                        _characterNode->getCollisionObject()->asCharacter()->setPhysicsEnabled(true);
+                        character->setPhysicsEnabled(true);
                         _state = State::Idle;
                     }
 
@@ -205,7 +208,7 @@ namespace platformer
                         float horizontalSpeed = _isLeftFacing ? -_movementSpeed : _movementSpeed;
                         horizontalSpeed *= scale;
 
-                        _characterNode->getCollisionObject()->asCharacter()->setVelocity(horizontalSpeed, 0.0f, 0.0f);
+                        character->setVelocity(horizontalSpeed, 0.0f, 0.0f);
                     }
                 }
 
@@ -243,14 +246,30 @@ namespace platformer
         _climbingSnapPositionX = posX;
     }
 
-    void PlayerComponent::jump(float scale)
+    void PlayerComponent::jump(bool fromInput, float scale)
     {
-        if(_characterNode->getCollisionObject()->asCharacter()->getCurrentVelocity().y == 0.0f && _state != State::Climbing)
+        gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
+        character->getCurrentVelocity().y;
+        float const velY = character->getCurrentVelocity().y;
+
+        if(!fromInput || velY == 0.0f && _state != State::Climbing)
         {
             _state = State::Jumping;
-            _characterNode->getCollisionObject()->asCharacter()->setPhysicsEnabled(true);
-            _characterNode->getCollisionObject()->asCharacter()->jump(_jumpHeight * scale);
-            getParent()->broadcastMessage(_jumpMessage);
+            character->setPhysicsEnabled(true);
+
+            float height = (_jumpHeight * scale);
+
+            if(velY < 0)
+            {
+                height += -(velY / 2.0f);
+            }
+
+            character->jump(height, true);
+
+            if(fromInput)
+            {
+                getParent()->broadcastMessage(_jumpMessage);
+            }
         }
     }
 

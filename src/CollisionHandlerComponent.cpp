@@ -178,11 +178,13 @@ namespace platformer
             {
             case gameplay::PhysicsCollisionObject::Type::CHARACTER:
                 {
-                    float const playerVelY = collisionPair.objectB->asCharacter()->getCurrentVelocity().y;
+                    gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(collisionPair.objectB);
+                    float const playerVelY = character->getCurrentVelocity().y;
                     if((contactPointB.y >= contactPointA.y && playerVelY != 0) || playerVelY)
                     {
                         EnemyComponent * enemy = gameobjects::GameObject::getGameObject(collisionPair.objectA->getNode()->getParent())->getComponent<EnemyComponent>();
                         enemy->kill();
+                        _player->jump(false);
                     }
                     else
                     {
