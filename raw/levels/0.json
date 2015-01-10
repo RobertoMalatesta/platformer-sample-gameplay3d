@@ -69,8 +69,8 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":1918.8133,
-                 "y":537.2747
+                 "x":1918.81,
+                 "y":537.275
                 }, 
                 {
                  "ellipse":true,
@@ -84,8 +84,143 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":2278.8133,
-                 "y":729.2747
+                 "x":2278.81,
+                 "y":729.275
+                }, 
+                {
+                 "ellipse":true,
+                 "height":31.4506,
+                 "name":"enemy_snail",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":36.3734,
+                 "x":1606.56807082219,
+                 "y":661.998973229891
+                }, 
+                {
+                 "ellipse":true,
+                 "height":31.4506,
+                 "name":"enemy_spider",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":36.3734,
+                 "x":1415.17442917928,
+                 "y":1553.89512360969
+                }, 
+                {
+                 "ellipse":true,
+                 "height":31.4506,
+                 "name":"enemy_slime",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":36.3734,
+                 "x":1093.95905478765,
+                 "y":1544.58207543879
+                }, 
+                {
+                 "ellipse":true,
+                 "height":31.4506,
+                 "name":"enemy_snail",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":36.3734,
+                 "x":1280.09905478765,
+                 "y":1546.45307543879
+                }, 
+                {
+                 "ellipse":true,
+                 "height":31.4506,
+                 "name":"enemy_snail",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":36.3734,
+                 "x":1408.60124364188,
+                 "y":1034.74732350633
+                }, 
+                {
+                 "ellipse":true,
+                 "height":31.4506,
+                 "name":"enemy_spider",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":36.3734,
+                 "x":1189.23259730694,
+                 "y":902.769438719458
+                }, 
+                {
+                 "ellipse":true,
+                 "height":31.4506,
+                 "name":"enemy_slime",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":36.3734,
+                 "x":1863.0521522759,
+                 "y":973.286142194918
+                }, 
+                {
+                 "ellipse":true,
+                 "height":31.4506,
+                 "name":"enemy_snail",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":36.3734,
+                 "x":2049.1921522759,
+                 "y":975.157142194918
+                }, 
+                {
+                 "ellipse":true,
+                 "height":31.4506,
+                 "name":"enemy_slime",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":36.3734,
+                 "x":2419.67981773248,
+                 "y":729.876487210277
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -109,8 +244,8 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":3008,
-                 "x":0,
+                 "width":1472,
+                 "x":832,
                  "y":1280
                 }, 
                 {
@@ -123,7 +258,7 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1088,
+                 "width":192,
                  "x":3392,
                  "y":1280
                 }, 
@@ -335,6 +470,20 @@
                  "width":384,
                  "x":3008,
                  "y":1472
+                }, 
+                {
+                 "height":320,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":192,
+                 "x":2816,
+                 "y":1280
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -398,7 +547,7 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":2.51206000000002,
+                 "width":2.51206,
                  "x":1823,
                  "y":704
                 }],
@@ -468,8 +617,8 @@
                  "type":"",
                  "visible":true,
                  "width":64,
-                 "x":1970.78666666667,
-                 "y":798.122333333333
+                 "x":1970.79,
+                 "y":798.122
                 }, 
                 {
                  "height":32,
@@ -547,6 +696,110 @@
          "type":"objectgroup",
          "visible":true,
          "width":0,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":25,
+         "name":"collectables",
+         "objects":[
+                {
+                 "height":0,
+                 "name":"",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":240.770465489567,
+                         "y":21.4018191546281
+                        }],
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1054.03959336544,
+                 "y":1212.76975209559
+                }, 
+                {
+                 "height":0,
+                 "name":"",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":109.090909090909,
+                         "y":-54.5454545454545
+                        }],
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":1526.36363636364,
+                 "y":1054.54545454545
+                }, 
+                {
+                 "height":0,
+                 "name":"",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":142.727272727273,
+                         "y":164.545454545455
+                        }],
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2090.90909090909,
+                 "y":525.454545454545
+                }, 
+                {
+                 "height":0,
+                 "name":"",
+                 "polyline":[
+                        {
+                         "x":0,
+                         "y":0
+                        }, 
+                        {
+                         "x":245.454545454545,
+                         "y":99.090909090909
+                        }],
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":0,
+                 "x":2550,
+                 "y":720
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":true,
+         "width":70,
          "x":0,
          "y":0
         }],

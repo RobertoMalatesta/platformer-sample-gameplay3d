@@ -29,10 +29,37 @@
   <object name="enemy_spider" x="2278.81" y="729.275" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
+  <object name="enemy_snail" x="1606.57" y="661.999" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_spider" x="1415.17" y="1553.9" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_slime" x="1093.96" y="1544.58" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_snail" x="1280.1" y="1546.45" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_snail" x="1408.6" y="1034.75" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_spider" x="1189.23" y="902.769" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_slime" x="1863.05" y="973.286" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_snail" x="2049.19" y="975.157" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_slime" x="2419.68" y="729.876" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
  </objectgroup>
  <objectgroup name="collision_static">
-  <object x="0" y="1280" width="3008" height="320"/>
-  <object x="3392" y="1280" width="1088" height="320"/>
+  <object x="832" y="1280" width="1472" height="320"/>
+  <object x="3392" y="1280" width="192" height="320"/>
   <object x="0" y="0" width="832" height="1280"/>
   <object x="3584" y="0" width="896" height="1280"/>
   <object x="1344" y="1088" width="191.398" height="37.5259"/>
@@ -52,6 +79,7 @@
    <polyline points="0,0 -256,-256"/>
   </object>
   <object x="3008" y="1472" width="384" height="128"/>
+  <object x="2816" y="1280" width="192" height="320"/>
  </objectgroup>
  <objectgroup name="collision_hand_of_god">
   <object x="3005.82" y="1438.91" width="377.956" height="26.5418"/>
@@ -75,6 +103,20 @@
   </object>
   <object x="2245.06" y="1223.27" width="50" height="50">
    <ellipse/>
+  </object>
+ </objectgroup>
+ <objectgroup name="collectables">
+  <object x="1054.04" y="1212.77">
+   <polyline points="0,0 240.77,21.4018"/>
+  </object>
+  <object x="1526.36" y="1054.55">
+   <polyline points="0,0 109.091,-54.5455"/>
+  </object>
+  <object x="2090.91" y="525.455">
+   <polyline points="0,0 142.727,164.545"/>
+  </object>
+  <object x="2550" y="720">
+   <polyline points="0,0 245.455,99.0909"/>
   </object>
  </objectgroup>
 </map>
