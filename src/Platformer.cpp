@@ -145,6 +145,8 @@ namespace platformer
                 setVsync(windowSettings->getBool(vsyncOption));
             }
         }
+
+        getAudioListener()->setCamera(nullptr);
     }
 
     void Platformer::finalize()

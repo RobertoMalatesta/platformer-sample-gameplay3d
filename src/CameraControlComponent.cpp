@@ -92,6 +92,7 @@ namespace platformer
     void CameraControlComponent::setTargetPosition(gameplay::Vector2 const & target, float elapsedTime)
     {
         _targetPosition = target;
+        gameplay::Game::getInstance()->getAudioListener()->setPosition(_targetPosition.x, _targetPosition.y, 0.0);
         float const offsetX = (gameplay::Game::getInstance()->getWidth() / 2) *  _currentZoom;
         _targetPosition.x = MATH_CLAMP(_targetPosition.x, _boundary.x + offsetX, _boundary.x + _boundary.width - offsetX);
         float const offsetY = (gameplay::Game::getInstance()->getHeight() / 2) *  _currentZoom;
