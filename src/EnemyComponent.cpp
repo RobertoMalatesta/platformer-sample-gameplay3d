@@ -14,6 +14,7 @@ namespace platformer
         , _state(State::Walking)
         , _minX(std::numeric_limits<float>::min())
         , _maxX(std::numeric_limits<float>::max())
+        , _alpha(1.0f)
     {
     }
 
@@ -24,6 +25,7 @@ namespace platformer
     void EnemyComponent::onStart()
     {
         _animations[State::Walking] = getParent()->findComponent<SpriteAnimationComponent>(_walkAnimComponentId);
+        _animations[State::Dead] = getParent()->findComponent<SpriteAnimationComponent>(_deathAnimComponentId);
 
         _triggerNode = getParent()->findComponent<CollisionObjectComponent>(_triggerComponentId)->getNode();
         _triggerNode->addRef();
@@ -39,6 +41,7 @@ namespace platformer
     void EnemyComponent::readProperties(gameplay::Properties & properties)
     {
         _walkAnimComponentId = properties.getString("walk_anim");
+        _deathAnimComponentId = properties.getString("death_anim");
         _triggerComponentId = properties.getString("collision_trigger");
         _movementSpeed = properties.getFloat("speed");
     }
@@ -71,23 +74,32 @@ namespace platformer
 
     void EnemyComponent::update(float elapsedTime)
     {
-        // Calculate the next step
-        float const dt = elapsedTime / 1000.0f;
-        float velocityX = _movementSpeed *(_isLeftFacing ? -1.0f : 1.0f) * dt;
-        float originalTranslationX = _triggerNode->getTranslationX();
-        float nextTranslationX = originalTranslationX + velocityX;
-        float const offset = _triggerNode->getScaleX();
-        float clampedTranslationX = MATH_CLAMP(nextTranslationX, _minX + offset, _maxX - offset);
-
-        // If it exceeds the constraints along x then use the clamped translation and turn around
-        if(nextTranslationX != clampedTranslationX)
+        if(_state != State::Dead)
         {
-            _isLeftFacing = !_isLeftFacing;
-            _triggerNode->setTranslationX(clampedTranslationX);
-            velocityX *= -1.0f;
-        }
+            // Calculate the next step
+            float const dt = elapsedTime / 1000.0f;
+            float velocityX = _movementSpeed *(_isLeftFacing ? -1.0f : 1.0f) * dt;
+            float originalTranslationX = _triggerNode->getTranslationX();
+            float nextTranslationX = originalTranslationX + velocityX;
+            float const offset = _triggerNode->getScaleX();
+            float clampedTranslationX = MATH_CLAMP(nextTranslationX, _minX + offset, _maxX - offset);
 
-        _triggerNode->translateX(velocityX);
+            // If it exceeds the constraints along x then use the clamped translation and turn around
+            if(nextTranslationX != clampedTranslationX)
+            {
+                _isLeftFacing = !_isLeftFacing;
+                _triggerNode->setTranslationX(clampedTranslationX);
+                velocityX *= -1.0f;
+            }
+
+            _triggerNode->translateX(velocityX);
+        }
+        else if(_alpha > 0.0f)
+        {
+            float const fadeOutSpeed = 0.5f;
+            float const dt = elapsedTime / 1000.0f;
+            _alpha = MATH_CLAMP(_alpha - (dt * fadeOutSpeed), 0, 1.0f);
+        }
     }
 
     SpriteAnimationComponent * EnemyComponent::getCurrentAnimation()
@@ -100,9 +112,14 @@ namespace platformer
         return _triggerNode;
     }
 
-    bool EnemyComponent::IsLeftFacing() const
+    bool EnemyComponent::isLeftFacing() const
     {
         return _isLeftFacing;
+    }
+
+    float EnemyComponent::getAlpha()
+    {
+        return _alpha;
     }
 
     void EnemyComponent::setHorizontalConstraints(float minX, float maxX)
@@ -113,7 +130,7 @@ namespace platformer
 
     void EnemyComponent::kill()
     {
-        _triggerNode->setTranslation(gameplay::Vector3::zero());
-        _triggerNode->setEnabled(false);
+        _state = State::Dead;
+        getCurrentAnimation()->play();
     }
 }

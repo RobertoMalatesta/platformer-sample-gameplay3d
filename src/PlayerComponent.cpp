@@ -273,7 +273,7 @@ namespace platformer
         }
     }
 
-    bool PlayerComponent::IsLeftFacing() const
+    bool PlayerComponent::isLeftFacing() const
     {
         return _isLeftFacing;
     }

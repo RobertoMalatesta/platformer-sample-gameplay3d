@@ -27,7 +27,8 @@ namespace platformer
         {
             enum Enum
             {
-                Walking
+                Walking,
+                Dead
             };
         };
 
@@ -47,7 +48,8 @@ namespace platformer
         gameplay::Node * getTriggerNode() const;
         void kill();
 
-        bool IsLeftFacing() const;
+        bool isLeftFacing() const;
+        float getAlpha();
     private:
         EnemyComponent(EnemyComponent const &);
 
@@ -58,7 +60,9 @@ namespace platformer
         float _movementSpeed;
         float _minX;
         float _maxX;
+        float _alpha;
         std::string _walkAnimComponentId;
+        std::string _deathAnimComponentId;
         std::string _triggerComponentId;
     };
 }

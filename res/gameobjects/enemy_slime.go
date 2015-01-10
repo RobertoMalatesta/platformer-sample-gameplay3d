@@ -1,6 +1,7 @@
 enemy
 {
     walk_anim = walk
+    death_anim = dead
     speed = 3.0
     collision_trigger = enemy_slime_trigger
 }
@@ -17,4 +18,11 @@ sprite_animation walk
     loop = true
     autostart = true
     fps = 3
+}
+
+sprite_animation dead
+{
+    spritesheet = res/spritesheets/enemy.ss
+    spriteprefix = slime_dead
+    fps = 0
 }

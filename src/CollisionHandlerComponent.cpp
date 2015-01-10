@@ -178,17 +178,21 @@ namespace platformer
             {
             case gameplay::PhysicsCollisionObject::Type::CHARACTER:
                 {
-                    gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(collisionPair.objectB);
-                    float const playerVelY = character->getCurrentVelocity().y;
-                    if((contactPointB.y >= contactPointA.y && playerVelY != 0) || playerVelY)
+                    EnemyComponent * enemy = gameobjects::GameObject::getGameObject(collisionPair.objectA->getNode()->getParent())->getComponent<EnemyComponent>();
+
+                    if(enemy->getState() != EnemyComponent::State::Dead)
                     {
-                        EnemyComponent * enemy = gameobjects::GameObject::getGameObject(collisionPair.objectA->getNode()->getParent())->getComponent<EnemyComponent>();
-                        enemy->kill();
-                        _player->jump(false);
-                    }
-                    else
-                    {
-                        getRootParent()->broadcastMessage(_forceHandOfGodMessage);
+                        gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(collisionPair.objectB);
+                        float const playerVelY = character->getCurrentVelocity().y;
+                        if((contactPointB.y >= contactPointA.y && playerVelY != 0) || playerVelY)
+                        {
+                            enemy->kill();
+                            _player->jump(false);
+                        }
+                        else
+                        {
+                            getRootParent()->broadcastMessage(_forceHandOfGodMessage);
+                        }
                     }
 
                     return true;

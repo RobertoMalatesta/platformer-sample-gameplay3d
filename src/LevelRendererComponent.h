@@ -43,7 +43,7 @@ namespace platformer
             void finish();
             void render(SpriteAnimationComponent * animation, gameplay::SpriteBatch * spriteBatch,
                                  gameplay::Matrix const & spriteBatchProjection, SpriteAnimationComponent::Flip::Enum orientation,
-                                 gameplay::Vector2 const & position, gameplay::Rectangle const & viewport);
+                                 gameplay::Vector2 const & position, gameplay::Rectangle const & viewport, float alpha = 1.0f);
         private:
             gameplay::SpriteBatch * _previousSpritebatch;
             bool _started;

@@ -421,25 +421,27 @@ namespace platformer
             
             _characterRenderer.start();
 
-            // Draw the player
-            _characterRenderer.render(_player->getCurrentAnimation(),
-                            _playerAnimationBatches[_player->getState()], spriteBatchProjection,
-                            _player->IsLeftFacing() ? SpriteAnimationComponent::Flip::Horizontal : SpriteAnimationComponent::Flip::None,
-                            _player->getPosition(), spriteViewport);
-
             // Draw the enemies
             for (auto & enemyAnimPairItr : _enemyAnimationBatches)
             {
                 EnemyComponent * enemy = enemyAnimPairItr.first;
-                if(enemy->getTriggerNode()->isEnabled())
+                float const alpha = enemy->getAlpha();
+
+                if(alpha > 0.0f)
                 {
                     std::map<int, gameplay::SpriteBatch *> & enemyBatches = enemyAnimPairItr.second;
                     _characterRenderer.render(enemy->getCurrentAnimation(),
                                     enemyBatches[enemy->getState()], spriteBatchProjection,
-                                    enemy->IsLeftFacing() ? SpriteAnimationComponent::Flip::Horizontal : SpriteAnimationComponent::Flip::None,
-                                    enemy->getPosition(), spriteViewport);
+                                    enemy->isLeftFacing() ? SpriteAnimationComponent::Flip::Horizontal : SpriteAnimationComponent::Flip::None,
+                                    enemy->getPosition(), spriteViewport, alpha);
                 }
             }
+
+            // Draw the player
+            _characterRenderer.render(_player->getCurrentAnimation(),
+                            _playerAnimationBatches[_player->getState()], spriteBatchProjection,
+                            _player->isLeftFacing() ? SpriteAnimationComponent::Flip::Horizontal : SpriteAnimationComponent::Flip::None,
+                            _player->getPosition(), spriteViewport);
 
             _characterRenderer.finish();
 
@@ -484,7 +486,7 @@ namespace platformer
 
     void LevelRendererComponent::CharacterRenderer::render(SpriteAnimationComponent * animation, gameplay::SpriteBatch * spriteBatch,
                          gameplay::Matrix const & spriteBatchProjection, SpriteAnimationComponent::Flip::Enum orientation,
-                         gameplay::Vector2 const & position, gameplay::Rectangle const & viewport)
+                         gameplay::Vector2 const & position, gameplay::Rectangle const & viewport, float alpha)
     {
         SpriteAnimationComponent::DrawTarget drawTarget = animation->getDrawTarget(gameplay::Vector2::one(), 0.0f, orientation);
         gameplay::Vector2 playerDrawPosition = position / PLATFORMER_UNIT_SCALAR;
@@ -508,7 +510,7 @@ namespace platformer
             }
 
             spriteBatch->setProjectionMatrix(spriteBatchProjection);
-            spriteBatch->draw(drawTarget._dst, getSafeDrawRect(drawTarget._src), drawTarget._scale);
+            spriteBatch->draw(drawTarget._dst, getSafeDrawRect(drawTarget._src), drawTarget._scale, gameplay::Vector4(1.0f, 1.0f, 1.0f, alpha));
 
             _previousSpritebatch = spriteBatch;
         }

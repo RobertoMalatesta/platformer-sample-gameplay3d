@@ -71,7 +71,7 @@ namespace platformer
         void setClimpingSnapPositionX(float posX);
         void setMovementEnabled(MovementDirection::Enum direction, bool enabled, float scale = 1.0f);
         void jump(bool fromInput, float scale = 1.0f);
-        bool IsLeftFacing() const;
+        bool isLeftFacing() const;
     private:
         PlayerComponent(PlayerComponent const &);
 
