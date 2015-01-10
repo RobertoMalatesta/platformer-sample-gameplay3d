@@ -352,8 +352,8 @@ namespace platformer
                     enemyComponent->getTriggerNode()->setTranslationY(nearestCollisionNode->getTranslationY() +
                                                                       nearestCollisionNode->getScaleY() / 2 +
                                                                       enemyComponent->getTriggerNode()->getScaleY() / 2);
-                    enemyComponent->setHorizontalConstraints(nearestCollisionNode->getTranslationX() - nearestCollisionNode->getScaleX() / 2,
-                                                    nearestCollisionNode->getTranslationX() + nearestCollisionNode->getScaleX() / 2);
+                    enemyComponent->setHorizontalConstraints(nearestCollisionNode->getTranslationX() - (nearestCollisionNode->getScaleX() / 2) - (enemyComponent->getTriggerNode()->getScaleX() / 2),
+                                                    nearestCollisionNode->getTranslationX() + (nearestCollisionNode->getScaleX() / 2) + (enemyComponent->getTriggerNode()->getScaleX() / 2));
                 }
             }
         }
