@@ -56,7 +56,7 @@ namespace platformer
 
             if(isGamepadButtonPressed(GamepadButtons::Jump))
             {
-                _player->jump(true);
+                _player->jump(false);
             }
 
             gameplay::Vector2 joystickValue;
@@ -171,7 +171,7 @@ namespace platformer
                 case gameplay::Keyboard::Key::KEY_SPACE:
                     if (enable)
                     {
-                        _player->jump(true);
+                        _player->jump(false);
                     }
                     break;
                 case gameplay::Keyboard::Key::KEY_PG_UP:

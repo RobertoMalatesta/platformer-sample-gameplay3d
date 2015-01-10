@@ -187,7 +187,7 @@ namespace platformer
                         if((contactPointB.y >= contactPointA.y && playerVelY != 0) || playerVelY)
                         {
                             enemy->kill();
-                            _player->jump(false);
+                            _player->jump(true);
                         }
                         else
                         {

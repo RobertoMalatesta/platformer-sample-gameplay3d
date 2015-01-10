@@ -262,7 +262,11 @@ namespace platformer
 
     void LevelRendererComponent::render(float)
     {
-        if(_levelLoaded && gameplay::Game::getInstance()->getConfig()->getBool("debug_enabled_level_rendering"))
+        bool renderingEnabled = _levelLoaded;
+#ifndef _FINAL
+        renderingEnabled &= gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_level_rendering");
+#endif
+        if(renderingEnabled)
         {
             // Set the screen to the colour of the sky
             gameplay::Game::getInstance()->clear(gameplay::Game::ClearFlags::CLEAR_COLOR_DEPTH, gameplay::Vector4::fromColor(SKY_COLOR), 1.0f, 0);

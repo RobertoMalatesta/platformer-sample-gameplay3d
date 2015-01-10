@@ -246,13 +246,17 @@ namespace platformer
         _climbingSnapPositionX = posX;
     }
 
-    void PlayerComponent::jump(bool fromInput, float scale)
+    void PlayerComponent::jump(bool force, float scale)
     {
+#ifndef _FINAL
+        force |= gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_unlimited_jump");
+#endif
+
         gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
         character->getCurrentVelocity().y;
         float const velY = character->getCurrentVelocity().y;
 
-        if(!fromInput || velY == 0.0f && _state != State::Climbing)
+        if(force || velY == 0.0f && _state != State::Climbing)
         {
             _state = State::Jumping;
             character->setPhysicsEnabled(true);
@@ -266,7 +270,7 @@ namespace platformer
 
             character->jump(height, true);
 
-            if(fromInput)
+            if(!force)
             {
                 getParent()->broadcastMessage(_jumpMessage);
             }
