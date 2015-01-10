@@ -16,6 +16,9 @@ namespace platformer
         gameplay::Logger::log(gameplay::Logger::Level::LEVEL_INFO, (std::string(&logTimeStamp[0]) + std::string(message) + "\n").c_str(), __VA_ARGS__); \
     }
 
+    #define PLATFORMER_PRINT_VEC2(id, vec) PLATFORMER_LOG("%s: %f,%f", id, vec.x, vec.y)
+    #define PLATFORMER_PRINT_VEC3(id, vec) PLATFORMER_LOG("%s: %f,%f,%f,", id, vec.x, vec.y, vec.z)
+
     #define PLATFORMER_RANDOM_RANGE(min, max) min + (fabs(min - max) * MATH_RANDOM_0_1())
     #define PLATFORMER_FORCE_RELEASE(ref) forceReleaseRef(ref)
     #define PLATFORMER_ASSERT_SINGLE_REF(ref) PLATFORMER_ASSERT(ref->getRefCount() == 1, "Ref has references still outstanding")
