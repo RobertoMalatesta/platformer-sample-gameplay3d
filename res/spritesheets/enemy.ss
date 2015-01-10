@@ -6,24 +6,30 @@ frames
 
         frame
         {
-            h = 28
-            w = 50
+            h = 40
+            w = 85
             x = 2
             y = 2
+        }
+
+        pivot
+        {
+            x = 0.5
+            y = 0.5
         }
 
         rotated = false
 
         sourceSize
         {
-            h = 28
-            w = 50
+            h = 40
+            w = 85
         }
 
         spriteSourceSize
         {
-            h = 28
-            w = 50
+            h = 40
+            w = 85
             x = 0
             y = 0
         }
@@ -37,24 +43,30 @@ frames
 
         frame
         {
-            h = 28
-            w = 50
-            x = 2
-            y = 32
+            h = 40
+            w = 85
+            x = 89
+            y = 2
+        }
+
+        pivot
+        {
+            x = 0.5
+            y = 0.5
         }
 
         rotated = false
 
         sourceSize
         {
-            h = 28
-            w = 50
+            h = 40
+            w = 85
         }
 
         spriteSourceSize
         {
-            h = 28
-            w = 50
+            h = 40
+            w = 85
             x = 0
             y = 0
         }
@@ -68,24 +80,30 @@ frames
 
         frame
         {
-            h = 28
-            w = 50
+            h = 40
+            w = 85
             x = 2
-            y = 62
+            y = 44
+        }
+
+        pivot
+        {
+            x = 0.5
+            y = 0.5
         }
 
         rotated = false
 
         sourceSize
         {
-            h = 28
-            w = 50
+            h = 40
+            w = 85
         }
 
         spriteSourceSize
         {
-            h = 28
-            w = 50
+            h = 40
+            w = 85
             x = 0
             y = 0
         }
@@ -95,28 +113,34 @@ frames
 
     frames_3
     {
-        filename = snail_walk__00
+        filename = snail_dead
 
         frame
         {
-            h = 32
-            w = 57
-            x = 2
-            y = 92
+            h = 45
+            w = 82
+            x = 89
+            y = 44
+        }
+
+        pivot
+        {
+            x = 0.5
+            y = 0.5
         }
 
         rotated = false
 
         sourceSize
         {
-            h = 32
-            w = 57
+            h = 45
+            w = 82
         }
 
         spriteSourceSize
         {
-            h = 32
-            w = 57
+            h = 45
+            w = 82
             x = 0
             y = 0
         }
@@ -126,28 +150,34 @@ frames
 
     frames_4
     {
-        filename = snail_walk__01
+        filename = snail_walk__00
 
         frame
         {
-            h = 31
-            w = 57
+            h = 45
+            w = 82
             x = 2
-            y = 126
+            y = 91
+        }
+
+        pivot
+        {
+            x = 0.5
+            y = 0.5
         }
 
         rotated = false
 
         sourceSize
         {
-            h = 31
-            w = 57
+            h = 45
+            w = 82
         }
 
         spriteSourceSize
         {
-            h = 31
-            w = 57
+            h = 45
+            w = 82
             x = 0
             y = 0
         }
@@ -157,28 +187,34 @@ frames
 
     frames_5
     {
-        filename = spider_walk__00
+        filename = snail_walk__01
 
         frame
         {
-            h = 35
-            w = 50
-            x = 2
-            y = 159
+            h = 45
+            w = 82
+            x = 86
+            y = 91
+        }
+
+        pivot
+        {
+            x = 0.5
+            y = 0.5
         }
 
         rotated = false
 
         sourceSize
         {
-            h = 35
-            w = 50
+            h = 45
+            w = 82
         }
 
         spriteSourceSize
         {
-            h = 35
-            w = 50
+            h = 45
+            w = 82
             x = 0
             y = 0
         }
@@ -188,28 +224,145 @@ frames
 
     frames_6
     {
-        filename = spider_walk__01
+        filename = spider_dead
 
         frame
         {
-            h = 34
-            w = 50
-            x = 2
-            y = 196
+            h = 54
+            w = 79
+            x = 170
+            y = 91
+        }
+
+        pivot
+        {
+            x = 0.5
+            y = 0.5
         }
 
         rotated = false
 
         sourceSize
         {
-            h = 34
-            w = 50
+            h = 54
+            w = 79
         }
 
         spriteSourceSize
         {
-            h = 34
-            w = 50
+            h = 54
+            w = 79
+            x = 0
+            y = 0
+        }
+
+        trimmed = false
+    }
+
+    frames_7
+    {
+        filename = spider_walk__00
+
+        frame
+        {
+            h = 54
+            w = 79
+            x = 2
+            y = 147
+        }
+
+        pivot
+        {
+            x = 0.5
+            y = 0.5
+        }
+
+        rotated = false
+
+        sourceSize
+        {
+            h = 54
+            w = 79
+        }
+
+        spriteSourceSize
+        {
+            h = 54
+            w = 79
+            x = 0
+            y = 0
+        }
+
+        trimmed = false
+    }
+
+    frames_8
+    {
+        filename = spider_walk__01
+
+        frame
+        {
+            h = 54
+            w = 79
+            x = 83
+            y = 147
+        }
+
+        pivot
+        {
+            x = 0.5
+            y = 0.5
+        }
+
+        rotated = false
+
+        sourceSize
+        {
+            h = 54
+            w = 79
+        }
+
+        spriteSourceSize
+        {
+            h = 54
+            w = 79
+            x = 0
+            y = 0
+        }
+
+        trimmed = false
+    }
+
+    frames_9
+    {
+        filename = spider_walk__02
+
+        frame
+        {
+            h = 54
+            w = 79
+            x = 164
+            y = 147
+        }
+
+        pivot
+        {
+            x = 0.5
+            y = 0.5
+        }
+
+        rotated = false
+
+        sourceSize
+        {
+            h = 54
+            w = 79
+        }
+
+        spriteSourceSize
+        {
+            h = 54
+            w = 79
             x = 0
             y = 0
         }
@@ -220,7 +373,7 @@ frames
 
 meta
 {
-    app = http://www.codeandweb.com/texturepacker 
+    app = http://www.codeandweb.com/texturepacker
     format = RGBA8888
     image = @res/textures/enemy
     scale = 1
@@ -228,9 +381,9 @@ meta
     size
     {
         h = 256
-        w = 64
+        w = 256
     }
 
-    smartupdate = $TexturePacker:SmartUpdate:410f60ccd44074652a878d605375514e:1b111bbede814b4969681dddb2627fd4:a99356c10d69482e9bee53d25c3d05e1$
+    smartupdate = $TexturePacker:SmartUpdate:bc226a2859ae83f1441a1c94ed4b97e3:c900c8de8fcaf6aed65ab3126f54fdf8:a99356c10d69482e9bee53d25c3d05e1$
     version = 1.0
 }

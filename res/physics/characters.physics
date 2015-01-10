@@ -9,30 +9,23 @@ collisionObject player_normal
     maxSlopeAngle = 50
 }
 
-collisionObject enemy_slime_trigger
+collisionObject enemy_trigger_base
 {
     type = GHOST_OBJECT
     shape = BOX
-    extents = 1.5625, 0.875, 0
 }
 
-collisionObject enemy_snail : enemy_slime
+collisionObject enemy_slime_trigger : enemy_trigger_base
 {
-    extents = 1.78125, 1, 0
+    extents = 2.65625, 1.25, 0
 }
 
-collisionObject enemy_snail_trigger : enemy_slime_trigger
+collisionObject enemy_snail_trigger : enemy_trigger_base
 {
-    height = 2.3125
-}
-
-collisionObject enemy_spider : enemy_slime
-{
-    extents = 1.5625, 1.09375, 0
+    extents = 2.5625, 1.40625, 0
 }
 
 collisionObject enemy_spider_trigger : enemy_slime_trigger
 {
-    radius = 0.3125
-    height = 1.875
+    extents = 2.46875, 1.6875, 0
 }
