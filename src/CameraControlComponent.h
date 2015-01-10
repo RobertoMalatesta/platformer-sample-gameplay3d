@@ -42,6 +42,7 @@ namespace platformer
         float _initialCurrentZoom;
         float _initialTargetZoom;
         float _currentZoom;
+        float _previousZoom;
         float _targetZoom;
         float _zoomSpeedScale;
         float _smoothSpeedScale;

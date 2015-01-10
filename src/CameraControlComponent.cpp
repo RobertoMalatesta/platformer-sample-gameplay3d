@@ -12,6 +12,7 @@ namespace platformer
         , _minZoom(PLATFORMER_UNIT_SCALAR / 2)
         , _maxZoom(PLATFORMER_UNIT_SCALAR * 2)
         , _currentZoom(_maxZoom)
+        , _previousZoom(0.0f)
         , _targetZoom(PLATFORMER_UNIT_SCALAR)
         , _zoomSpeedScale(0.003f)
         , _smoothSpeedScale(0.25f)
@@ -72,8 +73,14 @@ namespace platformer
         if(_currentZoom != _targetZoom)
         {
             _currentZoom = MATH_CLAMP(gameplay::Curve::lerp(elapsedTime * _zoomSpeedScale, _currentZoom, _targetZoom) , _minZoom, _maxZoom);
-            _camera->setZoomX(gameplay::Game::getInstance()->getWidth() * _currentZoom);
-            _camera->setZoomY(gameplay::Game::getInstance()->getHeight() * _currentZoom);
+
+            if(_currentZoom != _previousZoom)
+            {
+                _camera->setZoomX(gameplay::Game::getInstance()->getWidth() * _currentZoom);
+                _camera->setZoomY(gameplay::Game::getInstance()->getHeight() * _currentZoom);
+            }
+
+            _previousZoom = _currentZoom;
         }
     }
 
