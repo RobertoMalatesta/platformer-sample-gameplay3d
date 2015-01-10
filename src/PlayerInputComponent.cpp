@@ -6,6 +6,10 @@
 #include "GameObject.h"
 #include "GameObjectController.h"
 
+#ifndef _FINAL
+#include "MessagesLevel.h"
+#endif
+
 namespace platformer
 {
     PlayerInputComponent::PlayerInputComponent()
@@ -32,6 +36,9 @@ namespace platformer
         _joystickMovementDirections[PlayerComponent::MovementDirection::Left] = gameplay::Vector2(-1, 0);
         _joystickMovementDirections[PlayerComponent::MovementDirection::Right] = gameplay::Vector2(1, 0);
         _gamepadButtonMapping[GamepadButtons::Jump] = gameplay::Gamepad::BUTTON_A;
+#ifndef _FINAL
+        _gamepadButtonMapping[GamepadButtons::Reload] = gameplay::Gamepad::BUTTON_MENU1;
+#endif
         _gamePad = gameplay::Game::getInstance()->getGamepad(0);
     }
 
@@ -58,6 +65,14 @@ namespace platformer
             {
                 _player->jump(false);
             }
+#ifndef _FINAL
+            else if (isGamepadButtonPressed(GamepadButtons::Reload))
+            {
+                gameplay::AIMessage * reloadMsg = RequestLevelReloadMessage::create();
+                getRootParent()->broadcastMessage(reloadMsg);
+                PLATFORMER_SAFE_DELETE_AI_MESSAGE(reloadMsg);
+            }
+#endif
 
             gameplay::Vector2 joystickValue;
             _gamePad->getJoystickValues(0, &joystickValue);

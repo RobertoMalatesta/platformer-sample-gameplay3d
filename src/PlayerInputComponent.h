@@ -38,6 +38,10 @@ namespace platformer
             {
                 Jump,
 
+#ifndef _FINAL
+                Reload,
+#endif
+
                 EnumCount
             };
         };
