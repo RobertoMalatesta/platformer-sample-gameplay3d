@@ -326,6 +326,7 @@ namespace platformer
                                 collisionProperties->setString("radius", &radiusBuffer[0]);
                                 gameplay::Rectangle bounds(position.x, position.y, collectableWidth, collectableWidth);
                                 gameplay::Node * collectableNode = createCollisionObject(CollisionType::COLLECTABLE, collisionProperties, bounds);
+                                collectableNode->addRef();
                                 Collectable collectable;
                                 collectable._src = sprite._src;
                                 collectable._node = collectableNode;
