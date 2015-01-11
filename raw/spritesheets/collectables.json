@@ -1,8 +1,17 @@
 {"frames": [
 
 {
-	"filename": "coin.png",
-	"frame": {"x":0,"y":0,"w":38,"h":38},
+	"filename": "cherry.png",
+	"frame": {"x":0,"y":0,"w":40,"h":47},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":47},
+	"sourceSize": {"w":40,"h":47},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "coin_bronze.png",
+	"frame": {"x":40,"y":0,"w":38,"h":38},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":38,"h":38},
@@ -10,8 +19,35 @@
 	"pivot": {"x":0.5,"y":0.5}
 },
 {
-	"filename": "gem.png",
-	"frame": {"x":0,"y":38,"w":36,"h":26},
+	"filename": "coin_gold.png",
+	"frame": {"x":78,"y":0,"w":38,"h":38},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":38,"h":38},
+	"sourceSize": {"w":38,"h":38},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "coin_silver.png",
+	"frame": {"x":0,"y":47,"w":38,"h":38},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":38,"h":38},
+	"sourceSize": {"w":38,"h":38},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "gem_blue.png",
+	"frame": {"x":38,"y":47,"w":36,"h":26},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":26},
+	"sourceSize": {"w":36,"h":26},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "gem_green.png",
+	"frame": {"x":74,"y":47,"w":36,"h":26},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":26},
@@ -20,7 +56,7 @@
 },
 {
 	"filename": "star.png",
-	"frame": {"x":0,"y":64,"w":36,"h":34},
+	"frame": {"x":0,"y":85,"w":36,"h":34},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":34},
@@ -32,8 +68,8 @@
 	"version": "1.0",
 	"image": "collectables.png",
 	"format": "RGBA8888",
-	"size": {"w":64,"h":128},
+	"size": {"w":128,"h":128},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:a04562a44780e27de9aac55a0929d518:1e83cb36ef124f48df3e8c3dde21b82a:64439ad7695433a6653822afb556729d$"
+	"smartupdate": "$TexturePacker:SmartUpdate:abafa748ed64c6cc5284e495258a3887:6db6b88372d88bc6b44b681fb5cafea0:64439ad7695433a6653822afb556729d$"
 }
 }

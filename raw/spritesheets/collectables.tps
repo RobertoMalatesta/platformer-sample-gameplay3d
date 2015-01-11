@@ -189,8 +189,12 @@
         <key>fileList</key>
         <array>
             <filename>../textures/star.png</filename>
-            <filename>../textures/coin.png</filename>
-            <filename>../textures/gem.png</filename>
+            <filename>../textures/cherry.png</filename>
+            <filename>../textures/coin_bronze.png</filename>
+            <filename>../textures/coin_gold.png</filename>
+            <filename>../textures/coin_silver.png</filename>
+            <filename>../textures/gem_blue.png</filename>
+            <filename>../textures/gem_green.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
