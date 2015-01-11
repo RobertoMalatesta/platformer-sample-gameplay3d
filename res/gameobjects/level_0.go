@@ -18,7 +18,7 @@ level_renderer
         layer
         {
             id = bg_0
-            speed = -0.25
+            speed = 0.25
             offset = 0, 0
         }
 
