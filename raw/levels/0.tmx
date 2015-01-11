@@ -1,255 +1,260 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="70" height="25" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="64" height="25" tilewidth="64" tileheight="64">
  <properties>
   <property name="texture" value="@res/textures/tiles"/>
  </properties>
  <tileset firstgid="1" name="Terrain" tilewidth="64" tileheight="64">
   <image source="../../res/textures/tiles.png" width="1024" height="1024"/>
  </tileset>
- <layer name="props" width="70" height="25">
+ <layer name="props" width="64" height="25">
   <data encoding="base64" compression="zlib">
-   eJzt1jEOgCAQRNHpjJ5ETuEt8E5waRsLG9mNhWPMfwmBYhN+RZAAAACQMbkDgB8ql/NuqwD8SjyCwOoOAD6guwMCrr527qO/xqzxW1wf3r0kZjJ9AKTtZgFvOwAAUwW9
+   eJzt1TEOgCAMheFuBk8Cp+AWeiXRS7s4sAimRp8m/5c06dDQNxUzAACA5wzqAMCHpKqfZSkAv9QfwSGqA+CWog4gtqgDdGwv7Wn91cHaN3Fy7hwvzKzOt4G/yCcFeOwFWwVi
   </data>
  </layer>
- <layer name="terrain" width="70" height="25">
+ <layer name="terrain" width="64" height="25">
   <data encoding="base64" compression="zlib">
-   eJztluEKgyAURn2Hnmrt5YIxatSG4B60KySEqLk2vZf5HTj0R+J2EG5KAQAAAAAAcI6RnMgH9yCCeHMPUJEL2Wd4JQ3TjNKJdbmR2vNeYyAh4L6Eaa2L3TE5+6W1Lke43Wy2pzPVciaf5UerRur/JPe+2CYL+VL/1SZGThfXZNhsoc1RF78JVxstzFCTfZv92ZLf1H1gbF4uY/zi3ejyfRepfUqIHmFXAybJWA==
+   eJztlm0KwjAMhnsHT+W8i2cRRFT8oDAPuhQMFLVt1jRdO/PCw/70I08K7awxxhLoKXYGGyI9xdV7IKL+6q/+6r82f2oP1F/9a/ifgQtwLbBWKq35v5jz56aG/xYYCOyAsbxiNK2df8j/aL7/x0/MvVx68ZeK+tfxd3c65T5fq38q+OaN7y8S69kNeGTuh1nCP/a+U8/fud+Bp+H1oJXzx1D80R3r4vRAyn+fWU/K/9Od2wMJfyvIL3e/B/7YUPwxJf0pa9QklNz11J/G0t5S/Ks3MgH2Ozfy
   </data>
  </layer>
  <objectgroup name="characters">
-  <object name="player" x="910.373" y="1230.76" width="36.3734" height="31.4506">
+  <object name="player" x="718.324" y="1174.09" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_slime" x="1420.43" y="660.128" width="36.3734" height="31.4506">
+  <object name="enemy_slime" x="1228.43" y="660.128" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_snail" x="1918.81" y="537.275" width="36.3734" height="31.4506">
+  <object name="enemy_snail" x="1726.81" y="537.275" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_spider" x="2278.81" y="729.275" width="36.3734" height="31.4506">
+  <object name="enemy_spider" x="2086.81" y="729.275" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_snail" x="1606.57" y="661.999" width="36.3734" height="31.4506">
+  <object name="enemy_snail" x="1414.57" y="661.999" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_spider" x="1734.34" y="1250.53" width="36.3734" height="31.4506">
+  <object name="enemy_spider" x="1521.1" y="1409.14" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_slime" x="1661.46" y="1247.43" width="36.3734" height="31.4506">
+  <object name="enemy_slime" x="1122.11" y="1420.18" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_snail" x="1599.26" y="1243.09" width="36.3734" height="31.4506">
+  <object name="enemy_snail" x="1419.34" y="1410.78" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_snail" x="1408.6" y="1034.75" width="36.3734" height="31.4506">
+  <object name="enemy_snail" x="1216.6" y="1034.75" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_spider" x="1189.23" y="902.769" width="36.3734" height="31.4506">
+  <object name="enemy_spider" x="997.233" y="902.769" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_slime" x="1863.05" y="973.286" width="36.3734" height="31.4506">
+  <object name="enemy_slime" x="1671.05" y="973.286" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_snail" x="2049.19" y="975.157" width="36.3734" height="31.4506">
+  <object name="enemy_snail" x="1857.19" y="975.157" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_slime" x="2419.68" y="729.876" width="36.3734" height="31.4506">
+  <object name="enemy_slime" x="2227.68" y="729.876" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_slime" x="1981.51" y="536.902" width="36.3734" height="31.4506">
+  <object name="enemy_slime" x="1789.51" y="536.902" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_spider" x="3163.58" y="1429.31" width="36.3734" height="31.4506">
+  <object name="enemy_spider" x="2971.58" y="1429.31" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_slime" x="1107.65" y="660.64" width="36.3734" height="31.4506">
+  <object name="enemy_slime" x="915.646" y="660.64" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_snail" x="1293.79" y="662.511" width="36.3734" height="31.4506">
+  <object name="enemy_snail" x="1101.79" y="662.511" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_spider" x="1514.35" y="663.804" width="36.3734" height="31.4506">
+  <object name="enemy_spider" x="1322.35" y="663.804" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_slime" x="1968.35" y="1232.88" width="36.3734" height="31.4506">
+  <object name="enemy_slime" x="1742.68" y="1401.26" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_spider" x="2062.27" y="1236.55" width="36.3734" height="31.4506">
+  <object name="enemy_spider" x="1872.95" y="1398.88" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_slime" x="1655.57" y="1233.39" width="36.3734" height="31.4506">
+  <object name="enemy_slime" x="1273.72" y="1418.25" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_snail" x="1841.71" y="1235.26" width="36.3734" height="31.4506">
-   <ellipse/>
-  </object>
-  <object name="enemy_snail" x="2154.49" y="1234.75" width="36.3734" height="31.4506">
+  <object name="enemy_snail" x="1652.39" y="1397.59" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
  </objectgroup>
  <objectgroup name="collision_static">
-  <object x="832" y="1280" width="1473.28" height="14.1597"/>
-  <object x="3392" y="1280" width="192" height="320"/>
-  <object x="0" y="0" width="832" height="1280"/>
-  <object x="3584" y="0" width="896" height="1280"/>
-  <object x="1344" y="1088" width="191.398" height="37.5259"/>
-  <object x="1152" y="960" width="128" height="37.2489"/>
-  <object x="1664" y="1024" width="128.241" height="37.0868"/>
-  <object x="1856" y="1024" width="256" height="37.167"/>
-  <object x="1088" y="704" width="704.69" height="37.1627"/>
-  <object x="1856" y="576" width="192.688" height="36.4745"/>
-  <object x="2176" y="768" width="384" height="64"/>
-  <object x="2304" y="1280">
+  <object x="768" y="1280" width="1348.6" height="6.31092"/>
+  <object x="3200" y="1280" width="192" height="320"/>
+  <object x="0" y="0" width="640" height="1280"/>
+  <object x="3392" y="0" width="704" height="1280"/>
+  <object x="1152" y="1088" width="191.398" height="37.5259"/>
+  <object x="960" y="960" width="128" height="37.2489"/>
+  <object x="1472" y="1024" width="128.241" height="37.0868"/>
+  <object x="1664" y="1024" width="256" height="37.167"/>
+  <object x="896" y="704" width="704.69" height="37.1627"/>
+  <object x="1664" y="576" width="192.688" height="36.4745"/>
+  <object x="1984" y="768" width="384" height="64"/>
+  <object x="2112" y="1280">
    <polyline points="0,0 256,-256"/>
   </object>
-  <object x="2816" y="1280">
+  <object x="2624" y="1280">
    <polyline points="0,0 -256,-256"/>
   </object>
-  <object x="2816" y="1280">
+  <object x="2624" y="1280">
    <polyline points="0,0 -256,-256"/>
   </object>
-  <object x="3008" y="1472" width="384" height="128"/>
-  <object x="2816" y="1280" width="192" height="320"/>
+  <object x="2816" y="1472" width="384" height="128"/>
+  <object x="2624" y="1280" width="192" height="320"/>
+  <object x="704" y="1216" width="64" height="128"/>
+  <object x="640" y="1280" width="64" height="64"/>
  </objectgroup>
- <objectgroup name="collision_hand_of_god" visible="0">
-  <object x="3005.82" y="1438.91" width="377.956" height="26.5418"/>
-  <object x="3456" y="1152" width="64" height="128"/>
+ <objectgroup name="collision_hand_of_god">
+  <object x="2813.82" y="1438.91" width="377.956" height="26.5418"/>
+  <object x="3264" y="1152" width="64" height="128"/>
  </objectgroup>
  <objectgroup name="collision_ladder">
-  <object x="1823" y="704" width="2.51206" height="544.583"/>
+  <object x="1631" y="704" width="2.51206" height="544.583"/>
  </objectgroup>
  <objectgroup name="interactive_props">
-  <object x="2105.73" y="1176.02" width="100" height="100">
+  <object x="1858.73" y="1167.97" width="100" height="100">
    <ellipse/>
   </object>
-  <object x="1984.16" y="949.312" width="64" height="64"/>
-  <object x="1971.94" y="878.32" width="64" height="64"/>
-  <object x="1970.79" y="798.122" width="64" height="64"/>
-  <object x="1730.84" y="854.089" width="32" height="32"/>
-  <object x="1718.73" y="900.128" width="48" height="48"/>
-  <object x="1714.24" y="958.417" width="64" height="64"/>
-  <object x="2834.45" y="1137.65" width="128" height="128">
+  <object x="1792.16" y="949.312" width="64" height="64"/>
+  <object x="1779.94" y="878.32" width="64" height="64"/>
+  <object x="1778.79" y="798.122" width="64" height="64"/>
+  <object x="1538.84" y="854.089" width="32" height="32"/>
+  <object x="1526.73" y="900.128" width="48" height="48"/>
+  <object x="1522.24" y="958.417" width="64" height="64"/>
+  <object x="2642.45" y="1137.65" width="128" height="128">
    <ellipse/>
   </object>
-  <object x="2245.06" y="1223.27" width="50" height="50">
+  <object x="2053.06" y="1223.27" width="50" height="50">
    <ellipse/>
   </object>
-  <object x="2408.18" y="634.064" width="128" height="128">
+  <object x="2216.18" y="634.064" width="128" height="128">
    <ellipse/>
   </object>
-  <object x="3033.97" y="1273.02" width="192" height="192">
+  <object x="2841.97" y="1273.02" width="192" height="192">
    <ellipse/>
   </object>
-  <object x="2111.74" y="575.715" width="192" height="192"/>
+  <object x="1919.74" y="575.715" width="192" height="192"/>
  </objectgroup>
  <objectgroup name="collectables">
-  <object x="1152" y="1216">
+  <object x="960" y="1216">
    <polyline points="0,0 320,0"/>
   </object>
-  <object x="1472" y="1024">
+  <object x="1280" y="1024">
    <polyline points="0,0 192,-64"/>
   </object>
-  <object x="1280" y="896">
+  <object x="1088" y="896">
    <polyline points="0,0 122.947,126.849"/>
   </object>
-  <object x="1088" y="640">
+  <object x="896" y="640">
    <polyline points="0,0 704,0"/>
   </object>
-  <object x="1728" y="576">
+  <object x="1474.98" y="661.428">
    <polyline points="0,0 192,-128"/>
   </object>
-  <object x="1984" y="448">
+  <object x="1792" y="448">
    <polyline points="0,0 320,256"/>
   </object>
-  <object x="2304" y="1216">
+  <object x="2112" y="1216">
    <polyline points="0,0 256,-256"/>
   </object>
-  <object x="2624" y="896">
+  <object x="2432" y="896">
    <polyline points="0,0 256,320"/>
   </object>
-  <object x="3008" y="1216">
+  <object x="2816" y="1216">
    <polyline points="0,0 128,-192"/>
   </object>
-  <object x="3200" y="1024">
+  <object x="3008" y="1024">
    <polyline points="0,0 192,192"/>
   </object>
-  <object x="888.319" y="1078.37">
+  <object x="696.319" y="1078.37">
    <polyline points="0,0 132.394,-380.098"/>
   </object>
-  <object x="1159.51" y="1110.4">
+  <object x="967.513" y="1110.4">
    <polyline points="0,0 113.175,0"/>
   </object>
-  <object x="896" y="320">
+  <object x="729.375" y="206.126">
    <polyline points="0,0 2.99637,258.689"/>
   </object>
-  <object x="960" y="576">
+  <object x="755.042" y="463.723">
    <polyline points="0,0 165.347,2.68887"/>
   </object>
-  <object x="1216" y="320">
+  <object x="977.501" y="212.514">
    <polyline points="0,0 0,256"/>
   </object>
-  <object x="1253.47" y="572.283">
+  <object x="1014.97" y="464.797">
    <polyline points="0,0 158.018,-4.27077"/>
   </object>
-  <object x="1449.93" y="570.147">
+  <object x="1211.43" y="462.662">
    <polyline points="0,0 0,-279.735"/>
   </object>
-  <object x="1417.89" y="309.631">
+  <object x="1179.4" y="202.145">
    <polyline points="0,0 -162.289,17.0831"/>
   </object>
-  <object x="1516.12" y="305.36">
+  <object x="1346.09" y="197.964">
    <polyline points="0,0 -8.54153,254.111"/>
   </object>
-  <object x="1548.15" y="557.335">
+  <object x="1378.12" y="449.939">
    <polyline points="0,0 145.206,8.54153"/>
   </object>
-  <object x="2299.81" y="738.843">
+  <object x="2107.81" y="738.843">
    <polyline points="0,0 275.95,-10.8308"/>
   </object>
-  <object x="989.785" y="1017.96">
+  <object x="797.785" y="1017.96">
    <polyline points="0,0 75.7309,204.297"/>
   </object>
-  <object x="1593.73" y="1184.61">
+  <object x="1401.73" y="1184.61">
    <polyline points="0,0 696.112,-93.6291"/>
   </object>
-  <object x="2106.66" y="877.264">
+  <object x="1914.66" y="877.264">
    <polyline points="0,0 77.3458,138.408"/>
   </object>
-  <object x="2245.06" y="1027.89">
+  <object x="2053.06" y="1027.89">
    <polyline points="0,0 65.1333,-142.479"/>
   </object>
-  <object x="2338.69" y="1025.85">
+  <object x="2146.69" y="1025.85">
    <polyline points="0,0 142.479,-109.912"/>
   </object>
-  <object x="3019.59" y="271.851">
+  <object x="2827.59" y="271.851">
    <polyline points="0,0 105.232,20.4619"/>
   </object>
-  <object x="3086.82" y="590.471">
+  <object x="2894.82" y="590.471">
    <polyline points="0,0 105.232,-116.925"/>
   </object>
-  <object x="3355.75" y="356.621">
+  <object x="3163.75" y="356.621">
    <polyline points="0,0 78.9243,38.0006"/>
   </object>
-  <object x="2876.36" y="730.781">
+  <object x="2684.36" y="730.781">
    <polyline points="0,0 564.163,81.8474"/>
   </object>
-  <object x="2896.82" y="771.704">
+  <object x="2704.82" y="771.704">
    <polyline points="0,0 207.542,154.925"/>
   </object>
-  <object x="2946.51" y="134.464">
+  <object x="2754.51" y="134.464">
    <polyline points="0,0 248.465,0"/>
   </object>
-  <object x="3089.75" y="648.933">
+  <object x="2897.75" y="648.933">
    <polyline points="0,0 166.618,32.1543"/>
   </object>
-  <object x="3151.13" y="923.707">
+  <object x="2959.13" y="923.707">
    <polyline points="0,0 251.388,-61.3856"/>
   </object>
-  <object x="3308.98" y="143.233">
+  <object x="3116.98" y="143.233">
    <polyline points="0,0 266.004,163.695"/>
   </object>
-  <object x="3218.36" y="494.008">
+  <object x="3026.36" y="494.008">
    <polyline points="0,0 40.9237,149.079"/>
+  </object>
+  <object name="enemy_slime" x="1285.47" y="1036.45" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_slime" x="2152.13" y="732.101" width="36.3734" height="31.4506">
+   <ellipse/>
   </object>
  </objectgroup>
 </map>
