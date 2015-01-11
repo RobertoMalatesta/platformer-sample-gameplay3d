@@ -110,6 +110,117 @@ frames
 
         trimmed = false
     }
+
+    frames_3
+    {
+        filename = bg_3
+
+        frame
+        {
+            h = 110
+            w = 1024
+            x = 0
+            y = 686
+        }
+
+        pivot
+        {
+            x = 0.5
+            y = 0.5
+        }
+
+        rotated = false
+
+        sourceSize
+        {
+            h = 110
+            w = 1024
+        }
+
+        spriteSourceSize
+        {
+            h = 110
+            w = 1024
+            x = 0
+            y = 0
+        }
+
+        trimmed = false
+    }
+
+    frames_4
+    {
+        filename = bg_4
+
+        frame
+        {
+            h = 165
+            w = 1024
+            x = 0
+            y = 796
+        }
+
+        pivot
+        {
+            x = 0.5
+            y = 0.5
+        }
+
+        rotated = false
+
+        sourceSize
+        {
+            h = 165
+            w = 1024
+        }
+
+        spriteSourceSize
+        {
+            h = 165
+            w = 1024
+            x = 0
+            y = 0
+        }
+
+        trimmed = false
+    }
+
+    frames_5
+    {
+        filename = bg_5
+
+        frame
+        {
+            h = 274
+            w = 1024
+            x = 0
+            y = 961
+        }
+
+        pivot
+        {
+            x = 0.5
+            y = 0.5
+        }
+
+        rotated = false
+
+        sourceSize
+        {
+            h = 274
+            w = 1024
+        }
+
+        spriteSourceSize
+        {
+            h = 274
+            w = 1024
+            x = 0
+            y = 0
+        }
+
+        trimmed = false
+    }
 }
 
 meta
@@ -121,10 +232,10 @@ meta
 
     size
     {
-        h = 1024
+        h = 2048
         w = 1024
     }
 
-    smartupdate = $TexturePacker:SmartUpdate:dd36395a2122ddc170e3da3619b7fc1a:203187a6afd39532026de28c4731f5ff:fda475f1469833f402cd7f3119be2bc2$
+    smartupdate = $TexturePacker:SmartUpdate:57ffc46984447567c3e3cd2bdee755e9:52f274474130da36849f074ff9b85b26:fda475f1469833f402cd7f3119be2bc2$
     version = 1.0
 }

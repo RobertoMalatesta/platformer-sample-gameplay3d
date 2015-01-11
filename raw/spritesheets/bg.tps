@@ -86,9 +86,9 @@
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
-            <int>1024</int>
+            <int>2048</int>
             <key>height</key>
-            <int>1024</int>
+            <int>2048</int>
         </QSize>
         <key>fixedTextureSize</key>
         <QSize>
@@ -191,6 +191,9 @@
             <filename>../textures/bg_2.png</filename>
             <filename>../textures/bg_0.png</filename>
             <filename>../textures/bg_1.png</filename>
+            <filename>../textures/bg_4.png</filename>
+            <filename>../textures/bg_5.png</filename>
+            <filename>../textures/bg_3.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
