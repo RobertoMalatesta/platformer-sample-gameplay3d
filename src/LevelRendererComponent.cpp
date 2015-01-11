@@ -471,7 +471,9 @@ namespace platformer
                     dst.y = collectable->_node->getTranslationY() / PLATFORMER_UNIT_SCALAR + dst.height / 2;
                     dst.y -= dst.height;
 
-                    if (dst.intersects(spriteViewport))
+                    collectable->_visible = dst.intersects(spriteViewport);
+
+                    if (collectable->_visible)
                     {
                         dst.y += dst.height;
                         dst.y *= -1.0f;

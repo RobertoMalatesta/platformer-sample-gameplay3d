@@ -52,6 +52,7 @@ namespace platformer
             gameplay::Node * _node;
             gameplay::Vector3 _startPosition;
             bool _active;
+            bool _visible;
         };
 
         void getCollectables(std::vector<Collectable*> & collectablesOut);

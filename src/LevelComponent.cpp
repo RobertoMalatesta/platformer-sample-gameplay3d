@@ -68,10 +68,14 @@ namespace platformer
             for(auto & collectablePair : _collectables)
             {
                 Collectable & collectable = collectablePair.second;
-                float const speed = 5.0f;
-                float const height = collectable._node->getScaleY() * 0.05f;
-                float bounce = sin((gameplay::Game::getAbsoluteTime() / 1000.0f) * speed + (collectable._node->getTranslationX() + collectable._node->getTranslationY())) * height;
-                collectable._node->setTranslation(collectable._startPosition + gameplay::Vector3(0, bounce, 0));
+
+                if(collectable._active && collectable._visible)
+                {
+                    float const speed = 5.0f;
+                    float const height = collectable._node->getScaleY() * 0.05f;
+                    float bounce = sin((gameplay::Game::getAbsoluteTime() / 1000.0f) * speed + (collectable._node->getTranslationX() + collectable._node->getTranslationY())) * height;
+                    collectable._node->setTranslation(collectable._startPosition + gameplay::Vector3(0, bounce, 0));
+                }
             }
         }
     }
@@ -332,6 +336,7 @@ namespace platformer
                                 collectable._node = collectableNode;
                                 collectable._startPosition = collectableNode->getTranslation();
                                 collectable._active = true;
+                                collectable._visible = false;
                                 _collectables[collectableNode] = collectable;
                                 float const padding = 1.25f;
                                 position += direction * (collectableWidth * padding);
@@ -406,6 +411,9 @@ namespace platformer
                 }
                 else if(layerName == "collectables")
                 {
+#ifndef _FINAL
+                    if (gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_collectables_spawn"))
+#endif
                     loadCollectables(layerNamespace);
                 }
             }
