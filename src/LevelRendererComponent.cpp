@@ -6,7 +6,6 @@
 #include "EnemyComponent.h"
 #include "GameObject.h"
 #include "GameObjectController.h"
-#include "LevelComponent.h"
 #include "Messages.h"
 #include "MessagesPlatformer.h"
 #include "PlayerComponent.h"
@@ -138,6 +137,7 @@ namespace platformer
             _collectablesSpritebatch = gameplay::SpriteBatch::create(collectablesSpriteSheet->getTexture());
             SAFE_RELEASE(collectablesSpriteSheet);
             uninitialisedSpriteBatches.push_back(_collectablesSpritebatch);
+            _level->getCollectables(_collectables);
         }
 
         _level->forEachCachedNode(CollisionType::COLLISION_DYNAMIC, [this](gameplay::Node * node)
@@ -204,6 +204,7 @@ namespace platformer
         _dynamicCollisionNodes.clear();
         _playerAnimationBatches.clear();
         _enemyAnimationBatches.clear();
+        _collectables.clear();
         _levelLoaded = false;
 
         if(_splashScreenFadeMessage)
@@ -432,29 +433,32 @@ namespace platformer
             // Draw collectables (coins, gems etc)
             bool collectableDrawn = false;
 
-            _level->forEachActiveCollectable([&spriteViewport, &spriteBatchProjection, &collectableDrawn, this](LevelComponent::Collectable const & collectable)
+            for(LevelComponent::Collectable * collectable : _collectables)
             {
-                if(!collectableDrawn)
+                if (collectable->_active)
                 {
-                    _collectablesSpritebatch->setProjectionMatrix(spriteBatchProjection);
-                    _collectablesSpritebatch->start();
-                    collectableDrawn = true;
-                }
+                    if (!collectableDrawn)
+                    {
+                        _collectablesSpritebatch->setProjectionMatrix(spriteBatchProjection);
+                        _collectablesSpritebatch->start();
+                        collectableDrawn = true;
+                    }
 
-                gameplay::Rectangle dst;
-                dst.width = collectable._node->getScaleX() / PLATFORMER_UNIT_SCALAR;
-                dst.height = collectable._node->getScaleY() / PLATFORMER_UNIT_SCALAR;
-                dst.x = (collectable._node->getTranslationX() / PLATFORMER_UNIT_SCALAR) - dst.width / 2;
-                dst.y = collectable._node->getTranslationY() / PLATFORMER_UNIT_SCALAR + dst.height / 2;
-                dst.y -= dst.height;
+                    gameplay::Rectangle dst;
+                    dst.width = collectable->_node->getScaleX() / PLATFORMER_UNIT_SCALAR;
+                    dst.height = collectable->_node->getScaleY() / PLATFORMER_UNIT_SCALAR;
+                    dst.x = (collectable->_node->getTranslationX() / PLATFORMER_UNIT_SCALAR) - dst.width / 2;
+                    dst.y = collectable->_node->getTranslationY() / PLATFORMER_UNIT_SCALAR + dst.height / 2;
+                    dst.y -= dst.height;
 
-                if (dst.intersects(spriteViewport))
-                {
-                    dst.y += dst.height;
-                    dst.y *= -1.0f;
-                    _collectablesSpritebatch->draw(dst, getSafeDrawRect(collectable._src));
+                    if (dst.intersects(spriteViewport))
+                    {
+                        dst.y += dst.height;
+                        dst.y *= -1.0f;
+                        _collectablesSpritebatch->draw(dst, getSafeDrawRect(collectable->_src));
+                    }
                 }
-            });
+            }
 
             if(collectableDrawn)
             {

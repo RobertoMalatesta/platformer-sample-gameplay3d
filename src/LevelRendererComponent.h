@@ -2,6 +2,7 @@
 #define PLATFORMER_LEVEL_RENDERER_COMPONENT_H
 
 #include "Component.h"
+#include "LevelComponent.h"
 #include "SpriteAnimationComponent.h"
 
 namespace platformer
@@ -80,6 +81,7 @@ namespace platformer
         gameplay::Vector4 _parallaxFillColor;
         gameplay::Vector2 _parallaxOffset;
         std::vector<std::pair<gameplay::Node *, gameplay::Rectangle>> _dynamicCollisionNodes;
+        std::vector<LevelComponent::Collectable *> _collectables;
     };
 }
 

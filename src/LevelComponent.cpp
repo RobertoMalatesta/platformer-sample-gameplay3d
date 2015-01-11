@@ -542,14 +542,11 @@ namespace platformer
         }
     }
 
-    void LevelComponent::forEachActiveCollectable(std::function<void(Collectable const &)> func)
+    void LevelComponent::getCollectables(std::vector<Collectable *> & collectablesOut)
     {
         for (auto & collectablePair : _collectables)
         {
-            if(collectablePair.second._active)
-            {
-                func(collectablePair.second);
-            }
+            collectablesOut.push_back(&collectablePair.second);
         }
     }
 }

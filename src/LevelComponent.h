@@ -54,7 +54,7 @@ namespace platformer
             bool _active;
         };
 
-        void forEachActiveCollectable(std::function<void(Collectable const &)> func);
+        void getCollectables(std::vector<Collectable*> & collectablesOut);
         void forEachCachedNode(CollisionType::Enum terrainType, std::function<void(gameplay::Node *)> func);
     private:
         struct Tile
