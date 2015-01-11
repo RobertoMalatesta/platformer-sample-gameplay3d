@@ -3847,6 +3847,114 @@ layers
                 x = 1293.78581160576
                 y = 662.51052139031106
             }
+
+            objects_17
+            {
+                ellipse = true
+                height = 31.450600000000001
+                name = enemy_spider
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 36.373399999999997
+                x = 1514.35116917153
+                y = 663.80419141068
+            }
+
+            objects_18
+            {
+                ellipse = true
+                height = 31.450600000000001
+                name = enemy_slime
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 36.373399999999997
+                x = 1968.3456987319501
+                y = 1232.87699587883
+            }
+
+            objects_19
+            {
+                ellipse = true
+                height = 31.450600000000001
+                name = enemy_spider
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 36.373399999999997
+                x = 2062.2656987319501
+                y = 1236.55299587883
+            }
+
+            objects_20
+            {
+                ellipse = true
+                height = 31.450600000000001
+                name = enemy_slime
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 36.373399999999997
+                x = 1655.5656987319501
+                y = 1233.38899587883
+            }
+
+            objects_21
+            {
+                ellipse = true
+                height = 31.450600000000001
+                name = enemy_snail
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 36.373399999999997
+                x = 1841.70569873195
+                y = 1235.2599958788301
+            }
+
+            objects_22
+            {
+                ellipse = true
+                height = 31.450600000000001
+                name = enemy_snail
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 36.373399999999997
+                x = 2154.4856987319499
+                y = 1234.7479958788299
+            }
         }
 
         opacity = 1
@@ -4236,7 +4344,7 @@ layers
 
         opacity = 1
         type = objectgroup
-        visible = true
+        visible = false
         width = 0
         x = 0
         y = 0
@@ -4418,8 +4526,8 @@ layers
                 type = 
                 visible = true
                 width = 128
-                x = 2837.5
-                y = 1143.3099999999999
+                x = 2834.4516841944801
+                y = 1137.64768979419
             }
 
             objects_8
@@ -4438,6 +4546,59 @@ layers
                 width = 50
                 x = 2245.0599999999999
                 y = 1223.27
+            }
+
+            objects_9
+            {
+                ellipse = true
+                height = 128
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 128
+                x = 2408.1841182746498
+                y = 634.06431946349596
+            }
+
+            objects_10
+            {
+                ellipse = true
+                height = 192
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 192
+                x = 3033.9724939742
+                y = 1273.01970792571
+            }
+
+            objects_11
+            {
+                height = 192
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 192
+                x = 2111.7378897304902
+                y = 575.71534261053398
             }
         }
 
@@ -4472,8 +4633,8 @@ layers
 
                     polyline_1
                     {
-                        x = 240.77046548956699
-                        y = 21.4018191546281
+                        x = 320
+                        y = 0
                     }
                 }
 
@@ -4485,8 +4646,8 @@ layers
                 type = 
                 visible = true
                 width = 0
-                x = 1054.0395933654399
-                y = 1212.7697520955901
+                x = 1152
+                y = 1216
             }
 
             objects_1
@@ -4504,8 +4665,8 @@ layers
 
                     polyline_1
                     {
-                        x = 109.09090909090899
-                        y = -54.545454545454497
+                        x = 192
+                        y = -64
                     }
                 }
 
@@ -4517,8 +4678,8 @@ layers
                 type = 
                 visible = true
                 width = 0
-                x = 1526.3636363636399
-                y = 1054.54545454545
+                x = 1472
+                y = 1024
             }
 
             objects_2
@@ -4536,8 +4697,8 @@ layers
 
                     polyline_1
                     {
-                        x = 142.727272727273
-                        y = 164.54545454545499
+                        x = 122.946828955798
+                        y = 126.848601323938
                     }
                 }
 
@@ -4549,8 +4710,8 @@ layers
                 type = 
                 visible = true
                 width = 0
-                x = 2090.9090909090901
-                y = 525.45454545454504
+                x = 1280
+                y = 896
             }
 
             objects_3
@@ -4568,8 +4729,8 @@ layers
 
                     polyline_1
                     {
-                        x = 245.45454545454501
-                        y = 99.090909090908994
+                        x = 704
+                        y = 0
                     }
                 }
 
@@ -4581,8 +4742,1032 @@ layers
                 type = 
                 visible = true
                 width = 0
-                x = 2550
-                y = 720
+                x = 1088
+                y = 640
+            }
+
+            objects_4
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 192
+                        y = -128
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 1728
+                y = 576
+            }
+
+            objects_5
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 320
+                        y = 256
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 1984
+                y = 448
+            }
+
+            objects_6
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 256
+                        y = -256
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 2304
+                y = 1216
+            }
+
+            objects_7
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 256
+                        y = 320
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 2624
+                y = 896
+            }
+
+            objects_8
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 128
+                        y = -192
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 3008
+                y = 1216
+            }
+
+            objects_9
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 192
+                        y = 192
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 3200
+                y = 1024
+            }
+
+            objects_10
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 132.39376468076
+                        y = -380.09822763186003
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 888.31945334187503
+                y = 1078.3685671578
+            }
+
+            objects_11
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 113.175314969037
+                        y = 0
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 1159.5131326072999
+                y = 1110.39931667734
+            }
+
+            objects_12
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 2.9963698483877601
+                        y = 258.68887465300003
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 896
+                y = 320
+            }
+
+            objects_13
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 165.34699978646199
+                        y = 2.6888746530001999
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 960
+                y = 576
+            }
+
+            objects_14
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 0
+                        y = 256
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 1216
+                y = 320
+            }
+
+            objects_15
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 158.01836429639101
+                        y = -4.2707666026052502
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 1253.4699978646199
+                y = 572.28272474909204
+            }
+
+            objects_16
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 0
+                        y = -279.735212470639
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 1449.92526158445
+                y = 570.14734144779004
+            }
+
+            objects_17
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = -162.289130898997
+                        y = 17.083066410420699
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 1417.89451206492
+                y = 309.630578688875
+            }
+
+            objects_18
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = -8.5415332052102695
+                        y = 254.11061285500799
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 1516.12214392483
+                y = 305.35981208626902
+            }
+
+            objects_19
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 145.206064488576
+                        y = 8.5415332052102695
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 1548.15289344437
+                y = 557.33504163997395
+            }
+
+            objects_20
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 275.94976025469299
+                        y = -10.8307966778929
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 2299.8078155028802
+                y = 738.84262225069403
+            }
+
+            objects_21
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 75.730891158858796
+                        y = 204.297287777386
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 989.78513561113095
+                y = 1017.96407185629
+            }
+
+            objects_22
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 696.112354976593
+                        y = -93.6291471605944
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 1593.7309179727299
+                y = 1184.61225320578
+            }
+
+            objects_23
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 77.345817219621495
+                        y = 138.40830449827001
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 2106.65581111337
+                y = 877.26440056991703
+            }
+
+            objects_24
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 65.133319763891905
+                        y = -142.479136983513
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 2245.0641156116399
+                y = 1027.88520252392
+            }
+
+            objects_25
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 142.479136983513
+                        y = -109.91247710156701
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 2338.6932627722399
+                y = 1025.8497862812901
+            }
+
+            objects_26
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 105.232
+                        y = 20.4619
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 3019.5872054954698
+                y = 271.85060011692502
+            }
+
+            objects_27
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 105.232
+                        y = -116.925
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 3086.8172054954698
+                y = 590.47060011692497
+            }
+
+            objects_28
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 78.924300000000002
+                        y = 38.000599999999999
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 3355.7472054954701
+                y = 356.620600116925
+            }
+
+            objects_29
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 564.16300000000001
+                        y = 81.847399999999993
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 2876.3572054954702
+                y = 730.78060011692503
+            }
+
+            objects_30
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 207.542
+                        y = 154.92500000000001
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 2896.8172054954698
+                y = 771.70360011692503
+            }
+
+            objects_31
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 248.465
+                        y = 0
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 2946.5072054954699
+                y = 134.46360011692499
+            }
+
+            objects_32
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 166.61799999999999
+                        y = 32.154299999999999
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 3089.7472054954701
+                y = 648.93260011692496
+            }
+
+            objects_33
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 251.38800000000001
+                        y = -61.385599999999997
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 3151.1272054954702
+                y = 923.70660011692496
+            }
+
+            objects_34
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 266.00400000000002
+                        y = 163.69499999999999
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 3308.9772054954701
+                y = 143.232600116925
+            }
+
+            objects_35
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = 40.923699999999997
+                        y = 149.07900000000001
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 3218.3572054954702
+                y = 494.007600116925
             }
         }
 
