@@ -28,6 +28,7 @@ namespace platformer
     protected:
         virtual void initialize() override;
         virtual void finalize() override;
+        virtual void update(float elaspedTime);
         virtual void render(float);
 #ifndef _FINAL
         virtual void renderDebug(float, gameplay::Font * font);
@@ -54,6 +55,8 @@ namespace platformer
             float _speed;
             gameplay::Rectangle _dst;
             gameplay::Rectangle _src;
+            gameplay::Vector2 _offset;
+            bool _cameraIndependent;
         };
 
         LevelRendererComponent(LevelRendererComponent const &);
@@ -82,6 +85,7 @@ namespace platformer
         gameplay::Vector2 _parallaxOffset;
         std::vector<std::pair<gameplay::Node *, gameplay::Rectangle>> _dynamicCollisionNodes;
         std::vector<LevelComponent::Collectable *> _collectables;
+        int _windDirection;
     };
 }
 

@@ -27,6 +27,7 @@ namespace platformer
         , _collectablesSpritebatch(nullptr)
         , _pixelSpritebatch(nullptr)
         , _interactablesSpritesheet(nullptr)
+        , _windDirection(1)
     {
     }
 
@@ -157,6 +158,7 @@ namespace platformer
             spriteBatch->finish();
         }
 
+        _windDirection = PLATFORMER_RANDOM_RANGE_INT(0,1) ? 1 : -1;
         _levelLoaded = true;
         _levelLoadedOnce = true;
 
@@ -253,17 +255,32 @@ namespace platformer
                         ParallaxLayer layer;
                         layer._src = spritesheet->getSprite(childNs->getString("id"))->_src;
                         layer._dst = layer._src;
-                        gameplay::Vector2 offset;
-                        childNs->getVector2("offset", &offset);
-                        offset *= -1.0f;
-                        layer._dst.x = offset.x - _parallaxOffset.x;
-                        layer._dst.y = offset.y - _parallaxOffset.y;
+                        childNs->getVector2("offset", &layer._offset);
+                        layer._offset.y *= -1.0f;
+                        layer._dst.y = layer._offset.y - _parallaxOffset.y;
+                        layer._src.x = layer._offset.x + _parallaxOffset.x;
                         layer._speed = childNs->getFloat("speed");
+                        layer._cameraIndependent = childNs->getBool("camera_independent");
                         _parallaxLayers.push_back(layer);
                     }
                 }
 
                 SAFE_RELEASE(spritesheet);
+            }
+        }
+    }
+
+    void LevelRendererComponent::update(float elapsedTime)
+    {
+        float const dt = elapsedTime / 1000.0f;
+
+        for (auto itr = _parallaxLayers.rbegin(); itr != _parallaxLayers.rend(); ++itr)
+        {
+            ParallaxLayer & layer = *itr;
+
+            if (layer._cameraIndependent)
+            {
+                layer._src.x += (layer._speed * dt * _windDirection) / PLATFORMER_UNIT_SCALAR;
             }
         }
     }
@@ -329,9 +346,13 @@ namespace platformer
             {
                 ParallaxLayer & layer = *itr;
                 layer._dst.width = layerWidth;
-                layer._src.width = layerWidth;
+                layer._src.width = layer._dst.width;
                 layer._dst.x = layerPosX;
-                layer._src.x = (layerPosX + spriteCameraPostion.x) * layer._speed;
+
+                if (!layer._cameraIndependent)
+                {
+                    layer._src.x = (layerPosX + layer._offset.x + _parallaxOffset.x + spriteCameraPostion.x) * layer._speed;
+                }
                 
                 gameplay::Rectangle layerVisibilityTest = layer._dst;
                 layerVisibilityTest.y += layerVisibilityTest.height;
