@@ -137,8 +137,9 @@ namespace platformer
             _collectablesSpritebatch = gameplay::SpriteBatch::create(collectablesSpriteSheet->getTexture());
             SAFE_RELEASE(collectablesSpriteSheet);
             uninitialisedSpriteBatches.push_back(_collectablesSpritebatch);
-            _level->getCollectables(_collectables);
         }
+
+        _level->getCollectables(_collectables);
 
         _level->forEachCachedNode(CollisionType::COLLISION_DYNAMIC, [this](gameplay::Node * node)
         {
