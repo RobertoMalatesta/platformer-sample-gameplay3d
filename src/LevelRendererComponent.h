@@ -85,7 +85,6 @@ namespace platformer
         gameplay::Vector2 _parallaxOffset;
         std::vector<std::pair<gameplay::Node *, gameplay::Rectangle>> _dynamicCollisionNodes;
         std::vector<LevelComponent::Collectable *> _collectables;
-        int _windDirection;
     };
 }
 

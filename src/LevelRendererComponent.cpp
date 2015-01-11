@@ -27,7 +27,6 @@ namespace platformer
         , _collectablesSpritebatch(nullptr)
         , _pixelSpritebatch(nullptr)
         , _interactablesSpritesheet(nullptr)
-        , _windDirection(1)
     {
     }
 
@@ -158,7 +157,6 @@ namespace platformer
             spriteBatch->finish();
         }
 
-        _windDirection = PLATFORMER_RANDOM_RANGE_INT(0,1) ? 1 : -1;
         _levelLoaded = true;
         _levelLoadedOnce = true;
 
@@ -280,7 +278,7 @@ namespace platformer
 
             if (layer._cameraIndependent)
             {
-                layer._src.x += (layer._speed * dt * _windDirection) / PLATFORMER_UNIT_SCALAR;
+                layer._src.x += (layer._speed * dt) / PLATFORMER_UNIT_SCALAR;
             }
         }
     }

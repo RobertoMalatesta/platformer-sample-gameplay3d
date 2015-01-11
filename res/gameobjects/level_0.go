@@ -18,7 +18,7 @@ level_renderer
         layer
         {
             id = bg_0
-            speed = 0.25
+            speed = -0.25
             offset = 0, 0
         }
 
@@ -39,7 +39,7 @@ level_renderer
         layer
         {
             id = bg_3
-            speed = 1
+            speed = -1
             camera_independent = true
             offset = 0, 500
         }
@@ -47,7 +47,7 @@ level_renderer
         layer
         {
             id = bg_4
-            speed = 0.65
+            speed = -0.65
             camera_independent = true
             offset = 0, 600
         }
@@ -55,7 +55,7 @@ level_renderer
         layer
         {
             id = bg_5
-            speed = 0.25
+            speed = -0.25
             camera_independent = true
             offset = 0, 350
         }
@@ -63,7 +63,7 @@ level_renderer
         layer
         {
             id = bg_3
-            speed = 1.8
+            speed = -1.8
             camera_independent = true
             offset = 400, 800
         }
@@ -71,7 +71,7 @@ level_renderer
         layer
         {
             id = bg_5
-            speed = 0.4
+            speed = -0.4
             camera_independent = true
             offset = 400, 850
         }
