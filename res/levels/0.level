@@ -3725,7 +3725,7 @@ layers
 
             objects_4
             {
-                height = 0.30390099999999998
+                height = 38.492298636318999
                 name = 
 
                 properties
@@ -3735,7 +3735,7 @@ layers
                 rotation = 0
                 type = 
                 visible = true
-                width = 194.80099999999999
+                width = 189.05680368880601
                 x = 1152
                 y = 1088
             }
@@ -4296,8 +4296,8 @@ layers
                 type = 
                 visible = true
                 width = 192
-                x = 2841.9699999999998
-                y = 1273.02
+                x = 1919.46077490775
+                y = 356.66083640836399
             }
 
             objects_11
