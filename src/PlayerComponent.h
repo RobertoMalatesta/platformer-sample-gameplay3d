@@ -54,6 +54,16 @@ namespace platformer
             };
         };
 
+        /** @script{ignore} */
+        struct JumpSource
+        {
+            enum Enum
+            {
+                Input,
+                EnemyCollision,
+            };
+        };
+
         explicit PlayerComponent();
         ~PlayerComponent();
 
@@ -70,7 +80,7 @@ namespace platformer
         void setClimbingEnabled(bool enabled);
         void setClimpingSnapPositionX(float posX);
         void setMovementEnabled(MovementDirection::Enum direction, bool enabled, float scale = 1.0f);
-        void jump(bool force, float scale = 1.0f);
+        void jump(JumpSource::Enum source, float scale = 1.0f);
         bool isLeftFacing() const;
     private:
         PlayerComponent(PlayerComponent const &);

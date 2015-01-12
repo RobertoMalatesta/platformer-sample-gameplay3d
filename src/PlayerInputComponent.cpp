@@ -63,7 +63,7 @@ namespace platformer
 
             if(isGamepadButtonPressed(GamepadButtons::Jump))
             {
-                _player->jump(false);
+                _player->jump(PlayerComponent::JumpSource::Input);
             }
 #ifndef _FINAL
             else if (isGamepadButtonPressed(GamepadButtons::Reload))
@@ -186,7 +186,7 @@ namespace platformer
                 case gameplay::Keyboard::Key::KEY_SPACE:
                     if (enable)
                     {
-                        _player->jump(false);
+                        _player->jump(PlayerComponent::JumpSource::Input);
                     }
                     break;
                 case gameplay::Keyboard::Key::KEY_PG_UP:

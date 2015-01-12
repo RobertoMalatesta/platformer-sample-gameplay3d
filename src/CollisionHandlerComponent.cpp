@@ -193,7 +193,7 @@ namespace platformer
                         if((contactPointB.y >= contactPointA.y && playerVelY != 0) || playerVelY)
                         {
                             enemy->kill();
-                            _player->jump(true);
+                            _player->jump(PlayerComponent::JumpSource::EnemyCollision);
                         }
                         else
                         {

@@ -246,34 +246,45 @@ namespace platformer
         _climbingSnapPositionX = posX;
     }
 
-    void PlayerComponent::jump(bool force, float scale)
+    void PlayerComponent::jump(JumpSource::Enum source, float scale)
     {
-#ifndef _FINAL
-        force |= gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_unlimited_jump");
-#endif
-
         gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
-        character->getCurrentVelocity().y;
-        float const velY = character->getCurrentVelocity().y;
+        gameplay::Vector3 const characterOriginalVelocity = character->getCurrentVelocity();
+        gameplay::Vector3 preJumpVelocity;
+        bool jumpAllowed = _state != State::Climbing;
+        float const jumpHeight = (_jumpHeight * scale);
 
-        if(force || velY == 0.0f && _state != State::Climbing)
+        switch(source)
+        {
+            case JumpSource::Input:
+            {
+                preJumpVelocity.x = characterOriginalVelocity.x;
+                jumpAllowed &= character->getCurrentVelocity().y == 0.0f;
+#ifndef _FINAL
+                preJumpVelocity.y = characterOriginalVelocity.y > 0.0f ? characterOriginalVelocity.y : (fabs(characterOriginalVelocity.y) / 2) + jumpHeight;
+                jumpAllowed |= gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_unlimited_jump");
+#endif
+                break;
+            }
+            case JumpSource::EnemyCollision:
+            {
+                preJumpVelocity.x = characterOriginalVelocity.x;
+                jumpAllowed &= true;
+                break;
+            }
+            default:
+                PLATFORMER_ASSERTFAIL("Unhandled JumpSource %d", source);
+                break;
+        }
+
+        if(jumpAllowed)
         {
             _state = State::Jumping;
             character->setPhysicsEnabled(true);
-
-            float height = (_jumpHeight * scale);
-
-            if(velY < 0)
-            {
-                height += -(velY / 2.0f);
-            }
-
-            character->jump(height, true);
-
-            if(!force)
-            {
-                getParent()->broadcastMessage(_jumpMessage);
-            }
+            character->resetVelocityState();
+            character->setVelocity(preJumpVelocity);
+            character->jump(jumpHeight);
+            getParent()->broadcastMessage(_jumpMessage);
         }
     }
 
