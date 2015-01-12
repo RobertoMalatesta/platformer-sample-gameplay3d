@@ -13,7 +13,7 @@
  </layer>
  <layer name="terrain" width="64" height="25">
   <data encoding="base64" compression="zlib">
-   eJztlm0KwjAMhnsHT+W8i2cRRFT8oDAPuhQMFLVt1jRdO/PCw/70I08K7awxxhLoKXYGGyI9xdV7IKL+6q/+6r82f2oP1F/9a/ifgQtwLbBWKq35v5jz56aG/xYYCOyAsbxiNK2df8j/aL7/x0/MvVx68ZeK+tfxd3c65T5fq38q+OaN7y8S69kNeGTuh1nCP/a+U8/fud+Bp+H1oJXzx1D80R3r4vRAyn+fWU/K/9Od2wMJfyvIL3e/B/7YUPwxJf0pa9QklNz11J/G0t5S/Ks3MgH2Ozfy
+   eJztlf8KQDAUhfcOngrv4lmUhPxI8aCuspLMbrLd4Xz1tX9Y59zVphQAAAAAAHBBRdZkIx1EgFk6gANiMmGYkpNQxlAw9S/I8WDpI5BncP7fZL3TOff5V/vb0G/etK3aq5m1ZO8+2uNcve/c81+7d+Sg3jkDE5z+unu+GeIMspv/2fofu/ucwRiAZ933M9h/+3SPyKIpl5Qm7u6H/jyle7vyr721C9MrvmI=
   </data>
  </layer>
  <objectgroup name="characters">
@@ -89,13 +89,13 @@
   <object x="3200" y="1280" width="192" height="320"/>
   <object x="0" y="0" width="640" height="1280"/>
   <object x="3392" y="0" width="704" height="1280"/>
-  <object x="1152" y="1088" width="191.398" height="37.5259"/>
-  <object x="960" y="960" width="128" height="37.2489"/>
-  <object x="1472" y="1024" width="128.241" height="37.0868"/>
-  <object x="1664" y="1024" width="256" height="37.167"/>
+  <object x="1152" y="1088" width="194.801" height="0.303901"/>
+  <object x="960" y="960" width="128"/>
+  <object x="1472" y="1024" width="128"/>
+  <object x="1664" y="1024" width="256"/>
   <object x="896" y="704" width="704.69" height="37.1627"/>
   <object x="1664" y="576" width="192.688" height="36.4745"/>
-  <object x="1984" y="768" width="384" height="64"/>
+  <object x="1984" y="768" width="384" height="0.535217"/>
   <object x="2112" y="1280">
    <polyline points="0,0 256,-256"/>
   </object>
@@ -108,7 +108,6 @@
   <object x="2816" y="1472" width="384" height="128"/>
   <object x="2624" y="1280" width="192" height="320"/>
   <object x="704" y="1216" width="64" height="128"/>
-  <object x="640" y="1280" width="64" height="64"/>
  </objectgroup>
  <objectgroup name="collision_hand_of_god">
   <object x="2813.82" y="1438.91" width="377.956" height="26.5418"/>
