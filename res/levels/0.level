@@ -3742,7 +3742,7 @@ layers
 
             objects_5
             {
-                height = 0
+                height = 32.703488372092998
                 name = 
 
                 properties
@@ -3759,7 +3759,7 @@ layers
 
             objects_6
             {
-                height = 0
+                height = 36.674330046569601
                 name = 
 
                 properties
@@ -3769,14 +3769,14 @@ layers
                 rotation = 0
                 type = 
                 visible = true
-                width = 128
+                width = 128.922977525497
                 x = 1472
                 y = 1024
             }
 
             objects_7
             {
-                height = 0
+                height = 36.809815950920402
                 name = 
 
                 properties
@@ -3786,7 +3786,7 @@ layers
                 rotation = 0
                 type = 
                 visible = true
-                width = 256
+                width = 259.06748466257699
                 x = 1664
                 y = 1024
             }
@@ -3827,7 +3827,7 @@ layers
 
             objects_10
             {
-                height = 0.53521700000000005
+                height = 64
                 name = 
 
                 properties
