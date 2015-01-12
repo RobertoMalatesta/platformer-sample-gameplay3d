@@ -108,6 +108,7 @@
   <object x="2816" y="1472" width="384" height="128"/>
   <object x="2624" y="1280" width="192" height="320"/>
   <object x="704" y="1216" width="64" height="128"/>
+  <object x="640" y="1280" width="64" height="64"/>
  </objectgroup>
  <objectgroup name="collision_hand_of_god">
   <object x="2813.82" y="1438.91" width="377.956" height="26.5418"/>
