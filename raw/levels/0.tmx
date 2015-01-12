@@ -90,12 +90,12 @@
   <object x="0" y="0" width="640" height="1280"/>
   <object x="3392" y="0" width="704" height="1280"/>
   <object x="1152" y="1088" width="194.801" height="0.303901"/>
-  <object x="960" y="960" width="128"/>
-  <object x="1472" y="1024" width="128"/>
-  <object x="1664" y="1024" width="256"/>
+  <object x="960" y="960" width="128" height="32.7035"/>
+  <object x="1472" y="1024" width="128.923" height="36.6743"/>
+  <object x="1664" y="1024" width="259.067" height="36.8098"/>
   <object x="896" y="704" width="704.69" height="37.1627"/>
   <object x="1664" y="576" width="192.688" height="36.4745"/>
-  <object x="1984" y="768" width="384" height="0.535217"/>
+  <object x="1984" y="768" width="384" height="64"/>
   <object x="2112" y="1280">
    <polyline points="0,0 256,-256"/>
   </object>
