@@ -252,7 +252,8 @@ namespace platformer
         gameplay::Vector3 const characterOriginalVelocity = character->getCurrentVelocity();
         gameplay::Vector3 preJumpVelocity;
         bool jumpAllowed = _state != State::Climbing;
-        float const jumpHeight = (_jumpHeight * scale);
+        float jumpHeight = (_jumpHeight * scale);
+        bool resetVelocityState = true;
 
         switch(source)
         {
@@ -261,8 +262,16 @@ namespace platformer
                 preJumpVelocity.x = characterOriginalVelocity.x;
                 jumpAllowed &= character->getCurrentVelocity().y == 0.0f;
 #ifndef _FINAL
-                preJumpVelocity.y = characterOriginalVelocity.y > 0.0f ? characterOriginalVelocity.y : (fabs(characterOriginalVelocity.y) / 2) + jumpHeight;
-                jumpAllowed |= gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_unlimited_jump");
+                if(gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_unlimited_jump"))
+                {
+                    if(characterOriginalVelocity.y < 0)
+                    {
+                        jumpHeight += -characterOriginalVelocity.y / 2.0f;
+                    }
+
+                    resetVelocityState = false;
+                    jumpAllowed = true;
+                }
 #endif
                 break;
             }
@@ -281,9 +290,14 @@ namespace platformer
         {
             _state = State::Jumping;
             character->setPhysicsEnabled(true);
-            character->resetVelocityState();
+
+            if(resetVelocityState)
+            {
+                character->resetVelocityState();
+            }
+
             character->setVelocity(preJumpVelocity);
-            character->jump(jumpHeight);
+            character->jump(jumpHeight, !resetVelocityState);
             getParent()->broadcastMessage(_jumpMessage);
         }
     }
