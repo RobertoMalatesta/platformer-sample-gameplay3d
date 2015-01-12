@@ -52,6 +52,8 @@ namespace platformer
                 float const fadeOutDuration = 1.0f;
                 PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, fadeOutDuration, false);
                 getRootParent()->broadcastMessage(_splashScreenFadeMessage);
+                gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter *>(node->getCollisionObject());
+                character->resetVelocityState();
                 node->setTranslation(_resetPosition.x, _resetPosition.y, 0);
             }
         }
