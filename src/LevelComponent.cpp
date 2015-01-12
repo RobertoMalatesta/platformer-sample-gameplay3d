@@ -407,14 +407,17 @@ namespace platformer
                 }
                 else if (layerName == "interactive_props")
                 {
-                    loadDynamicCollision(layerNamespace);
+#ifndef _FINAL
+                    if (gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_interactables_spawn"))
+#endif
+                        loadDynamicCollision(layerNamespace);
                 }
                 else if(layerName == "collectables")
                 {
 #ifndef _FINAL
                     if (gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_collectables_spawn"))
 #endif
-                    loadCollectables(layerNamespace);
+                        loadCollectables(layerNamespace);
                 }
             }
         }

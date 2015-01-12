@@ -578,20 +578,38 @@ namespace platformer
     }
 
 #ifndef _FINAL
-    void renderCharacterPositionDebug(gameplay::Vector2 const & position, gameplay::Vector2 const & renderPosition, gameplay::Font * font)
+    void renderCharacterDataDebug(gameplay::Vector2 * position, gameplay::Vector2 * velocity,
+                                  gameplay::Vector2 const & renderPosition, gameplay::Font * font)
     {
         std::array<char, 32> buffer;
-        sprintf(&buffer[0], "{%.2f, %.2f}", position.x, position.y);
+        static std::string text;
+        text = "";
+
+        if(position)
+        {
+            sprintf(&buffer[0], " {%.2f, %.2f} ", position->x, position->y);
+            text += &buffer[0];
+        }
+
+        if(velocity)
+        {
+            sprintf(&buffer[0], " {%.2f, %.2f} ", velocity->x, velocity->y);
+            text += &buffer[0];
+        }
+
         unsigned int width, height = 0;
-        font->measureText(&buffer[0], font->getSize(PLATFORMER_FONT_SIZE_LARGE_INDEX), &width, &height);
-        font->drawText(&buffer[0], renderPosition.x - (width / 4), -renderPosition.y, gameplay::Vector4(1,0,0,1));
+        font->measureText(text.c_str(), font->getSize(PLATFORMER_FONT_SIZE_LARGE_INDEX), &width, &height);
+        font->drawText(text.c_str(), renderPosition.x - (width / 4), -renderPosition.y, gameplay::Vector4(1,0,0,1));
     }
 
     void LevelRendererComponent::renderDebug(float, gameplay::Font * font)
     {
         gameplay::Rectangle const & screenDimensions = gameplay::Game::getInstance()->getViewport();
 
-        if(gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_character_positions"))
+        bool const drawPositions = gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_character_positions");
+        bool const drawPlayerVelocity = gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_player_velocity");
+
+        if(drawPlayerVelocity || drawPositions)
         {
             font->start();
 
@@ -605,12 +623,19 @@ namespace platformer
             gameplay::SpriteBatch * spriteBatch = font->getSpriteBatch(font->getSize());
             spriteBatch->setProjectionMatrix(spriteBatchProjection);
 
-            renderCharacterPositionDebug(_player->getPosition(), _player->getPosition() / unitToPixelScale, font);
+            gameplay::PhysicsCharacter * playerCharacter = static_cast<gameplay::PhysicsCharacter*>(_player->getCharacterNode()->getCollisionObject());
+            gameplay::Vector2 playerVelocity(playerCharacter->getCurrentVelocity().x, playerCharacter->getCurrentVelocity().y);
+            gameplay::Vector2 playerPosition(_player->getPosition());
+            renderCharacterDataDebug(drawPositions ? &playerPosition : nullptr, drawPlayerVelocity ? &playerVelocity : nullptr, _player->getPosition() / unitToPixelScale, font);
 
-            for (auto & enemyAnimPairItr : _enemyAnimationBatches)
+            if(drawPositions)
             {
-                EnemyComponent * enemy = enemyAnimPairItr.first;
-                renderCharacterPositionDebug(enemy->getPosition(), enemy->getPosition() / unitToPixelScale, font);
+                for (auto & enemyAnimPairItr : _enemyAnimationBatches)
+                {
+                    EnemyComponent * enemy = enemyAnimPairItr.first;
+                    gameplay::Vector2 enemyPosition = enemy->getPosition();
+                    renderCharacterDataDebug(&enemyPosition, nullptr, enemy->getPosition() / unitToPixelScale, font);
+                }
             }
 
             font->finish();
