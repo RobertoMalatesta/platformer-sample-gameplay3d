@@ -27,6 +27,7 @@ namespace platformer
         , _collectablesSpritebatch(nullptr)
         , _pixelSpritebatch(nullptr)
         , _interactablesSpritesheet(nullptr)
+        , _waterSpritebatch(nullptr)
     {
     }
 
@@ -133,11 +134,23 @@ namespace platformer
             _interactablesSpritebatch = gameplay::SpriteBatch::create(_interactablesSpritesheet->getTexture());
             uninitialisedSpriteBatches.push_back(_interactablesSpritebatch);
 
+
+            gameplay::Effect* waterEffect = gameplay::Effect::createFromFile("res/shaders/sprite.vert", "res/shaders/water.frag");
+            _waterSpritebatch = gameplay::SpriteBatch::create("@res/textures/water", waterEffect);
+            uninitialisedSpriteBatches.push_back(_waterSpritebatch);
+            gameplay::Material* waterMaterial = _waterSpritebatch->getMaterial();
+            gameplay::Texture::Sampler* noiseSampler = gameplay::Texture::Sampler::create("res/textures/water-noise.png");
+            waterMaterial->getParameter("u_texture_noise")->setValue(noiseSampler);
+            SAFE_RELEASE(noiseSampler);
+            waterMaterial->getParameter("u_time")->bindValue(this, &LevelRendererComponent::getWaterTimeUniform);
+
             SpriteSheet * collectablesSpriteSheet = SpriteSheet::create("res/spritesheets/collectables.ss");
             _collectablesSpritebatch = gameplay::SpriteBatch::create(collectablesSpriteSheet->getTexture());
             SAFE_RELEASE(collectablesSpriteSheet);
             uninitialisedSpriteBatches.push_back(_collectablesSpritebatch);
         }
+
+
 
         _level->getCollectables(_collectables);
 
@@ -228,6 +241,7 @@ namespace platformer
         SAFE_DELETE(_parallaxSpritebatch);
         SAFE_DELETE(_interactablesSpritebatch);
         SAFE_DELETE(_collectablesSpritebatch);
+        SAFE_DELETE(_waterSpritebatch);
         SAFE_RELEASE(_interactablesSpritesheet);
         PLATFORMER_SAFE_DELETE_AI_MESSAGE(_splashScreenFadeMessage);
         onLevelUnloaded();
@@ -543,6 +557,14 @@ namespace platformer
             _previousSpritebatch->finish();
             _previousSpritebatch = nullptr;
         }
+    }
+
+    float LevelRendererComponent::getWaterTimeUniform() const
+    {
+        float angle = gameplay::Game::getGameTime() * 0.001 * MATH_PIX2;
+        if (angle > MATH_PIX2)
+            angle -= MATH_PIX2;
+        return angle;
     }
 
     void LevelRendererComponent::CharacterRenderer::render(SpriteAnimationComponent * animation, gameplay::SpriteBatch * spriteBatch,
