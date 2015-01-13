@@ -1978,14 +1978,14 @@ layers
             353 = 0
             354 = 0
             355 = 0
-            356 = 0
+            356 = 19
             357 = 0
             358 = 0
             359 = 0
             360 = 0
             361 = 0
             362 = 0
-            363 = 0
+            363 = 19
             364 = 0
             365 = 0
             366 = 0
@@ -2042,14 +2042,14 @@ layers
             417 = 0
             418 = 0
             419 = 0
-            420 = 0
+            420 = 19
             421 = 0
             422 = 0
             423 = 0
             424 = 0
             425 = 0
             426 = 0
-            427 = 0
+            427 = 19
             428 = 0
             429 = 0
             430 = 0
@@ -2106,14 +2106,14 @@ layers
             481 = 0
             482 = 0
             483 = 0
-            484 = 0
-            485 = 0
-            486 = 0
-            487 = 0
-            488 = 0
-            489 = 0
-            490 = 0
-            491 = 0
+            484 = 19
+            485 = 19
+            486 = 19
+            487 = 19
+            488 = 19
+            489 = 19
+            490 = 19
+            491 = 19
             492 = 0
             493 = 0
             494 = 0
@@ -3256,8 +3256,8 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 718.32399999999996
-                y = 1174.0899999999999
+                x = 2310.81177977875
+                y = 271.079966555184
             }
 
             objects_1
@@ -4005,6 +4005,57 @@ layers
                 x = 640
                 y = 1280
             }
+
+            objects_18
+            {
+                height = 64
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 512
+                x = 2304
+                y = 448
+            }
+
+            objects_19
+            {
+                height = 128
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 64
+                x = 2752
+                y = 320
+            }
+
+            objects_20
+            {
+                height = 128
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 64
+                x = 2304
+                y = 320
+            }
         }
 
         opacity = 1
@@ -4101,6 +4152,40 @@ layers
     }
 
     layers_6
+    {
+        draworder = topdown
+        height = 25
+        name = collision_water
+
+        objects
+        {
+            objects_0
+            {
+                height = 118.03686063367201
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 455.58086560364501
+                x = 2325.5332366949701
+                y = 362.39387036653602
+            }
+        }
+
+        opacity = 1
+        type = objectgroup
+        visible = true
+        width = 64
+        x = 0
+        y = 0
+    }
+
+    layers_7
     {
         draworder = topdown
         height = 0
@@ -4326,7 +4411,7 @@ layers
         y = 0
     }
 
-    layers_7
+    layers_8
     {
         draworder = topdown
         height = 0

@@ -6,7 +6,7 @@ precision mediump float;
 #endif
 #endif
 
-const float AMPLITUDE = 0.008;
+const float AMPLITUDE = 0.03;
 const float FREQUENCY = 40.0;
 const float SPEED = 0.5;
 

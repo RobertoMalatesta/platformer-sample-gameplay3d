@@ -19,7 +19,8 @@ namespace platformer
             COLLISION_DYNAMIC,
             LADDER,
             RESET,
-            COLLECTABLE
+            COLLECTABLE,
+            WATER
         };
     };
 

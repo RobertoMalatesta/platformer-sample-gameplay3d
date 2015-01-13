@@ -22,6 +22,11 @@ collisionObject reset : world_collision
     type = GHOST_OBJECT
 }
 
+collisionObject water : world_collision
+{
+    type = GHOST_OBJECT
+}
+
 collisionObject boulder : world_collision
 {
     shape = SPHERE

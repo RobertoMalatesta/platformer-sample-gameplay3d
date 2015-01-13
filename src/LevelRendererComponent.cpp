@@ -137,6 +137,8 @@ namespace platformer
 
             gameplay::Effect* waterEffect = gameplay::Effect::createFromFile("res/shaders/sprite.vert", "res/shaders/water.frag");
             _waterSpritebatch = gameplay::SpriteBatch::create("@res/textures/water", waterEffect);
+            _waterSpritebatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::REPEAT, gameplay::Texture::Wrap::CLAMP);
+            SAFE_RELEASE(waterEffect);
             uninitialisedSpriteBatches.push_back(_waterSpritebatch);
             gameplay::Material* waterMaterial = _waterSpritebatch->getMaterial();
             gameplay::Texture::Sampler* noiseSampler = gameplay::Texture::Sampler::create("res/textures/water-noise.png");
@@ -160,6 +162,16 @@ namespace platformer
             bool const isBoulder = node->getCollisionObject()->getShapeType() == gameplay::PhysicsCollisionShape::SHAPE_SPHERE;
             _dynamicCollisionNodes.emplace_back(node, getSafeDrawRect(isBoulder ? _interactablesSpritesheet->getSprite("boulder")->_src : 
                 _interactablesSpritesheet->getSprite("crate")->_src));
+        });
+
+        _level->forEachCachedNode(CollisionType::WATER, [this](gameplay::Node * node)
+        {
+            gameplay::Rectangle bounds;
+            bounds.width = node->getScaleX() / PLATFORMER_UNIT_SCALAR;
+            bounds.height = node->getScaleY() / PLATFORMER_UNIT_SCALAR;
+            bounds.x = (node->getTranslationX() / PLATFORMER_UNIT_SCALAR) - bounds.width / 2.0f;
+            bounds.y = (-node->getTranslationY() / PLATFORMER_UNIT_SCALAR) - bounds.height / 2.0f;
+            _waterBounds.push_back(bounds);
         });
 
         // The first call to draw will perform some lazy initialisation in Effect::Bind
@@ -218,6 +230,7 @@ namespace platformer
         _dynamicCollisionNodes.clear();
         _playerAnimationBatches.clear();
         _enemyAnimationBatches.clear();
+        _waterBounds.clear();
         _collectables.clear();
         _levelLoaded = false;
 
@@ -387,6 +400,25 @@ namespace platformer
             {
                 _parallaxSpritebatch->finish();
             }
+
+            if (!_waterBounds.empty())
+            {
+                _waterSpritebatch->setProjectionMatrix(spriteBatchProjection);
+                _waterSpritebatch->start();
+
+                gameplay::Rectangle src;
+                src.width = _waterSpritebatch->getSampler()->getTexture()->getWidth();
+                src.height = _waterSpritebatch->getSampler()->getTexture()->getHeight();
+
+                // Draw the water volumes
+                for (gameplay::Rectangle const & dst : _waterBounds)
+                {
+                    _waterSpritebatch->draw(dst, getSafeDrawRect(src));
+                }
+
+                _waterSpritebatch->finish();
+            }
+            
 
             if(spriteLevelBounds.intersects(spriteViewport))
             {
