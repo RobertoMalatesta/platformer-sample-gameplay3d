@@ -13,11 +13,11 @@
  </layer>
  <layer name="terrain" width="64" height="25">
   <data encoding="base64" compression="zlib">
-   eJztlf8KQDAUhfcOngrv4lmUhPxI8aCuspLMbrLd4Xz1tX9Y59zVphQAAAAAAHBBRdZkIx1EgFk6gANiMmGYkpNQxlAw9S/I8WDpI5BncP7fZL3TOff5V/vb0G/etK3aq5m1ZO8+2uNcve/c81+7d+Sg3jkDE5z+unu+GeIMspv/2fofu/ucwRiAZ933M9h/+3SPyKIpl5Qm7u6H/jyle7vyr721C9MrvmI=
+   eJztl20KgzAQRHMHT6XepWcRiqi0FcEe1BUMiDTJEpJsTOfBwx9+MLOBBJUCAACQA5XnvVJAf7vgngzkSE7SQQT4SgeIQE02DFtyFcqYC6b+T3K52KcIlBisf5nsezpnPy+1vwt95q3HVWub2Yv8xI8WHNv5zl3/vfubnNU9Z2CC01937w5znMHD8z1X/2v3lDNYMvBX9/MMzs+G7uH63zLlktKE7/fQn6d071j+a2/tBsFjv0Y=
   </data>
  </layer>
  <objectgroup name="characters">
-  <object name="player" x="718.324" y="1174.09" width="36.3734" height="31.4506">
+  <object name="player" x="2310.81" y="271.08" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
   <object name="enemy_slime" x="1228.43" y="660.128" width="36.3734" height="31.4506">
@@ -89,7 +89,7 @@
   <object x="3200" y="1280" width="192" height="320"/>
   <object x="0" y="0" width="640" height="1280"/>
   <object x="3392" y="0" width="704" height="1280"/>
-  <object x="1152" y="1088" width="194.801" height="0.303901"/>
+  <object x="1152" y="1088" width="189.057" height="38.4923"/>
   <object x="960" y="960" width="128" height="32.7035"/>
   <object x="1472" y="1024" width="128.923" height="36.6743"/>
   <object x="1664" y="1024" width="259.067" height="36.8098"/>
@@ -109,6 +109,9 @@
   <object x="2624" y="1280" width="192" height="320"/>
   <object x="704" y="1216" width="64" height="128"/>
   <object x="640" y="1280" width="64" height="64"/>
+  <object x="2304" y="448" width="512" height="64"/>
+  <object x="2752" y="320" width="64" height="128"/>
+  <object x="2304" y="320" width="64" height="128"/>
  </objectgroup>
  <objectgroup name="collision_hand_of_god">
   <object x="2813.82" y="1438.91" width="377.956" height="26.5418"/>
@@ -136,7 +139,7 @@
   <object x="2216.18" y="634.064" width="128" height="128">
    <ellipse/>
   </object>
-  <object x="2841.97" y="1273.02" width="192" height="192">
+  <object x="1919.46" y="356.661" width="192" height="192">
    <ellipse/>
   </object>
   <object x="1919.74" y="575.715" width="192" height="192"/>
@@ -256,5 +259,8 @@
   <object name="enemy_slime" x="2152.13" y="732.101" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
+ </objectgroup>
+ <objectgroup name="water">
+  <object x="2325.53" y="362.394" width="455.581" height="118.037"/>
  </objectgroup>
 </map>

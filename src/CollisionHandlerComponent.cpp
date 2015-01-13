@@ -113,6 +113,7 @@ namespace platformer
             addOrRemoveCollisionListener(CollisionType::LADDER, this, level, playerCollisionObject, false);
             addOrRemoveCollisionListener(CollisionType::RESET, this, level, playerCollisionObject, false);
             addOrRemoveCollisionListener(CollisionType::COLLECTABLE, this, level, playerCollisionObject, false);
+            addOrRemoveCollisionListener(CollisionType::WATER, this, level, playerCollisionObject, false);
 
             SAFE_RELEASE(node);
         }
@@ -128,6 +129,7 @@ namespace platformer
         addOrRemoveCollisionListener(CollisionType::LADDER, this, level, playerCollisionObject, true);
         addOrRemoveCollisionListener(CollisionType::RESET, this, level, playerCollisionObject, true);
         addOrRemoveCollisionListener(CollisionType::COLLECTABLE, this, level, playerCollisionObject, true);
+        addOrRemoveCollisionListener(CollisionType::WATER, this, level, playerCollisionObject, true);
 
         for (auto & enemyPair : _enemies)
         {

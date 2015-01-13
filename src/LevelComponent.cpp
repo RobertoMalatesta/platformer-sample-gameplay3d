@@ -210,6 +210,9 @@ namespace platformer
             case CollisionType::RESET:
                 collisionId = "reset";
                 break;
+            case CollisionType::WATER:
+                collisionId = "water";
+                break;
             default:
                 PLATFORMER_ASSERTFAIL("Unhandled CollisionType %d", collisionType);
                 break;
@@ -401,6 +404,10 @@ namespace platformer
                     else if (layerName == "collision_hand_of_god")
                     {
                         collisionType = CollisionType::RESET;
+                    }
+                    else if (layerName == "collision_water")
+                    {
+                        collisionType = CollisionType::WATER;
                     }
 
                     loadStaticCollision(layerNamespace, collisionType);
