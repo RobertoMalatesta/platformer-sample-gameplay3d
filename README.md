@@ -4,40 +4,39 @@ A 2D physics based platformer made using the open source game framework Gameplay
 
 ![ScreenShot](https://raw.githubusercontent.com/louis-mclaughlin/platformer-sample-gameplay3d/master/raw/textures/platformer_big.jpg)
 
-![Video (60fps@720) of WIP](https://www.youtube.com/watch?v=03jDCVnvTzA)
+### Watch it
+
+[WIP Video (720p@60fps)](https://www.youtube.com/watch?v=03jDCVnvTzA)
 
 ### Try it
 
-```
-TODO:Google Play
-TODO:Windows
-TODO:Linux
-```
+- [TODO:Google Play](https://github.com/louis-mclaughlin/platformer-sample-gameplay3d/tree/next)
+- [TODO:Windows](https://github.com/louis-mclaughlin/platformer-sample-gameplay3d/tree/next)
+- [TODO:Linux](https://github.com/louis-mclaughlin/platformer-sample-gameplay3d/tree/next)
 
 ### Build it
 
-#### Windows 7+ [64-bit only]
-```
-TODO
-```
+#### Windows 7+ [64-bit]
 
-#### Linux [64-bit only]
-```
-TODO
-```
+- TODO
+
+#### Linux [64-bit]
+
+- TODO
 
 #### Android 4.1+ [arm x86]
-```
-TODO
-```
+
+- TODO
 
 ### Content pipeline
-- Audio:            [SFXR](http://www.drpetter.se/project_sfxr.html) -> (.wav)          ->  [Audacity](http://audacity.sourceforge.net/) (.ogg)
-- Fonts:            (.ttf)                  ->  [gameplay-encoder](https://github.com/gameplay3d/GamePlay/wiki/Building-gameplay-encoder) (.gpb)
-- Levels:           [Tiled](http://www.mapeditor.org/) (.json)           ->  [json-to-gameplay3d](https://github.com/louis-mclaughlin/json-to-gameplay3d) (.level)
-- Spritesheets:     [TexturePacker lite](https://www.codeandweb.com/texturepacker) (.json)   ->  [json-to-gameplay3d](https://github.com/louis-mclaughlin/json-to-gameplay3d) (.ss)
+
+| Type | Raw | Res |
+| :--- |:--- | :--- |
+| Audio | [SFXR](http://www.drpetter.se/project_sfxr.html) (.wav) | [Audacity](http://audacity.sourceforge.net/) (.ogg) |
+| Font | (.ttf) | [gameplay-encoder](https://github.com/gameplay3d/GamePlay/wiki/Building-gameplay-encoder) (.gpb) |
+| Level | [Tiled](http://www.mapeditor.org/) (.json) | [json-to-gameplay3d](https://github.com/louis-mclaughlin/json-to-gameplay3d) (.level) |
+| Sprite sheet | [TexturePacker lite](https://www.codeandweb.com/texturepacker) (.json) | [json-to-gameplay3d](https://github.com/louis-mclaughlin/json-to-gameplay3d) (.ss) |
 
 ### External content used
-- [https://www.google.com/fonts/specimen/Open+Sans](https://www.google.com/fonts/specimen/Open+Sans)
-- [http://kenney.nl/assets](http://kenney.nl/assets)
-- [https://github.com/blackberry/GamePlay/blob/master/gameplay/res/logo_black.png](https://github.com/blackberry/GamePlay/blob/master/gameplay/res/logo_black.png)
+- [Debug font](https://www.google.com/fonts/specimen/Open+Sans)
+- [Sprites](http://kenney.nl/assets)
