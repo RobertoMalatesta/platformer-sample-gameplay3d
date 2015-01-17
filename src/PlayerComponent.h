@@ -32,7 +32,8 @@ namespace platformer
                 Walking,
                 Cowering,
                 Jumping,
-                Climbing
+                Climbing,
+                Swimming
             };
         };
 
@@ -77,6 +78,7 @@ namespace platformer
         gameplay::Vector2 getPosition() const;
         SpriteAnimationComponent * getCurrentAnimation();
         gameplay::Node * getCharacterNode() const;
+        void setSwimmingEnabled(bool enabled);
         void setClimbingEnabled(bool enabled);
         void setClimpingSnapPositionX(float posX);
         void setMovementEnabled(MovementDirection::Enum direction, bool enabled, float scale = 1.0f);
@@ -91,10 +93,12 @@ namespace platformer
         State::Enum _state;
         bool _isLeftFacing;
         bool _climbingEnabled;
+        bool _swimmingEnabled;
         MovementDirection::Enum _movementDirection;
         float _movementScale;
         State::Enum _previousState;
         float _movementSpeed;
+        float _swimSpeedScale;
         float _jumpHeight;
         float _climbingSnapPositionX;
 
@@ -104,6 +108,7 @@ namespace platformer
         std::string _jumpAnimComponentId;
         std::string _normalCharacterComponentId;
         std::string _climbingCharacterComponentId;
+        std::string _swimmingCharacterComponentId;
 
         gameplay::AIMessage * _jumpMessage;
         CameraControlComponent * _camera;

@@ -15,6 +15,7 @@ namespace platformer
         : Component(true)
         , _player(nullptr)
         , _playerClimbingTerrainRefCount(0)
+        , _playerSwimmingRefCount(0)
         , _waitForPhysicsCleanup(false)
         , _framesSinceLevelReloaded(0)
         , _forceHandOfGodMessage(nullptr)
@@ -233,32 +234,49 @@ namespace platformer
             {
                 bool const isColliding = type == gameplay::PhysicsCollisionObject::CollisionListener::EventType::COLLIDING;
 
-                if(terrainInfo->_CollisionType == CollisionType::LADDER)
+                switch (terrainInfo->_CollisionType)
                 {
-                    if (isColliding)
+                    case CollisionType::LADDER:
                     {
-                        _player->setClimpingSnapPositionX(collisionPair.objectB->getNode()->getTranslationX());
-                        ++_playerClimbingTerrainRefCount;
+                        if (isColliding)
+                        {
+                            _player->setClimpingSnapPositionX(collisionPair.objectB->getNode()->getTranslationX());
+                            ++_playerClimbingTerrainRefCount;
+                        }
+                        else
+                        {
+                            --_playerClimbingTerrainRefCount;
+                        }
+
+                        PLATFORMER_ASSERT(_playerClimbingTerrainRefCount == MATH_CLAMP(_playerClimbingTerrainRefCount, 0, std::numeric_limits<int>::max()),
+                            "_playerClimbingTerrainRefCount invalid %d", _playerClimbingTerrainRefCount);
+                        _player->setClimbingEnabled(_playerClimbingTerrainRefCount > 0);
+                        return true;
                     }
-                    else
+                    case CollisionType::RESET:
                     {
-                        --_playerClimbingTerrainRefCount;
+                        if (isColliding)
+                        {
+                            getRootParent()->broadcastMessage(_forceHandOfGodMessage);
+                        }
+                        return true;
                     }
-                    
-                    _playerClimbingTerrainRefCount = MATH_CLAMP(_playerClimbingTerrainRefCount, 0, std::numeric_limits<int>::max());
-                    _player->setClimbingEnabled(_playerClimbingTerrainRefCount > 0);
-                    return true;
-                }
-                else if(terrainInfo->_CollisionType == CollisionType::RESET && isColliding)
-                {
-                    getRootParent()->broadcastMessage(_forceHandOfGodMessage);
-                    return true;
-                }
-                else if(terrainInfo->_CollisionType == CollisionType::COLLECTABLE)
-                {
-                    LevelComponent * level = getParent()->getComponent<LevelComponent>();
-                    level->consumeCollectable(collisionPair.objectB->getNode());
-                    return true;
+                    case CollisionType::COLLECTABLE:
+                    {
+                        LevelComponent * level = getParent()->getComponent<LevelComponent>();
+                        level->consumeCollectable(collisionPair.objectB->getNode());
+                        return true;
+                    }
+                    case CollisionType::WATER:
+                    {
+                        isColliding ? ++_playerSwimmingRefCount : --_playerSwimmingRefCount;
+                        _player->setSwimmingEnabled(_playerSwimmingRefCount > 0);
+                        PLATFORMER_ASSERT(_playerSwimmingRefCount == MATH_CLAMP(_playerSwimmingRefCount, 0, std::numeric_limits<int>::max()),
+                            "_playerSwimmingRefCount invalid %d", _playerSwimmingRefCount);
+                        break;
+                    }
+                    default:
+                        PLATFORMER_ASSERTFAIL("Unhandled terrain collision type %d", terrainInfo->_CollisionType);
                 }
             }
         }

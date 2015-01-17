@@ -20,7 +20,9 @@ namespace platformer
         , _movementScale(0.0f)
         , _jumpMessage(nullptr)
         , _climbingEnabled(false)
+        , _swimmingEnabled(false)
         , _climbingSnapPositionX(0.0f)
+        , _swimSpeedScale(1.0f)
     {
     }
 
@@ -35,6 +37,7 @@ namespace platformer
         _animations[State::Cowering] = getParent()->findComponent<SpriteAnimationComponent>(_cowerAnimComponentId);
         _animations[State::Jumping] = getParent()->findComponent<SpriteAnimationComponent>(_jumpAnimComponentId);
         _animations[State::Climbing] = getParent()->findComponent<SpriteAnimationComponent>(_climbingCharacterComponentId);
+        _animations[State::Swimming] = getParent()->findComponent<SpriteAnimationComponent>(_swimmingCharacterComponentId);
 
         _characterNormalNode = getParent()->findComponent<CollisionObjectComponent>(_normalCharacterComponentId)->getNode();
         _characterNormalNode->addRef();
@@ -60,7 +63,9 @@ namespace platformer
         _cowerAnimComponentId = properties.getString("cower_anim");
         _jumpAnimComponentId = properties.getString("jump_anim");
         _climbingCharacterComponentId = properties.getString("climb_anim");
+        _swimmingCharacterComponentId = properties.getString("swim_anim");
         _movementSpeed = properties.getFloat("speed");
+        _swimSpeedScale = properties.getFloat("swim_speed_scale");
         _jumpHeight = properties.getFloat("jump_height");
         _normalCharacterComponentId = properties.getString("normal_physics");
     }
@@ -102,25 +107,36 @@ namespace platformer
                 }
             }
 
-            if (velocity.isZero())
+            if (_state != State::Swimming)
             {
-                if(_movementDirection == MovementDirection::None || _movementDirection == MovementDirection::Up)
+                if (velocity.isZero())
                 {
-                    _state = State::Idle;
+                    if(_movementDirection == MovementDirection::None || _movementDirection == MovementDirection::Up)
+                    {
+                        _state = State::Idle;
+                    }
                 }
-            }
-            else
-            {
-                if(velocity.y == 0.0f && velocity.x != 0.0f)
+                else
                 {
-                    _state = State::Walking;
-                }
+                    if (velocity.y == 0.0f && velocity.x != 0.0f)
+                    {
+                        if (_swimmingEnabled && _state == State::Walking)
+                        {
+                            character->setVelocity(character->getCurrentVelocity().x * _swimSpeedScale, 0, 0);
+                            _state = State::Swimming;
+                        }
+                        else
+                        {
+                            _state = State::Walking;
+                        }
+                    }
 
-                float const minFallVelocity = -2.0f;
+                    float const minFallVelocity = -2.0f;
 
-                if(velocity.y < minFallVelocity && (_state == State::Idle || _state == State::Walking))
-                {
-                    _state = State::Cowering;
+                    if (velocity.y < minFallVelocity && (_state == State::Idle || _state == State::Walking))
+                    {
+                        _state = State::Cowering;
+                    }
                 }
             }
 
@@ -201,12 +217,21 @@ namespace platformer
                         character->setPhysicsEnabled(true);
                         _state = State::Idle;
                     }
+                    else if (_swimmingEnabled)
+                    {
+                        _state = State::Swimming;
+                    }
 
                     if((direction & MovementDirection::Horizontal) == direction)
                     {
                         _isLeftFacing = direction == MovementDirection::Left;
                         float horizontalSpeed = _isLeftFacing ? -_movementSpeed : _movementSpeed;
                         horizontalSpeed *= scale;
+
+                        if (_state == State::Swimming)
+                        {
+                            horizontalSpeed *= _swimSpeedScale;
+                        }
 
                         character->setVelocity(horizontalSpeed, 0.0f, 0.0f);
                     }
@@ -239,6 +264,21 @@ namespace platformer
         }
 
         _climbingEnabled = enabled;
+    }
+
+    void PlayerComponent::setSwimmingEnabled(bool enabled)
+    {
+        if (!enabled && _swimmingEnabled)
+        {
+            gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
+
+            if (character->getCurrentVelocity().x != 0)
+            {
+                character->setVelocity(character->getCurrentVelocity().x / _swimSpeedScale, 0 , 0);
+            }
+        }
+
+        _swimmingEnabled = enabled;
     }
 
     void PlayerComponent::setClimpingSnapPositionX(float posX)

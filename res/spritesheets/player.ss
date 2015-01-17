@@ -224,12 +224,12 @@ frames
 
     frames_6
     {
-        filename = player_walk__00
+        filename = player_swim__00
 
         frame
         {
             h = 97
-            w = 72
+            w = 71
             x = 407
             y = 0
         }
@@ -245,13 +245,13 @@ frames
         sourceSize
         {
             h = 97
-            w = 72
+            w = 71
         }
 
         spriteSourceSize
         {
             h = 97
-            w = 72
+            w = 71
             x = 0
             y = 0
         }
@@ -261,12 +261,12 @@ frames
 
     frames_7
     {
-        filename = player_walk__01
+        filename = player_swim__01
 
         frame
         {
             h = 97
-            w = 73
+            w = 71
             x = 0
             y = 97
         }
@@ -282,13 +282,13 @@ frames
         sourceSize
         {
             h = 97
-            w = 73
+            w = 71
         }
 
         spriteSourceSize
         {
             h = 97
-            w = 73
+            w = 71
             x = 0
             y = 0
         }
@@ -298,13 +298,13 @@ frames
 
     frames_8
     {
-        filename = player_walk__02
+        filename = player_walk__00
 
         frame
         {
-            h = 98
-            w = 73
-            x = 73
+            h = 97
+            w = 72
+            x = 71
             y = 97
         }
 
@@ -318,14 +318,14 @@ frames
 
         sourceSize
         {
-            h = 98
-            w = 73
+            h = 97
+            w = 72
         }
 
         spriteSourceSize
         {
-            h = 98
-            w = 73
+            h = 97
+            w = 72
             x = 0
             y = 0
         }
@@ -335,13 +335,13 @@ frames
 
     frames_9
     {
-        filename = player_walk__03
+        filename = player_walk__01
 
         frame
         {
             h = 97
-            w = 72
-            x = 146
+            w = 73
+            x = 143
             y = 97
         }
 
@@ -356,13 +356,13 @@ frames
         sourceSize
         {
             h = 97
-            w = 72
+            w = 73
         }
 
         spriteSourceSize
         {
             h = 97
-            w = 72
+            w = 73
             x = 0
             y = 0
         }
@@ -372,13 +372,13 @@ frames
 
     frames_10
     {
-        filename = player_walk__04
+        filename = player_walk__02
 
         frame
         {
-            h = 97
+            h = 98
             w = 73
-            x = 218
+            x = 216
             y = 97
         }
 
@@ -392,13 +392,13 @@ frames
 
         sourceSize
         {
-            h = 97
+            h = 98
             w = 73
         }
 
         spriteSourceSize
         {
-            h = 97
+            h = 98
             w = 73
             x = 0
             y = 0
@@ -409,13 +409,13 @@ frames
 
     frames_11
     {
-        filename = player_walk__05
+        filename = player_walk__03
 
         frame
         {
             h = 97
-            w = 73
-            x = 291
+            w = 72
+            x = 289
             y = 97
         }
 
@@ -430,13 +430,13 @@ frames
         sourceSize
         {
             h = 97
-            w = 73
+            w = 72
         }
 
         spriteSourceSize
         {
             h = 97
-            w = 73
+            w = 72
             x = 0
             y = 0
         }
@@ -446,13 +446,13 @@ frames
 
     frames_12
     {
-        filename = player_walk__06
+        filename = player_walk__04
 
         frame
         {
             h = 97
             w = 73
-            x = 364
+            x = 361
             y = 97
         }
 
@@ -483,13 +483,13 @@ frames
 
     frames_13
     {
-        filename = player_walk__07
+        filename = player_walk__05
 
         frame
         {
             h = 97
-            w = 72
-            x = 437
+            w = 73
+            x = 434
             y = 97
         }
 
@@ -504,13 +504,13 @@ frames
         sourceSize
         {
             h = 97
-            w = 72
+            w = 73
         }
 
         spriteSourceSize
         {
             h = 97
-            w = 72
+            w = 73
             x = 0
             y = 0
         }
@@ -520,12 +520,12 @@ frames
 
     frames_14
     {
-        filename = player_walk__08
+        filename = player_walk__06
 
         frame
         {
             h = 97
-            w = 72
+            w = 73
             x = 0
             y = 195
         }
@@ -541,13 +541,13 @@ frames
         sourceSize
         {
             h = 97
-            w = 72
+            w = 73
         }
 
         spriteSourceSize
         {
             h = 97
-            w = 72
+            w = 73
             x = 0
             y = 0
         }
@@ -557,13 +557,13 @@ frames
 
     frames_15
     {
-        filename = player_walk__09
+        filename = player_walk__07
 
         frame
         {
             h = 97
             w = 72
-            x = 72
+            x = 73
             y = 195
         }
 
@@ -594,13 +594,87 @@ frames
 
     frames_16
     {
+        filename = player_walk__08
+
+        frame
+        {
+            h = 97
+            w = 72
+            x = 145
+            y = 195
+        }
+
+        pivot
+        {
+            x = 0.5
+            y = 0.5
+        }
+
+        rotated = false
+
+        sourceSize
+        {
+            h = 97
+            w = 72
+        }
+
+        spriteSourceSize
+        {
+            h = 97
+            w = 72
+            x = 0
+            y = 0
+        }
+
+        trimmed = false
+    }
+
+    frames_17
+    {
+        filename = player_walk__09
+
+        frame
+        {
+            h = 97
+            w = 72
+            x = 217
+            y = 195
+        }
+
+        pivot
+        {
+            x = 0.5
+            y = 0.5
+        }
+
+        rotated = false
+
+        sourceSize
+        {
+            h = 97
+            w = 72
+        }
+
+        spriteSourceSize
+        {
+            h = 97
+            w = 72
+            x = 0
+            y = 0
+        }
+
+        trimmed = false
+    }
+
+    frames_18
+    {
         filename = player_walk__10
 
         frame
         {
             h = 97
             w = 72
-            x = 144
+            x = 289
             y = 195
         }
 
@@ -643,6 +717,6 @@ meta
         w = 512
     }
 
-    smartupdate = $TexturePacker:SmartUpdate:439e7f6a0c0eac28a0b32fdd54c8c5fd:504dcf7acce6bedd24fa2c6a7c8d9f96:86d5339b780aedd87b35e2b7c0a7e11b$
+    smartupdate = $TexturePacker:SmartUpdate:89815c240e19e29dafd7e26f63cb5526:c2dceaf45204137a3f01cec146dfa968:86d5339b780aedd87b35e2b7c0a7e11b$
     version = 1.0
 }

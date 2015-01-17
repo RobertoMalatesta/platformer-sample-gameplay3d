@@ -3652,26 +3652,8 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 2611.4266333333298
-                y = 401.44603333333299
-            }
-
-            objects_23
-            {
-                ellipse = true
-                height = 31.450600000000001
-                name = enemy_fish
-
-                properties
-                {
-                }
-
-                rotation = 0
-                type = 
-                visible = true
-                width = 36.373399999999997
-                x = 2516.1732999999999
-                y = 347.103366666667
+                x = 2606.1258910883698
+                y = 359.66691048931898
             }
         }
 
@@ -4044,7 +4026,7 @@ layers
 
             objects_18
             {
-                height = 64
+                height = 102
                 name = 
 
                 properties
@@ -4054,9 +4036,9 @@ layers
                 rotation = 0
                 type = 
                 visible = true
-                width = 384
+                width = 383
                 x = 2368
-                y = 448
+                y = 393
             }
 
             objects_19
@@ -5628,7 +5610,7 @@ layers
         {
             objects_0
             {
-                height = 128
+                height = 96
                 name = 
 
                 properties
@@ -5640,13 +5622,13 @@ layers
                 visible = true
                 width = 384
                 x = 2368
-                y = 320
+                y = 352
             }
         }
 
         opacity = 1
         type = objectgroup
-        visible = false
+        visible = true
         width = 0
         x = 0
         y = 0

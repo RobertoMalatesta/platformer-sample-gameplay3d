@@ -60,6 +60,7 @@ namespace platformer
         std::set<gameplay::Node *> _playerCharacterNodes;
         gameplay::AIMessage * _forceHandOfGodMessage;
         int _playerClimbingTerrainRefCount;
+        int _playerSwimmingRefCount;
         int _framesSinceLevelReloaded;
         bool _waitForPhysicsCleanup;
     };

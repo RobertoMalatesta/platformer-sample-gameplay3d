@@ -210,6 +210,8 @@
             <filename>../textures/player_walk__09.png</filename>
             <filename>../textures/player_climb__00.png</filename>
             <filename>../textures/player_climb__01.png</filename>
+            <filename>../textures/player_swim__01.png</filename>
+            <filename>../textures/player_swim__00.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

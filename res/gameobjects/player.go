@@ -5,7 +5,9 @@ player
     cower_anim = cower
     jump_anim = jump
     climb_anim = climb
+    swim_anim = swim
     speed = 9.0
+    swim_speed_scale = 0.5
     jump_height = 2.1
     normal_physics = character_normal
 }
@@ -64,4 +66,13 @@ sprite_animation jump
     sprite = player_jump
     sprite = player_hurt
     fps = 3
+}
+
+sprite_animation swim
+{
+    spritesheet = res/spritesheets/player.ss
+    spriteprefix = player_swim__
+    fps = 4
+    loop = true
+    autostart = true
 }

@@ -369,23 +369,8 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":2611.42663333333,
-                 "y":401.446033333333
-                }, 
-                {
-                 "ellipse":true,
-                 "height":31.4506,
-                 "name":"enemy_fish",
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":36.3734,
-                 "x":2516.1733,
-                 "y":347.103366666667
+                 "x":2606.12589108837,
+                 "y":359.666910489319
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -679,7 +664,7 @@
                  "y":1280
                 }, 
                 {
-                 "height":64,
+                 "height":102,
                  "name":"",
                  "properties":
                     {
@@ -688,9 +673,9 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":384,
+                 "width":383,
                  "x":2368,
-                 "y":448
+                 "y":393
                 }, 
                 {
                  "height":128,
@@ -1854,7 +1839,7 @@
          "name":"collision_water",
          "objects":[
                 {
-                 "height":128,
+                 "height":96,
                  "name":"",
                  "properties":
                     {
@@ -1865,11 +1850,11 @@
                  "visible":true,
                  "width":384,
                  "x":2368,
-                 "y":320
+                 "y":352
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "width":0,
          "x":0,
          "y":0
