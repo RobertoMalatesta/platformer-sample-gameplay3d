@@ -401,25 +401,6 @@ namespace platformer
                 _parallaxSpritebatch->finish();
             }
 
-            if (!_waterBounds.empty())
-            {
-                _waterSpritebatch->setProjectionMatrix(spriteBatchProjection);
-                _waterSpritebatch->start();
-
-                gameplay::Rectangle src;
-                src.width = _waterSpritebatch->getSampler()->getTexture()->getWidth();
-                src.height = _waterSpritebatch->getSampler()->getTexture()->getHeight();
-
-                // Draw the water volumes
-                for (gameplay::Rectangle const & dst : _waterBounds)
-                {
-                    _waterSpritebatch->draw(dst, getSafeDrawRect(src));
-                }
-
-                _waterSpritebatch->finish();
-            }
-            
-
             if(spriteLevelBounds.intersects(spriteViewport))
             {
                 // Draw the tiles
@@ -558,6 +539,24 @@ namespace platformer
                             _player->getPosition(), spriteViewport);
 
             _characterRenderer.finish();
+
+            if (!_waterBounds.empty())
+            {
+                _waterSpritebatch->setProjectionMatrix(spriteBatchProjection);
+                _waterSpritebatch->start();
+
+                gameplay::Rectangle src;
+                src.width = _waterSpritebatch->getSampler()->getTexture()->getWidth();
+                src.height = _waterSpritebatch->getSampler()->getTexture()->getHeight();
+
+                // Draw the water volumes
+                for (gameplay::Rectangle const & dst : _waterBounds)
+                {
+                    _waterSpritebatch->draw(dst, getSafeDrawRect(src));
+                }
+
+                _waterSpritebatch->finish();
+            }
 
             // Draw the virtual controls
             if(gameplay::Form * gamepadForm = _playerInput->getGamepadForm())
