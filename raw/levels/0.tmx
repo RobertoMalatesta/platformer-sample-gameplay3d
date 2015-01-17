@@ -32,13 +32,13 @@
   <object name="enemy_snail" x="1414.57" y="661.999" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_spider" x="1521.1" y="1409.14" width="36.3734" height="31.4506">
+  <object name="enemy_spider" x="1511.77" y="1233.14" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_slime" x="1122.11" y="1420.18" width="36.3734" height="31.4506">
+  <object name="enemy_slime" x="1112.78" y="1244.18" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_snail" x="1419.34" y="1410.78" width="36.3734" height="31.4506">
+  <object name="enemy_snail" x="1410.01" y="1234.78" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
   <object name="enemy_snail" x="1216.6" y="1034.75" width="36.3734" height="31.4506">
@@ -71,16 +71,22 @@
   <object name="enemy_spider" x="1322.35" y="663.804" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_slime" x="1742.68" y="1401.26" width="36.3734" height="31.4506">
+  <object name="enemy_slime" x="1733.35" y="1225.26" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_spider" x="1872.95" y="1398.88" width="36.3734" height="31.4506">
+  <object name="enemy_spider" x="1863.62" y="1222.88" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_slime" x="1273.72" y="1418.25" width="36.3734" height="31.4506">
+  <object name="enemy_slime" x="1264.39" y="1242.25" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
-  <object name="enemy_snail" x="1652.39" y="1397.59" width="36.3734" height="31.4506">
+  <object name="enemy_snail" x="1643.06" y="1221.59" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_fish" x="2611.43" y="401.446" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_fish" x="2516.17" y="347.103" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
  </objectgroup>
@@ -109,7 +115,7 @@
   <object x="2624" y="1280" width="192" height="320"/>
   <object x="704" y="1216" width="64" height="128"/>
   <object x="640" y="1280" width="64" height="64"/>
-  <object x="2304" y="448" width="512" height="64"/>
+  <object x="2368" y="448" width="384" height="64"/>
   <object x="2752" y="320" width="64" height="128"/>
   <object x="2304" y="320" width="64" height="128"/>
  </objectgroup>
@@ -260,7 +266,7 @@
    <ellipse/>
   </object>
  </objectgroup>
- <objectgroup name="water">
-  <object x="2325.53" y="362.394" width="455.581" height="118.037"/>
+ <objectgroup name="collision_water" visible="0">
+  <object x="2368" y="320" width="384" height="128"/>
  </objectgroup>
 </map>

@@ -1,8 +1,35 @@
 {"frames": [
 
 {
+	"filename": "fish_dead.png",
+	"frame": {"x":2,"y":2,"w":62,"h":47},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":62,"h":47},
+	"sourceSize": {"w":62,"h":47},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "fish_swim__00.png",
+	"frame": {"x":66,"y":2,"w":62,"h":47},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":62,"h":47},
+	"sourceSize": {"w":62,"h":47},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "fish_swim__01.png",
+	"frame": {"x":130,"y":2,"w":62,"h":47},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":62,"h":47},
+	"sourceSize": {"w":62,"h":47},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
 	"filename": "slime_dead.png",
-	"frame": {"x":2,"y":2,"w":85,"h":40},
+	"frame": {"x":2,"y":51,"w":85,"h":40},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":85,"h":40},
@@ -11,7 +38,7 @@
 },
 {
 	"filename": "slime_walk__00.png",
-	"frame": {"x":89,"y":2,"w":85,"h":40},
+	"frame": {"x":89,"y":51,"w":85,"h":40},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":85,"h":40},
@@ -20,7 +47,7 @@
 },
 {
 	"filename": "slime_walk__01.png",
-	"frame": {"x":2,"y":44,"w":85,"h":40},
+	"frame": {"x":2,"y":93,"w":85,"h":40},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":85,"h":40},
@@ -29,7 +56,7 @@
 },
 {
 	"filename": "snail_dead.png",
-	"frame": {"x":89,"y":44,"w":82,"h":45},
+	"frame": {"x":89,"y":93,"w":82,"h":45},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":82,"h":45},
@@ -38,7 +65,7 @@
 },
 {
 	"filename": "snail_walk__00.png",
-	"frame": {"x":2,"y":91,"w":82,"h":45},
+	"frame": {"x":2,"y":140,"w":82,"h":45},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":82,"h":45},
@@ -47,7 +74,7 @@
 },
 {
 	"filename": "snail_walk__01.png",
-	"frame": {"x":86,"y":91,"w":82,"h":45},
+	"frame": {"x":86,"y":140,"w":82,"h":45},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":82,"h":45},
@@ -56,7 +83,7 @@
 },
 {
 	"filename": "spider_dead.png",
-	"frame": {"x":170,"y":91,"w":79,"h":54},
+	"frame": {"x":170,"y":140,"w":79,"h":54},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":79,"h":54},
@@ -65,7 +92,7 @@
 },
 {
 	"filename": "spider_walk__00.png",
-	"frame": {"x":2,"y":147,"w":79,"h":54},
+	"frame": {"x":2,"y":196,"w":79,"h":54},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":79,"h":54},
@@ -74,7 +101,7 @@
 },
 {
 	"filename": "spider_walk__01.png",
-	"frame": {"x":83,"y":147,"w":79,"h":54},
+	"frame": {"x":83,"y":196,"w":79,"h":54},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":79,"h":54},
@@ -83,7 +110,7 @@
 },
 {
 	"filename": "spider_walk__02.png",
-	"frame": {"x":164,"y":147,"w":79,"h":54},
+	"frame": {"x":164,"y":196,"w":79,"h":54},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":79,"h":54},
@@ -97,6 +124,6 @@
 	"format": "RGBA8888",
 	"size": {"w":256,"h":256},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:bc226a2859ae83f1441a1c94ed4b97e3:c900c8de8fcaf6aed65ab3126f54fdf8:a99356c10d69482e9bee53d25c3d05e1$"
+	"smartupdate": "$TexturePacker:SmartUpdate:d811f042dab67ba2c88907045389fed9:09fe736e69a927e52496a7580fc299db:a99356c10d69482e9bee53d25c3d05e1$"
 }
 }

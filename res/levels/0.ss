@@ -3346,8 +3346,8 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 1511.7666666666701
-                y = 1233.1400000000001
+                x = 1521.0999999999999
+                y = 1409.1400000000001
             }
 
             objects_6
@@ -3364,8 +3364,8 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 1112.7766666666701
-                y = 1244.1800000000001
+                x = 1122.1099999999999
+                y = 1420.1800000000001
             }
 
             objects_7
@@ -3382,8 +3382,8 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 1410.0066666666701
-                y = 1234.78
+                x = 1419.3399999999999
+                y = 1410.78
             }
 
             objects_8
@@ -3580,8 +3580,8 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 1733.34666666667
-                y = 1225.26
+                x = 1742.6800000000001
+                y = 1401.26
             }
 
             objects_19
@@ -3598,8 +3598,8 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 1863.61666666667
-                y = 1222.8800000000001
+                x = 1872.95
+                y = 1398.8800000000001
             }
 
             objects_20
@@ -3616,8 +3616,8 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 1264.38666666667
-                y = 1242.25
+                x = 1273.72
+                y = 1418.25
             }
 
             objects_21
@@ -3634,44 +3634,8 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 1643.05666666667
-                y = 1221.5899999999999
-            }
-
-            objects_22
-            {
-                ellipse = true
-                height = 31.450600000000001
-                name = enemy_fish
-
-                properties
-                {
-                }
-
-                rotation = 0
-                type = 
-                visible = true
-                width = 36.373399999999997
-                x = 2611.4266333333298
-                y = 401.44603333333299
-            }
-
-            objects_23
-            {
-                ellipse = true
-                height = 31.450600000000001
-                name = enemy_fish
-
-                properties
-                {
-                }
-
-                rotation = 0
-                type = 
-                visible = true
-                width = 36.373399999999997
-                x = 2516.1732999999999
-                y = 347.103366666667
+                x = 1652.3900000000001
+                y = 1397.5899999999999
             }
         }
 
@@ -4054,8 +4018,8 @@ layers
                 rotation = 0
                 type = 
                 visible = true
-                width = 384
-                x = 2368
+                width = 512
+                x = 2304
                 y = 448
             }
 
@@ -5622,7 +5586,7 @@ layers
     {
         draworder = topdown
         height = 0
-        name = collision_water
+        name = water
 
         objects
         {
@@ -5639,14 +5603,14 @@ layers
                 type = 
                 visible = true
                 width = 384
-                x = 2368
-                y = 320
+                x = 2367.5300000000002
+                y = 322.39400000000001
             }
         }
 
         opacity = 1
         type = objectgroup
-        visible = false
+        visible = true
         width = 0
         x = 0
         y = 0

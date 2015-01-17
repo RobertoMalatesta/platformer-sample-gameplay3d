@@ -39,8 +39,8 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":2310.81177977875,
-                 "y":271.079966555184
+                 "x":2310.81,
+                 "y":271.08
                 }, 
                 {
                  "ellipse":true,
@@ -114,8 +114,8 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":1521.1,
-                 "y":1409.14
+                 "x":1511.76666666667,
+                 "y":1233.14
                 }, 
                 {
                  "ellipse":true,
@@ -129,8 +129,8 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":1122.11,
-                 "y":1420.18
+                 "x":1112.77666666667,
+                 "y":1244.18
                 }, 
                 {
                  "ellipse":true,
@@ -144,8 +144,8 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":1419.34,
-                 "y":1410.78
+                 "x":1410.00666666667,
+                 "y":1234.78
                 }, 
                 {
                  "ellipse":true,
@@ -309,8 +309,8 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":1742.68,
-                 "y":1401.26
+                 "x":1733.34666666667,
+                 "y":1225.26
                 }, 
                 {
                  "ellipse":true,
@@ -324,8 +324,8 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":1872.95,
-                 "y":1398.88
+                 "x":1863.61666666667,
+                 "y":1222.88
                 }, 
                 {
                  "ellipse":true,
@@ -339,8 +339,8 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":1273.72,
-                 "y":1418.25
+                 "x":1264.38666666667,
+                 "y":1242.25
                 }, 
                 {
                  "ellipse":true,
@@ -354,8 +354,38 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":1652.39,
-                 "y":1397.59
+                 "x":1643.05666666667,
+                 "y":1221.59
+                }, 
+                {
+                 "ellipse":true,
+                 "height":31.4506,
+                 "name":"enemy_fish",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":36.3734,
+                 "x":2611.42663333333,
+                 "y":401.446033333333
+                }, 
+                {
+                 "ellipse":true,
+                 "height":31.4506,
+                 "name":"enemy_fish",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":36.3734,
+                 "x":2516.1733,
+                 "y":347.103366666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -426,7 +456,7 @@
                  "y":0
                 }, 
                 {
-                 "height":38.492298636319,
+                 "height":38.4923,
                  "name":"",
                  "properties":
                     {
@@ -435,12 +465,12 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":189.056803688806,
+                 "width":189.057,
                  "x":1152,
                  "y":1088
                 }, 
                 {
-                 "height":32.703488372093,
+                 "height":32.7035,
                  "name":"",
                  "properties":
                     {
@@ -454,7 +484,7 @@
                  "y":960
                 }, 
                 {
-                 "height":36.6743300465696,
+                 "height":36.6743,
                  "name":"",
                  "properties":
                     {
@@ -463,12 +493,12 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":128.922977525497,
+                 "width":128.923,
                  "x":1472,
                  "y":1024
                 }, 
                 {
-                 "height":36.8098159509204,
+                 "height":36.8098,
                  "name":"",
                  "properties":
                     {
@@ -477,7 +507,7 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":259.067484662577,
+                 "width":259.067,
                  "x":1664,
                  "y":1024
                 }, 
@@ -658,8 +688,8 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":512,
-                 "x":2304,
+                 "width":384,
+                 "x":2368,
                  "y":448
                 }, 
                 {
@@ -760,32 +790,6 @@
          "type":"objectgroup",
          "visible":true,
          "width":0,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "height":25,
-         "name":"collision_water",
-         "objects":[
-                {
-                 "height":118.036860633672,
-                 "name":"",
-                 "properties":
-                    {
-
-                    },
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":455.580865603645,
-                 "x":2325.53323669497,
-                 "y":362.393870366536
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "width":64,
          "x":0,
          "y":0
         }, 
@@ -950,8 +954,8 @@
                  "type":"",
                  "visible":true,
                  "width":192,
-                 "x":1919.46077490775,
-                 "y":356.660836408364
+                 "x":1919.46,
+                 "y":356.661
                 }, 
                 {
                  "height":192,
@@ -1840,6 +1844,32 @@
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
+         "width":0,
+         "x":0,
+         "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "height":0,
+         "name":"collision_water",
+         "objects":[
+                {
+                 "height":128,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":384,
+                 "x":2368,
+                 "y":320
+                }],
+         "opacity":1,
+         "type":"objectgroup",
+         "visible":false,
          "width":0,
          "x":0,
          "y":0

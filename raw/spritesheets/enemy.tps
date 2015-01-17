@@ -198,6 +198,9 @@
             <filename>../textures/spider_dead.png</filename>
             <filename>../textures/spider_walk__00.png</filename>
             <filename>../textures/spider_walk__01.png</filename>
+            <filename>../textures/fish_swim__00.png</filename>
+            <filename>../textures/fish_swim__01.png</filename>
+            <filename>../textures/fish_dead.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

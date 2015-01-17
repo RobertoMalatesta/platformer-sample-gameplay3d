@@ -25,7 +25,12 @@ collisionObject enemy_snail_trigger : enemy_trigger_base
     extents = 2.5625, 1.40625, 0
 }
 
-collisionObject enemy_spider_trigger : enemy_slime_trigger
+collisionObject enemy_spider_trigger : enemy_trigger_base
 {
     extents = 2.46875, 1.6875, 0
+}
+
+collisionObject enemy_fish_trigger : enemy_trigger_base
+{
+    extents = 1.9375, 1.46875, 0
 }
