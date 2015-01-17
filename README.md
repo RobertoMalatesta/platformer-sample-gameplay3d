@@ -4,6 +4,8 @@ A 2D physics based platformer made using the open source game framework Gameplay
 
 ![ScreenShot](https://raw.githubusercontent.com/louis-mclaughlin/platformer-sample-gameplay3d/master/raw/textures/platformer_big.jpg)
 
+![Video (60fps@720) of WIP](https://www.youtube.com/watch?v=03jDCVnvTzA)
+
 ### Try it
 
 ```
@@ -14,7 +16,7 @@ TODO:Linux
 
 ### Build it
 
-#### Windows [64-bit only]
+#### Windows 7+ [64-bit only]
 ```
 TODO
 ```
@@ -24,7 +26,7 @@ TODO
 TODO
 ```
 
-#### Android [4.1 onwards]
+#### Android 4.1+ [arm x86]
 ```
 TODO
 ```
