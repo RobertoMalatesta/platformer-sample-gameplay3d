@@ -8,7 +8,7 @@
 namespace platformer
 {
     EnemyComponent::EnemyComponent()
-        : _isLeftFacing(false)
+        : _isLeftFacing(MATH_RANDOM_0_1() > 0.5f ? true : false)
         , _movementSpeed(5.0f)
         , _triggerNode(nullptr)
         , _state(State::Walking)
