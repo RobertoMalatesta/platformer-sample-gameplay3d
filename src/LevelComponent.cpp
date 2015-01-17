@@ -446,22 +446,35 @@ namespace platformer
 
                 forEachCachedNode(CollisionType::COLLISION_STATIC, [&nearestCollisionNode, &nearestDistance, &enemyPosition](gameplay::Node * collisionNode)
                 {
-                    float const distance = collisionNode->getTranslation().distanceSquared(enemyPosition);
+                    gameplay::Vector3 const collisionNodePosition = collisionNode->getTranslation();
 
-                    if(distance < nearestDistance)
+                    if (collisionNodePosition.y <= enemyPosition.y)
                     {
-                        nearestCollisionNode = collisionNode;
-                        nearestDistance = distance;
+                        float const distance = collisionNode->getTranslation().distanceSquared(enemyPosition);
+
+                        if (distance < nearestDistance)
+                        {
+                            nearestCollisionNode = collisionNode;
+                            nearestDistance = distance;
+                        }
                     }
                 });
 
                 if(nearestCollisionNode)
                 {
-                    enemyComponent->getTriggerNode()->setTranslationY(nearestCollisionNode->getTranslationY() +
-                                                                      nearestCollisionNode->getScaleY() / 2 +
-                                                                      enemyComponent->getTriggerNode()->getScaleY() / 2);
+                    if (enemyComponent->isSnappedToCollisionY())
+                    {
+                        enemyComponent->getTriggerNode()->setTranslationY(nearestCollisionNode->getTranslationY() +
+                            nearestCollisionNode->getScaleY() / 2 +
+                            enemyComponent->getTriggerNode()->getScaleY() / 2);
+                    }
+
                     enemyComponent->setHorizontalConstraints(nearestCollisionNode->getTranslationX() - (nearestCollisionNode->getScaleX() / 2) - (enemyComponent->getTriggerNode()->getScaleX() / 2),
                                                     nearestCollisionNode->getTranslationX() + (nearestCollisionNode->getScaleX() / 2) + (enemyComponent->getTriggerNode()->getScaleX() / 2));
+                }
+                else
+                {
+                    PLATFORMER_ASSERTFAIL("Unable to place %s", enemyComponent->getId().c_str());
                 }
             }
         }

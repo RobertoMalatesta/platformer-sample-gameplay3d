@@ -49,6 +49,7 @@ namespace platformer
         void kill();
 
         bool isLeftFacing() const;
+        bool isSnappedToCollisionY() const;
         float getAlpha();
     private:
         EnemyComponent(EnemyComponent const &);
@@ -61,6 +62,7 @@ namespace platformer
         float _minX;
         float _maxX;
         float _alpha;
+        bool _snapToCollisionY;
         std::string _walkAnimComponentId;
         std::string _deathAnimComponentId;
         std::string _triggerComponentId;

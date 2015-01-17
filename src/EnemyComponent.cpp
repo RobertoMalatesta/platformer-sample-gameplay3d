@@ -15,6 +15,7 @@ namespace platformer
         , _minX(std::numeric_limits<float>::min())
         , _maxX(std::numeric_limits<float>::max())
         , _alpha(1.0f)
+        , _snapToCollisionY(true)
     {
     }
 
@@ -44,6 +45,12 @@ namespace platformer
         _deathAnimComponentId = properties.getString("death_anim");
         _triggerComponentId = properties.getString("collision_trigger");
         _movementSpeed = properties.getFloat("speed");
+
+        char const * snapId = "snap_to_collision_y";
+        if (properties.exists(snapId))
+        {
+            _snapToCollisionY = properties.getBool(snapId);
+        }
     }
 
     EnemyComponent::State::Enum EnemyComponent::getState() const
@@ -132,5 +139,10 @@ namespace platformer
     {
         _state = State::Dead;
         getCurrentAnimation()->play();
+    }
+
+    bool EnemyComponent::isSnappedToCollisionY() const
+    {
+        return _snapToCollisionY;
     }
 }
