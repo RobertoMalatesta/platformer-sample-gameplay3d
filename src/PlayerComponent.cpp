@@ -113,7 +113,7 @@ namespace platformer
                 {
                     if(_movementDirection == MovementDirection::None || _movementDirection == MovementDirection::Up)
                     {
-                        _state = State::Idle;
+                        _state = _swimmingEnabled ? State::Swimming : State::Idle;
                     }
                 }
                 else
