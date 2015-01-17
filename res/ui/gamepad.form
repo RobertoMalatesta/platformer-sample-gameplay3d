@@ -13,7 +13,7 @@ form
             style = joystickStyle
             size = 100%, 100%
             alignment = ALIGN_VCENTER_HCENTER
-            radius = 32
+            radius = 8
         }
 
     }
