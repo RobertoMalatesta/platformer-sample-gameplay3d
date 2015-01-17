@@ -217,7 +217,7 @@ namespace platformer
                         character->setPhysicsEnabled(true);
                         _state = State::Idle;
                     }
-                    else if (_swimmingEnabled)
+                    else if (_swimmingEnabled && character->getCurrentVelocity().y == 0)
                     {
                         _state = State::Swimming;
                     }
@@ -268,16 +268,6 @@ namespace platformer
 
     void PlayerComponent::setSwimmingEnabled(bool enabled)
     {
-        if (!enabled && _swimmingEnabled)
-        {
-            gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
-
-            if (character->getCurrentVelocity().x != 0)
-            {
-                character->setVelocity(character->getCurrentVelocity().x / _swimSpeedScale, 0 , 0);
-            }
-        }
-
         _swimmingEnabled = enabled;
     }
 
