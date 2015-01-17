@@ -84,6 +84,7 @@ namespace platformer
         void setMovementEnabled(MovementDirection::Enum direction, bool enabled, float scale = 1.0f);
         void jump(JumpSource::Enum source, float scale = 1.0f);
         bool isLeftFacing() const;
+        void reset(gameplay::Vector2 const position);
     private:
         PlayerComponent(PlayerComponent const &);
 
