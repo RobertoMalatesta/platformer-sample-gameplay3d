@@ -290,7 +290,7 @@ namespace platformer
             case JumpSource::Input:
             {
                 preJumpVelocity.x = characterOriginalVelocity.x;
-                jumpAllowed &= character->getCurrentVelocity().y == 0.0f;
+                jumpAllowed &= _state == State::Walking || _state == State::Swimming || _state == State::Idle;
 #ifndef _FINAL
                 if(gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_unlimited_jump"))
                 {
