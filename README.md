@@ -24,7 +24,7 @@ A 2D physics based platformer made using the open source game framework Gameplay
 
 - TODO
 
-#### Android 4.1+ [arm x86]
+#### Android 4.1+
 
 - TODO
 
