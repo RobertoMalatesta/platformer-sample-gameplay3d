@@ -356,15 +356,27 @@ namespace platformer
                         gameobjects::GameObjectController::getInstance().getScene()->getActiveCamera()->getViewProjectionMatrix());
         }
 
+        std::array<char, std::numeric_limits<unsigned char>::max()> buffer;
+        static const int paddingX = 5;
+        int const paddingY = _debugFont->getSize();
+        int y = paddingY / 2;
+        _debugFont->start();
+
         if (gameplay::Game::getInstance()->getConfig()->getBool("debug_show_fps"))
         {
-            std::array<char, CHAR_MAX> buffer;
             sprintf(&buffer[0], "%d FPS", getFrameRate());
-            _debugFont->start();
-            static const int padding = 5;
-            _debugFont->drawText(&buffer[0], padding, padding, gameplay::Vector4(1, 0, 0, 1));
-            _debugFont->finish();
+            _debugFont->drawText(&buffer[0], paddingX, y, gameplay::Vector4(1, 0, 0, 1));
+            y += paddingY;
         }
+
+        if (gameplay::Game::getInstance()->getConfig()->getBool("debug_show_resolution"))
+        {
+            sprintf(&buffer[0], "%dx%d", getWidth(), getHeight());
+            _debugFont->drawText(&buffer[0], paddingX, y, gameplay::Vector4(1, 0, 0, 1));
+            y += paddingY;
+        }
+
+        _debugFont->finish();
 #endif
     }
 
