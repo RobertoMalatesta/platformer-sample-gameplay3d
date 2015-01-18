@@ -39,7 +39,6 @@ namespace platformer
 #ifndef _FINAL
         _gamepadButtonMapping[GamepadButtons::Reload] = gameplay::Gamepad::BUTTON_MENU1;
 #endif
-        _gamePad = gameplay::Game::getInstance()->getGamepad(0);
     }
 
     void PlayerInputComponent::finalize()
@@ -50,7 +49,7 @@ namespace platformer
 
     void PlayerInputComponent::update(float)
     {
-        if(_gamePad)
+        if (_gamePad = gameplay::Game::getInstance()->getGamepad(0))
         {
             bool isAnyButtonDown = false;
 
