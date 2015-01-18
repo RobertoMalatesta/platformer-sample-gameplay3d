@@ -193,6 +193,29 @@ namespace platformer
         return node;
     }
 
+    void setProperty(char const * id, gameplay::Vector3 const & vec, gameplay::Properties * properties)
+    {
+        std::array<char, 255> buffer;
+        sprintf(&buffer[0], "%f, %f, %f", vec.x, vec.y, vec.z);
+        properties->setString(id, &buffer[0]);
+    }
+
+    void getLineCollisionObjectParams(gameplay::Properties * lineVectorNamespace, gameplay::Rectangle & bounds, float & rotationZ, gameplay::Vector2 & direction)
+    {
+        gameplay::Vector2 const start(bounds.x, bounds.y);
+        gameplay::Vector2 localEnd(lineVectorNamespace->getFloat("x")  * PLATFORMER_UNIT_SCALAR,
+            lineVectorNamespace->getFloat("y") * PLATFORMER_UNIT_SCALAR);
+        direction = localEnd;
+        direction.normalize();
+        rotationZ = -acos(direction.dot(gameplay::Vector2::unitX() * (direction.y > 0 ? 1.0f : -1.0f)));
+        float deg = MATH_RAD_TO_DEG(rotationZ);
+        gameplay::Vector2 end(start.x + localEnd.x, start.y + localEnd.y);
+        gameplay::Vector2 tranlsation = start - (start + end) / 2;
+        bounds.x -= tranlsation.x;
+        bounds.y += tranlsation.y;
+        bounds.width = start.distance(end);
+    }
+
     void LevelComponent::loadStaticCollision(gameplay::Properties * layerNamespace, CollisionType::Enum collisionType)
     {
         if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
@@ -229,17 +252,9 @@ namespace platformer
                 {
                     if (gameplay::Properties * lineVectorNamespace = objectNamespace->getNamespace("polyline_1", true))
                     {
-                        gameplay::Vector2 const start(bounds.x, bounds.y);
-                        gameplay::Vector2 end(start.x + (lineVectorNamespace->getFloat("x")  * PLATFORMER_UNIT_SCALAR), 
-                            start.y + (lineVectorNamespace->getFloat("y") * PLATFORMER_UNIT_SCALAR));
-                        gameplay::Vector2 direction = start - end;
-                        direction.normalize();
-                        rotationZ = -acos(direction.dot(gameplay::Vector2::unitX()));
-                        gameplay::Vector2 tranlsation = start - (start + end) / 2;
-                        bounds.x -= tranlsation.x;
-                        bounds.y += tranlsation.y;
-                        static const float lineHeight = 0.05f;
-                        bounds.width = start.distance(end);
+                        gameplay::Vector2 direction;
+                        getLineCollisionObjectParams(lineVectorNamespace, bounds, rotationZ, direction);
+                        static float const lineHeight = 0.05f;
                         bounds.height = lineHeight;
                     }
                 }
@@ -249,9 +264,7 @@ namespace platformer
                     bounds.y -= bounds.height / 2;
                 }
 
-                std::array<char, 255> extentsBuffer;
-                sprintf(&extentsBuffer[0], "%f, %f, 1", bounds.width, bounds.height);
-                collisionProperties->setString("extents", &extentsBuffer[0]);
+                setProperty("extents", gameplay::Vector3(bounds.width, bounds.height, 0), collisionProperties);
                 createCollisionObject(collisionType, collisionProperties, bounds, rotationZ);
             }
 
@@ -359,6 +372,74 @@ namespace platformer
         }
     }
 
+    void LevelComponent::loadBridges(gameplay::Properties * layerNamespace)
+    {
+        if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
+        {
+            gameplay::Properties * collisionProperties = createProperties("res/physics/level.physics#bridge");
+
+            while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
+            {
+                if (objectNamespace->getNamespace("polyline", true))
+                {
+                    if (gameplay::Properties * lineVectorNamespace = objectNamespace->getNamespace("polyline_1", true))
+                    {
+                        // Get the params for a line
+                        gameplay::Rectangle bounds = getObjectBounds(objectNamespace);
+                        float rotationZ = 0.0f;
+                        gameplay::Vector2 bridgeDirection;
+                        getLineCollisionObjectParams(lineVectorNamespace, bounds, rotationZ, bridgeDirection);
+
+                        // Recalculate its starting X position based on the size of the bridge segment(s)
+                        bounds.x -= bounds.width / 2;
+                        int const numSegments = 10;
+                        bounds.width = bounds.width / numSegments;
+                        bounds.x += (numSegments * bounds.width) - bounds.width / 2;
+                        bounds.height = (getTileHeight() * PLATFORMER_UNIT_SCALAR) * 0.25f;
+                        setProperty("extents", gameplay::Vector3(bounds.width, bounds.height, 0.0f), collisionProperties);
+
+                        // Create collision nodes for them
+                        std::vector<gameplay::Node *> segmentNodes;
+                        for (int i = 0; i < numSegments; ++i)
+                        {
+                            segmentNodes.push_back(createCollisionObject(CollisionType::BRIDGE, collisionProperties, bounds, rotationZ));
+                            bounds.x += bridgeDirection.x * bounds.width;
+                            bounds.y -= bridgeDirection.y * bounds.width;
+                        }
+
+                        // Link them to each other and the end pieces with the world
+                        for (int segmentIndex = 0; segmentIndex < numSegments; ++segmentIndex)
+                        {
+                            gameplay::Node * segmentNode = segmentNodes[segmentIndex];
+                            gameplay::PhysicsRigidBody * segmentRigidBody = static_cast<gameplay::PhysicsRigidBody*>(segmentNode->getCollisionObject());
+                            gameplay::Vector3 const hingeOffset((bounds.width / 2) * (1.0f / segmentNode->getScaleX()) * (bridgeDirection.x >= 0 ? 1.0f : -1.0f), 0.0f, 0.0f);
+                            gameplay::PhysicsController * physicsController = gameplay::Game::getInstance()->getPhysicsController();
+
+                            bool const isFirstSegment = segmentIndex == 0;
+                            if (isFirstSegment)
+                            {
+                                physicsController->createHingeConstraint(segmentRigidBody, gameplay::Quaternion(), -hingeOffset);
+                            }
+
+                            bool const isEndSegment = segmentIndex == numSegments - 1;
+                            if (!isEndSegment)
+                            {
+                                gameplay::PhysicsRigidBody * nextSegmentRigidBody = static_cast<gameplay::PhysicsRigidBody*>(segmentNodes[segmentIndex + 1]->getCollisionObject());
+                                physicsController->createHingeConstraint(segmentRigidBody, gameplay::Quaternion(), hingeOffset, nextSegmentRigidBody, gameplay::Quaternion(), -hingeOffset);
+                            }
+                            else
+                            {
+                                physicsController->createHingeConstraint(segmentRigidBody, gameplay::Quaternion(), hingeOffset);
+                            }
+                        }
+                    }
+                }
+            }
+
+            SAFE_DELETE(collisionProperties);
+        }
+    }
+
     void LevelComponent::load()
     {
         gameplay::Properties * root = createProperties(_level.c_str());
@@ -409,8 +490,19 @@ namespace platformer
                     {
                         collisionType = CollisionType::WATER;
                     }
+                    else if (layerName == "collision_bridge")
+                    {
+                        collisionType = CollisionType::BRIDGE;
+                    }
 
-                    loadStaticCollision(layerNamespace, collisionType);
+                    if (collisionType != CollisionType::BRIDGE)
+                    {
+                        loadStaticCollision(layerNamespace, collisionType);
+                    }
+                    else
+                    {
+                        loadBridges(layerNamespace);
+                    }
                 }
                 else if (layerName == "interactive_props")
                 {

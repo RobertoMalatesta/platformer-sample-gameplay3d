@@ -164,6 +164,12 @@ namespace platformer
                 _interactablesSpritesheet->getSprite("crate")->_src));
         });
 
+        _level->forEachCachedNode(CollisionType::BRIDGE, [this](gameplay::Node * node)
+        {
+            node->addRef();
+            _dynamicCollisionNodes.emplace_back(node, _interactablesSpritesheet->getSprite("bridge")->_src);
+        });
+
         _level->forEachCachedNode(CollisionType::WATER, [this](gameplay::Node * node)
         {
             gameplay::Rectangle bounds;
@@ -463,7 +469,7 @@ namespace platformer
 
                     gameplay::Quaternion const & q = dynamicCollisionNode->getRotation();
                     float const rotation = -static_cast<float>(atan2f(2.0f * q.x * q.y + 2.0f * q.z * q.w, 1.0f - 2.0f * ((q.y * q.y) + (q.z * q.z))));
-                    _interactablesSpritebatch->draw(gameplay::Vector3(dst.x, dst.y, 0), // dst
+                    _interactablesSpritebatch->draw(gameplay::Vector3(dst.x, dst.y, 0),
                         nodePair.second,
                         gameplay::Vector2(dst.width, dst.height),
                         gameplay::Vector4::one(),

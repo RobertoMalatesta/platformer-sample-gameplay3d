@@ -17,6 +17,14 @@ collisionObject ladder : world_collision
     type = GHOST_OBJECT
 }
 
+collisionObject bridge : world_collision
+{
+    kinematic = false
+    mass = 10
+    angularDamping = 0.75
+    linearDamping = 0.75
+}
+
 collisionObject reset : world_collision
 {
     type = GHOST_OBJECT

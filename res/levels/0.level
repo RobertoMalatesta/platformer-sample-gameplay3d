@@ -3256,8 +3256,8 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 2310.8099999999999
-                y = 271.07999999999998
+                x = 2326.3124223602499
+                y = 278.004409937888
             }
 
             objects_1
@@ -3346,7 +3346,7 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 1511.7666666666701
+                x = 1511.77
                 y = 1233.1400000000001
             }
 
@@ -3364,7 +3364,7 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 1112.7766666666701
+                x = 1112.78
                 y = 1244.1800000000001
             }
 
@@ -3382,7 +3382,7 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 1410.0066666666701
+                x = 1410.01
                 y = 1234.78
             }
 
@@ -3580,7 +3580,7 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 1733.34666666667
+                x = 1733.3499999999999
                 y = 1225.26
             }
 
@@ -3598,7 +3598,7 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 1863.61666666667
+                x = 1863.6199999999999
                 y = 1222.8800000000001
             }
 
@@ -3616,7 +3616,7 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 1264.38666666667
+                x = 1264.3900000000001
                 y = 1242.25
             }
 
@@ -3634,7 +3634,7 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 1643.05666666667
+                x = 1643.0599999999999
                 y = 1221.5899999999999
             }
 
@@ -3652,8 +3652,8 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 2606.1258910883698
-                y = 359.66691048931898
+                x = 2606.1300000000001
+                y = 368.66699999999997
             }
         }
 
@@ -4038,7 +4038,7 @@ layers
                 visible = true
                 width = 383
                 x = 2368
-                y = 393
+                y = 399
             }
 
             objects_19
@@ -4347,8 +4347,8 @@ layers
                 type = 
                 visible = true
                 width = 128
-                x = 2216.1799999999998
-                y = 634.06399999999996
+                x = 1969.28559006211
+                y = 171.33108074534201
             }
 
             objects_10
@@ -4365,8 +4365,8 @@ layers
                 type = 
                 visible = true
                 width = 192
-                x = 1919.46
-                y = 356.661
+                x = 2440.71
+                y = 575.41099999999994
             }
 
             objects_11
@@ -4578,38 +4578,6 @@ layers
 
                     polyline_1
                     {
-                        x = 320
-                        y = 256
-                    }
-                }
-
-                properties
-                {
-                }
-
-                rotation = 0
-                type = 
-                visible = true
-                width = 0
-                x = 1792
-                y = 448
-            }
-
-            objects_6
-            {
-                height = 0
-                name = 
-
-                polyline
-                {
-                    polyline_0
-                    {
-                        x = 0
-                        y = 0
-                    }
-
-                    polyline_1
-                    {
                         x = 256
                         y = -256
                     }
@@ -4627,7 +4595,7 @@ layers
                 y = 1216
             }
 
-            objects_7
+            objects_6
             {
                 height = 0
                 name = 
@@ -4659,7 +4627,7 @@ layers
                 y = 896
             }
 
-            objects_8
+            objects_7
             {
                 height = 0
                 name = 
@@ -4691,7 +4659,7 @@ layers
                 y = 1216
             }
 
-            objects_9
+            objects_8
             {
                 height = 0
                 name = 
@@ -4723,7 +4691,7 @@ layers
                 y = 1024
             }
 
-            objects_10
+            objects_9
             {
                 height = 0
                 name = 
@@ -4755,7 +4723,7 @@ layers
                 y = 1078.3699999999999
             }
 
-            objects_11
+            objects_10
             {
                 height = 0
                 name = 
@@ -4787,7 +4755,7 @@ layers
                 y = 1110.4000000000001
             }
 
-            objects_12
+            objects_11
             {
                 height = 0
                 name = 
@@ -4819,7 +4787,7 @@ layers
                 y = 206.126
             }
 
-            objects_13
+            objects_12
             {
                 height = 0
                 name = 
@@ -4851,7 +4819,7 @@ layers
                 y = 463.72300000000001
             }
 
-            objects_14
+            objects_13
             {
                 height = 0
                 name = 
@@ -4883,7 +4851,7 @@ layers
                 y = 212.51400000000001
             }
 
-            objects_15
+            objects_14
             {
                 height = 0
                 name = 
@@ -4915,7 +4883,7 @@ layers
                 y = 464.79700000000003
             }
 
-            objects_16
+            objects_15
             {
                 height = 0
                 name = 
@@ -4947,7 +4915,7 @@ layers
                 y = 462.66199999999998
             }
 
-            objects_17
+            objects_16
             {
                 height = 0
                 name = 
@@ -4979,7 +4947,7 @@ layers
                 y = 202.14500000000001
             }
 
-            objects_18
+            objects_17
             {
                 height = 0
                 name = 
@@ -5011,7 +4979,7 @@ layers
                 y = 197.964
             }
 
-            objects_19
+            objects_18
             {
                 height = 0
                 name = 
@@ -5043,7 +5011,7 @@ layers
                 y = 449.93900000000002
             }
 
-            objects_20
+            objects_19
             {
                 height = 0
                 name = 
@@ -5075,7 +5043,7 @@ layers
                 y = 738.84299999999996
             }
 
-            objects_21
+            objects_20
             {
                 height = 0
                 name = 
@@ -5107,7 +5075,7 @@ layers
                 y = 1017.96
             }
 
-            objects_22
+            objects_21
             {
                 height = 0
                 name = 
@@ -5139,7 +5107,7 @@ layers
                 y = 1184.6099999999999
             }
 
-            objects_23
+            objects_22
             {
                 height = 0
                 name = 
@@ -5171,7 +5139,7 @@ layers
                 y = 877.26400000000001
             }
 
-            objects_24
+            objects_23
             {
                 height = 0
                 name = 
@@ -5203,7 +5171,7 @@ layers
                 y = 1027.8900000000001
             }
 
-            objects_25
+            objects_24
             {
                 height = 0
                 name = 
@@ -5235,7 +5203,7 @@ layers
                 y = 1025.8499999999999
             }
 
-            objects_26
+            objects_25
             {
                 height = 0
                 name = 
@@ -5267,7 +5235,7 @@ layers
                 y = 271.851
             }
 
-            objects_27
+            objects_26
             {
                 height = 0
                 name = 
@@ -5299,7 +5267,7 @@ layers
                 y = 590.471
             }
 
-            objects_28
+            objects_27
             {
                 height = 0
                 name = 
@@ -5331,7 +5299,7 @@ layers
                 y = 356.62099999999998
             }
 
-            objects_29
+            objects_28
             {
                 height = 0
                 name = 
@@ -5363,7 +5331,7 @@ layers
                 y = 730.78099999999995
             }
 
-            objects_30
+            objects_29
             {
                 height = 0
                 name = 
@@ -5395,7 +5363,7 @@ layers
                 y = 771.70399999999995
             }
 
-            objects_31
+            objects_30
             {
                 height = 0
                 name = 
@@ -5427,7 +5395,7 @@ layers
                 y = 134.464
             }
 
-            objects_32
+            objects_31
             {
                 height = 0
                 name = 
@@ -5459,7 +5427,7 @@ layers
                 y = 648.93299999999999
             }
 
-            objects_33
+            objects_32
             {
                 height = 0
                 name = 
@@ -5491,7 +5459,7 @@ layers
                 y = 923.70699999999999
             }
 
-            objects_34
+            objects_33
             {
                 height = 0
                 name = 
@@ -5523,7 +5491,7 @@ layers
                 y = 143.233
             }
 
-            objects_35
+            objects_34
             {
                 height = 0
                 name = 
@@ -5555,7 +5523,7 @@ layers
                 y = 494.00799999999998
             }
 
-            objects_36
+            objects_35
             {
                 ellipse = true
                 height = 31.450600000000001
@@ -5573,7 +5541,7 @@ layers
                 y = 1036.45
             }
 
-            objects_37
+            objects_36
             {
                 ellipse = true
                 height = 31.450600000000001
@@ -5623,6 +5591,55 @@ layers
                 width = 384
                 x = 2368
                 y = 352
+            }
+        }
+
+        opacity = 1
+        type = objectgroup
+        visible = true
+        width = 0
+        x = 0
+        y = 0
+    }
+
+    layers_9
+    {
+        draworder = topdown
+        height = 0
+        name = collision_bridge
+
+        objects
+        {
+            objects_0
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
+                        y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = -576
+                        y = 0
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 2304
+                y = 320
             }
         }
 

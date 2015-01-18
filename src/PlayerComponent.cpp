@@ -131,7 +131,7 @@ namespace platformer
                         }
                     }
 
-                    float const minFallVelocity = -2.0f;
+                    float const minFallVelocity = gameplay::Game::getInstance()->getPhysicsController()->getGravity().y / 5.0f;
 
                     if (velocity.y < minFallVelocity && (_state == State::Idle || _state == State::Walking))
                     {

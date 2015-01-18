@@ -20,7 +20,8 @@ namespace platformer
             LADDER,
             RESET,
             COLLECTABLE,
-            WATER
+            WATER,
+            BRIDGE
         };
     };
 

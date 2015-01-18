@@ -72,6 +72,7 @@ namespace platformer
         void loadStaticCollision(gameplay::Properties * layerNamespace, CollisionType::Enum terrainType);
         void loadDynamicCollision(gameplay::Properties * layerNamespace);
         void loadCollectables(gameplay::Properties * layerNamespace);
+        void loadBridges(gameplay::Properties * layerNamespace);
         void unload();
 
         gameplay::Rectangle getObjectBounds(gameplay::Properties * objectNamespace) const;

@@ -190,6 +190,7 @@
         <array>
             <filename>../textures/crate.png</filename>
             <filename>../textures/boulder.png</filename>
+            <filename>../textures/bridge.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

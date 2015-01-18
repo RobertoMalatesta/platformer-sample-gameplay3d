@@ -39,6 +39,43 @@ frames
 
     frames_1
     {
+        filename = bridge
+
+        frame
+        {
+            h = 23
+            w = 72
+            x = 256
+            y = 0
+        }
+
+        pivot
+        {
+            x = 0.5
+            y = 0.5
+        }
+
+        rotated = false
+
+        sourceSize
+        {
+            h = 23
+            w = 72
+        }
+
+        spriteSourceSize
+        {
+            h = 23
+            w = 72
+            x = 0
+            y = 0
+        }
+
+        trimmed = false
+    }
+
+    frames_2
+    {
         filename = crate
 
         frame
@@ -85,9 +122,9 @@ meta
     size
     {
         h = 512
-        w = 256
+        w = 512
     }
 
-    smartupdate = $TexturePacker:SmartUpdate:08aeae67f7c7d32ccfb1a491fce9a5b0:a36ee535a3751eb9b8092cda09a1b3a7:21f4efaff06982744fd2cac07b6c19b7$
+    smartupdate = $TexturePacker:SmartUpdate:03275c78ad88f7be0f013dbce3fe0546:13e51009ea476c0c4b7d250de376d3f9:21f4efaff06982744fd2cac07b6c19b7$
     version = 1.0
 }
