@@ -356,7 +356,7 @@ namespace platformer
                         gameobjects::GameObjectController::getInstance().getScene()->getActiveCamera()->getViewProjectionMatrix());
         }
 
-        std::array<char, std::numeric_limits<unsigned char>::max()> buffer;
+        std::array<char, CHAR_MAX> buffer;
         static const int paddingX = 5;
         int const paddingY = _debugFont->getSize();
         int y = paddingY / 2;
