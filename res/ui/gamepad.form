@@ -6,14 +6,14 @@ form
     container left
     {
         alignment = ALIGN_BOTTOM_LEFT
-        size = 288, 288
+        size = 22.5%, 40%
         
         joystick
         {
             style = joystickStyle
-            size = 100%, 100%
+            size = 60%, 60%
             alignment = ALIGN_VCENTER_HCENTER
-            radius = 8
+            radius = 5%
         }
 
     }
@@ -21,13 +21,13 @@ form
     container right
     {
         alignment = ALIGN_BOTTOM_RIGHT
-        size = 256, 256
+        size = 22.5%, 40%
 
         button jump
         {
             mapping = BUTTON_A
             style = jumpButtonStyle
-            size = 65%, 65%
+            size = 50%, 50%
             alignment = ALIGN_VCENTER_HCENTER
         }
     }
