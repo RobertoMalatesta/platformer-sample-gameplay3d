@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="64" height="25" tilewidth="64" tileheight="64">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="63" height="25" tilewidth="64" tileheight="64">
  <properties>
   <property name="texture" value="@res/textures/tiles"/>
  </properties>
  <tileset firstgid="1" name="Terrain" tilewidth="64" tileheight="64">
   <image source="../../res/textures/tiles.png" width="1024" height="1024"/>
  </tileset>
- <layer name="props" width="64" height="25">
+ <layer name="props" width="63" height="25">
   <data encoding="base64" compression="zlib">
-   eJzt1TEOgCAMheFuBk8Cp+AWeiXRS7s4sAimRp8m/5c06dDQNxUzAACA5wzqAMCHpKqfZSkAv9QfwSGqA+CWog4gtqgDdGwv7Wn91cHaN3Fy7hwvzKzOt4G/yCcFeOwFWwVi
+   eJzt1bsNgDAMRVF3iExCpmCLZCUIS0NJQz4u8ijukSy5sOJXOWYAAAB+izoAIBZffZalAMbE9ggemzoAXE51AKFDHaDhmrCj9hevVr9/ybkzdMwU59vAn+0fBfS6AXYMBWI=
   </data>
  </layer>
- <layer name="terrain" width="64" height="25">
+ <layer name="terrain" width="63" height="25">
   <data encoding="base64" compression="zlib">
-   eJztl1sKgzAQRbOHrsq6l65FqGJLbQ2kC3UEB6RtkmkwmRjnwMEPH9w7gahKCYLwDyOoHbYMmYQyOAWeKwXp71bYJz14A+/cQRh4cweIQAWeCdagYcqYC7b+V/X97dSlCJQYWf8ymfd0yn5ean8f+M4zyxF1zewBPuNH2xzX+526/nP3AXypfc7ABqU/dm8Wc5zBJfA+X//P7ilnoDPwV/f1DNbXbt3D979ly8WljdDnSX+a3L1jedTe6ATwHsTZ
+   eJztluEKgjAURvcOPlX5Lj5LYJFSmmAP2h1sKNW2i113t3UPHPqhwXcUVKUEQQjxACePZ4ZNQt5UG4+VwL+3+xTy4gp2YM89JDJP7gHEHMAjwhqcmTamgKu9VZ/fRZcYgyIi970s9LMb89wusT2Efa/N5tfqu143cNh/Gim+9zf2vuvuOziq/PpdYNpt98mYWn+z8X+h9vfu1PqnHf3Wve5fn4vZR41rW2wx+6jhbpb2366PtC+8AFNLmRM=
   </data>
  </layer>
  <objectgroup name="characters">
-  <object name="player" x="2326.31" y="278.004" width="36.3734" height="31.4506">
+  <object name="player" x="715.495" y="1175.52" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
   <object name="enemy_slime" x="1228.43" y="660.128" width="36.3734" height="31.4506">
@@ -86,12 +86,31 @@
   <object name="enemy_fish" x="2606.13" y="368.667" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
+  <object name="enemy_fish" x="3618.85" y="1353.43" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_fish" x="3863.96" y="1348.47" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_fish" x="3707.98" y="1343.52" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_fish" x="439.847" y="1341.05" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_fish" x="244.254" y="1333.62" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_fish" x="120.461" y="1358.38" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
+  <object name="enemy_fish" x="41.2339" y="1358.38" width="36.3734" height="31.4506">
+   <ellipse/>
+  </object>
  </objectgroup>
- <objectgroup name="collision_static">
+ <objectgroup name="collision_static" visible="0">
   <object x="768" y="1280" width="1348.6" height="6.31092"/>
   <object x="3200" y="1280" width="192" height="320"/>
-  <object x="0" y="0" width="640" height="1280"/>
-  <object x="3392" y="0" width="704" height="1280"/>
   <object x="1152" y="1088" width="189.057" height="38.4923"/>
   <object x="960" y="960" width="128" height="32.7035"/>
   <object x="1472" y="1024" width="128.923" height="36.6743"/>
@@ -111,11 +130,13 @@
   <object x="2816" y="1472" width="384" height="128"/>
   <object x="2624" y="1280" width="192" height="320"/>
   <object x="704" y="1216" width="64" height="128"/>
-  <object x="640" y="1280" width="64" height="64"/>
+  <object x="640" y="1280" width="64" height="320"/>
   <object x="2368" y="399" width="383" height="102"/>
   <object x="2752" y="320" width="64" height="128"/>
   <object x="2304" y="320" width="64" height="128"/>
   <object x="832" y="192" width="576" height="64"/>
+  <object x="0" y="1360" width="640" height="128"/>
+  <object x="3392" y="1357" width="640" height="128"/>
  </objectgroup>
  <objectgroup name="collision_hand_of_god">
   <object x="2813.82" y="1438.91" width="377.956" height="26.5418"/>
@@ -140,13 +161,13 @@
   <object x="2053.06" y="1223.27" width="50" height="50">
    <ellipse/>
   </object>
-  <object x="2169.99" y="383.724" width="128" height="128">
+  <object x="1025.56" y="56.4654" width="128" height="128">
    <ellipse/>
   </object>
   <object x="2204.93" y="555.925" width="192" height="192">
    <ellipse/>
   </object>
-  <object x="1386.02" y="495.482" width="192" height="192"/>
+  <object x="943.142" y="489.604" width="192" height="192"/>
  </objectgroup>
  <objectgroup name="collectables" visible="0">
   <object x="960" y="1216">
@@ -261,8 +282,10 @@
    <ellipse/>
   </object>
  </objectgroup>
- <objectgroup name="collision_water">
+ <objectgroup name="collision_water" visible="0">
   <object x="2368" y="352" width="384" height="96"/>
+  <object x="0" y="1273" width="640" height="333"/>
+  <object x="3392" y="1269" width="640" height="333"/>
  </objectgroup>
  <objectgroup name="collision_bridge">
   <object x="1856" y="576">
