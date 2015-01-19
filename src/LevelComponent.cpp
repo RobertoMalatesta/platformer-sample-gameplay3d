@@ -264,7 +264,7 @@ namespace platformer
                     bounds.y -= bounds.height / 2;
                 }
 
-                setProperty("extents", gameplay::Vector3(bounds.width, bounds.height, 0), collisionProperties);
+                setProperty("extents", gameplay::Vector3(bounds.width, bounds.height, 1), collisionProperties);
                 createCollisionObject(collisionType, collisionProperties, bounds, rotationZ);
             }
 
