@@ -20,7 +20,7 @@ collisionObject ladder : world_collision
 collisionObject bridge : world_collision
 {
     kinematic = false
-    mass = 10
+    mass = 50
     angularDamping = 0.75
     linearDamping = 0.75
 }

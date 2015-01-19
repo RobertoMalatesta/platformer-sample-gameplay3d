@@ -1827,15 +1827,15 @@ layers
             202 = 0
             203 = 0
             204 = 0
-            205 = 0
-            206 = 0
-            207 = 0
-            208 = 0
-            209 = 0
-            210 = 0
-            211 = 0
-            212 = 0
-            213 = 0
+            205 = 159
+            206 = 160
+            207 = 160
+            208 = 160
+            209 = 160
+            210 = 160
+            211 = 160
+            212 = 160
+            213 = 148
             214 = 0
             215 = 0
             216 = 0
@@ -4074,6 +4074,23 @@ layers
                 x = 2304
                 y = 320
             }
+
+            objects_21
+            {
+                height = 64
+                name = 
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 576
+                x = 832
+                y = 192
+            }
         }
 
         opacity = 1
@@ -4347,8 +4364,8 @@ layers
                 type = 
                 visible = true
                 width = 128
-                x = 1969.28559006211
-                y = 171.33108074534201
+                x = 2169.98707096624
+                y = 383.72391005165503
             }
 
             objects_10
@@ -4365,8 +4382,8 @@ layers
                 type = 
                 visible = true
                 width = 192
-                x = 2440.71
-                y = 575.41099999999994
+                x = 2204.9344738893201
+                y = 555.92541932969596
             }
 
             objects_11
@@ -4382,8 +4399,8 @@ layers
                 type = 
                 visible = true
                 width = 192
-                x = 1919.74
-                y = 575.71500000000003
+                x = 1386.01906976744
+                y = 495.48244186046497
             }
         }
 
@@ -5562,7 +5579,7 @@ layers
 
         opacity = 1
         type = objectgroup
-        visible = true
+        visible = false
         width = 0
         x = 0
         y = 0
@@ -5625,8 +5642,40 @@ layers
 
                     polyline_1
                     {
-                        x = -576
+                        x = 448
+                        y = -64
+                    }
+                }
+
+                properties
+                {
+                }
+
+                rotation = 0
+                type = 
+                visible = true
+                width = 0
+                x = 1856
+                y = 576
+            }
+
+            objects_1
+            {
+                height = 0
+                name = 
+
+                polyline
+                {
+                    polyline_0
+                    {
+                        x = 0
                         y = 0
+                    }
+
+                    polyline_1
+                    {
+                        x = -896
+                        y = -128
                     }
                 }
 

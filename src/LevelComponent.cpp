@@ -390,11 +390,13 @@ namespace platformer
                         gameplay::Vector2 bridgeDirection;
                         getLineCollisionObjectParams(lineVectorNamespace, bounds, rotationZ, bridgeDirection);
 
-                        // Recalculate its starting X position based on the size of the bridge segment(s)
-                        bounds.x -= bounds.width / 2;
-                        int const numSegments = 10;
+                        // Recalculate its starting position based on the size and orientation of the bridge segment(s)
+                        bounds.x += (bounds.width / 2) * -bridgeDirection.x;
+                        bounds.y += (bounds.width / 2) * bridgeDirection.y;
+                        int const numSegments = std::ceil(bounds.width / (getTileWidth() * PLATFORMER_UNIT_SCALAR));
                         bounds.width = bounds.width / numSegments;
-                        bounds.x += (numSegments * bounds.width) - bounds.width / 2;
+                        bounds.x += (bounds.width / 2) * bridgeDirection.x;
+                        bounds.y += (bounds.width / 2) * -bridgeDirection.y;
                         bounds.height = (getTileHeight() * PLATFORMER_UNIT_SCALAR) * 0.25f;
                         setProperty("extents", gameplay::Vector3(bounds.width, bounds.height, 0.0f), collisionProperties);
 
@@ -412,7 +414,7 @@ namespace platformer
                         {
                             gameplay::Node * segmentNode = segmentNodes[segmentIndex];
                             gameplay::PhysicsRigidBody * segmentRigidBody = static_cast<gameplay::PhysicsRigidBody*>(segmentNode->getCollisionObject());
-                            gameplay::Vector3 const hingeOffset((bounds.width / 2) * (1.0f / segmentNode->getScaleX()) * (bridgeDirection.x >= 0 ? 1.0f : -1.0f), 0.0f, 0.0f);
+                            gameplay::Vector3 const hingeOffset((bounds.width / 2) * (1.0f / segmentNode->getScaleX()) * (bridgeDirection.y >= 0 ? 1.0f : -1.0f), 0.0f, 0.0f);
                             gameplay::PhysicsController * physicsController = gameplay::Game::getInstance()->getPhysicsController();
 
                             bool const isFirstSegment = segmentIndex == 0;
