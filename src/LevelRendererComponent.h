@@ -29,7 +29,7 @@ namespace platformer
         virtual void initialize() override;
         virtual void finalize() override;
         virtual void update(float elaspedTime);
-        virtual void render(float);
+        virtual bool render(float);
 #ifndef _FINAL
         virtual void renderDebug(float, gameplay::Font * font);
 #endif

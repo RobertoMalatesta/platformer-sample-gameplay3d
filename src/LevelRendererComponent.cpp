@@ -315,7 +315,7 @@ namespace platformer
         }
     }
 
-    void LevelRendererComponent::render(float)
+    bool LevelRendererComponent::render(float)
     {
         bool renderingEnabled = _levelLoaded;
 #ifndef _FINAL
@@ -569,6 +569,8 @@ namespace platformer
                 gamepadForm->draw();
             }
         }
+
+        return false;
     }
 
     LevelRendererComponent::CharacterRenderer::CharacterRenderer()
