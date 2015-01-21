@@ -2,7 +2,7 @@
 #define PLATFORMER_LEVEL_COMPONENT_H
 
 #include "Component.h"
-#include "TerrainInfo.h"
+#include "PlatformerCollision.h"
 
 namespace gameplay
 {

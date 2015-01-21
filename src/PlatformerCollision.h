@@ -26,10 +26,10 @@ namespace platformer
     };
 
     /** @script{ignore} */
-    class TerrainInfo : public gameobjects::INodeUserData
+    class NodeCollisionInfo : public gameobjects::INodeUserData
     {
     public:
-        static TerrainInfo * getTerrainInfo(gameplay::Node * node);
+        static NodeCollisionInfo * getNodeCollisionInfo(gameplay::Node * node);
 
         int getNodeUserDataId() const override;
 

@@ -179,7 +179,7 @@ namespace platformer
     gameplay::Node * LevelComponent::createCollisionObject(CollisionType::Enum collisionType, gameplay::Properties * collisionProperties, gameplay::Rectangle const & bounds, float rotationZ)
     {
         gameplay::Node * node = gameplay::Node::create();
-        TerrainInfo * info = new TerrainInfo();
+        NodeCollisionInfo * info = new NodeCollisionInfo();
         info->_CollisionType = collisionType;
         node->setDrawable(info);
         node->translate(bounds.x, bounds.y, 0);
@@ -578,7 +578,7 @@ namespace platformer
         {
             for (gameplay::Node* node : listPair.second)
             {
-                TerrainInfo * info = TerrainInfo::getTerrainInfo(node);
+                NodeCollisionInfo * info = NodeCollisionInfo::getNodeCollisionInfo(node);
                 node->setDrawable(nullptr);
                 delete info;
                 getParent()->getNode()->removeChild(node);

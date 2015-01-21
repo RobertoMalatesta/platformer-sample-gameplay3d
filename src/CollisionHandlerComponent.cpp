@@ -5,7 +5,7 @@
 #include "LevelComponent.h"
 #include "PlayerComponent.h"
 #include "Messages.h"
-#include "TerrainInfo.h"
+#include "PlatformerCollision.h"
 
 namespace platformer
 {
@@ -228,11 +228,11 @@ namespace platformer
         if(collisionPair.objectA == _player->getCharacterNode()->getCollisionObject() &&
             collisionPair.objectB->getType() == gameplay::PhysicsCollisionObject::Type::GHOST_OBJECT)
         {
-            if(TerrainInfo * terrainInfo = TerrainInfo::getTerrainInfo(collisionPair.objectB->getNode()))
+            if(NodeCollisionInfo * NodeCollisionInfo = NodeCollisionInfo::getNodeCollisionInfo(collisionPair.objectB->getNode()))
             {
                 bool const isColliding = type == gameplay::PhysicsCollisionObject::CollisionListener::EventType::COLLIDING;
 
-                switch (terrainInfo->_CollisionType)
+                switch (NodeCollisionInfo->_CollisionType)
                 {
                     case CollisionType::LADDER:
                     {
@@ -274,7 +274,7 @@ namespace platformer
                         break;
                     }
                     default:
-                        PLATFORMER_ASSERTFAIL("Unhandled terrain collision type %d", terrainInfo->_CollisionType);
+                        PLATFORMER_ASSERTFAIL("Unhandled terrain collision type %d", NodeCollisionInfo->_CollisionType);
                 }
             }
         }
