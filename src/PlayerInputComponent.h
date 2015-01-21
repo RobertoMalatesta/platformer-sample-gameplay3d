@@ -2,7 +2,7 @@
 #define PLATFORMER_INPUT_COMPONENT_H
 
 #include "Component.h"
-#include "MessagesInput.h"
+#include "Messages.h"
 #include "PlayerComponent.h"
 
 namespace gameplay

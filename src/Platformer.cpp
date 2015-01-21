@@ -6,7 +6,7 @@
 #include "EnemyComponent.h"
 #include "GameObjectController.h"
 #include "LevelComponent.h"
-#include "MessagesInput.h"
+#include "Messages.h"
 #include "PlayerAudioComponent.h"
 #include "PlayerComponent.h"
 #include "PlayerHandOfGodComponent.h"

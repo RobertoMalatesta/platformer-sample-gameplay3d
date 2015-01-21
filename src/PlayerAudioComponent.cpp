@@ -2,7 +2,7 @@
 
 #include "Common.h"
 #include "GameObjectController.h"
-#include "MessagesPlayer.h"
+#include "Messages.h"
 #include "PlayerComponent.h"
 
 namespace platformer

@@ -4,7 +4,7 @@
 #include "Common.h"
 #include "CollisionObjectComponent.h"
 #include "GameObject.h"
-#include "MessagesPlayer.h"
+#include "Messages.h"
 #include "SpriteAnimationComponent.h"
 
 namespace platformer

@@ -51,10 +51,6 @@ LOCAL_SRC_FILES :=  ../external/GamePlay/gameplay/src/gameplay-main-android.cpp 
                     EnemyComponent.cpp \
                     LevelComponent.cpp \
                     LevelRendererComponent.cpp \
-                    MessagesInput.cpp \
-                    MessagesLevel.cpp \
-                    MessagesPlatformer.cpp \
-                    MessagesPlayer.cpp \
                     Platformer.cpp \
                     PlatformerEventForwarderComponent.cpp \
                     PlayerAudioComponent.cpp \

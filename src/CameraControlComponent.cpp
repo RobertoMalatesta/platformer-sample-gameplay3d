@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "GameObjectController.h"
 #include "Common.h"
-#include "MessagesPlatformer.h"
+#include "Messages.h"
 
 namespace platformer
 {
@@ -61,7 +61,7 @@ namespace platformer
     {
         switch (message->getId())
         {
-        case(Messages::Type::PlatformerSplashScreenChangeRequestMessage):
+        case(Messages::Type::PlatformerSplashScreenChangeRequest):
             _currentZoom = _initialCurrentZoom;
             _targetZoom = _initialTargetZoom;
             break;

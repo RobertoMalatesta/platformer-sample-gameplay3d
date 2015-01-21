@@ -5,7 +5,6 @@
 #include "GameObject.h"
 #include "LevelComponent.h"
 #include "Messages.h"
-#include "MessagesPlatformer.h"
 #include "PlayerComponent.h"
 
 namespace platformer

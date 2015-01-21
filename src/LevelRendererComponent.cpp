@@ -7,7 +7,6 @@
 #include "GameObject.h"
 #include "GameObjectController.h"
 #include "Messages.h"
-#include "MessagesPlatformer.h"
 #include "PlayerComponent.h"
 #include "PlayerInputComponent.h"
 #include "SpriteSheet.h"

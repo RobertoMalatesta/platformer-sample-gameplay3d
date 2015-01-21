@@ -6,8 +6,6 @@
 #include "GameObject.h"
 #include "GameObjectController.h"
 #include "Messages.h"
-#include "MessagesInput.h"
-#include "MessagesLevel.h"
 #include "SpriteSheet.h"
 
 namespace platformer
@@ -39,7 +37,7 @@ namespace platformer
                 }
             }
             break;
-        case Messages::Type::RequestLevelReloadMessage:
+        case Messages::Type::RequestLevelReload:
             reload();
             break;
         }

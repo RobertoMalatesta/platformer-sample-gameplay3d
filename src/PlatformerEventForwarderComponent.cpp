@@ -1,6 +1,6 @@
 #include "PlatformerEventForwarderComponent.h"
 
-#include "MessagesPlatformer.h"
+#include "Messages.h"
 #include "Platformer.h"
 
 namespace platformer
@@ -19,7 +19,7 @@ namespace platformer
 
         switch (message->getId())
         {
-            case (Messages::Type::PlatformerSplashScreenChangeRequestMessage):
+            case (Messages::Type::PlatformerSplashScreenChangeRequest):
             {
                 PlatformerSplashScreenChangeRequestMessage msg(message);
                 game->setSplashScreenFade(msg._duration, msg._isFadingIn);

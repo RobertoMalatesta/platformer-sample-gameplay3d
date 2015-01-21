@@ -7,7 +7,7 @@
 #include "GameObjectController.h"
 
 #ifndef _FINAL
-#include "MessagesLevel.h"
+#include "Messages.h"
 #endif
 
 namespace platformer

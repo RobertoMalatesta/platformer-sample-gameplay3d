@@ -5,8 +5,6 @@
 #include "LevelComponent.h"
 #include "PlayerComponent.h"
 #include "Messages.h"
-#include "MessagesLevel.h"
-#include "MessagesPlayer.h"
 #include "TerrainInfo.h"
 
 namespace platformer
