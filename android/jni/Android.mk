@@ -51,6 +51,7 @@ LOCAL_SRC_FILES :=  ../external/GamePlay/gameplay/src/gameplay-main-android.cpp 
                     EnemyComponent.cpp \
                     LevelComponent.cpp \
                     LevelRendererComponent.cpp \
+                    PlatformerCollision.cpp \
                     Platformer.cpp \
                     PlatformerEventForwarderComponent.cpp \
                     PlayerAudioComponent.cpp \
@@ -59,7 +60,6 @@ LOCAL_SRC_FILES :=  ../external/GamePlay/gameplay/src/gameplay-main-android.cpp 
                     PlayerInputComponent.cpp \
                     SpriteAnimationComponent.cpp \
                     SpriteSheet.cpp \
-                    TerrainInfo.cpp \
 
 
 LOCAL_CPPFLAGS += -std=c++11 -Wno-switch-enum -Wno-switch
