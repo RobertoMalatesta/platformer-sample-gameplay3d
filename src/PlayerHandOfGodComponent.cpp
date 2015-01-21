@@ -28,7 +28,7 @@ namespace platformer
 
     void PlayerHandOfGodComponent::initialize()
     {
-        _splashScreenFadeMessage = PlatformerSplashScreenChangeRequestMessage::create();
+        _splashScreenFadeMessage = RequestSplashScreenFadeMessage::create();
     }
 
     void PlayerHandOfGodComponent::finalize()
@@ -46,10 +46,10 @@ namespace platformer
             if (gameplay::Node * node = _player->getCharacterNode())
             {
                 float const fadeInDuration = 0.0f;
-                PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, fadeInDuration, true);
+                RequestSplashScreenFadeMessage::setMessage(_splashScreenFadeMessage, fadeInDuration, true);
                 getRootParent()->broadcastMessage(_splashScreenFadeMessage);
                 float const fadeOutDuration = 1.0f;
-                PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, fadeOutDuration, false);
+                RequestSplashScreenFadeMessage::setMessage(_splashScreenFadeMessage, fadeOutDuration, false);
                 getRootParent()->broadcastMessage(_splashScreenFadeMessage);
                 _player->reset(_resetPosition);
             }

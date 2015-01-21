@@ -61,7 +61,7 @@ namespace platformer
     {
         switch (messageType)
         {
-        case(Messages::Type::PlatformerSplashScreenChangeRequest):
+        case(Messages::Type::RequestSplashScreenFade):
             _currentZoom = _initialCurrentZoom;
             _targetZoom = _initialTargetZoom;
             break;

@@ -19,9 +19,9 @@ namespace platformer
 
         switch (messageType)
         {
-            case (Messages::Type::PlatformerSplashScreenChangeRequest):
+            case (Messages::Type::RequestSplashScreenFade):
             {
-                PlatformerSplashScreenChangeRequestMessage msg(message);
+                RequestSplashScreenFadeMessage msg(message);
                 game->setSplashScreenFade(msg._duration, msg._isFadingIn);
             }
             break;

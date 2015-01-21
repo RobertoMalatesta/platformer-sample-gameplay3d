@@ -191,7 +191,7 @@ namespace platformer
         _levelLoadedOnce = true;
 
         float const fadeOutDuration = 1.0f;
-        PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, fadeOutDuration, false);
+        RequestSplashScreenFadeMessage::setMessage(_splashScreenFadeMessage, fadeOutDuration, false);
         this->getRootParent()->broadcastMessage(_splashScreenFadeMessage);
     }
 
@@ -242,14 +242,14 @@ namespace platformer
         if(_splashScreenFadeMessage)
         {
             float const fadeInDuration = 0.0f;
-            PlatformerSplashScreenChangeRequestMessage::setMessage(_splashScreenFadeMessage, fadeInDuration, true);
+            RequestSplashScreenFadeMessage::setMessage(_splashScreenFadeMessage, fadeInDuration, true);
             getRootParent()->broadcastMessage(_splashScreenFadeMessage);
         }
     }
 
     void LevelRendererComponent::initialize()
     {
-        _splashScreenFadeMessage = PlatformerSplashScreenChangeRequestMessage::create();
+        _splashScreenFadeMessage = RequestSplashScreenFadeMessage::create();
         _pixelSpritebatch = createSinglePixelSpritebatch();
     }
 
