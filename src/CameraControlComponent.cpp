@@ -57,9 +57,9 @@ namespace platformer
         }
     }
 
-    void CameraControlComponent::onMessageReceived(gameplay::AIMessage * message)
+    void CameraControlComponent::onMessageReceived(gameobjects::GameObjectMessage message, int messageType)
     {
-        switch (message->getId())
+        switch (messageType)
         {
         case(Messages::Type::PlatformerSplashScreenChangeRequest):
             _currentZoom = _initialCurrentZoom;

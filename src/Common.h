@@ -9,20 +9,18 @@ namespace platformer
     #define PLATFORMER_ASSERT(expression, ...) if (!(expression)) GP_ERROR(__VA_ARGS__)
     #define PLATFORMER_ASSERTFAIL(...) PLATFORMER_ASSERT(false, __VA_ARGS__)
 
-    #define PLATFORMER_LOG(message, ...)                                                                                                            \
-    {                                                                                                                                               \
-        std::array<char, UCHAR_MAX> logTimeStamp;                                                                                                               \
-        sprintf(&logTimeStamp[0], "[%.2f] ", gameplay::Game::getAbsoluteTime() / 1000.0f);                                                              \
-        gameplay::Logger::log(gameplay::Logger::Level::LEVEL_INFO, (std::string(&logTimeStamp[0]) + std::string(message) + "\n").c_str(), __VA_ARGS__); \
+    #define PLATFORMER_LOG(message, ...)\
+    {\
+        std::array<char, UCHAR_MAX> logTimeStamp;\
+        sprintf(&logTimeStamp[0], "[%.2f] ", gameplay::Game::getAbsoluteTime() / 1000.0f);\
+        gameplay::Logger::log(gameplay::Logger::Level::LEVEL_INFO, (std::string(&logTimeStamp[0]) + std::string(message) + "\n").c_str(), __VA_ARGS__);\
     }
 
     #define PLATFORMER_PRINT_VEC2(id, vec) PLATFORMER_LOG("%s: %f,%f", id, vec.x, vec.y)
     #define PLATFORMER_PRINT_VEC3(id, vec) PLATFORMER_LOG("%s: %f,%f,%f,", id, vec.x, vec.y, vec.z)
-
     #define PLATFORMER_RANDOM_RANGE_INT(min, max) min + (rand() % (int)(max - min + 1))
     #define PLATFORMER_FORCE_RELEASE(ref) forceReleaseRef(ref)
     #define PLATFORMER_ASSERT_SINGLE_REF(ref) PLATFORMER_ASSERT(ref->getRefCount() == 1, "Ref has references still outstanding")
-    #define PLATFORMER_SAFE_DELETE_AI_MESSAGE(message) gameplay::AIMessage::destroy(message); message = nullptr
     #define PLATFORMER_FONT_SIZE_SMALL 20
     #define PLATFORMER_FONT_SIZE_REGULAR 35
     #define PLATFORMER_FONT_SIZE_LARGE 50

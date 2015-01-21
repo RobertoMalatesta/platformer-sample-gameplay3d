@@ -32,7 +32,7 @@ namespace platformer
         virtual void update(float elapsedTime) override;
         virtual void onStart() override;
         virtual void finalize() override;
-        virtual void onMessageReceived(gameplay::AIMessage * message) override;
+        virtual void onMessageReceived(gameobjects::GameObjectMessage message, int messageType) override;
     private:
         CameraControlComponent(CameraControlComponent const &);
 

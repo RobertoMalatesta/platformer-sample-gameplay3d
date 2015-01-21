@@ -33,7 +33,7 @@ namespace platformer
 
     void PlayerHandOfGodComponent::finalize()
     {
-        PLATFORMER_SAFE_DELETE_AI_MESSAGE(_splashScreenFadeMessage);
+        GAMEOBJECTS_DELETE_MESSAGE(_splashScreenFadeMessage);
         SAFE_RELEASE(_player);
     }
 
@@ -56,9 +56,9 @@ namespace platformer
         }
     }
 
-    void PlayerHandOfGodComponent::onMessageReceived(gameplay::AIMessage * message)
+    void PlayerHandOfGodComponent::onMessageReceived(gameobjects::GameObjectMessage message, int messageType)
     {
-        switch (message->getId())
+        switch (messageType)
         {
         case(Messages::Type::LevelLoaded):
         {

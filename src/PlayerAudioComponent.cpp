@@ -54,9 +54,9 @@ namespace platformer
         _audioNodes[audioSourcePath] = node;
     }
 
-    void PlayerAudioComponent::onMessageReceived(gameplay::AIMessage * message)
+    void PlayerAudioComponent::onMessageReceived(gameobjects::GameObjectMessage message, int messageType)
     {
-        switch (message->getId())
+        switch (messageType)
         {
         case(Messages::Type::PlayerJump) :
             {

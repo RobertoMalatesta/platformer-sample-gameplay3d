@@ -32,7 +32,7 @@ namespace platformer
 
         virtual void initialize() override;
         virtual void finalize() override;
-        virtual void onMessageReceived(gameplay::AIMessage * message) override;
+        virtual void onMessageReceived(gameobjects::GameObjectMessage message, int messageType) override;
         virtual void readProperties(gameplay::Properties & properties) override;
         virtual void update(float) override;
 

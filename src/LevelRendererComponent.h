@@ -33,7 +33,7 @@ namespace platformer
 #ifndef _FINAL
         virtual void renderDebug(float, gameplay::Font * font);
 #endif
-        virtual void onMessageReceived(gameplay::AIMessage * message) override;
+        virtual void onMessageReceived(gameobjects::GameObjectMessage message, int messageType) override;
         virtual void readProperties(gameplay::Properties & properties) override;
     private:
         class CharacterRenderer

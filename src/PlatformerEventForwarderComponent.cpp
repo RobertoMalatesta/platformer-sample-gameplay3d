@@ -13,11 +13,11 @@ namespace platformer
     {
     }
 
-    void PlatformerEventForwarderComponent::onMessageReceived(gameplay::AIMessage * message)
+    void PlatformerEventForwarderComponent::onMessageReceived(gameobjects::GameObjectMessage message, int messageType)
     {
         Platformer * game = static_cast<Platformer*>(gameplay::Game::getInstance());
 
-        switch (message->getId())
+        switch (messageType)
         {
             case (Messages::Type::PlatformerSplashScreenChangeRequest):
             {

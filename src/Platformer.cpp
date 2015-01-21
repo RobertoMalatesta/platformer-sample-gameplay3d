@@ -158,11 +158,11 @@ namespace platformer
         // in final builds we want to shutdown as fast as possible, the platform will free up
         // all resources used by this process
 #ifndef _FINAL
-        PLATFORMER_SAFE_DELETE_AI_MESSAGE(_pinchMessage);
-        PLATFORMER_SAFE_DELETE_AI_MESSAGE(_keyMessage);
-        PLATFORMER_SAFE_DELETE_AI_MESSAGE(_touchMessage);
-        PLATFORMER_SAFE_DELETE_AI_MESSAGE(_mouseMessage);
-        PLATFORMER_SAFE_DELETE_AI_MESSAGE(_gamepadMessage);
+        GAMEOBJECTS_DELETE_MESSAGE(_pinchMessage);
+        GAMEOBJECTS_DELETE_MESSAGE(_keyMessage);
+        GAMEOBJECTS_DELETE_MESSAGE(_touchMessage);
+        GAMEOBJECTS_DELETE_MESSAGE(_mouseMessage);
+        GAMEOBJECTS_DELETE_MESSAGE(_gamepadMessage);
         SAFE_RELEASE(_debugFont);
         SAFE_DELETE(_splashBackgroundSpriteBatch);
         SAFE_DELETE(_splashForegroundSpriteBatch);

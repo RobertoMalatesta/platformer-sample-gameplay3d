@@ -69,7 +69,7 @@ namespace platformer
             {
                 gameplay::AIMessage * reloadMsg = RequestLevelReloadMessage::create();
                 getRootParent()->broadcastMessage(reloadMsg);
-                PLATFORMER_SAFE_DELETE_AI_MESSAGE(reloadMsg);
+                GAMEOBJECTS_DELETE_MESSAGE(reloadMsg);
             }
 #endif
 
@@ -112,9 +112,9 @@ namespace platformer
         return _gamePad ? _gamePad->getForm() : nullptr;
     }
 
-    void PlayerInputComponent::onMessageReceived(gameplay::AIMessage * message)
+    void PlayerInputComponent::onMessageReceived(gameobjects::GameObjectMessage message, int messageType)
     {
-        switch (message->getId())
+        switch (messageType)
         {
         case(Messages::Type::Key) :
             onKeyboardInput(std::move(KeyMessage(message)));

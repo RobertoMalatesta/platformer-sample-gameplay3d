@@ -26,7 +26,7 @@ namespace platformer
         explicit CollisionHandlerComponent();
         ~CollisionHandlerComponent();
 
-        virtual void onMessageReceived(gameplay::AIMessage * message) override;
+        virtual void onMessageReceived(gameobjects::GameObjectMessage message, int messageType) override;
         virtual void update(float elapsedTime) override;
         virtual void initialize() override;
         virtual void finalize() override;

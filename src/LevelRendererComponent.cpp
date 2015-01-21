@@ -34,9 +34,9 @@ namespace platformer
     {
     }
 
-    void LevelRendererComponent::onMessageReceived(gameplay::AIMessage * message)
+    void LevelRendererComponent::onMessageReceived(gameobjects::GameObjectMessage message, int messageType)
     {
-        switch (message->getId())
+        switch (messageType)
         {
         case(Messages::Type::LevelLoaded):
             onLevelUnloaded();
@@ -261,7 +261,7 @@ namespace platformer
         SAFE_DELETE(_collectablesSpritebatch);
         SAFE_DELETE(_waterSpritebatch);
         SAFE_RELEASE(_interactablesSpritesheet);
-        PLATFORMER_SAFE_DELETE_AI_MESSAGE(_splashScreenFadeMessage);
+        GAMEOBJECTS_DELETE_MESSAGE(_splashScreenFadeMessage);
         onLevelUnloaded();
     }
 

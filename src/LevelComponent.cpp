@@ -22,11 +22,11 @@ namespace platformer
     {
     }
 
-    void LevelComponent::onMessageReceived(gameplay::AIMessage * message)
+    void LevelComponent::onMessageReceived(gameobjects::GameObjectMessage message, int messageType)
     {
 #ifndef _FINAL
         // Reload on F5 pressed so we can iterate upon it at runtime
-        switch (message->getId())
+        switch (messageType)
         {
         case Messages::Type::Key:
             {
@@ -88,9 +88,9 @@ namespace platformer
     void LevelComponent::finalize()
     {
         unload();
-        PLATFORMER_SAFE_DELETE_AI_MESSAGE(_loadedMessage);
-        PLATFORMER_SAFE_DELETE_AI_MESSAGE(_unloadedMessage);
-        PLATFORMER_SAFE_DELETE_AI_MESSAGE(_preUnloadedMessage);
+        GAMEOBJECTS_DELETE_MESSAGE(_loadedMessage);
+        GAMEOBJECTS_DELETE_MESSAGE(_unloadedMessage);
+        GAMEOBJECTS_DELETE_MESSAGE(_preUnloadedMessage);
     }
 
     void LevelComponent::loadTerrain(gameplay::Properties * layerNamespace)

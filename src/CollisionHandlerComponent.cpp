@@ -24,9 +24,9 @@ namespace platformer
     {
     }
 
-    void CollisionHandlerComponent::onMessageReceived(gameplay::AIMessage * message)
+    void CollisionHandlerComponent::onMessageReceived(gameobjects::GameObjectMessage message, int messageType)
     {
-        switch (message->getId())
+        switch (messageType)
         {
         case(Messages::Type::LevelLoaded):
             onLevelUnloaded();
@@ -159,7 +159,7 @@ namespace platformer
     void CollisionHandlerComponent::finalize()
     {
         onLevelUnloaded();
-        PLATFORMER_SAFE_DELETE_AI_MESSAGE(_forceHandOfGodMessage);
+        GAMEOBJECTS_DELETE_MESSAGE(_forceHandOfGodMessage);
     }
 
     void CollisionHandlerComponent::collisionEvent(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,

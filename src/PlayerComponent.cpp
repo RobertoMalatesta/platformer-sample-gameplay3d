@@ -53,7 +53,7 @@ namespace platformer
         _characterNode = nullptr;
         SAFE_RELEASE(_camera);
         SAFE_RELEASE(_characterNormalNode);
-        PLATFORMER_SAFE_DELETE_AI_MESSAGE(_jumpMessage);
+        GAMEOBJECTS_DELETE_MESSAGE(_jumpMessage);
     }
 
     void PlayerComponent::readProperties(gameplay::Properties & properties)
