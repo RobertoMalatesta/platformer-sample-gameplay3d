@@ -1,0 +1,10 @@
+/android/assets
+/android/bin
+/android/gen
+/android/libs
+/android/obj
+/android/src
+/android/local*
+/android/pro*
+/build
+*.user
