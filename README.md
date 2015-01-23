@@ -36,7 +36,3 @@ A 2D physics based platformer made using the open source game framework Gameplay
 | Font | (.ttf) | [gameplay-encoder](https://github.com/gameplay3d/GamePlay/wiki/Building-gameplay-encoder) (.gpb) |
 | Level | [Tiled](http://www.mapeditor.org/) (.json) | [json-to-gameplay3d](https://github.com/louis-mclaughlin/json-to-gameplay3d) (.level) |
 | Sprite sheet | [TexturePacker lite](https://www.codeandweb.com/texturepacker) (.json) | [json-to-gameplay3d](https://github.com/louis-mclaughlin/json-to-gameplay3d) (.ss) |
-
-### External content used
-- [Debug font](https://www.google.com/fonts/specimen/Open+Sans)
-- [Sprites](http://kenney.nl/assets)
