@@ -359,9 +359,9 @@ namespace platformer
             float const layerPosX = spriteCameraPostion.x - (layerWidth / 2);
 
             gameplay::Rectangle parallaxFill(layerPosX,
-                                                   spriteLevelBounds.y + _parallaxOffset.y,
-                                                   layerWidth,
-                                                   (spriteLevelBounds.y + (spriteCameraZoomScale)) - spriteCameraPostion.y + (spriteScreenDimensions.height));
+                spriteLevelBounds.y + _parallaxOffset.y,
+                layerWidth,
+                _parallaxOffset.y);
 
             if(parallaxFill.intersects(spriteViewport))
             {
@@ -456,7 +456,10 @@ namespace platformer
                 dst.y = dynamicCollisionNode->getTranslationY() / PLATFORMER_UNIT_SCALAR + (dst.height / 2);
                 dst.y -= dst.height;
 
-                if (dst.intersects(spriteViewport))
+                gameplay::Rectangle viewportTest = dst;
+                viewportTest.width = std::max(dst.width, dst.height);
+                viewportTest.height = viewportTest.width;
+                if (viewportTest.intersects(spriteViewport))
                 {
                     dst.y += dst.height;
                     dst.y *= -1.0f;
