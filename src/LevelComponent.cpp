@@ -186,7 +186,38 @@ namespace platformer
         node->rotateZ(rotationZ);
         getParent()->getNode()->addChild(node);
         node->setScale(bounds.width, bounds.height, 1.0f);
-        node->setCollisionObject(collisionProperties);
+
+        gameplay::PhysicsCollisionObject::Type type = gameplay::PhysicsCollisionObject::GHOST_OBJECT;
+        gameplay::PhysicsRigidBody::Parameters rigidBodyParams;
+        gameplay::PhysicsCollisionShape::Definition shape;
+        collisionProperties->getVector3("linearFactor", &rigidBodyParams.linearFactor);
+        collisionProperties->getVector3("angularFactor", &rigidBodyParams.angularFactor);
+
+        rigidBodyParams.friction = collisionProperties->getFloat("friction");
+        rigidBodyParams.restitution = collisionProperties->getFloat("restitution");
+        rigidBodyParams.linearDamping = collisionProperties->getFloat("linearDamping");
+        rigidBodyParams.angularDamping = collisionProperties->getFloat("angularDamping");
+        rigidBodyParams.mass = collisionProperties->getFloat("mass");
+        rigidBodyParams.kinematic = collisionProperties->getBool("kinematic");
+
+        if(strcmp(collisionProperties->getString("type"), "RIGID_BODY") == 0)
+        {
+            type = gameplay::PhysicsCollisionObject::Type::RIGID_BODY;
+        }
+
+        if(strcmp(collisionProperties->getString("shape"), "BOX") == 0)
+        {
+            gameplay::Vector3 extents;
+            collisionProperties->getVector3("extents", &extents);
+            shape = gameplay::PhysicsCollisionShape::box(extents);
+        }
+        else if(strcmp(collisionProperties->getString("shape"), "SPHERE") == 0)
+        {
+            float radius = collisionProperties->getFloat("radius");
+            shape = gameplay::PhysicsCollisionShape::sphere(radius);
+        }
+
+        node->setCollisionObject(type, shape, &rigidBodyParams);
         _collisionNodes[collisionType].push_back(node);
         return node;
     }

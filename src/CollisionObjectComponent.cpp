@@ -18,7 +18,7 @@ namespace platformer
     {
         gameplay::Properties * physicsProperties = createProperties(_physics.c_str());
         _node = gameplay::Node::create(getId().c_str());
-        _node->setCollisionObject(physicsProperties);
+        _node->setCollisionObject(_physics.c_str());
 
         if (physicsProperties->exists("extents"))
         {
