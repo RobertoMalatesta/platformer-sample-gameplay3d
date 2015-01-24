@@ -122,6 +122,9 @@ namespace platformer
 
         if (!_levelLoadedOnce)
         {
+            _pixelSpritebatch = createSinglePixelSpritebatch();
+            uninitialisedSpriteBatches.push_back(_pixelSpritebatch);
+
             uninitialisedSpriteBatches.push_back(_parallaxSpritebatch);
 
             for (ParallaxLayer & layer : _parallaxLayers)
@@ -250,7 +253,6 @@ namespace platformer
     void LevelRendererComponent::initialize()
     {
         _splashScreenFadeMessage = RequestSplashScreenFadeMessage::create();
-        _pixelSpritebatch = createSinglePixelSpritebatch();
     }
 
     void LevelRendererComponent::finalize()
