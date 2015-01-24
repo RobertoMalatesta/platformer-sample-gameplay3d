@@ -181,7 +181,7 @@ namespace platformer
         gameplay::Node * node = gameplay::Node::create();
         NodeCollisionInfo * info = new NodeCollisionInfo();
         info->_CollisionType = collisionType;
-        node->setDrawable(info);
+        node->setUserObject(info);
         node->translate(bounds.x, bounds.y, 0);
         node->rotateZ(rotationZ);
         getParent()->getNode()->addChild(node);
@@ -610,8 +610,8 @@ namespace platformer
             for (gameplay::Node* node : listPair.second)
             {
                 NodeCollisionInfo * info = NodeCollisionInfo::getNodeCollisionInfo(node);
-                node->setDrawable(nullptr);
-                delete info;
+                node->setUserObject(nullptr);
+                SAFE_RELEASE(info);
                 getParent()->getNode()->removeChild(node);
                 SAFE_RELEASE(node);
             }
