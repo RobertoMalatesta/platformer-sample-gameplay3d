@@ -23,7 +23,6 @@ player_audio
 
 player_hand_of_god
 {
-    level_boundary_scale = 2, 1.25
 }
 
 collision_object character_normal

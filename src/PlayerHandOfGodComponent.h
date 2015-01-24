@@ -23,10 +23,8 @@ namespace platformer
         virtual void finalize() override;
         virtual void onStart() override;
         virtual void onMessageReceived(gameobjects::GameObjectMessage message, int messageType) override;
-        virtual void readProperties(gameplay::Properties & properties) override;
     private:
         gameplay::Vector2 _resetPosition;
-        gameplay::Vector2 _boundaryScale;
         gameplay::Rectangle _boundary;
         PlayerComponent * _player;
         bool _levelLoaded;

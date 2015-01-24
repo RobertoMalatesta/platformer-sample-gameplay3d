@@ -96,7 +96,7 @@ namespace platformer
         float const offsetX = (gameplay::Game::getInstance()->getWidth() / 2) *  _currentZoom;
         _targetPosition.x = MATH_CLAMP(_targetPosition.x, _boundary.x + offsetX, _boundary.x + _boundary.width - offsetX);
         float const offsetY = (gameplay::Game::getInstance()->getHeight() / 2) *  _currentZoom;
-        _targetPosition.y = MATH_CLAMP(_targetPosition.y, _boundary.y + offsetY, _boundary.y + _boundary.height + offsetY);
+        _targetPosition.y = MATH_CLAMP(_targetPosition.y, _boundary.y + offsetY, std::numeric_limits<float>::max());
         _camera->getNode()->setTranslation(gameplay::Vector3(_targetPosition.x, _targetPosition.y, 0));
         _currentPosition.x = _camera->getNode()->getTranslationX();
         _currentPosition.y = _camera->getNode()->getTranslationY();

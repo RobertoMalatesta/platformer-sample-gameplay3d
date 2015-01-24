@@ -10,8 +10,7 @@
 namespace platformer
 {
     PlayerHandOfGodComponent::PlayerHandOfGodComponent()
-        : _boundaryScale(gameplay::Vector2::one())
-        , _levelLoaded(false)
+        : _levelLoaded(false)
         , _forceNextReset(false)
     {
     }
@@ -66,10 +65,11 @@ namespace platformer
             _resetPosition = level->getPlayerSpawnPosition();
             float const width = ((level->getWidth() + 1) * level->getTileWidth()) * PLATFORMER_UNIT_SCALAR;
             float const height = ((level->getHeight() + 1) * level->getTileHeight()) * PLATFORMER_UNIT_SCALAR;
-            _boundary.width = width * _boundaryScale.x;
-            _boundary.height = height * _boundaryScale.y;
+            _boundary.width = width;
+            _boundary.height = height;
             _boundary.x = (width - _boundary.width) / 2;
             _boundary.y = -height + (height - _boundary.height) / 2;
+            _boundary.height = std::numeric_limits<float>::max();
             _levelLoaded = true;
         }
             break;
@@ -80,10 +80,5 @@ namespace platformer
             _forceNextReset = true;
             break;
         }
-    }
-
-    void PlayerHandOfGodComponent::readProperties(gameplay::Properties & properties)
-    {
-        properties.getVector2("level_boundary_scale", &_boundaryScale);
     }
 }
