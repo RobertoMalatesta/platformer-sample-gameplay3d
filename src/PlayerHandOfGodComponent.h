@@ -5,6 +5,7 @@
 
 namespace platformer
 {
+    class CameraControlComponent;
     class PlayerComponent;
 
     /**
@@ -27,6 +28,7 @@ namespace platformer
         gameplay::Vector2 _resetPosition;
         gameplay::Rectangle _boundary;
         PlayerComponent * _player;
+        CameraControlComponent * _camera;
         bool _levelLoaded;
         bool _forceNextReset;
         gameplay::AIMessage * _splashScreenFadeMessage;

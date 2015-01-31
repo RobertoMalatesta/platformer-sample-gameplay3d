@@ -144,8 +144,8 @@ namespace platformer
 #endif
                 {
                     gameobjects::GameObject * gameObject = gameobjects::GameObjectController::getInstance().createGameObject(gameObjectTypeName, getParent());
-                    gameplay::Vector2 spawnPos(objectNamespace->getInt("x"), -objectNamespace->getInt("y"));
-                    spawnPos *= PLATFORMER_UNIT_SCALAR;
+                    gameplay::Rectangle boumds = getObjectBounds(objectNamespace);
+                    gameplay::Vector2 spawnPos(boumds.x, boumds.y);
 
                     if (isPlayer)
                     {
@@ -172,7 +172,7 @@ namespace platformer
         rect.width = objectNamespace->getInt("width") * PLATFORMER_UNIT_SCALAR;
         rect.height = objectNamespace->getInt("height") * PLATFORMER_UNIT_SCALAR;
         rect.x = objectNamespace->getInt("x") * PLATFORMER_UNIT_SCALAR;
-        rect.y = -objectNamespace->getInt("y") * PLATFORMER_UNIT_SCALAR;
+        rect.y = ((_tileHeight * _height) - objectNamespace->getInt("y")) * PLATFORMER_UNIT_SCALAR;
         return rect;
     }
 

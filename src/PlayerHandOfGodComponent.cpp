@@ -1,5 +1,6 @@
 #include "PlayerHandOfGodComponent.h"
 
+#include "CameraControlComponent.h"
 #include "CollisionObjectComponent.h"
 #include "Common.h"
 #include "GameObject.h"
@@ -23,6 +24,8 @@ namespace platformer
     {
         _player = getParent()->getComponent<PlayerComponent>();
         _player->addRef();
+        _camera = getRootParent()->getComponent<CameraControlComponent>();
+        _camera->addRef();
     }
 
     void PlayerHandOfGodComponent::initialize()
@@ -34,6 +37,7 @@ namespace platformer
     {
         GAMEOBJECTS_DELETE_MESSAGE(_splashScreenFadeMessage);
         SAFE_RELEASE(_player);
+        SAFE_RELEASE(_camera);
     }
 
     void PlayerHandOfGodComponent::update(float)
@@ -63,11 +67,10 @@ namespace platformer
         {
             LevelComponent * level = getRootParent()->getComponentInChildren<LevelComponent>();
             _resetPosition = level->getPlayerSpawnPosition();
-            float const width = ((level->getWidth() + 1) * level->getTileWidth()) * PLATFORMER_UNIT_SCALAR;
             float const height = ((level->getHeight() + 1) * level->getTileHeight()) * PLATFORMER_UNIT_SCALAR;
-            _boundary.width = width;
+            _boundary.width = _camera->getTargetBoundary().width;
             _boundary.height = height;
-            _boundary.x = (width - _boundary.width) / 2;
+            _boundary.x = _camera->getTargetBoundary().x;
             _boundary.y = -height + (height - _boundary.height) / 2;
             _boundary.height = std::numeric_limits<float>::max();
             _levelLoaded = true;

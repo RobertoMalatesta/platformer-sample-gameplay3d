@@ -63,7 +63,12 @@ namespace platformer
 
         void onLevelLoaded();
         void onLevelUnloaded();
-
+        void renderBackground(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
+        void renderTileMap(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
+        void renderInteractables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
+        void renderCollectables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
+        void renderCharacters(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
+        void renderWater(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
         float getWaterTimeUniform() const;
 
         PlayerComponent * _player;
