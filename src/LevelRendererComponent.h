@@ -94,6 +94,7 @@ namespace platformer
         std::vector<std::pair<gameplay::Node *, gameplay::Rectangle>> _dynamicCollisionNodes;
         std::vector<LevelComponent::Collectable *> _collectables;
         std::vector<gameplay::Rectangle> _waterBounds;
+        float _waterUniformTimer;
     };
 }
 

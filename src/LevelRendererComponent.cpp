@@ -27,6 +27,7 @@ namespace platformer
         , _pixelSpritebatch(nullptr)
         , _interactablesSpritesheet(nullptr)
         , _waterSpritebatch(nullptr)
+        , _waterUniformTimer(0.0f)
     {
     }
 
@@ -176,6 +177,8 @@ namespace platformer
             _dynamicCollisionNodes.emplace_back(node, _interactablesSpritesheet->getSprite("bridge")->_src);
         });
 
+        _waterUniformTimer = 0.0f;
+
         _level->forEachCachedNode(CollisionType::WATER, [this](gameplay::Node * node)
         {
             gameplay::Rectangle bounds;
@@ -315,6 +318,7 @@ namespace platformer
     void LevelRendererComponent::update(float elapsedTime)
     {
         float const dt = elapsedTime / 1000.0f;
+        _waterUniformTimer += dt;
 
         for (auto itr = _parallaxLayers.rbegin(); itr != _parallaxLayers.rend(); ++itr)
         {
@@ -583,6 +587,10 @@ namespace platformer
             {
                 _waterSpritebatch->finish();
             }
+            else
+            {
+                _waterUniformTimer = 0;
+            }
         }
     }
 
@@ -657,10 +665,7 @@ namespace platformer
 
     float LevelRendererComponent::getWaterTimeUniform() const
     {
-        float angle = gameplay::Game::getGameTime() * 0.001 * MATH_PIX2;
-        if (angle > MATH_PIX2)
-            angle -= MATH_PIX2;
-        return angle;
+        return _waterUniformTimer * MATH_PIX2;
     }
 
     void LevelRendererComponent::CharacterRenderer::render(SpriteAnimationComponent * animation, gameplay::SpriteBatch * spriteBatch,
