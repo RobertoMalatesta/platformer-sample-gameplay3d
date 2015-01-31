@@ -41,6 +41,8 @@ namespace platformer
 
     void CollisionHandlerComponent::onLevelLoaded()
     {
+        _playerClimbingTerrainRefCount = 0;
+        _playerSwimmingRefCount = 0;
         _waitForPhysicsCleanup = true;
         std::vector<EnemyComponent *> enemyComponents;
         getParent()->getComponentsInChildren(enemyComponents);
@@ -268,6 +270,7 @@ namespace platformer
                     case CollisionType::WATER:
                     {
                         isColliding ? ++_playerSwimmingRefCount : --_playerSwimmingRefCount;
+                        PLATFORMER_LOG("%d", _playerSwimmingRefCount);
                         _player->setSwimmingEnabled(_playerSwimmingRefCount > 0);
                         PLATFORMER_ASSERT(_playerSwimmingRefCount == MATH_CLAMP(_playerSwimmingRefCount, 0, std::numeric_limits<int>::max()),
                             "_playerSwimmingRefCount invalid %d", _playerSwimmingRefCount);

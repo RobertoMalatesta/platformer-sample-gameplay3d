@@ -3196,6 +3196,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 1
                 name = player
 
                 properties
@@ -3206,14 +3207,15 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 715.49525598752598
-                y = 1175.5156778195301
+                x = 715.495
+                y = 1175.52
             }
 
             objects_1
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 2
                 name = enemy_slime
 
                 properties
@@ -3232,6 +3234,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 3
                 name = enemy_snail
 
                 properties
@@ -3250,6 +3253,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 4
                 name = enemy_spider
 
                 properties
@@ -3268,6 +3272,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 5
                 name = enemy_snail
 
                 properties
@@ -3286,6 +3291,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 6
                 name = enemy_spider
 
                 properties
@@ -3304,6 +3310,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 7
                 name = enemy_slime
 
                 properties
@@ -3322,6 +3329,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 8
                 name = enemy_snail
 
                 properties
@@ -3340,6 +3348,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 9
                 name = enemy_snail
 
                 properties
@@ -3358,6 +3367,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 10
                 name = enemy_spider
 
                 properties
@@ -3376,6 +3386,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 11
                 name = enemy_slime
 
                 properties
@@ -3394,6 +3405,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 12
                 name = enemy_snail
 
                 properties
@@ -3412,6 +3424,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 13
                 name = enemy_slime
 
                 properties
@@ -3430,6 +3443,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 14
                 name = enemy_slime
 
                 properties
@@ -3448,6 +3462,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 15
                 name = enemy_spider
 
                 properties
@@ -3466,6 +3481,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 16
                 name = enemy_slime
 
                 properties
@@ -3484,6 +3500,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 17
                 name = enemy_snail
 
                 properties
@@ -3502,6 +3519,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 18
                 name = enemy_spider
 
                 properties
@@ -3520,6 +3538,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 19
                 name = enemy_slime
 
                 properties
@@ -3538,6 +3557,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 20
                 name = enemy_spider
 
                 properties
@@ -3556,6 +3576,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 21
                 name = enemy_slime
 
                 properties
@@ -3574,6 +3595,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 22
                 name = enemy_snail
 
                 properties
@@ -3592,6 +3614,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 23
                 name = enemy_fish
 
                 properties
@@ -3610,6 +3633,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 24
                 name = enemy_fish
 
                 properties
@@ -3620,14 +3644,15 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 3618.8521710076802
-                y = 1353.4254798960101
+                x = 3618.8499999999999
+                y = 1353.4300000000001
             }
 
             objects_24
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 25
                 name = enemy_fish
 
                 properties
@@ -3638,14 +3663,15 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 3863.9623467937599
-                y = 1348.47375917306
+                x = 3863.96
+                y = 1348.47
             }
 
             objects_25
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 26
                 name = enemy_fish
 
                 properties
@@ -3656,14 +3682,15 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 3707.9831440208
-                y = 1343.5220384501099
+                x = 3707.98
+                y = 1343.52
             }
 
             objects_26
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 27
                 name = enemy_fish
 
                 properties
@@ -3674,14 +3701,15 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 439.84746687298798
-                y = 1341.0461780886401
+                x = 439.84699999999998
+                y = 1341.05
             }
 
             objects_27
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 28
                 name = enemy_fish
 
                 properties
@@ -3692,14 +3720,15 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 244.25449831641501
-                y = 1333.61859700421
+                x = 244.25399999999999
+                y = 1333.6199999999999
             }
 
             objects_28
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 29
                 name = enemy_fish
 
                 properties
@@ -3710,14 +3739,15 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 120.461480242634
-                y = 1358.3772006189699
+                x = 120.461
+                y = 1358.3800000000001
             }
 
             objects_29
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 30
                 name = enemy_fish
 
                 properties
@@ -3728,8 +3758,8 @@ layers
                 type = 
                 visible = true
                 width = 36.373399999999997
-                x = 41.233948675414503
-                y = 1358.3772006189699
+                x = 41.233899999999998
+                y = 1358.3800000000001
             }
         }
 
@@ -3752,6 +3782,7 @@ layers
             objects_0
             {
                 height = 6.3109200000000003
+                id = 31
                 name = 
 
                 properties
@@ -3769,6 +3800,7 @@ layers
             objects_1
             {
                 height = 320
+                id = 32
                 name = 
 
                 properties
@@ -3786,6 +3818,7 @@ layers
             objects_2
             {
                 height = 38.4923
+                id = 33
                 name = 
 
                 properties
@@ -3803,6 +3836,7 @@ layers
             objects_3
             {
                 height = 32.703499999999998
+                id = 34
                 name = 
 
                 properties
@@ -3820,6 +3854,7 @@ layers
             objects_4
             {
                 height = 36.674300000000002
+                id = 35
                 name = 
 
                 properties
@@ -3837,6 +3872,7 @@ layers
             objects_5
             {
                 height = 36.809800000000003
+                id = 36
                 name = 
 
                 properties
@@ -3854,6 +3890,7 @@ layers
             objects_6
             {
                 height = 37.162700000000001
+                id = 37
                 name = 
 
                 properties
@@ -3871,6 +3908,7 @@ layers
             objects_7
             {
                 height = 36.474499999999999
+                id = 38
                 name = 
 
                 properties
@@ -3888,6 +3926,7 @@ layers
             objects_8
             {
                 height = 64
+                id = 39
                 name = 
 
                 properties
@@ -3905,6 +3944,7 @@ layers
             objects_9
             {
                 height = 0
+                id = 40
                 name = 
 
                 polyline
@@ -3937,6 +3977,7 @@ layers
             objects_10
             {
                 height = 0
+                id = 41
                 name = 
 
                 polyline
@@ -3969,6 +4010,7 @@ layers
             objects_11
             {
                 height = 0
+                id = 42
                 name = 
 
                 polyline
@@ -4001,6 +4043,7 @@ layers
             objects_12
             {
                 height = 128
+                id = 43
                 name = 
 
                 properties
@@ -4018,6 +4061,7 @@ layers
             objects_13
             {
                 height = 320
+                id = 44
                 name = 
 
                 properties
@@ -4035,6 +4079,7 @@ layers
             objects_14
             {
                 height = 128
+                id = 45
                 name = 
 
                 properties
@@ -4052,6 +4097,7 @@ layers
             objects_15
             {
                 height = 320
+                id = 46
                 name = 
 
                 properties
@@ -4069,6 +4115,7 @@ layers
             objects_16
             {
                 height = 102
+                id = 47
                 name = 
 
                 properties
@@ -4086,6 +4133,7 @@ layers
             objects_17
             {
                 height = 128
+                id = 48
                 name = 
 
                 properties
@@ -4103,6 +4151,7 @@ layers
             objects_18
             {
                 height = 128
+                id = 49
                 name = 
 
                 properties
@@ -4120,6 +4169,7 @@ layers
             objects_19
             {
                 height = 64
+                id = 50
                 name = 
 
                 properties
@@ -4137,6 +4187,7 @@ layers
             objects_20
             {
                 height = 128
+                id = 51
                 name = 
 
                 properties
@@ -4148,12 +4199,13 @@ layers
                 visible = true
                 width = 640
                 x = 0
-                y = 1360
+                y = 1362
             }
 
             objects_21
             {
                 height = 128
+                id = 52
                 name = 
 
                 properties
@@ -4171,7 +4223,7 @@ layers
 
         opacity = 1
         type = objectgroup
-        visible = false
+        visible = true
         width = 0
         x = 0
         y = 0
@@ -4188,6 +4240,7 @@ layers
             objects_0
             {
                 height = 26.541799999999999
+                id = 53
                 name = 
 
                 properties
@@ -4205,6 +4258,7 @@ layers
             objects_1
             {
                 height = 128
+                id = 54
                 name = 
 
                 properties
@@ -4239,6 +4293,7 @@ layers
             objects_0
             {
                 height = 544.58299999999997
+                id = 55
                 name = 
 
                 properties
@@ -4274,6 +4329,7 @@ layers
             {
                 ellipse = true
                 height = 100
+                id = 56
                 name = 
 
                 properties
@@ -4291,6 +4347,7 @@ layers
             objects_1
             {
                 height = 64
+                id = 57
                 name = 
 
                 properties
@@ -4308,6 +4365,7 @@ layers
             objects_2
             {
                 height = 64
+                id = 58
                 name = 
 
                 properties
@@ -4325,6 +4383,7 @@ layers
             objects_3
             {
                 height = 64
+                id = 59
                 name = 
 
                 properties
@@ -4342,6 +4401,7 @@ layers
             objects_4
             {
                 height = 32
+                id = 60
                 name = 
 
                 properties
@@ -4359,6 +4419,7 @@ layers
             objects_5
             {
                 height = 48
+                id = 61
                 name = 
 
                 properties
@@ -4376,6 +4437,7 @@ layers
             objects_6
             {
                 height = 64
+                id = 62
                 name = 
 
                 properties
@@ -4394,6 +4456,7 @@ layers
             {
                 ellipse = true
                 height = 128
+                id = 63
                 name = 
 
                 properties
@@ -4412,6 +4475,7 @@ layers
             {
                 ellipse = true
                 height = 50
+                id = 64
                 name = 
 
                 properties
@@ -4430,6 +4494,7 @@ layers
             {
                 ellipse = true
                 height = 128
+                id = 65
                 name = 
 
                 properties
@@ -4440,14 +4505,15 @@ layers
                 type = 
                 visible = true
                 width = 128
-                x = 1025.5622228376899
-                y = 56.465434645031401
+                x = 1025.5599999999999
+                y = 56.465400000000002
             }
 
             objects_10
             {
                 ellipse = true
                 height = 192
+                id = 66
                 name = 
 
                 properties
@@ -4458,13 +4524,14 @@ layers
                 type = 
                 visible = true
                 width = 192
-                x = 2204.9344738893201
-                y = 555.92541932969596
+                x = 2204.9299999999998
+                y = 555.92499999999995
             }
 
             objects_11
             {
                 height = 192
+                id = 67
                 name = 
 
                 properties
@@ -4475,8 +4542,8 @@ layers
                 type = 
                 visible = true
                 width = 192
-                x = 943.14233059440596
-                y = 489.60354709268199
+                x = 943.14200000000005
+                y = 489.60399999999998
             }
         }
 
@@ -4499,6 +4566,7 @@ layers
             objects_0
             {
                 height = 0
+                id = 68
                 name = 
 
                 polyline
@@ -4531,6 +4599,7 @@ layers
             objects_1
             {
                 height = 0
+                id = 69
                 name = 
 
                 polyline
@@ -4563,6 +4632,7 @@ layers
             objects_2
             {
                 height = 0
+                id = 70
                 name = 
 
                 polyline
@@ -4595,6 +4665,7 @@ layers
             objects_3
             {
                 height = 0
+                id = 71
                 name = 
 
                 polyline
@@ -4627,6 +4698,7 @@ layers
             objects_4
             {
                 height = 0
+                id = 72
                 name = 
 
                 polyline
@@ -4659,6 +4731,7 @@ layers
             objects_5
             {
                 height = 0
+                id = 73
                 name = 
 
                 polyline
@@ -4691,6 +4764,7 @@ layers
             objects_6
             {
                 height = 0
+                id = 74
                 name = 
 
                 polyline
@@ -4723,6 +4797,7 @@ layers
             objects_7
             {
                 height = 0
+                id = 75
                 name = 
 
                 polyline
@@ -4755,6 +4830,7 @@ layers
             objects_8
             {
                 height = 0
+                id = 76
                 name = 
 
                 polyline
@@ -4787,6 +4863,7 @@ layers
             objects_9
             {
                 height = 0
+                id = 77
                 name = 
 
                 polyline
@@ -4819,6 +4896,7 @@ layers
             objects_10
             {
                 height = 0
+                id = 78
                 name = 
 
                 polyline
@@ -4851,6 +4929,7 @@ layers
             objects_11
             {
                 height = 0
+                id = 79
                 name = 
 
                 polyline
@@ -4883,6 +4962,7 @@ layers
             objects_12
             {
                 height = 0
+                id = 80
                 name = 
 
                 polyline
@@ -4915,6 +4995,7 @@ layers
             objects_13
             {
                 height = 0
+                id = 81
                 name = 
 
                 polyline
@@ -4947,6 +5028,7 @@ layers
             objects_14
             {
                 height = 0
+                id = 82
                 name = 
 
                 polyline
@@ -4979,6 +5061,7 @@ layers
             objects_15
             {
                 height = 0
+                id = 83
                 name = 
 
                 polyline
@@ -5011,6 +5094,7 @@ layers
             objects_16
             {
                 height = 0
+                id = 84
                 name = 
 
                 polyline
@@ -5043,6 +5127,7 @@ layers
             objects_17
             {
                 height = 0
+                id = 85
                 name = 
 
                 polyline
@@ -5075,6 +5160,7 @@ layers
             objects_18
             {
                 height = 0
+                id = 86
                 name = 
 
                 polyline
@@ -5107,6 +5193,7 @@ layers
             objects_19
             {
                 height = 0
+                id = 87
                 name = 
 
                 polyline
@@ -5139,6 +5226,7 @@ layers
             objects_20
             {
                 height = 0
+                id = 88
                 name = 
 
                 polyline
@@ -5171,6 +5259,7 @@ layers
             objects_21
             {
                 height = 0
+                id = 89
                 name = 
 
                 polyline
@@ -5203,6 +5292,7 @@ layers
             objects_22
             {
                 height = 0
+                id = 90
                 name = 
 
                 polyline
@@ -5235,6 +5325,7 @@ layers
             objects_23
             {
                 height = 0
+                id = 91
                 name = 
 
                 polyline
@@ -5267,6 +5358,7 @@ layers
             objects_24
             {
                 height = 0
+                id = 92
                 name = 
 
                 polyline
@@ -5299,6 +5391,7 @@ layers
             objects_25
             {
                 height = 0
+                id = 93
                 name = 
 
                 polyline
@@ -5331,6 +5424,7 @@ layers
             objects_26
             {
                 height = 0
+                id = 94
                 name = 
 
                 polyline
@@ -5363,6 +5457,7 @@ layers
             objects_27
             {
                 height = 0
+                id = 95
                 name = 
 
                 polyline
@@ -5395,6 +5490,7 @@ layers
             objects_28
             {
                 height = 0
+                id = 96
                 name = 
 
                 polyline
@@ -5427,6 +5523,7 @@ layers
             objects_29
             {
                 height = 0
+                id = 97
                 name = 
 
                 polyline
@@ -5459,6 +5556,7 @@ layers
             objects_30
             {
                 height = 0
+                id = 98
                 name = 
 
                 polyline
@@ -5491,6 +5589,7 @@ layers
             objects_31
             {
                 height = 0
+                id = 99
                 name = 
 
                 polyline
@@ -5523,6 +5622,7 @@ layers
             objects_32
             {
                 height = 0
+                id = 100
                 name = 
 
                 polyline
@@ -5555,6 +5655,7 @@ layers
             objects_33
             {
                 height = 0
+                id = 101
                 name = 
 
                 polyline
@@ -5587,6 +5688,7 @@ layers
             objects_34
             {
                 height = 0
+                id = 102
                 name = 
 
                 polyline
@@ -5620,6 +5722,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 103
                 name = enemy_slime
 
                 properties
@@ -5638,6 +5741,7 @@ layers
             {
                 ellipse = true
                 height = 31.450600000000001
+                id = 104
                 name = enemy_slime
 
                 properties
@@ -5672,6 +5776,7 @@ layers
             objects_0
             {
                 height = 96
+                id = 105
                 name = 
 
                 properties
@@ -5688,7 +5793,8 @@ layers
 
             objects_1
             {
-                height = 333
+                height = 276
+                id = 106
                 name = 
 
                 properties
@@ -5700,12 +5806,13 @@ layers
                 visible = true
                 width = 640
                 x = 0
-                y = 1273
+                y = 1324
             }
 
             objects_2
             {
                 height = 333
+                id = 107
                 name = 
 
                 properties
@@ -5723,7 +5830,7 @@ layers
 
         opacity = 1
         type = objectgroup
-        visible = false
+        visible = true
         width = 0
         x = 0
         y = 0
@@ -5740,6 +5847,7 @@ layers
             objects_0
             {
                 height = 0
+                id = 108
                 name = 
 
                 polyline
@@ -5772,6 +5880,7 @@ layers
             objects_1
             {
                 height = 0
+                id = 109
                 name = 
 
                 polyline
@@ -5811,6 +5920,7 @@ layers
     }
 }
 
+nextobjectid = 110
 orientation = orthogonal
 
 properties

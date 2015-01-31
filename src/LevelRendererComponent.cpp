@@ -183,6 +183,9 @@ namespace platformer
             bounds.height = node->getScaleY();
             bounds.x = node->getTranslationX() - bounds.width / 2.0f;
             bounds.y = node->getTranslationY() - bounds.height / 2.0f;
+            // Scale the boundary height to add the area that was removed to make room for waves in the texture (95px of 512px)
+            float const textureScale = 1.18f;
+            bounds.height *= textureScale;
             _waterBounds.push_back(bounds);
         });
 

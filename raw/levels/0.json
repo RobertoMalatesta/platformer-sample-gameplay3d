@@ -30,6 +30,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":1,
                  "name":"player",
                  "properties":
                     {
@@ -39,12 +40,13 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":715.495255987526,
-                 "y":1175.51567781953
+                 "x":715.495,
+                 "y":1175.52
                 }, 
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":2,
                  "name":"enemy_slime",
                  "properties":
                     {
@@ -60,6 +62,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":3,
                  "name":"enemy_snail",
                  "properties":
                     {
@@ -75,6 +78,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":4,
                  "name":"enemy_spider",
                  "properties":
                     {
@@ -90,6 +94,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":5,
                  "name":"enemy_snail",
                  "properties":
                     {
@@ -105,6 +110,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":6,
                  "name":"enemy_spider",
                  "properties":
                     {
@@ -120,6 +126,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":7,
                  "name":"enemy_slime",
                  "properties":
                     {
@@ -135,6 +142,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":8,
                  "name":"enemy_snail",
                  "properties":
                     {
@@ -150,6 +158,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":9,
                  "name":"enemy_snail",
                  "properties":
                     {
@@ -165,6 +174,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":10,
                  "name":"enemy_spider",
                  "properties":
                     {
@@ -180,6 +190,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":11,
                  "name":"enemy_slime",
                  "properties":
                     {
@@ -195,6 +206,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":12,
                  "name":"enemy_snail",
                  "properties":
                     {
@@ -210,6 +222,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":13,
                  "name":"enemy_slime",
                  "properties":
                     {
@@ -225,6 +238,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":14,
                  "name":"enemy_slime",
                  "properties":
                     {
@@ -240,6 +254,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":15,
                  "name":"enemy_spider",
                  "properties":
                     {
@@ -255,6 +270,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":16,
                  "name":"enemy_slime",
                  "properties":
                     {
@@ -270,6 +286,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":17,
                  "name":"enemy_snail",
                  "properties":
                     {
@@ -285,6 +302,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":18,
                  "name":"enemy_spider",
                  "properties":
                     {
@@ -300,6 +318,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":19,
                  "name":"enemy_slime",
                  "properties":
                     {
@@ -315,6 +334,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":20,
                  "name":"enemy_spider",
                  "properties":
                     {
@@ -330,6 +350,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":21,
                  "name":"enemy_slime",
                  "properties":
                     {
@@ -345,6 +366,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":22,
                  "name":"enemy_snail",
                  "properties":
                     {
@@ -360,6 +382,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":23,
                  "name":"enemy_fish",
                  "properties":
                     {
@@ -375,6 +398,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":24,
                  "name":"enemy_fish",
                  "properties":
                     {
@@ -384,12 +408,13 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":3618.85217100768,
-                 "y":1353.42547989601
+                 "x":3618.85,
+                 "y":1353.43
                 }, 
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":25,
                  "name":"enemy_fish",
                  "properties":
                     {
@@ -399,12 +424,13 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":3863.96234679376,
-                 "y":1348.47375917306
+                 "x":3863.96,
+                 "y":1348.47
                 }, 
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":26,
                  "name":"enemy_fish",
                  "properties":
                     {
@@ -414,12 +440,13 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":3707.9831440208,
-                 "y":1343.52203845011
+                 "x":3707.98,
+                 "y":1343.52
                 }, 
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":27,
                  "name":"enemy_fish",
                  "properties":
                     {
@@ -429,12 +456,13 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":439.847466872988,
-                 "y":1341.04617808864
+                 "x":439.847,
+                 "y":1341.05
                 }, 
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":28,
                  "name":"enemy_fish",
                  "properties":
                     {
@@ -444,12 +472,13 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":244.254498316415,
-                 "y":1333.61859700421
+                 "x":244.254,
+                 "y":1333.62
                 }, 
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":29,
                  "name":"enemy_fish",
                  "properties":
                     {
@@ -459,12 +488,13 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":120.461480242634,
-                 "y":1358.37720061897
+                 "x":120.461,
+                 "y":1358.38
                 }, 
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":30,
                  "name":"enemy_fish",
                  "properties":
                     {
@@ -474,8 +504,8 @@
                  "type":"",
                  "visible":true,
                  "width":36.3734,
-                 "x":41.2339486754145,
-                 "y":1358.37720061897
+                 "x":41.2339,
+                 "y":1358.38
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -491,6 +521,7 @@
          "objects":[
                 {
                  "height":6.31092,
+                 "id":31,
                  "name":"",
                  "properties":
                     {
@@ -505,6 +536,7 @@
                 }, 
                 {
                  "height":320,
+                 "id":32,
                  "name":"",
                  "properties":
                     {
@@ -519,6 +551,7 @@
                 }, 
                 {
                  "height":38.4923,
+                 "id":33,
                  "name":"",
                  "properties":
                     {
@@ -533,6 +566,7 @@
                 }, 
                 {
                  "height":32.7035,
+                 "id":34,
                  "name":"",
                  "properties":
                     {
@@ -547,6 +581,7 @@
                 }, 
                 {
                  "height":36.6743,
+                 "id":35,
                  "name":"",
                  "properties":
                     {
@@ -561,6 +596,7 @@
                 }, 
                 {
                  "height":36.8098,
+                 "id":36,
                  "name":"",
                  "properties":
                     {
@@ -575,6 +611,7 @@
                 }, 
                 {
                  "height":37.1627,
+                 "id":37,
                  "name":"",
                  "properties":
                     {
@@ -589,6 +626,7 @@
                 }, 
                 {
                  "height":36.4745,
+                 "id":38,
                  "name":"",
                  "properties":
                     {
@@ -603,6 +641,7 @@
                 }, 
                 {
                  "height":64,
+                 "id":39,
                  "name":"",
                  "properties":
                     {
@@ -617,6 +656,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":40,
                  "name":"",
                  "polyline":[
                         {
@@ -640,6 +680,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":41,
                  "name":"",
                  "polyline":[
                         {
@@ -663,6 +704,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":42,
                  "name":"",
                  "polyline":[
                         {
@@ -686,6 +728,7 @@
                 }, 
                 {
                  "height":128,
+                 "id":43,
                  "name":"",
                  "properties":
                     {
@@ -700,6 +743,7 @@
                 }, 
                 {
                  "height":320,
+                 "id":44,
                  "name":"",
                  "properties":
                     {
@@ -714,6 +758,7 @@
                 }, 
                 {
                  "height":128,
+                 "id":45,
                  "name":"",
                  "properties":
                     {
@@ -728,6 +773,7 @@
                 }, 
                 {
                  "height":320,
+                 "id":46,
                  "name":"",
                  "properties":
                     {
@@ -742,6 +788,7 @@
                 }, 
                 {
                  "height":102,
+                 "id":47,
                  "name":"",
                  "properties":
                     {
@@ -756,6 +803,7 @@
                 }, 
                 {
                  "height":128,
+                 "id":48,
                  "name":"",
                  "properties":
                     {
@@ -770,6 +818,7 @@
                 }, 
                 {
                  "height":128,
+                 "id":49,
                  "name":"",
                  "properties":
                     {
@@ -784,6 +833,7 @@
                 }, 
                 {
                  "height":64,
+                 "id":50,
                  "name":"",
                  "properties":
                     {
@@ -798,6 +848,7 @@
                 }, 
                 {
                  "height":128,
+                 "id":51,
                  "name":"",
                  "properties":
                     {
@@ -808,10 +859,11 @@
                  "visible":true,
                  "width":640,
                  "x":0,
-                 "y":1360
+                 "y":1362
                 }, 
                 {
                  "height":128,
+                 "id":52,
                  "name":"",
                  "properties":
                     {
@@ -826,7 +878,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "width":0,
          "x":0,
          "y":0
@@ -838,6 +890,7 @@
          "objects":[
                 {
                  "height":26.5418,
+                 "id":53,
                  "name":"",
                  "properties":
                     {
@@ -852,6 +905,7 @@
                 }, 
                 {
                  "height":128,
+                 "id":54,
                  "name":"",
                  "properties":
                     {
@@ -878,6 +932,7 @@
          "objects":[
                 {
                  "height":544.583,
+                 "id":55,
                  "name":"",
                  "properties":
                     {
@@ -905,6 +960,7 @@
                 {
                  "ellipse":true,
                  "height":100,
+                 "id":56,
                  "name":"",
                  "properties":
                     {
@@ -919,6 +975,7 @@
                 }, 
                 {
                  "height":64,
+                 "id":57,
                  "name":"",
                  "properties":
                     {
@@ -933,6 +990,7 @@
                 }, 
                 {
                  "height":64,
+                 "id":58,
                  "name":"",
                  "properties":
                     {
@@ -947,6 +1005,7 @@
                 }, 
                 {
                  "height":64,
+                 "id":59,
                  "name":"",
                  "properties":
                     {
@@ -961,6 +1020,7 @@
                 }, 
                 {
                  "height":32,
+                 "id":60,
                  "name":"",
                  "properties":
                     {
@@ -975,6 +1035,7 @@
                 }, 
                 {
                  "height":48,
+                 "id":61,
                  "name":"",
                  "properties":
                     {
@@ -989,6 +1050,7 @@
                 }, 
                 {
                  "height":64,
+                 "id":62,
                  "name":"",
                  "properties":
                     {
@@ -1004,6 +1066,7 @@
                 {
                  "ellipse":true,
                  "height":128,
+                 "id":63,
                  "name":"",
                  "properties":
                     {
@@ -1019,6 +1082,7 @@
                 {
                  "ellipse":true,
                  "height":50,
+                 "id":64,
                  "name":"",
                  "properties":
                     {
@@ -1034,6 +1098,7 @@
                 {
                  "ellipse":true,
                  "height":128,
+                 "id":65,
                  "name":"",
                  "properties":
                     {
@@ -1043,12 +1108,13 @@
                  "type":"",
                  "visible":true,
                  "width":128,
-                 "x":1025.56222283769,
-                 "y":56.4654346450314
+                 "x":1025.56,
+                 "y":56.4654
                 }, 
                 {
                  "ellipse":true,
                  "height":192,
+                 "id":66,
                  "name":"",
                  "properties":
                     {
@@ -1058,11 +1124,12 @@
                  "type":"",
                  "visible":true,
                  "width":192,
-                 "x":2204.93447388932,
-                 "y":555.925419329696
+                 "x":2204.93,
+                 "y":555.925
                 }, 
                 {
                  "height":192,
+                 "id":67,
                  "name":"",
                  "properties":
                     {
@@ -1072,8 +1139,8 @@
                  "type":"",
                  "visible":true,
                  "width":192,
-                 "x":943.142330594406,
-                 "y":489.603547092682
+                 "x":943.142,
+                 "y":489.604
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1089,6 +1156,7 @@
          "objects":[
                 {
                  "height":0,
+                 "id":68,
                  "name":"",
                  "polyline":[
                         {
@@ -1112,6 +1180,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":69,
                  "name":"",
                  "polyline":[
                         {
@@ -1135,6 +1204,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":70,
                  "name":"",
                  "polyline":[
                         {
@@ -1158,6 +1228,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":71,
                  "name":"",
                  "polyline":[
                         {
@@ -1181,6 +1252,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":72,
                  "name":"",
                  "polyline":[
                         {
@@ -1204,6 +1276,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":73,
                  "name":"",
                  "polyline":[
                         {
@@ -1227,6 +1300,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":74,
                  "name":"",
                  "polyline":[
                         {
@@ -1250,6 +1324,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":75,
                  "name":"",
                  "polyline":[
                         {
@@ -1273,6 +1348,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":76,
                  "name":"",
                  "polyline":[
                         {
@@ -1296,6 +1372,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":77,
                  "name":"",
                  "polyline":[
                         {
@@ -1319,6 +1396,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":78,
                  "name":"",
                  "polyline":[
                         {
@@ -1342,6 +1420,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":79,
                  "name":"",
                  "polyline":[
                         {
@@ -1365,6 +1444,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":80,
                  "name":"",
                  "polyline":[
                         {
@@ -1388,6 +1468,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":81,
                  "name":"",
                  "polyline":[
                         {
@@ -1411,6 +1492,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":82,
                  "name":"",
                  "polyline":[
                         {
@@ -1434,6 +1516,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":83,
                  "name":"",
                  "polyline":[
                         {
@@ -1457,6 +1540,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":84,
                  "name":"",
                  "polyline":[
                         {
@@ -1480,6 +1564,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":85,
                  "name":"",
                  "polyline":[
                         {
@@ -1503,6 +1588,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":86,
                  "name":"",
                  "polyline":[
                         {
@@ -1526,6 +1612,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":87,
                  "name":"",
                  "polyline":[
                         {
@@ -1549,6 +1636,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":88,
                  "name":"",
                  "polyline":[
                         {
@@ -1572,6 +1660,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":89,
                  "name":"",
                  "polyline":[
                         {
@@ -1595,6 +1684,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":90,
                  "name":"",
                  "polyline":[
                         {
@@ -1618,6 +1708,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":91,
                  "name":"",
                  "polyline":[
                         {
@@ -1641,6 +1732,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":92,
                  "name":"",
                  "polyline":[
                         {
@@ -1664,6 +1756,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":93,
                  "name":"",
                  "polyline":[
                         {
@@ -1687,6 +1780,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":94,
                  "name":"",
                  "polyline":[
                         {
@@ -1710,6 +1804,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":95,
                  "name":"",
                  "polyline":[
                         {
@@ -1733,6 +1828,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":96,
                  "name":"",
                  "polyline":[
                         {
@@ -1756,6 +1852,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":97,
                  "name":"",
                  "polyline":[
                         {
@@ -1779,6 +1876,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":98,
                  "name":"",
                  "polyline":[
                         {
@@ -1802,6 +1900,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":99,
                  "name":"",
                  "polyline":[
                         {
@@ -1825,6 +1924,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":100,
                  "name":"",
                  "polyline":[
                         {
@@ -1848,6 +1948,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":101,
                  "name":"",
                  "polyline":[
                         {
@@ -1871,6 +1972,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":102,
                  "name":"",
                  "polyline":[
                         {
@@ -1895,6 +1997,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":103,
                  "name":"enemy_slime",
                  "properties":
                     {
@@ -1910,6 +2013,7 @@
                 {
                  "ellipse":true,
                  "height":31.4506,
+                 "id":104,
                  "name":"enemy_slime",
                  "properties":
                     {
@@ -1936,6 +2040,7 @@
          "objects":[
                 {
                  "height":96,
+                 "id":105,
                  "name":"",
                  "properties":
                     {
@@ -1949,7 +2054,8 @@
                  "y":352
                 }, 
                 {
-                 "height":333,
+                 "height":276,
+                 "id":106,
                  "name":"",
                  "properties":
                     {
@@ -1960,10 +2066,11 @@
                  "visible":true,
                  "width":640,
                  "x":0,
-                 "y":1273
+                 "y":1324
                 }, 
                 {
                  "height":333,
+                 "id":107,
                  "name":"",
                  "properties":
                     {
@@ -1978,7 +2085,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "width":0,
          "x":0,
          "y":0
@@ -1990,6 +2097,7 @@
          "objects":[
                 {
                  "height":0,
+                 "id":108,
                  "name":"",
                  "polyline":[
                         {
@@ -2013,6 +2121,7 @@
                 }, 
                 {
                  "height":0,
+                 "id":109,
                  "name":"",
                  "polyline":[
                         {
@@ -2041,6 +2150,7 @@
          "x":0,
          "y":0
         }],
+ "nextobjectid":110,
  "orientation":"orthogonal",
  "properties":
     {

@@ -119,15 +119,20 @@ namespace platformer
                 else
                 {
                     if (velocity.y == 0.0f && velocity.x != 0.0f)
-                    {
+                    { 
                         if (_swimmingEnabled && _state == State::Walking)
                         {
-                            character->setVelocity(character->getCurrentVelocity().x * _swimSpeedScale, 0, 0);
+                            character->setVelocity(velocity.x * _swimSpeedScale, 0, 0);
                             _state = State::Swimming;
                         }
                         else
                         {
                             _state = State::Walking;
+
+                            if(fabs(velocity.x) == _movementSpeed * _swimSpeedScale)
+                            {
+                                character->setVelocity(_movementSpeed * (velocity.x >= 0 ? 1.0f : -1.0f) , 0, 0);
+                            }
                         }
                     }
 
@@ -137,6 +142,14 @@ namespace platformer
                     {
                         _state = State::Cowering;
                     }
+                }
+            }
+            else
+            {
+                if(velocity.x == 0)
+                {
+                    static float const tideSpeed = -50.0f;
+                    velocity.x = tideSpeed * (elapsedTime / 1000.0f);
                 }
             }
 
@@ -226,13 +239,7 @@ namespace platformer
                     {
                         _isLeftFacing = direction == MovementDirection::Left;
                         float horizontalSpeed = _isLeftFacing ? -_movementSpeed : _movementSpeed;
-                        horizontalSpeed *= scale;
-
-                        if (_state == State::Swimming)
-                        {
-                            horizontalSpeed *= _swimSpeedScale;
-                        }
-
+                        horizontalSpeed *= _state == State::Swimming ? _swimSpeedScale : scale;
                         character->setVelocity(horizontalSpeed, 0.0f, 0.0f);
                     }
                 }
@@ -289,7 +296,9 @@ namespace platformer
         {
             case JumpSource::Input:
             {
-                preJumpVelocity.x = characterOriginalVelocity.x;
+                preJumpVelocity.x = _state != State::Swimming || characterOriginalVelocity.x == 0 ? characterOriginalVelocity.x :
+                    (_movementSpeed * _swimSpeedScale) * (!_isLeftFacing ? 1.0f : -1.0f);
+
                 jumpAllowed &= _state == State::Walking || _state == State::Swimming || _state == State::Idle;
 #ifndef _FINAL
                 if(gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_unlimited_jump"))
