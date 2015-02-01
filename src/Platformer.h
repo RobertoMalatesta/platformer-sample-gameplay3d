@@ -37,7 +37,7 @@ namespace platformer
         void unloadCachedAssets();
         void broadcastKeyEvent(gameplay::Keyboard::KeyEvent evt, int key);
         void renderSplashScreen(void * = nullptr);
-        void setSplashScreenFade(float duration, bool isFadingIn);
+        void setSplashScreenFade(float duration, bool isFadingIn, bool showLogo);
 
 #ifndef _FINAL
         gameplay::Font * _debugFont;
@@ -51,11 +51,12 @@ namespace platformer
         gameplay::SpriteBatch * _splashBackgroundSpriteBatch;
         std::vector<gameplay::Texture *> _cachedTextures;
         std::vector<SpriteSheet *> _cachedSpriteSheets;
-        std::queue<std::pair<float,float>> _splashScreenFadeRequests;
+        std::queue<std::tuple<float,float,bool>> _splashScreenFadeRequests;
         float _splashScreenAlpha;
         float _splashScreenFadeDuration;
         float _splashScreenFadeDirection;
         bool _splashScreenFadeActive;
+        bool _splashScreenShowsLogo;
 #ifndef WIN32
         int _previousReleasedKey;
         int _framesSinceKeyReleaseEvent;

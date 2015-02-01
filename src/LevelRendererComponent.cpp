@@ -204,7 +204,7 @@ namespace platformer
         _levelLoadedOnce = true;
 
         float const fadeOutDuration = 1.0f;
-        RequestSplashScreenFadeMessage::setMessage(_splashScreenFadeMessage, fadeOutDuration, false);
+        RequestSplashScreenFadeMessage::setMessage(_splashScreenFadeMessage, fadeOutDuration, false, true);
         this->getRootParent()->broadcastMessage(_splashScreenFadeMessage);
     }
 
@@ -255,7 +255,7 @@ namespace platformer
         if(_splashScreenFadeMessage)
         {
             float const fadeInDuration = 0.0f;
-            RequestSplashScreenFadeMessage::setMessage(_splashScreenFadeMessage, fadeInDuration, true);
+            RequestSplashScreenFadeMessage::setMessage(_splashScreenFadeMessage, fadeInDuration, true, true);
             getRootParent()->broadcastMessage(_splashScreenFadeMessage);
         }
     }

@@ -28,7 +28,7 @@ namespace platformer
     GAMEOBJECTS_MESSAGE_0(PlayerForceHandOfGodReset)
     GAMEOBJECTS_MESSAGE_2(Key, int, event, int, key)
     GAMEOBJECTS_MESSAGE_2(Gamepad, int, event, int, gamepadIndex)
-    GAMEOBJECTS_MESSAGE_2(RequestSplashScreenFade, float, duration, bool, isFadingIn)
+    GAMEOBJECTS_MESSAGE_3(RequestSplashScreenFade, float, duration, bool, isFadingIn, bool, showLogo)
     GAMEOBJECTS_MESSAGE_3(Pinch, int, x, int, y, float, scale)
     GAMEOBJECTS_MESSAGE_4(Touch, int, event, int, x, int, y, int, contactIndex)
     GAMEOBJECTS_MESSAGE_4(Mouse, int, event, int, x, int, y, int, wheelDelta)

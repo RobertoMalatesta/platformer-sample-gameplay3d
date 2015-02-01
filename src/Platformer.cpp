@@ -32,6 +32,7 @@ namespace platformer
         , _splashForegroundSpriteBatch(nullptr)
         , _splashBackgroundSpriteBatch(nullptr)
         , _splashScreenFadeDirection(0.0f)
+        , _splashScreenShowsLogo(true)
 #ifndef WIN32
         , _previousReleasedKey(gameplay::Keyboard::Key::KEY_NONE)
         , _framesSinceKeyReleaseEvent(0)
@@ -300,8 +301,9 @@ namespace platformer
         {
             auto & request = _splashScreenFadeRequests.front();
             _splashScreenFadeRequests.pop();
-            _splashScreenFadeDuration = request.first;
-            _splashScreenFadeDirection = request.second;
+            _splashScreenFadeDuration = std::get<0>(request);
+            _splashScreenFadeDirection = std::get<1>(request);
+            _splashScreenShowsLogo = std::get<2>(request);
             _splashScreenFadeActive = true;
         }
 
@@ -379,7 +381,7 @@ namespace platformer
     {
         if(_splashScreenAlpha > 0.0f)
         {
-            gameplay::Vector4 bgColor = gameplay::Vector4::fromColor(LevelRendererComponent::SKY_COLOR);
+            gameplay::Vector4 bgColor = gameplay::Vector4::fromColor(_splashScreenShowsLogo ? 0xF5F5F5FF : 0x0000FF);
             bgColor.w = _splashScreenAlpha;
 
             _splashBackgroundSpriteBatch->start();
@@ -388,17 +390,20 @@ namespace platformer
                                                bgColor);
             _splashBackgroundSpriteBatch->finish();
 
-            gameplay::Rectangle bounds(_splashForegroundSpriteBatch->getSampler()->getTexture()->getWidth(),
-                                       _splashForegroundSpriteBatch->getSampler()->getTexture()->getHeight());
-            gameplay::Vector2 drawPos;
-            drawPos.x = (getWidth() / 2) - (bounds.width / 2);
-            drawPos.y = (getHeight() / 2) - (bounds.height / 2);
+            if (_splashScreenShowsLogo)
+            {
+                gameplay::Rectangle bounds(_splashForegroundSpriteBatch->getSampler()->getTexture()->getWidth(),
+                    _splashForegroundSpriteBatch->getSampler()->getTexture()->getHeight());
+                gameplay::Vector2 drawPos;
+                drawPos.x = (getWidth() / 2) - (bounds.width / 2);
+                drawPos.y = (getHeight() / 2) - (bounds.height / 2);
 
-            _splashForegroundSpriteBatch->start();
-            _splashForegroundSpriteBatch->draw(gameplay::Rectangle (drawPos.x, drawPos.y, bounds.width, bounds.height),
-                                               gameplay::Rectangle (0, 0, bounds.width, bounds.height),
-                                               gameplay::Vector4(1, 1, 1, _splashScreenAlpha));
-            _splashForegroundSpriteBatch->finish();
+                _splashForegroundSpriteBatch->start();
+                _splashForegroundSpriteBatch->draw(gameplay::Rectangle(drawPos.x, drawPos.y, bounds.width, bounds.height),
+                    gameplay::Rectangle(0, 0, bounds.width, bounds.height),
+                    gameplay::Vector4(1, 1, 1, _splashScreenAlpha));
+                _splashForegroundSpriteBatch->finish();
+            }
 
 #if !defined(_FINAL) && !defined(__ANDROID__)
             if(_splashScreenAlpha == 1.0f && getConfig()->getBool("debug_enable_tools"))
@@ -411,10 +416,10 @@ namespace platformer
         }
     }
 
-    void Platformer::setSplashScreenFade(float duration, bool isFadingIn)
+    void Platformer::setSplashScreenFade(float duration, bool isFadingIn, bool showLogo)
     {
         static const float fadeInDirection = 1.0f;
         static const float fadeOutDirection = -1.0f;
-        _splashScreenFadeRequests.push(std::make_pair(duration, isFadingIn ? fadeInDirection : fadeOutDirection));
+        _splashScreenFadeRequests.push(std::make_tuple(duration, isFadingIn ? fadeInDirection : fadeOutDirection, showLogo));
     }
 }

@@ -22,7 +22,7 @@ namespace platformer
             case (Messages::Type::RequestSplashScreenFade):
             {
                 RequestSplashScreenFadeMessage msg(message);
-                game->setSplashScreenFade(msg._duration, msg._isFadingIn);
+                game->setSplashScreenFade(msg._duration, msg._isFadingIn, msg._showLogo);
             }
             break;
         }
