@@ -141,7 +141,7 @@ namespace platformer
     {
         if(_pinchEnabled)
         {
-            static float const zoomFactor = 100.0f;
+            static float const zoomFactor = -100.0f;
             float const scale = (1.0f - pinchMessage._scale) * zoomFactor;
             _camera->setZoom(calculateCameraZoomStep(scale));
         }
