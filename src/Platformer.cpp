@@ -32,6 +32,7 @@ namespace platformer
         , _splashBackgroundSpriteBatch(nullptr)
         , _splashScreenFadeDirection(0.0f)
         , _splashScreenShowsLogo(true)
+        , _splashScreenUpdatedThisFrame(false)
 #ifndef WIN32
         , _previousReleasedKey(gameplay::Keyboard::Key::KEY_NONE)
         , _framesSinceKeyReleaseEvent(0)
@@ -259,24 +260,12 @@ namespace platformer
         return false;
     }
 
-    void Platformer::update(float elapsedTime)
+    void Platformer::updateSplashScreenFade()
     {
-        // Work-around for receiving false key release events due to auto repeat in x11
-#ifndef WIN32
-        if(_previousReleasedKey != gameplay::Keyboard::Key::KEY_NONE)
+        if(_splashScreenUpdatedThisFrame)
         {
-            ++_framesSinceKeyReleaseEvent;
-
-            if(_framesSinceKeyReleaseEvent > 1)
-            {
-                broadcastKeyEvent(gameplay::Keyboard::KeyEvent::KEY_RELEASE, _previousReleasedKey);
-                _framesSinceKeyReleaseEvent = 0;
-                _previousReleasedKey = gameplay::Keyboard::Key::KEY_NONE;
-            }
+            return;
         }
-#endif
-
-        gameobjects::GameObjectController::getInstance().update(elapsedTime);
 
         if(!_splashScreenFadeActive && !_splashScreenFadeRequests.empty())
         {
@@ -317,6 +306,30 @@ namespace platformer
                 _splashScreenFadeDuration = 0.0f;
             }
         }
+
+        _splashScreenUpdatedThisFrame = true;
+    }
+
+    void Platformer::update(float elapsedTime)
+    {
+        // Work-around for receiving false key release events due to auto repeat in x11
+#ifndef WIN32
+        if(_previousReleasedKey != gameplay::Keyboard::Key::KEY_NONE)
+        {
+            ++_framesSinceKeyReleaseEvent;
+
+            if(_framesSinceKeyReleaseEvent > 1)
+            {
+                broadcastKeyEvent(gameplay::Keyboard::KeyEvent::KEY_RELEASE, _previousReleasedKey);
+                _framesSinceKeyReleaseEvent = 0;
+                _previousReleasedKey = gameplay::Keyboard::Key::KEY_NONE;
+            }
+        }
+#endif
+
+        gameobjects::GameObjectController::getInstance().update(elapsedTime);
+        updateSplashScreenFade();
+        _splashScreenUpdatedThisFrame = false;
     }
 
     void Platformer::render(float elapsedTime)
@@ -413,5 +426,7 @@ namespace platformer
         static const float fadeInDirection = 1.0f;
         static const float fadeOutDirection = -1.0f;
         _splashScreenFadeRequests.push(std::make_tuple(duration, isFadingIn ? fadeInDirection : fadeOutDirection, showLogo));
+        updateSplashScreenFade();
+        renderOnce(this, &Platformer::renderSplashScreen, nullptr);
     }
 }

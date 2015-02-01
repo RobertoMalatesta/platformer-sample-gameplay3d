@@ -37,6 +37,7 @@ namespace platformer
         void broadcastKeyEvent(gameplay::Keyboard::KeyEvent evt, int key);
         void renderSplashScreen(void * = nullptr);
         void setSplashScreenFade(float duration, bool isFadingIn, bool showLogo);
+        void updateSplashScreenFade();
 
 #ifndef _FINAL
         gameplay::Font * _debugFont;
@@ -55,6 +56,7 @@ namespace platformer
         float _splashScreenFadeDirection;
         bool _splashScreenFadeActive;
         bool _splashScreenShowsLogo;
+        bool _splashScreenUpdatedThisFrame;
 #ifndef WIN32
         int _previousReleasedKey;
         int _framesSinceKeyReleaseEvent;
