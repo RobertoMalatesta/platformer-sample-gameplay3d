@@ -6,23 +6,23 @@ theme gamepad
     {
         image outer
         {
-            region = 0, 0, 256, 256
+            region = 0, 0, 512, 512
         }
 
         image inner
         {
-            region = 256, 0, 256, 256
+            region = 512, 0, 512, 512
         }
     }
 
     skin jumpButtonPressedSkin
     {
-        region = 256, 256, 256, 256
+        region = 512, 512, 512, 512
     }
 
     skin jumpButtonNormalSkin
     {
-        region = 0, 256, 256, 256
+        region = 0, 512, 512, 512
     }
 
     style joystickStyle
