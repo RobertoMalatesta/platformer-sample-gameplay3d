@@ -350,7 +350,8 @@ namespace platformer
     {
         _state = State::Idle;
         gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
-        character->resetVelocityState();
         _characterNode->setTranslation(gameplay::Vector3(position.x, position.y, 0));
+        character->resetVelocityState();
+        character->setPhysicsEnabled(true);
     }
 }
