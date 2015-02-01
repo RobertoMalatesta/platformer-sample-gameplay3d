@@ -25,7 +25,6 @@ namespace platformer
         , _pinchMessage(nullptr)
         , _touchMessage(nullptr)
         , _mouseMessage(nullptr)
-        , _gamepadMessage(nullptr)
         , _splashScreenAlpha(1.0f)
         , _splashScreenFadeDuration(0.0f)
         , _splashScreenFadeActive(false)
@@ -129,7 +128,6 @@ namespace platformer
         _keyMessage = KeyMessage::create();
         _touchMessage = TouchMessage::create();
         _mouseMessage = MouseMessage::create();
-        _gamepadMessage = GamepadMessage::create();
 
         setMultiTouch(true);
 
@@ -163,7 +161,6 @@ namespace platformer
         GAMEOBJECTS_DELETE_MESSAGE(_keyMessage);
         GAMEOBJECTS_DELETE_MESSAGE(_touchMessage);
         GAMEOBJECTS_DELETE_MESSAGE(_mouseMessage);
-        GAMEOBJECTS_DELETE_MESSAGE(_gamepadMessage);
         SAFE_RELEASE(_debugFont);
         SAFE_DELETE(_splashBackgroundSpriteBatch);
         SAFE_DELETE(_splashForegroundSpriteBatch);
@@ -203,7 +200,7 @@ namespace platformer
 
     void Platformer::gesturePinchEvent(int x, int y, float scale)
     {
-        if(_pinchMessage)
+        if(_pinchMessage && _splashScreenAlpha == 0.0f)
         {
             PinchMessage::setMessage(_pinchMessage, x, y, scale);
             gameobjects::GameObjectController::getInstance().broadcastGameObjectMessage(_pinchMessage);
@@ -212,7 +209,7 @@ namespace platformer
 
     void Platformer::keyEvent(gameplay::Keyboard::KeyEvent evt, int key)
     {
-        if (_keyMessage)
+        if (_keyMessage && _splashScreenAlpha == 0.0f)
         {
 #ifndef WIN32
             if(evt != gameplay::Keyboard::KeyEvent::KEY_RELEASE)
@@ -244,7 +241,7 @@ namespace platformer
 
     void Platformer::touchEvent(gameplay::Touch::TouchEvent evt, int x, int y, unsigned int contactIndex)
     {
-        if (_touchMessage)
+        if (_touchMessage && _splashScreenAlpha == 0.0f)
         {
             TouchMessage::setMessage(_touchMessage, evt, x, y, contactIndex);
             gameobjects::GameObjectController::getInstance().broadcastGameObjectMessage(_touchMessage);
@@ -253,29 +250,13 @@ namespace platformer
 
     bool Platformer::mouseEvent(gameplay::Mouse::MouseEvent evt, int x, int y, int wheelDelta)
     {
-        if (_mouseMessage)
+        if (_mouseMessage && _splashScreenAlpha == 0.0f)
         {
             MouseMessage::setMessage(_mouseMessage, evt, x, y, wheelDelta);
             gameobjects::GameObjectController::getInstance().broadcastGameObjectMessage(_mouseMessage);
         }
         
         return false;
-    }
-
-    void Platformer::gamepadEvent(gameplay::Gamepad::GamepadEvent evt, gameplay::Gamepad * gamepad)
-    {
-        if(_gamepadMessage)
-        {
-            for(int i = 0; i < PLATFORMER_MAX_GAMEPADS; ++i)
-            {
-                if(gamepad == getGamepad(i))
-                {
-                    GamepadMessage::setMessage(_gamepadMessage, evt, i);
-                    gameobjects::GameObjectController::getInstance().broadcastGameObjectMessage(_gamepadMessage);
-                    break;
-                }
-            }
-        }
     }
 
     void Platformer::update(float elapsedTime)
@@ -343,6 +324,17 @@ namespace platformer
         clear(gameplay::Game::CLEAR_COLOR_DEPTH, gameplay::Vector4::zero(), 1.0f, 0);
         gameobjects::GameObjectController::getInstance().render(elapsedTime);
         renderSplashScreen();
+
+        if (_splashScreenAlpha <= 0.0f)
+        {
+            if (gameplay::Gamepad * gamepad = getGamepad(0))
+            {
+                if (gameplay::Form * gamepadForm = gamepad->getForm())
+                {
+                    gamepadForm->draw();
+                }
+            }
+        }
 
 #ifndef _FINAL
         gameobjects::GameObjectController::getInstance().renderDebug(elapsedTime, _debugFont);

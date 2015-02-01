@@ -24,7 +24,6 @@ namespace platformer
     public:
         explicit PlayerInputComponent();
         ~PlayerInputComponent();
-        gameplay::Form * getGamepadForm() const;
     protected:
         virtual void initialize() override;
         virtual void finalize() override;

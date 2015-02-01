@@ -27,7 +27,6 @@ namespace platformer
         virtual void keyEvent(gameplay::Keyboard::KeyEvent evt, int key) override;
         virtual void touchEvent(gameplay::Touch::TouchEvent evt, int x, int y, unsigned int contactIndex) override;
         virtual bool mouseEvent(gameplay::Mouse::MouseEvent evt, int x, int y, int wheelDelta) override;
-        virtual void gamepadEvent(gameplay::Gamepad::GamepadEvent evt, gameplay::Gamepad * gamepad) override;
         virtual void update(float elapsedTime) override;
         virtual void render(float elapsedTime) override;
 
@@ -46,7 +45,6 @@ namespace platformer
         gameplay::AIMessage * _keyMessage;
         gameplay::AIMessage * _touchMessage;
         gameplay::AIMessage * _mouseMessage;
-        gameplay::AIMessage * _gamepadMessage;
         gameplay::SpriteBatch * _splashForegroundSpriteBatch;
         gameplay::SpriteBatch * _splashBackgroundSpriteBatch;
         std::vector<gameplay::Texture *> _cachedTextures;

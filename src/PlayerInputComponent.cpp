@@ -107,11 +107,6 @@ namespace platformer
         return !_gamepadButtonState[button] && _previousGamepadButtonState[button];
     }
 
-    gameplay::Form * PlayerInputComponent::getGamepadForm() const
-    {
-        return _gamePad ? _gamePad->getForm() : nullptr;
-    }
-
     void PlayerInputComponent::onMessageReceived(gameobjects::GameObjectMessage message, int messageType)
     {
         switch (messageType)

@@ -628,11 +628,6 @@ namespace platformer
             renderCollectables(projection, viewport);
             renderCharacters(projection, viewport);
             renderWater(projection, viewport);
-
-            if(gameplay::Form * gamepadForm = _playerInput->getGamepadForm())
-            {
-                gamepadForm->draw();
-            }
         }
 
 
