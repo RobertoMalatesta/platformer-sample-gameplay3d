@@ -81,7 +81,7 @@ namespace platformer
         _cameraControl = getRootParent()->getComponentInChildren<CameraControlComponent>();
         _cameraControl->addRef();
         _cameraControl->setBoundary(gameplay::Rectangle(_level->getTileWidth() * 2.0f * PLATFORMER_UNIT_SCALAR, 0,
-            (_level->getTileWidth() * _level->getWidth() - (_level->getTileWidth() * 4.0f))  * PLATFORMER_UNIT_SCALAR,
+            (_level->getTileWidth() * _level->getWidth() - (_level->getTileWidth() * 2.0f))  * PLATFORMER_UNIT_SCALAR,
             std::numeric_limits<float>::max()));
 
         _player->forEachAnimation([this, &uninitialisedSpriteBatches](PlayerComponent::State::Enum state, SpriteAnimationComponent * animation) -> bool
