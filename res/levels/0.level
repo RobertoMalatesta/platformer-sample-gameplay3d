@@ -4292,7 +4292,7 @@ layers
         {
             objects_0
             {
-                height = 544.58299999999997
+                height = 543.91633333333402
                 id = 55
                 name = 
 
@@ -4303,8 +4303,8 @@ layers
                 rotation = 0
                 type = 
                 visible = true
-                width = 2.51206
-                x = 1631
+                width = 19.845393333333298
+                x = 1621
                 y = 704
             }
         }
