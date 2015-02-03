@@ -51,7 +51,7 @@ namespace platformer
                 float const fadeInDuration = 0.0f;
                 RequestSplashScreenFadeMessage::setMessage(_splashScreenFadeMessage, fadeInDuration, true, false);
                 getRootParent()->broadcastMessage(_splashScreenFadeMessage);
-                float const fadeOutDuration = 1.0f;
+                float const fadeOutDuration = 1.15f;
                 RequestSplashScreenFadeMessage::setMessage(_splashScreenFadeMessage, fadeOutDuration, false, false);
                 getRootParent()->broadcastMessage(_splashScreenFadeMessage);
                 _player->reset(_resetPosition);

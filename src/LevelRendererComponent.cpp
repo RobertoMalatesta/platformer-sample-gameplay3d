@@ -203,7 +203,7 @@ namespace platformer
         _levelLoaded = true;
         _levelLoadedOnce = true;
 
-        float const fadeOutDuration = 1.0f;
+        float const fadeOutDuration = 1.5f;
         RequestSplashScreenFadeMessage::setMessage(_splashScreenFadeMessage, fadeOutDuration, false, true);
         this->getRootParent()->broadcastMessage(_splashScreenFadeMessage);
     }
