@@ -324,7 +324,7 @@ namespace platformer
 
         if(_splashScreenFadeActive)
         {
-            static float const minPlayableDt = 1.0 / 15.0f;
+            static float const minPlayableDt = 1.0f / 15.0f;
 
             if(_splashScreenFadeTimer > 0.0f)
             {
