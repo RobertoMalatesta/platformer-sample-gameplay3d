@@ -107,6 +107,7 @@ namespace platformer
                 {
                     std::string const propertyPath = std::string(dir) + std::string("/") + propertyUrl;
                     PropertiesRef * propertiesRef = createProperties(propertyPath.c_str());
+                    propertiesRef->addRef();
                     _cachedProperties.push_back(propertiesRef);
 
                     bool const usesTopLevelNamespaceUrls = propertyDirNamespace->getBool();
@@ -117,7 +118,9 @@ namespace platformer
 
                         while(gameplay::Properties * topLevelChildNS = properties->getNextNamespace())
                         {
-                            _cachedProperties.push_back(createProperties(std::string(propertyPath + std::string("#") + topLevelChildNS->getId()).c_str()));
+                            PropertiesRef * childPropertiesRef = createProperties(std::string(propertyPath + std::string("#") + topLevelChildNS->getId()).c_str());
+                            childPropertiesRef->addRef();
+                            _cachedProperties.push_back(childPropertiesRef);
                         }
                     }
                 }
