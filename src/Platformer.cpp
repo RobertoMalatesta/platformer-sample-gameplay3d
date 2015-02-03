@@ -108,8 +108,6 @@ namespace platformer
                 {
                     std::string const propertyPath = std::string(dir) + std::string("/") + propertyUrl;
                     PropertiesRef * propertiesRef = createProperties(propertyPath.c_str());
-                    propertiesRef->addRef();
-                    _cachedProperties.push_back(propertiesRef);
 
                     bool const usesTopLevelNamespaceUrls = propertyDirNamespace->getBool();
 
@@ -123,6 +121,13 @@ namespace platformer
                             childPropertiesRef->addRef();
                             _cachedProperties.push_back(childPropertiesRef);
                         }
+
+                        SAFE_RELEASE(propertiesRef);
+                    }
+                    else
+                    {
+                        propertiesRef->addRef();
+                        _cachedProperties.push_back(propertiesRef);
                     }
                 }
             }
