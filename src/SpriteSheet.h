@@ -36,12 +36,6 @@ namespace platformer
         std::string const & getName() const;
         void forEachSprite(std::function<void(Sprite const &)> func);
     private:
-        struct SpriteFactory
-        {
-            static SpriteFactory & getInstance();
-            std::map<std::string, SpriteSheet *> _sprites;
-        };
-
         explicit SpriteSheet();
         SpriteSheet(SpriteSheet const &);
 
@@ -51,6 +45,7 @@ namespace platformer
         gameplay::Texture * _texture;
         std::string _name;
         std::map<std::string, Sprite> _sprites;
+        static std::map<std::string, SpriteSheet *> & getCache();
     };
 }
 

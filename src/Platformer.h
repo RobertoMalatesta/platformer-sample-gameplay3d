@@ -5,6 +5,7 @@
 
 namespace platformer
 {
+    class PropertiesRef;
     class SpriteSheet;
 
     /**
@@ -49,6 +50,7 @@ namespace platformer
         gameplay::SpriteBatch * _splashForegroundSpriteBatch;
         gameplay::SpriteBatch * _splashBackgroundSpriteBatch;
         std::vector<gameplay::Texture *> _cachedTextures;
+        std::vector<PropertiesRef *> _cachedProperties;
         std::vector<SpriteSheet *> _cachedSpriteSheets;
         std::queue<std::tuple<float,float,bool>> _splashScreenFadeRequests;
         float _splashScreenAlpha;

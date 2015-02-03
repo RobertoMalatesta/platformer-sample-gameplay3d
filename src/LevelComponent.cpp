@@ -127,6 +127,8 @@ namespace platformer
                     }
                 }
             }
+
+            dataNamespace->rewind();
         }
     }
 
@@ -163,6 +165,8 @@ namespace platformer
                     _children.push_back(gameObject);
                 }
             }
+
+            objectsNamespace->rewind();
         }
     }
 
@@ -270,7 +274,8 @@ namespace platformer
                 break;
             }
 
-            gameplay::Properties * collisionProperties = createProperties((std::string("res/physics/level.physics#") + collisionId).c_str());
+            PropertiesRef * collisionPropertiesRef = createProperties((std::string("res/physics/level.physics#") + collisionId).c_str());
+            gameplay::Properties * collisionProperties = collisionPropertiesRef->get();
 
             while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
             {
@@ -297,7 +302,8 @@ namespace platformer
                 createCollisionObject(collisionType, collisionProperties, bounds, rotationZ);
             }
 
-            SAFE_DELETE(collisionProperties);
+            objectsNamespace->rewind();
+            SAFE_RELEASE(collisionPropertiesRef);
         }
     }
 
@@ -310,7 +316,8 @@ namespace platformer
                 bool const isBoulder = objectNamespace->exists("ellipse");
                 std::string collisionId = isBoulder ? "boulder" : "crate";
 
-                gameplay::Properties * collisionProperties = createProperties((std::string("res/physics/level.physics#") + collisionId).c_str());
+                PropertiesRef * collisionPropertiesRef = createProperties((std::string("res/physics/level.physics#") + collisionId).c_str());
+                gameplay::Properties * collisionProperties = collisionPropertiesRef->get();
                 gameplay::Rectangle bounds = getObjectBounds(objectNamespace);
                 std::array<char, 255> dimensionsBuffer;
                 std::string dimensionsId = "extents";
@@ -329,8 +336,10 @@ namespace platformer
 
                 collisionProperties->setString(dimensionsId.c_str(), &dimensionsBuffer[0]);
                 createCollisionObject(CollisionType::COLLISION_DYNAMIC, collisionProperties, bounds);
-                SAFE_DELETE(collisionProperties);
+                SAFE_RELEASE(collisionPropertiesRef);
             }
+
+            objectsNamespace->rewind();
         }
     }
 
@@ -339,7 +348,8 @@ namespace platformer
         if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
         {
             SpriteSheet * spriteSheet = SpriteSheet::create("res/spritesheets/collectables.ss");
-            gameplay::Properties * collisionProperties = createProperties("res/physics/level.physics#collectable");
+            PropertiesRef * collisionPropertiesRef = createProperties("res/physics/level.physics#collectable");
+            gameplay::Properties * collisionProperties = collisionPropertiesRef->get();
             std::vector<Sprite> sprites;
 
             spriteSheet->forEachSprite([&sprites](Sprite const & sprite)
@@ -395,8 +405,9 @@ namespace platformer
                 }
             }
 
+            objectsNamespace->rewind();
             sprites.clear();
-            SAFE_DELETE(collisionProperties);
+            SAFE_RELEASE(collisionPropertiesRef);
             SAFE_RELEASE(spriteSheet);
         }
     }
@@ -405,7 +416,8 @@ namespace platformer
     {
         if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
         {
-            gameplay::Properties * collisionProperties = createProperties("res/physics/level.physics#bridge");
+            PropertiesRef * collisionPropertiesRef = createProperties("res/physics/level.physics#bridge");
+            gameplay::Properties * collisionProperties = collisionPropertiesRef->get();
 
             while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
             {
@@ -467,13 +479,16 @@ namespace platformer
                 }
             }
 
-            SAFE_DELETE(collisionProperties);
+            objectsNamespace->rewind();
+
+            SAFE_RELEASE(collisionPropertiesRef);
         }
     }
 
     void LevelComponent::load()
     {
-        gameplay::Properties * root = createProperties(_level.c_str());
+        PropertiesRef * rootRef = createProperties(_level.c_str());
+        gameplay::Properties * root = rootRef->get();
 
         if (gameplay::Properties * propertiesNamespace = root->getNamespace("properties", true, false))
         {
@@ -550,11 +565,13 @@ namespace platformer
                         loadCollectables(layerNamespace);
                 }
             }
+
+            layersNamespace->rewind();
         }
 
         placeEnemies();
-
-        SAFE_DELETE(root);
+        root->rewind();
+        SAFE_RELEASE(rootRef);
     }
 
     void LevelComponent::placeEnemies()

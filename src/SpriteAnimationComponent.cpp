@@ -112,6 +112,8 @@ namespace platformer
                 }
             }
 
+            properties.rewind();
+
             PLATFORMER_ASSERT(!_spriteNames.empty(), "No sprites were specified");
         }
     }

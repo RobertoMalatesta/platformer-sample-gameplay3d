@@ -8,9 +8,11 @@ namespace platformer
     {
         SpriteSheet * spriteSheet = nullptr;
         
-        auto itr = SpriteFactory::getInstance()._sprites.find(spriteSheetPath);
+        auto & cache = getCache();
 
-        if (itr != SpriteFactory::getInstance()._sprites.end())
+        auto itr = cache.find(spriteSheetPath);
+
+        if (itr != cache.end())
         {
             itr->second->addRef();
             spriteSheet = itr->second;
@@ -19,7 +21,7 @@ namespace platformer
         {
             spriteSheet = new SpriteSheet();
             spriteSheet->initialize(spriteSheetPath);
-            SpriteFactory::getInstance()._sprites[spriteSheetPath] = spriteSheet;
+            cache[spriteSheetPath] = spriteSheet;
         }
 
         return spriteSheet;
@@ -37,7 +39,8 @@ namespace platformer
 
     void SpriteSheet::initialize(std::string const & filePath)
     {
-        gameplay::Properties * properties = createProperties(filePath.c_str());
+        PropertiesRef * propertyRef = createProperties(filePath.c_str());
+        gameplay::Properties * properties = propertyRef->get();
 
         PLATFORMER_ASSERT(properties, "Failed to load sprite sheet %s", filePath.c_str());
 
@@ -80,7 +83,7 @@ namespace platformer
             }
         }
 
-        SAFE_DELETE(properties);
+        SAFE_RELEASE(propertyRef);
     }
 
     Sprite * SpriteSheet::getSprite(std::string const & spriteName)
@@ -104,10 +107,10 @@ namespace platformer
         return _name;
     }
 
-    SpriteSheet::SpriteFactory & SpriteSheet::SpriteFactory::getInstance()
+    std::map<std::string, SpriteSheet *> & SpriteSheet::getCache()
     {
-        static SpriteFactory instance;
-        return instance;
+        static std::map<std::string, SpriteSheet *> cache;
+        return cache;
     }
 
     void SpriteSheet::forEachSprite(std::function<void(Sprite const &)> func)

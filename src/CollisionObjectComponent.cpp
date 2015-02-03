@@ -16,7 +16,8 @@ namespace platformer
 
     void CollisionObjectComponent::initialize()
     {
-        gameplay::Properties * physicsProperties = createProperties(_physics.c_str());
+        PropertiesRef * physicsPropertiesRef = createProperties(_physics.c_str());
+        gameplay::Properties * physicsProperties = physicsPropertiesRef->get();
         _node = gameplay::Node::create(getId().c_str());
         _node->setCollisionObject(_physics.c_str());
 
@@ -28,7 +29,7 @@ namespace platformer
         }
 
         getParent()->getNode()->addChild(_node);
-        SAFE_DELETE(physicsProperties);
+        SAFE_RELEASE(physicsPropertiesRef);
     }
 
     void CollisionObjectComponent::finalize()

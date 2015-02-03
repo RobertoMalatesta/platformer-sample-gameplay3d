@@ -96,9 +96,37 @@ namespace platformer
             _cachedTextures.push_back(texture);
         }
 
+        if(gameplay::Properties * propertyDirNamespace = getConfig()->getNamespace("properties_directories", true))
+        {
+            while(char const * dir = propertyDirNamespace->getNextProperty())
+            {
+                fileList.clear();
+                gameplay::FileSystem::listFiles(dir, fileList);
+
+                for(std::string & propertyUrl : fileList)
+                {
+                    std::string const propertyPath = std::string(dir) + std::string("/") + propertyUrl;
+                    PropertiesRef * propertiesRef = createProperties(propertyPath.c_str());
+                    _cachedProperties.push_back(propertiesRef);
+
+                    bool const usesTopLevelNamespaceUrls = propertyDirNamespace->getBool();
+
+                    if(usesTopLevelNamespaceUrls)
+                    {
+                        gameplay::Properties * properties = propertiesRef->get();
+
+                        while(gameplay::Properties * topLevelChildNS = properties->getNextNamespace())
+                        {
+                            _cachedProperties.push_back(createProperties(std::string(propertyPath + std::string("#") + topLevelChildNS->getId()).c_str()));
+                        }
+                    }
+                }
+            }
+        }
+
         fileList.clear();
         std::string const spriteSheetDirectory = "res/spritesheets";
-        gameplay::FileSystem::listFiles(gameplay::FileSystem::resolvePath(spriteSheetDirectory.c_str()), fileList);
+        gameplay::FileSystem::listFiles(spriteSheetDirectory.c_str(), fileList);
 
         for (std::string & fileName : fileList)
         {
@@ -167,6 +195,13 @@ namespace platformer
         SAFE_DELETE(_splashForegroundSpriteBatch);
 
         int const unusedCachedAssetRefCount = 2;
+
+
+        for (PropertiesRef * properties : _cachedProperties)
+        {
+            PLATFORMER_ASSERT(properties->getRefCount() == unusedCachedAssetRefCount, "Unreleased properties found");
+            PLATFORMER_FORCE_RELEASE(properties);
+        }
 
         for (SpriteSheet * spriteSheet : _cachedSpriteSheets)
         {

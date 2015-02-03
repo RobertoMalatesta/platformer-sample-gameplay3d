@@ -2,10 +2,48 @@
 
 namespace platformer
 {
-    gameplay::Properties * createProperties(const char * url)
+    PropertiesRef::PropertiesRef(gameplay::Properties * properties)
+        : _properties(properties)
     {
-        PLATFORMER_LOG("Loading properties '%s'", url);
-        return gameplay::Properties::create(url);
+    }
+
+    PropertiesRef::~PropertiesRef()
+    {
+        SAFE_DELETE(_properties);
+    }
+
+    gameplay::Properties * PropertiesRef::get()
+    {
+        return _properties;
+    }
+
+    PropertiesRef * createProperties(const char * url)
+    {
+        PropertiesRef * result = nullptr;
+        static std::map<std::string, PropertiesRef *> cache;
+
+        auto itr = cache.find(url);
+        if(itr == cache.end())
+        {
+            PLATFORMER_LOG("Loading properties '%s'", url);
+            result = new PropertiesRef(gameplay::Properties::create(url));
+
+            if(result)
+            {
+                cache[url] = result;
+            }
+            else
+            {
+                PLATFORMER_ASSERTFAIL("Failed to load proerties %s", url);
+            }
+        }
+        else
+        {
+            result = itr->second;
+            result->addRef();
+        }
+
+        return result;
     }
 
     gameplay::SpriteBatch * createSinglePixelSpritebatch()
@@ -128,7 +166,7 @@ namespace platformer
 #else
         if (level != gameplay::Logger::Level::LEVEL_INFO)
         {
-            // <Insert User facing crash notfication/log upload to a server>
+            // <Insert User LoadingScreenControllering crash notfication/log upload to a server>
         }
 #endif
     }

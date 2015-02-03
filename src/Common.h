@@ -35,15 +35,20 @@ namespace platformer
     */
     gameplay::SpriteBatch * createSinglePixelSpritebatch();
 
+    class PropertiesRef : public gameplay::Ref
+    {
+    public:
+        PropertiesRef(gameplay::Properties * properties);
+        virtual ~PropertiesRef();
+        gameplay::Properties * get();
+    private:
+        gameplay::Properties * _properties;
+    };
+
     /**
-     * Calls gameplay::Properties::create() and also logs the file url.
-     *
-     * Gameplay doesn't provide the file name when loading a properties files
-     * fails due to invalid formatting.
-     *
      * @script{ignore}
     */
-    gameplay::Properties * createProperties(const char * url);
+    PropertiesRef * createProperties(const char * url);
 
     /** @script{ignore} */
     void loggingCallback(gameplay::Logger::Level level, char const * msg);
@@ -54,7 +59,6 @@ namespace platformer
      * @script{ignore}
     */
     void forceReleaseRef(gameplay::Ref * ref);
-
 #ifndef _FINAL
     #define PLATFORMER_ON_SCREEN_LOG_HISTORY_CAPACITY 25
 
