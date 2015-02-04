@@ -48,7 +48,7 @@ LOCAL_SRC_FILES :=  ../external/GamePlay/gameplay/src/gameplay-main-android.cpp 
 LOCAL_CPPFLAGS += -std=c++11 -Wno-switch-enum -Wno-switch
 LOCAL_ARM_MODE := arm
 LOCAL_LDLIBS    := -llog -landroid -lEGL -lGLESv2 -lOpenSLES
-LOCAL_CFLAGS    := -D__ANDROID__ -I"../external/GamePlay/external-deps/include" -I"../external/GamePlay/gameplay/src" -I"../external/gameobjects-gameplay3d/src"
+LOCAL_CFLAGS    := -D__ANDROID__ -DNO_LUA_BINDINGS -I"../external/GamePlay/external-deps/include" -I"../external/GamePlay/gameplay/src" -I"../external/gameobjects-gameplay3d/src"
 
 LOCAL_STATIC_LIBRARIES := android_native_app_glue libgameplay libgameobjects libpng libz liblua libBulletDynamics libBulletCollision libvorbis libOpenAL
 
