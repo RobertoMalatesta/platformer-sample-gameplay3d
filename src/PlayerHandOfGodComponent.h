@@ -23,7 +23,7 @@ namespace platformer
         virtual void initialize() override;
         virtual void finalize() override;
         virtual void onStart() override;
-        virtual void onMessageReceived(gameobjects::GameObjectMessage message, int messageType) override;
+        virtual void onMessageReceived(gameobjects::Message * message, int messageType) override;
     private:
         gameplay::Vector2 _resetPosition;
         gameplay::Rectangle _boundary;
@@ -31,7 +31,7 @@ namespace platformer
         CameraControlComponent * _camera;
         bool _levelLoaded;
         bool _forceNextReset;
-        gameplay::AIMessage * _splashScreenFadeMessage;
+        gameobjects::Message * _splashScreenFadeMessage;
     };
 }
 

@@ -1,6 +1,7 @@
 #include "SpriteSheet.h"
 
 #include "Common.h"
+#include "Texture.h"
 
 namespace platformer
 {

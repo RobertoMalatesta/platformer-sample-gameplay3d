@@ -1,5 +1,6 @@
 #include "PlayerAudioComponent.h"
 
+#include "AudioSource.h"
 #include "Common.h"
 #include "GameObjectController.h"
 #include "Messages.h"
@@ -54,7 +55,7 @@ namespace platformer
         _audioNodes[audioSourcePath] = node;
     }
 
-    void PlayerAudioComponent::onMessageReceived(gameobjects::GameObjectMessage message, int messageType)
+    void PlayerAudioComponent::onMessageReceived(gameobjects::Message * message, int messageType)
     {
         switch (messageType)
         {

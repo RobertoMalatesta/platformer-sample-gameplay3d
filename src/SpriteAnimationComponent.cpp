@@ -1,6 +1,7 @@
 #include "SpriteAnimationComponent.h"
 
 #include "Common.h"
+#include "FileSystem.h"
 
 namespace platformer
 {

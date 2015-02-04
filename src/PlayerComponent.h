@@ -111,7 +111,7 @@ namespace platformer
         std::string _climbingCharacterComponentId;
         std::string _swimmingCharacterComponentId;
 
-        gameplay::AIMessage * _jumpMessage;
+        gameobjects::Message * _jumpMessage;
         CameraControlComponent * _camera;
     };
 }

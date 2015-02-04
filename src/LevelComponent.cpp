@@ -22,7 +22,7 @@ namespace platformer
     {
     }
 
-    void LevelComponent::onMessageReceived(gameobjects::GameObjectMessage message, int messageType)
+    void LevelComponent::onMessageReceived(gameobjects::Message * message, int messageType)
     {
 #ifndef _FINAL
         // Reload on F5 pressed so we can iterate upon it at runtime

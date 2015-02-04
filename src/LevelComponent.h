@@ -32,7 +32,7 @@ namespace platformer
 
         virtual void initialize() override;
         virtual void finalize() override;
-        virtual void onMessageReceived(gameobjects::GameObjectMessage message, int messageType) override;
+        virtual void onMessageReceived(gameobjects::Message * message, int messageType) override;
         virtual void readProperties(gameplay::Properties & properties) override;
         virtual void update(float) override;
 
@@ -88,9 +88,9 @@ namespace platformer
         bool _loadBroadcasted;
         gameplay::Vector2 _playerSpawnPosition;
         std::vector<std::vector<Tile>> _grid;
-        gameplay::AIMessage * _loadedMessage;
-        gameplay::AIMessage * _unloadedMessage;
-        gameplay::AIMessage * _preUnloadedMessage;
+        gameobjects::Message * _loadedMessage;
+        gameobjects::Message * _unloadedMessage;
+        gameobjects::Message * _preUnloadedMessage;
         std::vector<gameobjects::GameObject*> _children;
         std::map <CollisionType::Enum, std::vector<gameplay::Node*>> _collisionNodes;
         std::map<gameplay::Node *, Collectable> _collectables;

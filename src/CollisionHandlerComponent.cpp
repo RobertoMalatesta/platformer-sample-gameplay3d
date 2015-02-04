@@ -5,6 +5,7 @@
 #include "LevelComponent.h"
 #include "PlayerComponent.h"
 #include "Messages.h"
+#include "PhysicsCharacter.h"
 #include "PlatformerCollision.h"
 
 namespace platformer
@@ -24,7 +25,7 @@ namespace platformer
     {
     }
 
-    void CollisionHandlerComponent::onMessageReceived(gameobjects::GameObjectMessage message, int messageType)
+    void CollisionHandlerComponent::onMessageReceived(gameobjects::Message * message, int messageType)
     {
         switch (messageType)
         {

@@ -1,7 +1,15 @@
 #ifndef PLATFORMER_H
 #define PLATFORMER_H
 
-#include "gameplay.h"
+#include "Game.h"
+#include "GameObjectMessage.h"
+
+namespace gameplay
+{
+    class Font;
+    class SpriteBatch;
+    class Texture;
+}
 
 namespace platformer
 {
@@ -43,10 +51,10 @@ namespace platformer
 #ifndef _FINAL
         gameplay::Font * _debugFont;
 #endif
-        gameplay::AIMessage * _pinchMessage;
-        gameplay::AIMessage * _keyMessage;
-        gameplay::AIMessage * _touchMessage;
-        gameplay::AIMessage * _mouseMessage;
+        gameobjects::Message * _pinchMessage;
+        gameobjects::Message * _keyMessage;
+        gameobjects::Message * _touchMessage;
+        gameobjects::Message * _mouseMessage;
         gameplay::SpriteBatch * _splashForegroundSpriteBatch;
         gameplay::SpriteBatch * _splashBackgroundSpriteBatch;
         std::vector<gameplay::Texture *> _cachedTextures;

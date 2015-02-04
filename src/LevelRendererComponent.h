@@ -33,7 +33,7 @@ namespace platformer
 #ifndef _FINAL
         virtual void renderDebug(float, gameplay::Font * font);
 #endif
-        virtual void onMessageReceived(gameobjects::GameObjectMessage message, int messageType) override;
+        virtual void onMessageReceived(gameobjects::Message * message, int messageType) override;
         virtual void readProperties(gameplay::Properties & properties) override;
     private:
         class CharacterRenderer
@@ -76,7 +76,7 @@ namespace platformer
         LevelComponent * _level;
         std::map<int, gameplay::SpriteBatch *> _playerAnimationBatches;
         std::map<EnemyComponent *, std::map<int, gameplay::SpriteBatch *>> _enemyAnimationBatches;
-        gameplay::AIMessage * _splashScreenFadeMessage;
+        gameobjects::Message * _splashScreenFadeMessage;
         gameplay::SpriteBatch * _tileBatch;
         CameraControlComponent * _cameraControl;
         CharacterRenderer _characterRenderer;

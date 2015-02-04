@@ -1,7 +1,16 @@
 #ifndef PLATFORMER_SPRITESHEET_H
 #define PLATFORMER_SPRITESHEET_H
 
-#include "gameplay.h"
+#include <functional>
+#include <map>
+#include "Rectangle.h"
+#include "Ref.h"
+#include <string>
+
+namespace gameplay
+{
+    class Texture;
+}
 
 namespace platformer
 {

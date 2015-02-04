@@ -107,7 +107,7 @@ namespace platformer
         return !_gamepadButtonState[button] && _previousGamepadButtonState[button];
     }
 
-    void PlayerInputComponent::onMessageReceived(gameobjects::GameObjectMessage message, int messageType)
+    void PlayerInputComponent::onMessageReceived(gameobjects::Message * message, int messageType)
     {
         switch (messageType)
         {

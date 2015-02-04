@@ -2,7 +2,16 @@
 #define PLATFORMER_COMMON_H
 
 #include <array>
-#include "gameplay.h"
+#include "Base.h"
+#include "Game.h"
+#include "Logger.h"
+#include "Ref.h"
+
+namespace gameplay
+{
+    class Properties;
+    class SpriteBatch;
+}
 
 namespace platformer
 {

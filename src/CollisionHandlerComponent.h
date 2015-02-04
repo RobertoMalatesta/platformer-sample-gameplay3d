@@ -26,7 +26,7 @@ namespace platformer
         explicit CollisionHandlerComponent();
         ~CollisionHandlerComponent();
 
-        virtual void onMessageReceived(gameobjects::GameObjectMessage message, int messageType) override;
+        virtual void onMessageReceived(gameobjects::Message * message, int messageType) override;
         virtual void update(float elapsedTime) override;
         virtual void initialize() override;
         virtual void finalize() override;
@@ -58,7 +58,7 @@ namespace platformer
         PlayerComponent * _player;
         LevelComponent * _level;
         std::set<gameplay::Node *> _playerCharacterNodes;
-        gameplay::AIMessage * _forceHandOfGodMessage;
+        gameobjects::Message * _forceHandOfGodMessage;
         int _playerClimbingTerrainRefCount;
         int _playerSwimmingRefCount;
         int _framesSinceLevelReloaded;
