@@ -68,10 +68,6 @@ namespace platformer
 
     #ifdef WIN32
         getConfig()->setString("debug_os", "windows");
-    #elif defined(__ANDROID__)
-        getConfig()->setString("debug_os", "android");
-        getConfig()->setString("debug_enable_tools", "false");
-        getConfig()->setString("debug_run_tools_only", "false");
     #else
         getConfig()->setString("debug_os", "linux");
     #endif
@@ -84,6 +80,19 @@ namespace platformer
         _splashBackgroundSpriteBatch = createSinglePixelSpritebatch();
         _splashForegroundSpriteBatch = gameplay::SpriteBatch::create("@res/textures/splash");
         renderOnce(this, &Platformer::renderSplashScreen, nullptr);
+
+#if !_FINAL && !NO_LUA_BINDINGS
+        if(getConfig()->getBool("debug_enable_tools"))
+        {
+            getScriptController()->loadScript("res/lua/run_tools.lua");
+
+            if(getConfig()->getBool("debug_run_tools_only"))
+            {
+                exit();
+                return;
+            }
+        }
+#endif
 
         std::vector<std::string> fileList;
 
@@ -185,6 +194,8 @@ namespace platformer
         }
 
         getAudioListener()->setCamera(nullptr);
+        gameobjects::GameObject * rootGameObject = gameobjects::GameObjectController::getInstance().createGameObject("root");
+        gameobjects::GameObjectController::getInstance().createGameObject("level_0", rootGameObject);
     }
 
     void Platformer::finalize()
