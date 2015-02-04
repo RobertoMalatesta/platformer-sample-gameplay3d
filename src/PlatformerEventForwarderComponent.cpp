@@ -13,7 +13,7 @@ namespace platformer
     {
     }
 
-    void PlatformerEventForwarderComponent::onMessageReceived(gameobjects::GameObjectMessage message, int messageType)
+    void PlatformerEventForwarderComponent::onMessageReceived(gameobjects::Message * message, int messageType)
     {
         Platformer * game = static_cast<Platformer*>(gameplay::Game::getInstance());
 

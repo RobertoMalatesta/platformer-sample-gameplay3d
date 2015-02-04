@@ -1,8 +1,8 @@
+#include "Common.h"
 #include "Platformer.h"
 
 #include "CameraControlComponent.h"
 #include "CollisionObjectComponent.h"
-#include "Common.h"
 #include "EnemyComponent.h"
 #include "GameObjectController.h"
 #include "LevelComponent.h"
@@ -12,6 +12,7 @@
 #include "PlayerHandOfGodComponent.h"
 #include "PlayerInputComponent.h"
 #include "PlatformerEventForwarderComponent.h"
+#include "Scene.h"
 #include "SpriteAnimationComponent.h"
 #include "CollisionHandlerComponent.h"
 #include "LevelRendererComponent.h"
@@ -239,7 +240,7 @@ namespace platformer
     void Platformer::broadcastKeyEvent(gameplay::Keyboard::KeyEvent evt, int key)
     {
         KeyMessage::setMessage(_keyMessage, evt, key);
-        gameobjects::GameObjectController::getInstance().broadcastGameObjectMessage(_keyMessage);
+        gameobjects::GameObjectController::getInstance().broadcastMessage(_keyMessage);
     }
 
     void Platformer::gesturePinchEvent(int x, int y, float scale)
@@ -247,7 +248,7 @@ namespace platformer
         if(_pinchMessage && _splashScreenAlpha == 0.0f)
         {
             PinchMessage::setMessage(_pinchMessage, x, y, scale);
-            gameobjects::GameObjectController::getInstance().broadcastGameObjectMessage(_pinchMessage);
+            gameobjects::GameObjectController::getInstance().broadcastMessage(_pinchMessage);
         }
     }
 
@@ -288,7 +289,7 @@ namespace platformer
         if (_touchMessage && _splashScreenAlpha == 0.0f)
         {
             TouchMessage::setMessage(_touchMessage, evt, x, y, contactIndex);
-            gameobjects::GameObjectController::getInstance().broadcastGameObjectMessage(_touchMessage);
+            gameobjects::GameObjectController::getInstance().broadcastMessage(_touchMessage);
         }
     }
 
@@ -297,7 +298,7 @@ namespace platformer
         if (_mouseMessage && _splashScreenAlpha == 0.0f)
         {
             MouseMessage::setMessage(_mouseMessage, evt, x, y, wheelDelta);
-            gameobjects::GameObjectController::getInstance().broadcastGameObjectMessage(_mouseMessage);
+            gameobjects::GameObjectController::getInstance().broadcastMessage(_mouseMessage);
         }
         
         return false;

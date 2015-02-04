@@ -7,6 +7,7 @@
 #include "GameObject.h"
 #include "GameObjectController.h"
 #include "Messages.h"
+#include "PhysicsCharacter.h"
 #include "PlayerComponent.h"
 #include "PlayerInputComponent.h"
 #include "SpriteSheet.h"
@@ -35,7 +36,7 @@ namespace platformer
     {
     }
 
-    void LevelRendererComponent::onMessageReceived(gameobjects::GameObjectMessage message, int messageType)
+    void LevelRendererComponent::onMessageReceived(gameobjects::Message * message, int messageType)
     {
         switch (messageType)
         {

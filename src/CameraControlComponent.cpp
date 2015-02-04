@@ -4,6 +4,7 @@
 #include "GameObjectController.h"
 #include "Common.h"
 #include "Messages.h"
+#include "Scene.h"
 
 namespace platformer
 {
@@ -57,7 +58,7 @@ namespace platformer
         }
     }
 
-    void CameraControlComponent::onMessageReceived(gameobjects::GameObjectMessage message, int messageType)
+    void CameraControlComponent::onMessageReceived(gameobjects::Message * message, int messageType)
     {
         switch (messageType)
         {

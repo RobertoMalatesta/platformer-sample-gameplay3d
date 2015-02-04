@@ -5,6 +5,7 @@
 #include "CollisionObjectComponent.h"
 #include "GameObject.h"
 #include "Messages.h"
+#include "PhysicsCharacter.h"
 #include "SpriteAnimationComponent.h"
 
 namespace platformer

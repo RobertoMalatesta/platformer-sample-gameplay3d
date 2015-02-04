@@ -59,7 +59,7 @@ namespace platformer
         }
     }
 
-    void PlayerHandOfGodComponent::onMessageReceived(gameobjects::GameObjectMessage message, int messageType)
+    void PlayerHandOfGodComponent::onMessageReceived(gameobjects::Message * message, int messageType)
     {
         switch (messageType)
         {
