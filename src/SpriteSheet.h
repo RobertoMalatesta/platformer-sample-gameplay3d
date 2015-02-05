@@ -1,5 +1,5 @@
-#ifndef PLATFORMER_SPRITESHEET_H
-#define PLATFORMER_SPRITESHEET_H
+#ifndef GAME_SPRITESHEET_H
+#define GAME_SPRITESHEET_H
 
 #include <functional>
 #include <map>
@@ -12,7 +12,7 @@ namespace gameplay
     class Texture;
 }
 
-namespace platformer
+namespace game
 {
     /** @script{ignore} */
     struct Sprite

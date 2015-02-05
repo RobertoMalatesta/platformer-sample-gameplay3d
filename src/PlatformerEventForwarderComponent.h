@@ -1,9 +1,9 @@
-#ifndef PLATFORMER_EVENT_FORWARDER_COMPONENT_H
-#define PLATFORMER_EVENT_FORWARDER_COMPONENT_H
+#ifndef GAME_EVENT_FORWARDER_COMPONENT_H
+#define GAME_EVENT_FORWARDER_COMPONENT_H
 
 #include "Component.h"
 
-namespace platformer
+namespace game
 {
     /**
      * Forwards relevant GameObject messages to the game

@@ -12,7 +12,7 @@
 #include "PlayerInputComponent.h"
 #include "SpriteSheet.h"
 
-namespace platformer
+namespace game
 {
     LevelRendererComponent::LevelRendererComponent()
         : _levelLoaded(false)
@@ -58,10 +58,10 @@ namespace platformer
     gameplay::Rectangle getRenderDestination(gameplay::Rectangle const & worldDestination)
     {
         gameplay::Rectangle result;
-        result.width = worldDestination.width / PLATFORMER_UNIT_SCALAR;
-        result.height = worldDestination.height / PLATFORMER_UNIT_SCALAR;
-        result.x = worldDestination.x / PLATFORMER_UNIT_SCALAR;
-        result.y = -worldDestination.y / PLATFORMER_UNIT_SCALAR - result.height;
+        result.width = worldDestination.width / GAME_UNIT_SCALAR;
+        result.height = worldDestination.height / GAME_UNIT_SCALAR;
+        result.x = worldDestination.x / GAME_UNIT_SCALAR;
+        result.y = -worldDestination.y / GAME_UNIT_SCALAR - result.height;
         return result;
     }
 
@@ -81,8 +81,8 @@ namespace platformer
         _playerInput->addRef();
         _cameraControl = getRootParent()->getComponentInChildren<CameraControlComponent>();
         _cameraControl->addRef();
-        _cameraControl->setBoundary(gameplay::Rectangle(_level->getTileWidth() * 2.0f * PLATFORMER_UNIT_SCALAR, 0,
-            (_level->getTileWidth() * _level->getWidth() - (_level->getTileWidth() * 2.0f))  * PLATFORMER_UNIT_SCALAR,
+        _cameraControl->setBoundary(gameplay::Rectangle(_level->getTileWidth() * 2.0f * GAME_UNIT_SCALAR, 0,
+            (_level->getTileWidth() * _level->getWidth() - (_level->getTileWidth() * 2.0f))  * GAME_UNIT_SCALAR,
             std::numeric_limits<float>::max()));
 
         _player->forEachAnimation([this, &uninitialisedSpriteBatches](PlayerComponent::State::Enum state, SpriteAnimationComponent * animation) -> bool
@@ -287,7 +287,7 @@ namespace platformer
                 SpriteSheet * spritesheet = SpriteSheet::create(ns->getString("spritesheet"));
                 ns->getVector4("fill", &_parallaxFillColor);
                 ns->getVector2("offset", &_parallaxOffset);
-                _parallaxOffset *= PLATFORMER_UNIT_SCALAR;
+                _parallaxOffset *= GAME_UNIT_SCALAR;
                 _parallaxSpritebatch = gameplay::SpriteBatch::create(spritesheet->getTexture());
                 _parallaxSpritebatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::REPEAT, gameplay::Texture::Wrap::CLAMP);
                 _parallaxSpritebatch->getSampler()->setFilterMode(gameplay::Texture::Filter::NEAREST, gameplay::Texture::Filter::NEAREST);
@@ -299,10 +299,10 @@ namespace platformer
                         ParallaxLayer layer;
                         layer._src = spritesheet->getSprite(childNs->getString("id"))->_src;
                         layer._dst = layer._src;
-                        layer._dst.width *= PLATFORMER_UNIT_SCALAR;
-                        layer._dst.height *= PLATFORMER_UNIT_SCALAR;
+                        layer._dst.width *= GAME_UNIT_SCALAR;
+                        layer._dst.height *= GAME_UNIT_SCALAR;
                         childNs->getVector2("offset", &layer._offset);
-                        layer._offset *= PLATFORMER_UNIT_SCALAR;
+                        layer._offset *= GAME_UNIT_SCALAR;
                         layer._dst.y = layer._offset.y + _parallaxOffset.y;
                         layer._src.x = layer._offset.x + _parallaxOffset.x;
                         layer._speed = childNs->getFloat("speed");
@@ -327,7 +327,7 @@ namespace platformer
 
             if (layer._cameraIndependent)
             {
-                layer._src.x += (layer._speed * dt) / PLATFORMER_UNIT_SCALAR;
+                layer._src.x += (layer._speed * dt) / GAME_UNIT_SCALAR;
             }
         }
     }
@@ -371,10 +371,10 @@ namespace platformer
 
                 if (!layer._cameraIndependent)
                 {
-                    layer._src.x = ((layerPosX + layer._offset.x + _parallaxOffset.x + viewport.x) * layer._speed) / PLATFORMER_UNIT_SCALAR;
+                    layer._src.x = ((layerPosX + layer._offset.x + _parallaxOffset.x + viewport.x) * layer._speed) / GAME_UNIT_SCALAR;
                 }
 
-                layer._src.width = layer._dst.width / PLATFORMER_UNIT_SCALAR;
+                layer._src.width = layer._dst.width / GAME_UNIT_SCALAR;
 
                 _parallaxSpritebatch->draw(getRenderDestination(layer._dst), getSafeDrawRect(layer._src, 0, 0.5f));
             }
@@ -388,8 +388,8 @@ namespace platformer
 
     void LevelRendererComponent::renderTileMap(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport)
     {
-        gameplay::Rectangle const levelArea((_level->getTileWidth() * _level->getWidth()) * PLATFORMER_UNIT_SCALAR,
-            (_level->getTileHeight() * _level->getHeight()) * PLATFORMER_UNIT_SCALAR);
+        gameplay::Rectangle const levelArea((_level->getTileWidth() * _level->getWidth()) * GAME_UNIT_SCALAR,
+            (_level->getTileHeight() * _level->getHeight()) * GAME_UNIT_SCALAR);
 
         if(levelArea.intersects(viewport))
         {
@@ -603,10 +603,10 @@ namespace platformer
 #endif
         if(renderingEnabled)
         {
-            float const zoomScale = (1.0f / PLATFORMER_UNIT_SCALAR) * _cameraControl->getZoom();
+            float const zoomScale = (1.0f / GAME_UNIT_SCALAR) * _cameraControl->getZoom();
             gameplay::Rectangle viewport;
-            viewport.width = gameplay::Game::getInstance()->getViewport().width * PLATFORMER_UNIT_SCALAR,
-            viewport.height = gameplay::Game::getInstance()->getViewport().height * PLATFORMER_UNIT_SCALAR;
+            viewport.width = gameplay::Game::getInstance()->getViewport().width * GAME_UNIT_SCALAR,
+            viewport.height = gameplay::Game::getInstance()->getViewport().height * GAME_UNIT_SCALAR;
 
 #ifndef _FINAL
             if(gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_zoom_draw_culling"))
@@ -621,7 +621,7 @@ namespace platformer
 
             gameplay::Matrix projection = _cameraControl->getViewProjectionMatrix();
             projection.rotateX(MATH_DEG_TO_RAD(180));
-            projection.scale(PLATFORMER_UNIT_SCALAR, PLATFORMER_UNIT_SCALAR, 0);
+            projection.scale(GAME_UNIT_SCALAR, GAME_UNIT_SCALAR, 0);
 
             renderBackground(projection, viewport);
             renderTileMap(projection, viewport);
@@ -643,13 +643,13 @@ namespace platformer
 
     void LevelRendererComponent::CharacterRenderer::start()
     {
-        PLATFORMER_ASSERT(!_started, "Start called before Finish");
+        GAME_ASSERT(!_started, "Start called before Finish");
         _started = true;
     }
 
     void LevelRendererComponent::CharacterRenderer::finish()
     {
-        PLATFORMER_ASSERT(_started, "Finsh called before Start");
+        GAME_ASSERT(_started, "Finsh called before Start");
         _started = false;
 
         if(_previousSpritebatch)
@@ -669,14 +669,14 @@ namespace platformer
                          gameplay::Vector2 const & position, gameplay::Rectangle const & viewport, float alpha)
     {
         SpriteAnimationComponent::DrawTarget drawTarget = animation->getDrawTarget(gameplay::Vector2::one(), 0.0f, orientation);
-        gameplay::Rectangle const bounds(position.x - ((fabs(drawTarget._scale.x / 2) * PLATFORMER_UNIT_SCALAR)),
-                                                  position.y - ((fabs(drawTarget._scale.y / 2) * PLATFORMER_UNIT_SCALAR)),
-                                                  fabs(drawTarget._scale.x) * PLATFORMER_UNIT_SCALAR,
-                                                  fabs(drawTarget._scale.y) * PLATFORMER_UNIT_SCALAR);
+        gameplay::Rectangle const bounds(position.x - ((fabs(drawTarget._scale.x / 2) * GAME_UNIT_SCALAR)),
+                                                  position.y - ((fabs(drawTarget._scale.y / 2) * GAME_UNIT_SCALAR)),
+                                                  fabs(drawTarget._scale.x) * GAME_UNIT_SCALAR,
+                                                  fabs(drawTarget._scale.y) * GAME_UNIT_SCALAR);
 
         if(bounds.intersects(viewport))
         {
-            gameplay::Vector2 drawPosition = position / PLATFORMER_UNIT_SCALAR;
+            gameplay::Vector2 drawPosition = position / GAME_UNIT_SCALAR;
             drawPosition.x -= fabs(drawTarget._scale.x / 2);
             drawPosition.y += fabs(drawTarget._scale.y / 2);
             drawPosition.y *= -1.0f;
@@ -721,7 +721,7 @@ namespace platformer
         }
 
         unsigned int width, height = 0;
-        font->measureText(text.c_str(), font->getSize(PLATFORMER_FONT_SIZE_LARGE_INDEX), &width, &height);
+        font->measureText(text.c_str(), font->getSize(GAME_FONT_SIZE_LARGE_INDEX), &width, &height);
         font->drawText(text.c_str(), renderPosition.x - (width / 4), -renderPosition.y, gameplay::Vector4(1,0,0,1));
     }
 
@@ -742,8 +742,8 @@ namespace platformer
 
             gameplay::Matrix projection = _cameraControl->getViewProjectionMatrix();
             projection.rotateX(MATH_DEG_TO_RAD(180));
-            float const spriteCameraZoomScale = (1.0f / PLATFORMER_UNIT_SCALAR) * _cameraControl->getZoom();
-            float const unitToPixelScale = (1.0f / screenDimensions.height) * (screenDimensions.height * PLATFORMER_UNIT_SCALAR * spriteCameraZoomScale);
+            float const spriteCameraZoomScale = (1.0f / GAME_UNIT_SCALAR) * _cameraControl->getZoom();
+            float const unitToPixelScale = (1.0f / screenDimensions.height) * (screenDimensions.height * GAME_UNIT_SCALAR * spriteCameraZoomScale);
             projection.scale(unitToPixelScale, unitToPixelScale, 0);
             gameplay::SpriteBatch * spriteBatch = font->getSpriteBatch(font->getSize());
             spriteBatch->setProjectionMatrix(projection);
@@ -768,7 +768,7 @@ namespace platformer
 
         gameplay::Matrix projection = _cameraControl->getViewProjectionMatrix();
         projection.rotateX(MATH_DEG_TO_RAD(180));
-        projection.scale(PLATFORMER_UNIT_SCALAR, PLATFORMER_UNIT_SCALAR, 0);
+        projection.scale(GAME_UNIT_SCALAR, GAME_UNIT_SCALAR, 0);
         _pixelSpritebatch->setProjectionMatrix(projection);
 
         if(drawCameraTarget)
@@ -778,8 +778,8 @@ namespace platformer
             float const dimensions = 10.0f;
             gameplay::Vector4 targetColour;
             gameplay::Game::getInstance()->getConfig()->getVector4("debug_camera_target_colour", &targetColour);
-            gameplay::Rectangle targetBounds(_cameraControl->getTargetPosition().x / PLATFORMER_UNIT_SCALAR,
-                                          -_cameraControl->getTargetPosition().y / PLATFORMER_UNIT_SCALAR, dimensions, dimensions);
+            gameplay::Rectangle targetBounds(_cameraControl->getTargetPosition().x / GAME_UNIT_SCALAR,
+                                          -_cameraControl->getTargetPosition().y / GAME_UNIT_SCALAR, dimensions, dimensions);
             _pixelSpritebatch->draw(targetBounds, gameplay::Rectangle(1,1), targetColour);
 
             _pixelSpritebatch->finish();
@@ -787,10 +787,10 @@ namespace platformer
 
         if(drawViewport)
         {
-            float const zoomScale = (1.0f / PLATFORMER_UNIT_SCALAR) * _cameraControl->getZoom();
+            float const zoomScale = (1.0f / GAME_UNIT_SCALAR) * _cameraControl->getZoom();
             gameplay::Rectangle viewport;
-            viewport.width = gameplay::Game::getInstance()->getViewport().width * PLATFORMER_UNIT_SCALAR,
-            viewport.height = gameplay::Game::getInstance()->getViewport().height * PLATFORMER_UNIT_SCALAR;
+            viewport.width = gameplay::Game::getInstance()->getViewport().width * GAME_UNIT_SCALAR,
+            viewport.height = gameplay::Game::getInstance()->getViewport().height * GAME_UNIT_SCALAR;
             viewport.x = _cameraControl->getPosition().x - (viewport.width / 2.0f);
             viewport.y = _cameraControl->getPosition().y - (viewport.height / 2.0f);
             _pixelSpritebatch->setProjectionMatrix(projection);

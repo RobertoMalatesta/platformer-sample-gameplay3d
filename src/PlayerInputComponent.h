@@ -1,5 +1,5 @@
-#ifndef PLATFORMER_INPUT_COMPONENT_H
-#define PLATFORMER_INPUT_COMPONENT_H
+#ifndef GAME_INPUT_COMPONENT_H
+#define GAME_INPUT_COMPONENT_H
 
 #include "Component.h"
 #include "Messages.h"
@@ -10,7 +10,7 @@ namespace gameplay
     class Gamepad;
 }
 
-namespace platformer
+namespace game
 {
     class CameraControlComponent;
 

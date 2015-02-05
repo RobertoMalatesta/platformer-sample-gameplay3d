@@ -8,7 +8,7 @@
 #include "PhysicsCharacter.h"
 #include "PlatformerCollision.h"
 
-namespace platformer
+namespace game
 {
     CollisionHandlerComponent::CollisionHandlerComponent()
         : Component(true)
@@ -215,7 +215,7 @@ namespace platformer
             case gameplay::PhysicsCollisionObject::Type::NONE:
                 break;
             default:
-                PLATFORMER_ASSERTFAIL("Unhandled PhysicsCollisionObject type %d", collisionPair.objectB->getType());
+                GAME_ASSERTFAIL("Unhandled PhysicsCollisionObject type %d", collisionPair.objectB->getType());
             }
 
 
@@ -249,7 +249,7 @@ namespace platformer
                             --_playerClimbingTerrainRefCount;
                         }
 
-                        PLATFORMER_ASSERT(_playerClimbingTerrainRefCount == MATH_CLAMP(_playerClimbingTerrainRefCount, 0, std::numeric_limits<int>::max()),
+                        GAME_ASSERT(_playerClimbingTerrainRefCount == MATH_CLAMP(_playerClimbingTerrainRefCount, 0, std::numeric_limits<int>::max()),
                             "_playerClimbingTerrainRefCount invalid %d", _playerClimbingTerrainRefCount);
                         _player->setClimbingEnabled(_playerClimbingTerrainRefCount > 0);
                         return true;
@@ -272,12 +272,12 @@ namespace platformer
                     {
                         isColliding ? ++_playerSwimmingRefCount : --_playerSwimmingRefCount;
                         _player->setSwimmingEnabled(_playerSwimmingRefCount > 0);
-                        PLATFORMER_ASSERT(_playerSwimmingRefCount == MATH_CLAMP(_playerSwimmingRefCount, 0, std::numeric_limits<int>::max()),
+                        GAME_ASSERT(_playerSwimmingRefCount == MATH_CLAMP(_playerSwimmingRefCount, 0, std::numeric_limits<int>::max()),
                             "_playerSwimmingRefCount invalid %d", _playerSwimmingRefCount);
                         break;
                     }
                     default:
-                        PLATFORMER_ASSERTFAIL("Unhandled terrain collision type %d", NodeCollisionInfo->_CollisionType);
+                        GAME_ASSERTFAIL("Unhandled terrain collision type %d", NodeCollisionInfo->_CollisionType);
                 }
             }
         }

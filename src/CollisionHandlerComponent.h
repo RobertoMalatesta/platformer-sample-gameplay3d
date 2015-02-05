@@ -1,5 +1,5 @@
-#ifndef PLATFORMER_COLLISION_HANDLER_COMPONENT_H
-#define PLATFORMER_COLLISION_HANDLER_COMPONENT_H
+#ifndef GAME_COLLISION_HANDLER_COMPONENT_H
+#define GAME_COLLISION_HANDLER_COMPONENT_H
 
 #include "Component.h"
 #include "PhysicsRigidBody.h"
@@ -9,7 +9,7 @@ namespace gameplay
     class AIMessage;
 }
 
-namespace platformer
+namespace game
 {
     class EnemyComponent;
     class LevelComponent;

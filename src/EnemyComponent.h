@@ -1,5 +1,5 @@
-#ifndef PLATFORMER_ENEMY_COMPONENT_H
-#define PLATFORMER_ENEMY_COMPONENT_H
+#ifndef GAME_ENEMY_COMPONENT_H
+#define GAME_ENEMY_COMPONENT_H
 
 #include "Component.h"
 
@@ -8,7 +8,7 @@ namespace gameplay
     class Properties;
 }
 
-namespace platformer
+namespace game
 {
     class CollisionObjectComponent;
     class SpriteAnimationComponent;

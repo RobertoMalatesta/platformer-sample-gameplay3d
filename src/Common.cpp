@@ -5,7 +5,7 @@
 #include "SpriteBatch.h"
 #include "Texture.h"
 
-namespace platformer
+namespace game
 {
     PropertiesRef::PropertiesRef(gameplay::Properties * properties)
         : _properties(properties)
@@ -30,7 +30,7 @@ namespace platformer
         auto itr = cache.find(url);
         if(itr == cache.end())
         {
-            PLATFORMER_LOG("Loading properties '%s'", url);
+            GAME_LOG("Loading properties '%s'", url);
             result = new PropertiesRef(gameplay::Properties::create(url));
 
             if(result)
@@ -39,7 +39,7 @@ namespace platformer
             }
             else
             {
-                PLATFORMER_ASSERTFAIL("Failed to load proerties %s", url);
+                GAME_ASSERTFAIL("Failed to load proerties %s", url);
             }
         }
         else
@@ -160,7 +160,7 @@ namespace platformer
         }
         else
         {
-            if (getLogHistory().size() == PLATFORMER_ON_SCREEN_LOG_HISTORY_CAPACITY)
+            if (getLogHistory().size() == GAME_ON_SCREEN_LOG_HISTORY_CAPACITY)
             {
                 getLogHistory().pop_front();
             }

@@ -1,9 +1,9 @@
-#ifndef PLATFORMER_AUDIO_COMPONENT_H
-#define PLATFORMER_AUDIO_COMPONENT_H
+#ifndef GAME_AUDIO_COMPONENT_H
+#define GAME_AUDIO_COMPONENT_H
 
 #include "Component.h"
 
-namespace platformer
+namespace game
 {
     class PlayerComponent;
     struct PlayerJumpMessage;

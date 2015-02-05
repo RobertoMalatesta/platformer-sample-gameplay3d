@@ -10,7 +10,7 @@
 #include "Messages.h"
 #endif
 
-namespace platformer
+namespace game
 {
     PlayerInputComponent::PlayerInputComponent()
         : _pinchEnabled(true)

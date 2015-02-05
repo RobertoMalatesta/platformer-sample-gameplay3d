@@ -8,7 +8,7 @@
 #include "PhysicsCharacter.h"
 #include "SpriteAnimationComponent.h"
 
-namespace platformer
+namespace game
 {
     PlayerComponent::PlayerComponent()
         : _isLeftFacing(false)
@@ -322,7 +322,7 @@ namespace platformer
                 break;
             }
             default:
-                PLATFORMER_ASSERTFAIL("Unhandled JumpSource %d", source);
+                GAME_ASSERTFAIL("Unhandled JumpSource %d", source);
                 break;
         }
 

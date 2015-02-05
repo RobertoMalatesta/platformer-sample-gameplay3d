@@ -1,7 +1,7 @@
 #include "PlatformerCollision.h"
 #include "GameObject.h"
 
-namespace platformer
+namespace game
 {
     static const int COLLISION_TYPE_ID = gameobjects::GameObject::GAMEOBJECT_NODE_USER_DATA_ID + 1;
 

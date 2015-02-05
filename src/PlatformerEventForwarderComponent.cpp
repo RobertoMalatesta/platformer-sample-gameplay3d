@@ -3,7 +3,7 @@
 #include "Messages.h"
 #include "Platformer.h"
 
-namespace platformer
+namespace game
 {
     PlatformerEventForwarderComponent::PlatformerEventForwarderComponent()
     {

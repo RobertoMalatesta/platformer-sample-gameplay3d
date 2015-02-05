@@ -8,7 +8,7 @@
 #include "Messages.h"
 #include "SpriteSheet.h"
 
-namespace platformer
+namespace game
 {
     LevelComponent::LevelComponent()
         : _loadedMessage(nullptr)
@@ -107,7 +107,7 @@ namespace platformer
                 if (currentTileId == EMPTY_TILE)
                 {
                     int const newTileId = dataNamespace->getInt();
-                    PLATFORMER_ASSERT(currentTileId == EMPTY_TILE || newTileId == EMPTY_TILE, 
+                    GAME_ASSERT(currentTileId == EMPTY_TILE || newTileId == EMPTY_TILE, 
                         "Multi layered tile rendering not isn't supported [%d][%d]", x, y);
                     _grid[y][x]._tileId = newTileId;
                 }
@@ -173,10 +173,10 @@ namespace platformer
     gameplay::Rectangle LevelComponent::getObjectBounds(gameplay::Properties * objectNamespace) const
     {
         gameplay::Rectangle rect;
-        rect.width = objectNamespace->getInt("width") * PLATFORMER_UNIT_SCALAR;
-        rect.height = objectNamespace->getInt("height") * PLATFORMER_UNIT_SCALAR;
-        rect.x = objectNamespace->getInt("x") * PLATFORMER_UNIT_SCALAR;
-        rect.y = ((_tileHeight * _height) - objectNamespace->getInt("y")) * PLATFORMER_UNIT_SCALAR;
+        rect.width = objectNamespace->getInt("width") * GAME_UNIT_SCALAR;
+        rect.height = objectNamespace->getInt("height") * GAME_UNIT_SCALAR;
+        rect.x = objectNamespace->getInt("x") * GAME_UNIT_SCALAR;
+        rect.y = ((_tileHeight * _height) - objectNamespace->getInt("y")) * GAME_UNIT_SCALAR;
         return rect;
     }
 
@@ -236,8 +236,8 @@ namespace platformer
     void getLineCollisionObjectParams(gameplay::Properties * lineVectorNamespace, gameplay::Rectangle & bounds, float & rotationZ, gameplay::Vector2 & direction)
     {
         gameplay::Vector2 const start(bounds.x, bounds.y);
-        gameplay::Vector2 localEnd(lineVectorNamespace->getFloat("x")  * PLATFORMER_UNIT_SCALAR,
-            lineVectorNamespace->getFloat("y") * PLATFORMER_UNIT_SCALAR);
+        gameplay::Vector2 localEnd(lineVectorNamespace->getFloat("x")  * GAME_UNIT_SCALAR,
+            lineVectorNamespace->getFloat("y") * GAME_UNIT_SCALAR);
         direction = localEnd;
         direction.normalize();
         rotationZ = -acos(direction.dot(gameplay::Vector2::unitX() * (direction.y > 0 ? 1.0f : -1.0f)));
@@ -270,7 +270,7 @@ namespace platformer
                 collisionId = "water";
                 break;
             default:
-                PLATFORMER_ASSERTFAIL("Unhandled CollisionType %d", collisionType);
+                GAME_ASSERTFAIL("Unhandled CollisionType %d", collisionType);
                 break;
             }
 
@@ -366,16 +366,16 @@ namespace platformer
                 {
                     if (gameplay::Properties * lineVectorNamespace = objectNamespace->getNamespace("polyline_1", true))
                     {
-                        gameplay::Vector2 line(lineVectorNamespace->getFloat("x")  * PLATFORMER_UNIT_SCALAR,
-                                              -lineVectorNamespace->getFloat("y") * PLATFORMER_UNIT_SCALAR);
+                        gameplay::Vector2 line(lineVectorNamespace->getFloat("x")  * GAME_UNIT_SCALAR,
+                                              -lineVectorNamespace->getFloat("y") * GAME_UNIT_SCALAR);
                         float lineLength = line.length();
                         gameplay::Vector2 direction = line;
                         direction.normalize();
 
                         while(true)
                         {
-                            Sprite & sprite = sprites[PLATFORMER_RANDOM_RANGE_INT(0, sprites.size() - 1)];
-                            float const collectableWidth = sprite._src.width * PLATFORMER_UNIT_SCALAR;
+                            Sprite & sprite = sprites[GAME_RANDOM_RANGE_INT(0, sprites.size() - 1)];
+                            float const collectableWidth = sprite._src.width * GAME_UNIT_SCALAR;
                             lineLength -= collectableWidth;
 
                             if(lineLength > 0)
@@ -434,11 +434,11 @@ namespace platformer
                         // Recalculate its starting position based on the size and orientation of the bridge segment(s)
                         bounds.x += (bounds.width / 2) * -bridgeDirection.x;
                         bounds.y += (bounds.width / 2) * bridgeDirection.y;
-                        int const numSegments = std::ceil(bounds.width / (getTileWidth() * PLATFORMER_UNIT_SCALAR));
+                        int const numSegments = std::ceil(bounds.width / (getTileWidth() * GAME_UNIT_SCALAR));
                         bounds.width = bounds.width / numSegments;
                         bounds.x += (bounds.width / 2) * bridgeDirection.x;
                         bounds.y += (bounds.width / 2) * -bridgeDirection.y;
-                        bounds.height = (getTileHeight() * PLATFORMER_UNIT_SCALAR) * 0.25f;
+                        bounds.height = (getTileHeight() * GAME_UNIT_SCALAR) * 0.25f;
                         setProperty("extents", gameplay::Vector3(bounds.width, bounds.height, 0.0f), collisionProperties);
 
                         // Create collision nodes for them
@@ -614,7 +614,7 @@ namespace platformer
                 }
                 else
                 {
-                    PLATFORMER_ASSERTFAIL("Unable to place %s", enemyComponent->getId().c_str());
+                    GAME_ASSERTFAIL("Unable to place %s", enemyComponent->getId().c_str());
                 }
             }
         }
@@ -656,7 +656,7 @@ namespace platformer
     void LevelComponent::readProperties(gameplay::Properties & properties)
     {
         _level = properties.getString("level", _level.c_str());
-        PLATFORMER_ASSERT(gameplay::FileSystem::fileExists(_level.c_str()), "Level '%s' not found", _level.c_str());
+        GAME_ASSERT(gameplay::FileSystem::fileExists(_level.c_str()), "Level '%s' not found", _level.c_str());
     }
 
     void LevelComponent::consumeCollectable(gameplay::Node * collectableNode)
