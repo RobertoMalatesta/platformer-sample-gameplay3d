@@ -10,7 +10,6 @@
 #include "Messages.h"
 #include "PhysicsCharacter.h"
 #include "PlayerComponent.h"
-#include "PlayerInputComponent.h"
 #include "ResourceManager.h"
 #include "SpriteSheet.h"
 
@@ -20,7 +19,6 @@ namespace game
         : _levelLoaded(false)
         , _levelLoadedOnce(false)
         , _player(nullptr)
-        , _playerInput(nullptr)
         , _level(nullptr)
         , _tileBatch(nullptr)
         , _cameraControl(nullptr)
@@ -78,9 +76,7 @@ namespace game
         _tileBatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::CLAMP, gameplay::Texture::Wrap::CLAMP);
         uninitialisedSpriteBatches.push_back(_tileBatch);
         _player = _level->getParent()->getComponentInChildren<PlayerComponent>();
-        _playerInput = _player->getParent()->getComponent<PlayerInputComponent>();
         _player->addRef();
-        _playerInput->addRef();
         _cameraControl = getRootParent()->getComponentInChildren<CameraControlComponent>();
         _cameraControl->addRef();
         _cameraControl->setBoundary(gameplay::Rectangle(_level->getTileWidth() * 2.0f * GAME_UNIT_SCALAR, 0,
@@ -216,8 +212,6 @@ namespace game
         SAFE_RELEASE(_cameraControl);
         SAFE_RELEASE(_level);
         SAFE_RELEASE(_player);
-        SAFE_RELEASE(_playerInput);
-
         SAFE_DELETE(_tileBatch);
 
         for (auto & playerAnimBatchPairItr : _playerAnimationBatches)
@@ -632,7 +626,6 @@ namespace game
             renderCharacters(projection, viewport);
             renderWater(projection, viewport);
         }
-
 
         return false;
     }

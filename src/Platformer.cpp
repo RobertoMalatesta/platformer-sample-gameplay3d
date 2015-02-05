@@ -67,7 +67,6 @@ namespace game
         gameplay::Logger::set(gameplay::Logger::Level::LEVEL_ERROR, loggingCallback);
 
 #ifndef _FINAL
-
     #ifdef WIN32
         getConfig()->setString("debug_os", "windows");
     #else
@@ -200,7 +199,7 @@ namespace game
                 _previousReleasedKey = key;
             }
 #else
-			broadcastKeyEvent(evt, key);
+            broadcastKeyEvent(evt, key);
 #endif
         }
 

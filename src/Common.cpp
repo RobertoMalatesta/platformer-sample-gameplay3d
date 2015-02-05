@@ -2,7 +2,6 @@
 
 #include "Font.h"
 #include "ScreenDisplayer.h"
-#include "SpriteBatch.h"
 #include "Texture.h"
 
 namespace game

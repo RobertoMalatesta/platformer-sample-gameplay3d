@@ -11,7 +11,6 @@ namespace game
     class EnemyComponent;
     class LevelComponent;
     class PlayerComponent;
-    class PlayerInputComponent;
     class SpriteSheet;
 
     /**
@@ -72,7 +71,6 @@ namespace game
         float getWaterTimeUniform() const;
 
         PlayerComponent * _player;
-        PlayerInputComponent * _playerInput;
         LevelComponent * _level;
         std::map<int, gameplay::SpriteBatch *> _playerAnimationBatches;
         std::map<EnemyComponent *, std::map<int, gameplay::SpriteBatch *>> _enemyAnimationBatches;
