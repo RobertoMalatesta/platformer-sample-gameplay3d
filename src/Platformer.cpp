@@ -51,15 +51,6 @@ namespace game
     {
     }
 
-    class PlatformerGameObjectCallbackHandler : public gameobjects::GameObjectCallbackHandler
-    {
-    public:
-        virtual void OnPreCreateProperties(const char * url) override
-        {
-            GAME_LOG("Loading properties '%s'", url);
-        }
-    };
-
     void Platformer::initialize()
     {
         gameplay::Logger::set(gameplay::Logger::Level::LEVEL_INFO, loggingCallback);
@@ -124,8 +115,6 @@ namespace game
         gameobjects::GameObjectController::getInstance().registerComponent<PlatformerEventForwarderComponent>("platformer_event_forwarder");
         gameobjects::GameObjectController::getInstance().registerComponent<SpriteAnimationComponent>("sprite_animation");
         gameobjects::GameObjectController::getInstance().registerComponent<CollisionHandlerComponent>("collision_handler");
-        PlatformerGameObjectCallbackHandler * callbackHandler = new PlatformerGameObjectCallbackHandler();
-        gameobjects::GameObjectController::getInstance().registerCallbackHandler(callbackHandler);
         gameobjects::GameObjectController::getInstance().initialize();
 
         _pinchMessage = PinchMessage::create();

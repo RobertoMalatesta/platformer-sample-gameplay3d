@@ -28,6 +28,29 @@ namespace game
         return instance;
     }
 
+#ifndef _FINAL
+    struct LoadScope
+    {
+        LoadScope(std::string const & url)
+        {
+            _start = gameplay::Game::getAbsoluteTime();
+            _url = url;
+        }
+
+        ~LoadScope()
+        {
+            GAME_LOG("%.2fs loading %s", (gameplay::Game::getAbsoluteTime() - _start) * 0.001, _url.c_str());
+        }
+
+        double _start;
+        std::string _url;
+    };
+
+    #define LOAD_SCOPE(url) LoadScope scope(url);
+#else
+    #define LOAD_SCOPE(url)
+#endif
+
     void ResourceManager::initialize()
     {
         std::vector<std::string> fileList;
@@ -37,8 +60,9 @@ namespace game
 
         for (std::string & fileName : fileList)
         {
-            std::string const textureFile = textureDirectory + "/" + fileName;
-            gameplay::Texture * texture = gameplay::Texture::create(textureFile.c_str());
+            std::string const texturePath = textureDirectory + "/" + fileName;
+            LOAD_SCOPE(texturePath)
+            gameplay::Texture * texture = gameplay::Texture::create(texturePath.c_str());
             texture->addRef();
             _cachedTextures.push_back(texture);
         }
@@ -53,7 +77,12 @@ namespace game
                 for(std::string & propertyUrl : fileList)
                 {
                     std::string const propertyPath = std::string(dir) + std::string("/") + propertyUrl;
-                    PropertiesRef * propertiesRef = new PropertiesRef(gameplay::Properties::create(propertyPath.c_str()));
+                    PropertiesRef * propertiesRef = nullptr;
+
+                    {
+                        LOAD_SCOPE(propertyPath)
+                        propertiesRef = new PropertiesRef(gameplay::Properties::create(propertyPath.c_str()));
+                    }
 
                     bool const usesTopLevelNamespaceUrls = propertyDirNamespace->getBool();
 
@@ -64,7 +93,13 @@ namespace game
                         while(gameplay::Properties * topLevelChildNS = properties->getNextNamespace())
                         {
                             std::string const childPropertiesPath = std::string(propertyPath + std::string("#") + topLevelChildNS->getId()).c_str();
-                            PropertiesRef * childPropertiesRef = new PropertiesRef(gameplay::Properties::create(childPropertiesPath.c_str()));
+                            PropertiesRef * childPropertiesRef = nullptr;
+
+                            {
+                                LOAD_SCOPE(childPropertiesPath)
+                                childPropertiesRef = new PropertiesRef(gameplay::Properties::create(childPropertiesPath.c_str()));
+                            }
+
                             childPropertiesRef->addRef();
                             _cachedProperties[childPropertiesPath] = childPropertiesRef;
                         }
@@ -87,6 +122,7 @@ namespace game
         for (std::string & fileName : fileList)
         {
             std::string const spriteSheetPath = spriteSheetDirectory + "/" + fileName;
+            LOAD_SCOPE(spriteSheetPath)
             SpriteSheet * spriteSheet = new SpriteSheet();
             spriteSheet->initialize(spriteSheetPath);
             spriteSheet->addRef();
@@ -94,19 +130,13 @@ namespace game
         }
     }
 
-    void forceReleaseRef(gameplay::Ref * ref)
+    void releaseCacheRefs(gameplay::Ref * ref)
     {
         if (ref)
         {
-            while (true)
+            for(int i = 0; i < 2; ++i)
             {
-                bool const done = ref->getRefCount() == 1;
                 ref->release();
-
-                if (done)
-                {
-                    break;
-                }
             }
         }
     }
@@ -115,17 +145,17 @@ namespace game
     {
         for(auto pair : _cachedProperties)
         {
-            forceReleaseRef(pair.second);
+            releaseCacheRefs(pair.second);
         }
 
         for(auto pair : _cachedSpriteSheets)
         {
-            forceReleaseRef(pair.second);
+            releaseCacheRefs(pair.second);
         }
 
         for (gameplay::Ref * texture : _cachedTextures)
         {
-            forceReleaseRef(texture);
+            releaseCacheRefs(texture);
         }
 
         _cachedProperties.clear();
