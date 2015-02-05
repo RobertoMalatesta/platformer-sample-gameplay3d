@@ -204,10 +204,9 @@ namespace game
         // Always cleanup game objects in case any components need to serialse game state
         gameobjects::GameObjectController::getInstance().finalize();
 
-        // Only perform cleanup in non final builds for the purposes of detecting memory leaks,
-        // in final builds we want to shutdown as fast as possible, the platform will free up
-        // all resources used by this process
-#ifndef _FINAL
+        // Only perform cleanup for the purposes of detecting memory leaks, in final builds we want 
+        // to shutdown as fast as possible, the platform will free up all resources used by this process
+#ifdef GP_USE_MEM_LEAK_DETECTION
         GAMEOBJECTS_DELETE_MESSAGE(_pinchMessage);
         GAMEOBJECTS_DELETE_MESSAGE(_keyMessage);
         GAMEOBJECTS_DELETE_MESSAGE(_touchMessage);
@@ -337,7 +336,7 @@ namespace game
 
         if(_splashScreenFadeActive)
         {
-            static float const minPlayableDt = 1.0 / 15.0f;
+            static float const minPlayableDt = 1.0f / 15.0f;
 
             if(_splashScreenFadeTimer > 0.0f)
             {

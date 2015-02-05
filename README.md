@@ -2,7 +2,7 @@
 
 A 2D physics based platformer made using the open source game framework Gameplay3D, other freely available libraries, tools and free to use assets.
 
-![ScreenShot](https://raw.githubusercontent.com/louis-mclaughlin/platformer-sample-gameplay3d/next/raw/textures/platformer_big.jpg)
+![ScreenShot](https://raw.githubusercontent.com/louis-mclaughlin/platformer-sample-gameplay3d/next/raw/textures/platformer_big.png)
 
 ### Watch it
 
