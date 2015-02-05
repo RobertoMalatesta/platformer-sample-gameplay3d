@@ -17,9 +17,9 @@
 #include "CollisionHandlerComponent.h"
 #include "LevelRendererComponent.h"
 
-platformer::Platformer game;
+game::Platformer platformer;
 
-namespace platformer
+namespace game
 {
     Platformer::Platformer()
         : _keyMessage(nullptr)
@@ -54,7 +54,7 @@ namespace platformer
     public:
         virtual void OnPreCreateProperties(const char * url) override
         {
-            PLATFORMER_LOG("Loading properties '%s'", url);
+            GAME_LOG("Loading properties '%s'", url);
         }
     };
 
@@ -219,22 +219,22 @@ namespace platformer
 
         for (PropertiesRef * properties : _cachedProperties)
         {
-            PLATFORMER_ASSERT(properties->getRefCount() == unusedCachedAssetRefCount, "Unreleased properties found");
-            PLATFORMER_FORCE_RELEASE(properties);
+            GAME_ASSERT(properties->getRefCount() == unusedCachedAssetRefCount, "Unreleased properties found");
+            GAME_FORCE_RELEASE(properties);
         }
 
         for (SpriteSheet * spriteSheet : _cachedSpriteSheets)
         {
-            PLATFORMER_ASSERT(spriteSheet->getRefCount() == unusedCachedAssetRefCount, "Unreleased spritesheet found");
-            PLATFORMER_FORCE_RELEASE(spriteSheet);
+            GAME_ASSERT(spriteSheet->getRefCount() == unusedCachedAssetRefCount, "Unreleased spritesheet found");
+            GAME_FORCE_RELEASE(spriteSheet);
         }
 
         _cachedSpriteSheets.clear();
 
         for (gameplay::Texture * texture : _cachedTextures)
         {
-            PLATFORMER_ASSERT(texture->getRefCount() == unusedCachedAssetRefCount, "Unreleased texture found");
-            PLATFORMER_FORCE_RELEASE(texture);
+            GAME_ASSERT(texture->getRefCount() == unusedCachedAssetRefCount, "Unreleased texture found");
+            GAME_FORCE_RELEASE(texture);
         }
 
         _cachedTextures.clear();

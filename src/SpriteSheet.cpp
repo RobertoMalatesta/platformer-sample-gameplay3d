@@ -3,7 +3,7 @@
 #include "Common.h"
 #include "Texture.h"
 
-namespace platformer
+namespace game
 {
     SpriteSheet * SpriteSheet::create(std::string const & spriteSheetPath)
     {
@@ -43,7 +43,7 @@ namespace platformer
         PropertiesRef * propertyRef = createProperties(filePath.c_str());
         gameplay::Properties * properties = propertyRef->get();
 
-        PLATFORMER_ASSERT(properties, "Failed to load sprite sheet %s", filePath.c_str());
+        GAME_ASSERT(properties, "Failed to load sprite sheet %s", filePath.c_str());
 
         while (gameplay::Properties * currentNamespace = properties->getNextNamespace())
         {
@@ -66,7 +66,7 @@ namespace platformer
                         }
                     }
 
-                    PLATFORMER_ASSERT(_sprites.find(sprite._name) == _sprites.end(),
+                    GAME_ASSERT(_sprites.find(sprite._name) == _sprites.end(),
                         "Duplicate sprite name '%s' in '%s'", sprite._name.c_str(), filePath.c_str());
 
                     _sprites[sprite._name] = sprite;
@@ -79,7 +79,7 @@ namespace platformer
                 gameplay::Properties * dimensionsNamespace = currentNamespace->getNextNamespace();
                 int const width = dimensionsNamespace->getInt("w");
                 int const height = dimensionsNamespace->getInt("h");
-                PLATFORMER_ASSERT(_texture && _texture->getWidth() == width && _texture->getHeight() == height,
+                GAME_ASSERT(_texture && _texture->getWidth() == width && _texture->getHeight() == height,
                     "Spritesheet '%s' width/height meta texture meta data is incorrect for '%s'", filePath.c_str(), texturePath.c_str());
             }
         }

@@ -3,7 +3,7 @@
 #include "Common.h"
 #include "FileSystem.h"
 
-namespace platformer
+namespace game
 {
     SpriteAnimationComponent::SpriteAnimationComponent()
         : _playbackState(PlaybackState::Stopped)
@@ -68,7 +68,7 @@ namespace platformer
             }
         }
 
-        PLATFORMER_ASSERT(!_sprites.empty(), "%s contains no sprites", _spriteSheetPath.c_str());
+        GAME_ASSERT(!_sprites.empty(), "%s contains no sprites", _spriteSheetPath.c_str());
 
         _frameCount = _sprites.size();
 
@@ -96,12 +96,12 @@ namespace platformer
         }
 
         _spriteSheetPath = properties.getString("spritesheet", _spriteSheetPath.c_str());
-        PLATFORMER_ASSERT(gameplay::FileSystem::fileExists(_spriteSheetPath.c_str()), "Spritesheet '%s' not found", _spriteSheetPath.c_str());
+        GAME_ASSERT(gameplay::FileSystem::fileExists(_spriteSheetPath.c_str()), "Spritesheet '%s' not found", _spriteSheetPath.c_str());
 
         if(!properties.exists("sprite"))
         {
             _spritePrefix = properties.getString("spriteprefix", _spritePrefix.c_str());
-            PLATFORMER_ASSERT(!_spritePrefix.empty(), "Sprite prefix cannot be empty");
+            GAME_ASSERT(!_spritePrefix.empty(), "Sprite prefix cannot be empty");
         }
         else
         {
@@ -115,7 +115,7 @@ namespace platformer
 
             properties.rewind();
 
-            PLATFORMER_ASSERT(!_spriteNames.empty(), "No sprites were specified");
+            GAME_ASSERT(!_spriteNames.empty(), "No sprites were specified");
         }
     }
 

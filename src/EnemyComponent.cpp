@@ -5,7 +5,7 @@
 #include "GameObject.h"
 #include "SpriteAnimationComponent.h"
 
-namespace platformer
+namespace game
 {
     EnemyComponent::EnemyComponent()
         : _isLeftFacing(MATH_RANDOM_0_1() > 0.5f ? true : false)

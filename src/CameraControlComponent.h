@@ -1,9 +1,9 @@
-#ifndef PLATFORMER_CAMERA_COMPONENT_H
-#define PLATFORMER_CAMERA_COMPONENT_H
+#ifndef GAME_CAMERA_COMPONENT_H
+#define GAME_CAMERA_COMPONENT_H
 
 #include "Component.h"
 
-namespace platformer
+namespace game
 {
     /**
      * Controls the active camera, any smoothing/zooming etc should be applied by and configured via this component

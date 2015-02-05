@@ -8,7 +8,7 @@
 #include "Messages.h"
 #include "PlayerComponent.h"
 
-namespace platformer
+namespace game
 {
     PlayerHandOfGodComponent::PlayerHandOfGodComponent()
         : _levelLoaded(false)
@@ -67,7 +67,7 @@ namespace platformer
         {
             LevelComponent * level = getRootParent()->getComponentInChildren<LevelComponent>();
             _resetPosition = level->getPlayerSpawnPosition();
-            float const height = ((level->getHeight() + 1) * level->getTileHeight()) * PLATFORMER_UNIT_SCALAR;
+            float const height = ((level->getHeight() + 1) * level->getTileHeight()) * GAME_UNIT_SCALAR;
             _boundary.width = _camera->getTargetBoundary().width;
             _boundary.height = height;
             _boundary.x = _camera->getTargetBoundary().x;

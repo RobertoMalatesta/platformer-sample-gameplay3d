@@ -6,15 +6,15 @@
 #include "Messages.h"
 #include "Scene.h"
 
-namespace platformer
+namespace game
 {
     CameraControlComponent::CameraControlComponent()
         : _camera(nullptr)
-        , _minZoom(PLATFORMER_UNIT_SCALAR / 2)
-        , _maxZoom(PLATFORMER_UNIT_SCALAR * 2)
+        , _minZoom(GAME_UNIT_SCALAR / 2)
+        , _maxZoom(GAME_UNIT_SCALAR * 2)
         , _currentZoom(_maxZoom)
         , _previousZoom(0.0f)
-        , _targetZoom(PLATFORMER_UNIT_SCALAR)
+        , _targetZoom(GAME_UNIT_SCALAR)
         , _zoomSpeedScale(0.003f)
         , _smoothSpeedScale(0.25f)
         , _targetBoundaryScale(gameplay::Vector2(0.25f, 0.5))

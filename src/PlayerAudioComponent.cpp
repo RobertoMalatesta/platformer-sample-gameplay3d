@@ -6,7 +6,7 @@
 #include "Messages.h"
 #include "PlayerComponent.h"
 
-namespace platformer
+namespace game
 {
     PlayerAudioComponent::PlayerAudioComponent()
         : _player(nullptr)
@@ -35,7 +35,7 @@ namespace platformer
                 node->getParent()->removeChild(node);
             }
 
-            PLATFORMER_ASSERT_SINGLE_REF(node);
+            GAME_ASSERT_SINGLE_REF(node);
             SAFE_RELEASE(node);
         }
 

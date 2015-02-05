@@ -1,5 +1,5 @@
-#ifndef PLATFORMER_COLLISION_OBJECT_COMPONENT_H
-#define PLATFORMER_COLLISION_OBJECT_COMPONENT_H
+#ifndef GAME_COLLISION_OBJECT_COMPONENT_H
+#define GAME_COLLISION_OBJECT_COMPONENT_H
 
 #include "Component.h"
 
@@ -8,7 +8,7 @@ namespace gameplay
     class Properties;
 }
 
-namespace platformer
+namespace game
 {
     /**
      * Creates a collision object from a .physics file and creates a node for it.

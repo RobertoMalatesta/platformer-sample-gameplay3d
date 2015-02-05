@@ -3,7 +3,7 @@
 #include "GameObject.h"
 #include "Common.h"
 
-namespace platformer
+namespace game
 {
     CollisionObjectComponent::CollisionObjectComponent()
         : _node(nullptr)

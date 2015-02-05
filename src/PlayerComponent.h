@@ -1,5 +1,5 @@
-#ifndef PLATFORMER_PLAYER_COMPONENT_H
-#define PLATFORMER_PLAYER_COMPONENT_H
+#ifndef GAME_PLAYER_COMPONENT_H
+#define GAME_PLAYER_COMPONENT_H
 
 #include "Component.h"
 
@@ -8,7 +8,7 @@ namespace gameplay
     class Properties;
 }
 
-namespace platformer
+namespace game
 {
     class CameraControlComponent;
     class CollisionObjectComponent;

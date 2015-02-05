@@ -1,5 +1,5 @@
-#ifndef PLATFORMER_SPRITE_ANIMATION_COMPONENT_H
-#define PLATFORMER_SPRITE_ANIMATION_COMPONENT_H
+#ifndef GAME_SPRITE_ANIMATION_COMPONENT_H
+#define GAME_SPRITE_ANIMATION_COMPONENT_H
 
 #include "Component.h"
 #include "SpriteSheet.h"
@@ -9,7 +9,7 @@ namespace gameplay
     class Properties;
 }
 
-namespace platformer
+namespace game
 {
     /**
      * Creates a configurable sprite animation, rendering not handled by this component.

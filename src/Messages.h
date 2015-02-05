@@ -1,9 +1,9 @@
-#ifndef PLATFORMER_MESSAGES_H
-#define PLATFORMER_MESSAGES_H
+#ifndef GAME_MESSAGES_H
+#define GAME_MESSAGES_H
 
 #include "GameObjectCommon.h"
 
-namespace platformer
+namespace game
 {
     GAMEOBJECTS_MESSAGE_TYPES_BEGIN()
         GAMEOBJECTS_MESSAGE_TYPE(Key)

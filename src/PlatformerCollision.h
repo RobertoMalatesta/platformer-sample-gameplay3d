@@ -1,10 +1,10 @@
-#ifndef PLATFORMER_TERRAIN_INFO_H
-#define PLATFORMER_TERRAIN_INFO_H
+#ifndef GAME_TERRAIN_INFO_H
+#define GAME_TERRAIN_INFO_H
 
 #include "Common.h"
 #include "GameObjectCommon.h"
 
-namespace platformer
+namespace game
 {
     /**
      * The unique tile types that can be set per tile in a level.

@@ -1,11 +1,11 @@
-#ifndef PLATFORMER_LEVEL_RENDERER_COMPONENT_H
-#define PLATFORMER_LEVEL_RENDERER_COMPONENT_H
+#ifndef GAME_LEVEL_RENDERER_COMPONENT_H
+#define GAME_LEVEL_RENDERER_COMPONENT_H
 
 #include "Component.h"
 #include "LevelComponent.h"
 #include "SpriteAnimationComponent.h"
 
-namespace platformer
+namespace game
 {
     class CameraControlComponent;
     class EnemyComponent;

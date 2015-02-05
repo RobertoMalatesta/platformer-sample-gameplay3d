@@ -1,5 +1,5 @@
-#ifndef PLATFORMER_H
-#define PLATFORMER_H
+#ifndef GAME_H
+#define GAME_H
 
 #include "Game.h"
 #include "GameObjectMessage.h"
@@ -11,7 +11,7 @@ namespace gameplay
     class Texture;
 }
 
-namespace platformer
+namespace game
 {
     class PropertiesRef;
     class SpriteSheet;

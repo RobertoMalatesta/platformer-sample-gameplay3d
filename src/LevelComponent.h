@@ -1,5 +1,5 @@
-#ifndef PLATFORMER_LEVEL_COMPONENT_H
-#define PLATFORMER_LEVEL_COMPONENT_H
+#ifndef GAME_LEVEL_COMPONENT_H
+#define GAME_LEVEL_COMPONENT_H
 
 #include "Component.h"
 #include "PlatformerCollision.h"
@@ -9,7 +9,7 @@ namespace gameplay
     class Properties;
 }
 
-namespace platformer
+namespace game
 {
     /**
      * Creates the player, enemy AI and physics defined in a level file (*.level).
