@@ -2,6 +2,7 @@
 
 #include "Common.h"
 #include "FileSystem.h"
+#include "SpriteSheet.h"
 
 namespace game
 {

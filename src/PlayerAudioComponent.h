@@ -6,7 +6,6 @@
 namespace game
 {
     class PlayerComponent;
-    struct PlayerJumpMessage;
 
     /**
      * Listens for audible player messages and triggers playback of audio sources

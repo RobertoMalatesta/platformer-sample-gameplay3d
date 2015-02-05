@@ -11,7 +11,6 @@ namespace gameplay
 namespace game
 {
     class CameraControlComponent;
-    class CollisionObjectComponent;
     class SpriteAnimationComponent;
 
     /**

@@ -2,7 +2,7 @@
 #define GAME_COLLISION_HANDLER_COMPONENT_H
 
 #include "Component.h"
-#include "PhysicsRigidBody.h"
+#include "PhysicsCollisionObject.h"
 
 namespace gameplay
 {
@@ -20,7 +20,7 @@ namespace game
      *
      * @script{ignore}
     */
-    class CollisionHandlerComponent : public gameobjects::Component, public gameplay::PhysicsRigidBody::CollisionListener
+    class CollisionHandlerComponent : public gameobjects::Component, public gameplay::PhysicsCollisionObject::CollisionListener
     {
     public:
         explicit CollisionHandlerComponent();

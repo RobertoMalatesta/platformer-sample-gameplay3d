@@ -1,5 +1,6 @@
 #include "CollisionHandlerComponent.h"
 
+#include "Common.h"
 #include "EnemyComponent.h"
 #include "GameObject.h"
 #include "LevelComponent.h"

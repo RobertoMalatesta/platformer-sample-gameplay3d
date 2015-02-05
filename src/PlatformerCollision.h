@@ -1,7 +1,6 @@
 #ifndef GAME_TERRAIN_INFO_H
 #define GAME_TERRAIN_INFO_H
 
-#include "Common.h"
 #include "GameObjectCommon.h"
 
 namespace game

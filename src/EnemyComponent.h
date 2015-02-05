@@ -10,7 +10,6 @@ namespace gameplay
 
 namespace game
 {
-    class CollisionObjectComponent;
     class SpriteAnimationComponent;
 
     /**

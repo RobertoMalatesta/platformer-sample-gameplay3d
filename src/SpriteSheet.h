@@ -5,6 +5,7 @@
 #include <map>
 #include "Rectangle.h"
 #include "Ref.h"
+#include "Sprite.h"
 #include <string>
 
 namespace gameplay
@@ -14,14 +15,6 @@ namespace gameplay
 
 namespace game
 {
-    /** @script{ignore} */
-    struct Sprite
-    {
-        std::string _name;
-        gameplay::Rectangle _src;
-        bool _isRotated;
-    };
-
     /**
      * Loads a sprite sheet from a file (*.ss)
      *

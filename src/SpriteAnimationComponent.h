@@ -2,7 +2,7 @@
 #define GAME_SPRITE_ANIMATION_COMPONENT_H
 
 #include "Component.h"
-#include "SpriteSheet.h"
+#include "Sprite.h"
 
 namespace gameplay
 {

@@ -13,6 +13,7 @@
 #include "PlayerInputComponent.h"
 #include "PlatformerEventForwarderComponent.h"
 #include "Scene.h"
+#include "SpriteSheet.h"
 #include "SpriteAnimationComponent.h"
 #include "CollisionHandlerComponent.h"
 #include "LevelRendererComponent.h"
