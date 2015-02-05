@@ -58,6 +58,8 @@ LOCAL_SRC_FILES :=  ../external/GamePlay/gameplay/src/gameplay-main-android.cpp 
                     PlayerComponent.cpp \
                     PlayerHandOfGodComponent.cpp \
                     PlayerInputComponent.cpp \
+                    PropertiesRef.cpp \
+                    ResourceManager.cpp \
                     SpriteAnimationComponent.cpp \
                     SpriteSheet.cpp \
 
