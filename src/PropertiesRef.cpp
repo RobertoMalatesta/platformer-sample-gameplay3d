@@ -1,6 +1,7 @@
 #include "PropertiesRef.h"
 
 #include "Common.h"
+#include "Properties.h"
 
 namespace game
 {
