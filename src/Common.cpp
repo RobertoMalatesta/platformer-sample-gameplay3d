@@ -7,60 +7,6 @@
 
 namespace game
 {
-    PropertiesRef::PropertiesRef(gameplay::Properties * properties)
-        : _properties(properties)
-    {
-    }
-
-    PropertiesRef::~PropertiesRef()
-    {
-        SAFE_DELETE(_properties);
-    }
-
-    gameplay::Properties * PropertiesRef::get()
-    {
-        return _properties;
-    }
-
-    PropertiesRef * createProperties(const char * url)
-    {
-        PropertiesRef * result = nullptr;
-        static std::map<std::string, PropertiesRef *> cache;
-
-        auto itr = cache.find(url);
-        if(itr == cache.end())
-        {
-            GAME_LOG("Loading properties '%s'", url);
-            result = new PropertiesRef(gameplay::Properties::create(url));
-
-            if(result)
-            {
-                cache[url] = result;
-            }
-            else
-            {
-                GAME_ASSERTFAIL("Failed to load proerties %s", url);
-            }
-        }
-        else
-        {
-            result = itr->second;
-            result->addRef();
-        }
-
-        return result;
-    }
-
-    gameplay::SpriteBatch * createSinglePixelSpritebatch()
-    {
-        std::array<unsigned char, 4> rgba;
-        rgba.fill(std::numeric_limits<unsigned char>::max());
-        gameplay::Texture * texture = gameplay::Texture::create(gameplay::Texture::Format::RGBA, 1, 1, &rgba.front());
-        gameplay::SpriteBatch * spriteBatch = gameplay::SpriteBatch::create(texture);
-        texture->release();
-        return spriteBatch;
-    }
-
 #ifndef _FINAL
     /** @script{ignore} */
     struct LogDisplayMessage
@@ -171,25 +117,8 @@ namespace game
 #else
         if (level != gameplay::Logger::Level::LEVEL_INFO)
         {
-            // <Insert User LoadingScreenControllering crash notfication/log upload to a server>
+            // <Insert User user facing crash notfication/log upload to a server>
         }
 #endif
-    }
-
-    void forceReleaseRef(gameplay::Ref * ref)
-    {
-        if (ref)
-        {
-            while (true)
-            {
-                bool const done = ref->getRefCount() == 1;
-                ref->release();
-
-                if (done)
-                {
-                    break;
-                }
-            }
-        }
     }
 }

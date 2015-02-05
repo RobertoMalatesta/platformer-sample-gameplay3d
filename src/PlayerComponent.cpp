@@ -3,6 +3,7 @@
 #include "CameraControlComponent.h"
 #include "Common.h"
 #include "CollisionObjectComponent.h"
+#include "Game.h"
 #include "GameObject.h"
 #include "Messages.h"
 #include "PhysicsCharacter.h"

@@ -3,6 +3,7 @@
 #include "CameraControlComponent.h"
 #include "CameraControlComponent.h"
 #include "Common.h"
+#include "Game.h"
 #include "GameObject.h"
 #include "GameObjectController.h"
 

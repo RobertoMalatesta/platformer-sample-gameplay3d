@@ -3,15 +3,6 @@
 
 #include <array>
 #include "Base.h"
-#include "Game.h"
-#include "Logger.h"
-#include "Ref.h"
-
-namespace gameplay
-{
-    class Properties;
-    class SpriteBatch;
-}
 
 namespace game
 {
@@ -28,7 +19,6 @@ namespace game
     #define GAME_PRINT_VEC2(id, vec) GAME_LOG("%s: %f,%f", id, vec.x, vec.y)
     #define GAME_PRINT_VEC3(id, vec) GAME_LOG("%s: %f,%f,%f,", id, vec.x, vec.y, vec.z)
     #define GAME_RANDOM_RANGE_INT(min, max) min + (rand() % (int)(max - min + 1))
-    #define GAME_FORCE_RELEASE(ref) forceReleaseRef(ref)
     #define GAME_ASSERT_SINGLE_REF(ref) GAME_ASSERT(ref->getRefCount() == 1, "Ref has references still outstanding")
     #define GAME_FONT_SIZE_SMALL 20
     #define GAME_FONT_SIZE_REGULAR 35
@@ -39,35 +29,8 @@ namespace game
     // 1 metre = 32 pixels
     #define GAME_UNIT_SCALAR 0.03125f
 
-    /**
-     * @script{ignore}
-    */
-    gameplay::SpriteBatch * createSinglePixelSpritebatch();
-
-    class PropertiesRef : public gameplay::Ref
-    {
-    public:
-        PropertiesRef(gameplay::Properties * properties);
-        virtual ~PropertiesRef();
-        gameplay::Properties * get();
-    private:
-        gameplay::Properties * _properties;
-    };
-
-    /**
-     * @script{ignore}
-    */
-    PropertiesRef * createProperties(const char * url);
-
     /** @script{ignore} */
     void loggingCallback(gameplay::Logger::Level level, char const * msg);
-
-    /**
-     * Recursivley calls release() on the ref until it has been deleted
-     *
-     * @script{ignore}
-    */
-    void forceReleaseRef(gameplay::Ref * ref);
 #ifndef _FINAL
     #define GAME_ON_SCREEN_LOG_HISTORY_CAPACITY 25
 

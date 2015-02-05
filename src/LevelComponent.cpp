@@ -3,9 +3,12 @@
 #include "Common.h"
 #include "CollisionObjectComponent.h"
 #include "EnemyComponent.h"
+#include "Game.h"
 #include "GameObject.h"
 #include "GameObjectController.h"
 #include "Messages.h"
+#include "PropertiesRef.h"
+#include "ResourceManager.h"
 #include "SpriteSheet.h"
 
 namespace game
@@ -274,7 +277,7 @@ namespace game
                 break;
             }
 
-            PropertiesRef * collisionPropertiesRef = createProperties((std::string("res/physics/level.physics#") + collisionId).c_str());
+            PropertiesRef * collisionPropertiesRef = ResourceManager::getInstance().getProperties((std::string("res/physics/level.physics#") + collisionId).c_str());
             gameplay::Properties * collisionProperties = collisionPropertiesRef->get();
 
             while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
@@ -316,7 +319,7 @@ namespace game
                 bool const isBoulder = objectNamespace->exists("ellipse");
                 std::string collisionId = isBoulder ? "boulder" : "crate";
 
-                PropertiesRef * collisionPropertiesRef = createProperties((std::string("res/physics/level.physics#") + collisionId).c_str());
+                PropertiesRef * collisionPropertiesRef = ResourceManager::getInstance().getProperties((std::string("res/physics/level.physics#") + collisionId).c_str());
                 gameplay::Properties * collisionProperties = collisionPropertiesRef->get();
                 gameplay::Rectangle bounds = getObjectBounds(objectNamespace);
                 std::array<char, 255> dimensionsBuffer;
@@ -347,8 +350,8 @@ namespace game
     {
         if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
         {
-            SpriteSheet * spriteSheet = SpriteSheet::create("res/spritesheets/collectables.ss");
-            PropertiesRef * collisionPropertiesRef = createProperties("res/physics/level.physics#collectable");
+            SpriteSheet * spriteSheet = ResourceManager::getInstance().getSpriteSheet("res/spritesheets/collectables.ss");
+            PropertiesRef * collisionPropertiesRef = ResourceManager::getInstance().getProperties("res/physics/level.physics#collectable");
             gameplay::Properties * collisionProperties = collisionPropertiesRef->get();
             std::vector<Sprite> sprites;
 
@@ -416,7 +419,7 @@ namespace game
     {
         if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
         {
-            PropertiesRef * collisionPropertiesRef = createProperties("res/physics/level.physics#bridge");
+            PropertiesRef * collisionPropertiesRef = ResourceManager::getInstance().getProperties("res/physics/level.physics#bridge");
             gameplay::Properties * collisionProperties = collisionPropertiesRef->get();
 
             while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
@@ -487,7 +490,7 @@ namespace game
 
     void LevelComponent::load()
     {
-        PropertiesRef * rootRef = createProperties(_level.c_str());
+        PropertiesRef * rootRef = ResourceManager::getInstance().getProperties(_level.c_str());
         gameplay::Properties * root = rootRef->get();
 
         if (gameplay::Properties * propertiesNamespace = root->getNamespace("properties", true, false))

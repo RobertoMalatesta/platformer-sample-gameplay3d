@@ -2,21 +2,22 @@
 #include "Platformer.h"
 
 #include "CameraControlComponent.h"
+#include "CollisionHandlerComponent.h"
 #include "CollisionObjectComponent.h"
 #include "EnemyComponent.h"
 #include "GameObjectController.h"
 #include "LevelComponent.h"
+#include "LevelRendererComponent.h"
 #include "Messages.h"
 #include "PlayerAudioComponent.h"
 #include "PlayerComponent.h"
 #include "PlayerHandOfGodComponent.h"
 #include "PlayerInputComponent.h"
 #include "PlatformerEventForwarderComponent.h"
+#include "ResourceManager.h"
 #include "Scene.h"
 #include "SpriteSheet.h"
 #include "SpriteAnimationComponent.h"
-#include "CollisionHandlerComponent.h"
-#include "LevelRendererComponent.h"
 
 game::Platformer platformer;
 
@@ -75,10 +76,9 @@ namespace game
 
         _debugFont = gameplay::Font::create(getConfig()->getString("debug_font"));
 #endif
-
         // Display a splash screen during loading, consider displaying a loading progress indicator once initial load time lasts more
         // than a few seconds on weakest target hardware
-        _splashBackgroundSpriteBatch = createSinglePixelSpritebatch();
+        _splashBackgroundSpriteBatch = ResourceManager::createSinglePixelSpritebatch();
         _splashForegroundSpriteBatch = gameplay::SpriteBatch::create("@res/textures/splash");
         renderOnce(this, &Platformer::renderSplashScreen, nullptr);
 
@@ -94,67 +94,23 @@ namespace game
             }
         }
 #endif
+        setMultiTouch(true);
 
-        std::vector<std::string> fileList;
-
-        std::string const textureDirectory = gameplay::FileSystem::resolvePath("@res/textures");
-        gameplay::FileSystem::listFiles(textureDirectory.c_str(), fileList);
-
-        for (std::string & fileName : fileList)
+        if (isGestureSupported(gameplay::Gesture::GESTURE_PINCH))
         {
-            std::string const textureFile = textureDirectory + "/" + fileName;
-            gameplay::Texture * texture = gameplay::Texture::create(textureFile.c_str());
-            texture->addRef();
-            _cachedTextures.push_back(texture);
+            registerGesture(gameplay::Gesture::GESTURE_PINCH);
         }
 
-        if(gameplay::Properties * propertyDirNamespace = getConfig()->getNamespace("properties_directories", true))
+        if(gameplay::Properties * windowSettings = getConfig()->getNamespace("window", true))
         {
-            while(char const * dir = propertyDirNamespace->getNextProperty())
+            char const * vsyncOption = "vsync";
+            if(windowSettings->exists(vsyncOption))
             {
-                fileList.clear();
-                gameplay::FileSystem::listFiles(dir, fileList);
-
-                for(std::string & propertyUrl : fileList)
-                {
-                    std::string const propertyPath = std::string(dir) + std::string("/") + propertyUrl;
-                    PropertiesRef * propertiesRef = createProperties(propertyPath.c_str());
-
-                    bool const usesTopLevelNamespaceUrls = propertyDirNamespace->getBool();
-
-                    if(usesTopLevelNamespaceUrls)
-                    {
-                        gameplay::Properties * properties = propertiesRef->get();
-
-                        while(gameplay::Properties * topLevelChildNS = properties->getNextNamespace())
-                        {
-                            PropertiesRef * childPropertiesRef = createProperties(std::string(propertyPath + std::string("#") + topLevelChildNS->getId()).c_str());
-                            childPropertiesRef->addRef();
-                            _cachedProperties.push_back(childPropertiesRef);
-                        }
-
-                        SAFE_RELEASE(propertiesRef);
-                    }
-                    else
-                    {
-                        propertiesRef->addRef();
-                        _cachedProperties.push_back(propertiesRef);
-                    }
-                }
+                setVsync(windowSettings->getBool(vsyncOption));
             }
         }
 
-        fileList.clear();
-        std::string const spriteSheetDirectory = "res/spritesheets";
-        gameplay::FileSystem::listFiles(spriteSheetDirectory.c_str(), fileList);
-
-        for (std::string & fileName : fileList)
-        {
-            std::string const spriteSheetFile = spriteSheetDirectory + "/" + fileName;
-            SpriteSheet * spriteSheet = SpriteSheet::create(spriteSheetFile.c_str());
-            spriteSheet->addRef();
-            _cachedSpriteSheets.push_back(spriteSheet);
-        }
+        ResourceManager::getInstance().initialize();
 
         // Register the component types so the GameObject system will know how to serialize them from the .go files
         gameobjects::GameObjectController::getInstance().registerComponent<CameraControlComponent>("camera_control");
@@ -178,22 +134,6 @@ namespace game
         _touchMessage = TouchMessage::create();
         _mouseMessage = MouseMessage::create();
 
-        setMultiTouch(true);
-
-        if (isGestureSupported(gameplay::Gesture::GESTURE_PINCH))
-        {
-            registerGesture(gameplay::Gesture::GESTURE_PINCH);
-        }
-
-        if(gameplay::Properties * windowSettings = getConfig()->getNamespace("window", true))
-        {
-            char const * vsyncOption = "vsync";
-            if(windowSettings->exists(vsyncOption))
-            {
-                setVsync(windowSettings->getBool(vsyncOption));
-            }
-        }
-
         getAudioListener()->setCamera(nullptr);
         gameobjects::GameObject * rootGameObject = gameobjects::GameObjectController::getInstance().createGameObject("root");
         gameobjects::GameObjectController::getInstance().createGameObject("level_0", rootGameObject);
@@ -201,12 +141,10 @@ namespace game
 
     void Platformer::finalize()
     {
-        // Always cleanup game objects in case any components need to serialse game state
-        gameobjects::GameObjectController::getInstance().finalize();
-
-        // Only perform cleanup for the purposes of detecting memory leaks, in final builds we want 
+        // Only perform resource cleanup for the purposes of detecting memory leaks, in final builds we want
         // to shutdown as fast as possible, the platform will free up all resources used by this process
 #ifdef GP_USE_MEM_LEAK_DETECTION
+        gameobjects::GameObjectController::getInstance().finalize();
         GAMEOBJECTS_DELETE_MESSAGE(_pinchMessage);
         GAMEOBJECTS_DELETE_MESSAGE(_keyMessage);
         GAMEOBJECTS_DELETE_MESSAGE(_touchMessage);
@@ -214,31 +152,7 @@ namespace game
         SAFE_RELEASE(_debugFont);
         SAFE_DELETE(_splashBackgroundSpriteBatch);
         SAFE_DELETE(_splashForegroundSpriteBatch);
-
-        int const unusedCachedAssetRefCount = 2;
-
-
-        for (PropertiesRef * properties : _cachedProperties)
-        {
-            GAME_ASSERT(properties->getRefCount() == unusedCachedAssetRefCount, "Unreleased properties found");
-            GAME_FORCE_RELEASE(properties);
-        }
-
-        for (SpriteSheet * spriteSheet : _cachedSpriteSheets)
-        {
-            GAME_ASSERT(spriteSheet->getRefCount() == unusedCachedAssetRefCount, "Unreleased spritesheet found");
-            GAME_FORCE_RELEASE(spriteSheet);
-        }
-
-        _cachedSpriteSheets.clear();
-
-        for (gameplay::Texture * texture : _cachedTextures)
-        {
-            GAME_ASSERT(texture->getRefCount() == unusedCachedAssetRefCount, "Unreleased texture found");
-            GAME_FORCE_RELEASE(texture);
-        }
-
-        _cachedTextures.clear();
+        ResourceManager::getInstance().finalize();
 
         // Removing log handlers once everything else has been torn down
         clearLogHistory();

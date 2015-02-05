@@ -4,12 +4,14 @@
 #include "CollisionObjectComponent.h"
 #include "Common.h"
 #include "EnemyComponent.h"
+#include "Game.h"
 #include "GameObject.h"
 #include "GameObjectController.h"
 #include "Messages.h"
 #include "PhysicsCharacter.h"
 #include "PlayerComponent.h"
 #include "PlayerInputComponent.h"
+#include "ResourceManager.h"
 #include "SpriteSheet.h"
 
 namespace game
@@ -87,7 +89,7 @@ namespace game
 
         _player->forEachAnimation([this, &uninitialisedSpriteBatches](PlayerComponent::State::Enum state, SpriteAnimationComponent * animation) -> bool
         {
-            SpriteSheet * animSheet = SpriteSheet::create(animation->getSpriteSheetPath());
+            SpriteSheet * animSheet = ResourceManager::getInstance().getSpriteSheet(animation->getSpriteSheetPath());
              gameplay::SpriteBatch * spriteBatch = gameplay::SpriteBatch::create(animSheet->getTexture());
             spriteBatch->getSampler()->setFilterMode(gameplay::Texture::Filter::NEAREST, gameplay::Texture::Filter::NEAREST);
             spriteBatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::CLAMP, gameplay::Texture::Wrap::CLAMP);
@@ -107,7 +109,7 @@ namespace game
 
             enemy->forEachAnimation([this, &enemyuninitialisedSpriteBatches, &enemy, &uninitialisedSpriteBatches](EnemyComponent::State::Enum state, SpriteAnimationComponent * animation) -> bool
             {
-                SpriteSheet * animSheet = SpriteSheet::create(animation->getSpriteSheetPath());
+                SpriteSheet * animSheet = ResourceManager::getInstance().getSpriteSheet(animation->getSpriteSheetPath());
                 gameplay::SpriteBatch * spriteBatch = nullptr;
 
                 auto enemyBatchItr = enemyuninitialisedSpriteBatches.find(animation->getSpriteSheetPath());
@@ -133,12 +135,12 @@ namespace game
 
         if (!_levelLoadedOnce)
         {
-            _pixelSpritebatch = createSinglePixelSpritebatch();
+            _pixelSpritebatch = ResourceManager::createSinglePixelSpritebatch();
             uninitialisedSpriteBatches.push_back(_pixelSpritebatch);
 
             uninitialisedSpriteBatches.push_back(_parallaxSpritebatch);
 
-            _interactablesSpritesheet = SpriteSheet::create("res/spritesheets/interactables.ss");
+            _interactablesSpritesheet = ResourceManager::getInstance().getSpriteSheet("res/spritesheets/interactables.ss");
             _interactablesSpritebatch = gameplay::SpriteBatch::create(_interactablesSpritesheet->getTexture());
             uninitialisedSpriteBatches.push_back(_interactablesSpritebatch);
 
@@ -154,7 +156,7 @@ namespace game
             SAFE_RELEASE(noiseSampler);
             waterMaterial->getParameter("u_time")->bindValue(this, &LevelRendererComponent::getWaterTimeUniform);
 
-            SpriteSheet * collectablesSpriteSheet = SpriteSheet::create("res/spritesheets/collectables.ss");
+            SpriteSheet * collectablesSpriteSheet = ResourceManager::getInstance().getSpriteSheet("res/spritesheets/collectables.ss");
             _collectablesSpritebatch = gameplay::SpriteBatch::create(collectablesSpriteSheet->getTexture());
             SAFE_RELEASE(collectablesSpriteSheet);
             uninitialisedSpriteBatches.push_back(_collectablesSpritebatch);
@@ -284,7 +286,7 @@ namespace game
         {
             if (strcmp(ns->getNamespace(), "parallax") == 0)
             {
-                SpriteSheet * spritesheet = SpriteSheet::create(ns->getString("spritesheet"));
+                SpriteSheet * spritesheet = ResourceManager::getInstance().getSpriteSheet(ns->getString("spritesheet"));
                 ns->getVector4("fill", &_parallaxFillColor);
                 ns->getVector2("offset", &_parallaxOffset);
                 _parallaxOffset *= GAME_UNIT_SCALAR;

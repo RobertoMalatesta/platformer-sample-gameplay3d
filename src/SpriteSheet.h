@@ -28,8 +28,9 @@ namespace game
     */
     class SpriteSheet : public gameplay::Ref
     {
+        friend class ResourceManager;
+
     public:
-        static SpriteSheet * create(std::string const & spriteSheetPath);
         ~SpriteSheet();
 
         Sprite * getSprite(std::string const & spriteName);
@@ -47,7 +48,6 @@ namespace game
         gameplay::Texture * _texture;
         std::string _name;
         std::map<std::string, Sprite> _sprites;
-        static std::map<std::string, SpriteSheet *> & getCache();
     };
 }
 

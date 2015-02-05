@@ -41,8 +41,6 @@ namespace game
 
     private:
         void renderLoadingMessage(void * message);
-        void loadCachedAssets();
-        void unloadCachedAssets();
         void broadcastKeyEvent(gameplay::Keyboard::KeyEvent evt, int key);
         void renderSplashScreen(void * = nullptr);
         void setSplashScreenFade(float duration, bool isFadingIn, bool showLogo);
@@ -57,9 +55,6 @@ namespace game
         gameobjects::Message * _mouseMessage;
         gameplay::SpriteBatch * _splashForegroundSpriteBatch;
         gameplay::SpriteBatch * _splashBackgroundSpriteBatch;
-        std::vector<gameplay::Texture *> _cachedTextures;
-        std::vector<PropertiesRef *> _cachedProperties;
-        std::vector<SpriteSheet *> _cachedSpriteSheets;
         std::queue<std::tuple<float,bool,bool>> _splashScreenFadeRequests;
         float _splashScreenAlpha;
         float _splashScreenFadeDuration;

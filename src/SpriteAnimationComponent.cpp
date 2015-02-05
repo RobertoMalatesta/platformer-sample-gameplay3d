@@ -2,6 +2,7 @@
 
 #include "Common.h"
 #include "FileSystem.h"
+#include "ResourceManager.h"
 #include "SpriteSheet.h"
 
 namespace game
@@ -26,7 +27,7 @@ namespace game
     {
         _fps = 1000.0f / _fps;
 
-        SpriteSheet * spriteSheet = SpriteSheet::create(_spriteSheetPath);
+        SpriteSheet * spriteSheet = ResourceManager::getInstance().getSpriteSheet(_spriteSheetPath);
 
         int frames = 0;
         std::array<char, UCHAR_MAX> str;
@@ -65,7 +66,14 @@ namespace game
         {
             for(std::string const spriteName : _spriteNames)
             {
-                _sprites.push_back(*spriteSheet->getSprite(spriteName));
+                if(Sprite * sprite = spriteSheet->getSprite(spriteName))
+                {
+                    _sprites.push_back(*sprite);
+                }
+                else
+                {
+                    GAME_ASSERTFAIL("Couldn't find sprite '%s'", spriteName.c_str());
+                }
             }
         }
 

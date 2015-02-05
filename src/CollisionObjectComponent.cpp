@@ -2,6 +2,8 @@
 
 #include "GameObject.h"
 #include "Common.h"
+#include "PropertiesRef.h"
+#include "ResourceManager.h"
 
 namespace game
 {
@@ -16,7 +18,7 @@ namespace game
 
     void CollisionObjectComponent::initialize()
     {
-        PropertiesRef * physicsPropertiesRef = createProperties(_physics.c_str());
+        PropertiesRef * physicsPropertiesRef = ResourceManager::getInstance().getProperties(_physics.c_str());
         gameplay::Properties * physicsProperties = physicsPropertiesRef->get();
         _node = gameplay::Node::create(getId().c_str());
         _node->setCollisionObject(_physics.c_str());

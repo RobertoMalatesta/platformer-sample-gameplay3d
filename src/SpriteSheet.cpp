@@ -1,33 +1,13 @@
 #include "SpriteSheet.h"
 
 #include "Common.h"
+#include "Properties.h"
+#include "PropertiesRef.h"
+#include "ResourceManager.h"
 #include "Texture.h"
 
 namespace game
 {
-    SpriteSheet * SpriteSheet::create(std::string const & spriteSheetPath)
-    {
-        SpriteSheet * spriteSheet = nullptr;
-        
-        auto & cache = getCache();
-
-        auto itr = cache.find(spriteSheetPath);
-
-        if (itr != cache.end())
-        {
-            itr->second->addRef();
-            spriteSheet = itr->second;
-        }
-        else
-        {
-            spriteSheet = new SpriteSheet();
-            spriteSheet->initialize(spriteSheetPath);
-            cache[spriteSheetPath] = spriteSheet;
-        }
-
-        return spriteSheet;
-    }
-
     SpriteSheet::SpriteSheet()
         : _texture(nullptr)
     {
@@ -40,7 +20,7 @@ namespace game
 
     void SpriteSheet::initialize(std::string const & filePath)
     {
-        PropertiesRef * propertyRef = createProperties(filePath.c_str());
+        PropertiesRef * propertyRef = ResourceManager::getInstance().getProperties(filePath.c_str());
         gameplay::Properties * properties = propertyRef->get();
 
         GAME_ASSERT(properties, "Failed to load sprite sheet %s", filePath.c_str());
@@ -106,12 +86,6 @@ namespace game
     std::string const & SpriteSheet::getName() const
     {
         return _name;
-    }
-
-    std::map<std::string, SpriteSheet *> & SpriteSheet::getCache()
-    {
-        static std::map<std::string, SpriteSheet *> cache;
-        return cache;
     }
 
     void SpriteSheet::forEachSprite(std::function<void(Sprite const &)> func)
