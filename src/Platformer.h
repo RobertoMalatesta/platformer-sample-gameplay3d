@@ -6,16 +6,11 @@
 
 namespace gameplay
 {
-    class Font;
     class SpriteBatch;
-    class Texture;
 }
 
 namespace game
 {
-    class PropertiesRef;
-    class SpriteSheet;
-
     /**
      * A 2D platformer
      *
@@ -38,7 +33,6 @@ namespace game
         virtual bool mouseEvent(gameplay::Mouse::MouseEvent evt, int x, int y, int wheelDelta) override;
         virtual void update(float elapsedTime) override;
         virtual void render(float elapsedTime) override;
-
     private:
         void renderLoadingMessage(void * message);
         void broadcastKeyEvent(gameplay::Keyboard::KeyEvent evt, int key);
@@ -46,13 +40,11 @@ namespace game
         void setSplashScreenFade(float duration, bool isFadingIn, bool showLogo);
         void updateSplashScreenFade(float dt = 0.0f);
 
-#ifndef _FINAL
-        gameplay::Font * _debugFont;
-#endif
         gameobjects::Message * _pinchMessage;
         gameobjects::Message * _keyMessage;
         gameobjects::Message * _touchMessage;
         gameobjects::Message * _mouseMessage;
+        gameobjects::Message * _renderLevelMessage;
         gameplay::SpriteBatch * _splashForegroundSpriteBatch;
         gameplay::SpriteBatch * _splashBackgroundSpriteBatch;
         std::queue<std::tuple<float,bool,bool>> _splashScreenFadeRequests;

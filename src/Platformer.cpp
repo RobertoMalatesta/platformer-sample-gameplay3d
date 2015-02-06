@@ -15,7 +15,7 @@
 #include "PlayerInputComponent.h"
 #include "PlatformerEventForwarderComponent.h"
 #include "ResourceManager.h"
-#include "Scene.h"
+#include "ScriptController.h"
 #include "SpriteSheet.h"
 #include "SpriteAnimationComponent.h"
 
@@ -28,6 +28,7 @@ namespace game
         , _pinchMessage(nullptr)
         , _touchMessage(nullptr)
         , _mouseMessage(nullptr)
+        , _renderLevelMessage(nullptr)
         , _splashScreenAlpha(1.0f)
         , _splashScreenFadeDuration(0.0f)
         , _splashScreenFadeActive(false)
@@ -40,9 +41,6 @@ namespace game
 #ifndef WIN32
         , _previousReleasedKey(gameplay::Keyboard::Key::KEY_NONE)
         , _framesSinceKeyReleaseEvent(0)
-#endif
-#ifndef _FINAL
-        , _debugFont(nullptr)
 #endif
     {
     }
@@ -63,8 +61,6 @@ namespace game
     #else
         getConfig()->setString("debug_os", "linux");
     #endif
-
-        _debugFont = gameplay::Font::create(getConfig()->getString("debug_font"));
 #endif
         // Display a splash screen during loading, consider displaying a loading progress indicator once initial load time lasts more
         // than a few seconds on weakest target hardware
@@ -125,6 +121,7 @@ namespace game
         _keyMessage = KeyMessage::create();
         _touchMessage = TouchMessage::create();
         _mouseMessage = MouseMessage::create();
+        _renderLevelMessage = RenderLevelMessage::create();
 
         getAudioListener()->setCamera(nullptr);
         gameobjects::GameObject * rootGameObject = gameobjects::GameObjectController::getInstance().createGameObject("root");
@@ -141,7 +138,7 @@ namespace game
         GAMEOBJECTS_DELETE_MESSAGE(_keyMessage);
         GAMEOBJECTS_DELETE_MESSAGE(_touchMessage);
         GAMEOBJECTS_DELETE_MESSAGE(_mouseMessage);
-        SAFE_RELEASE(_debugFont);
+        GAMEOBJECTS_DELETE_MESSAGE(_renderLevelMessage);
         SAFE_DELETE(_splashBackgroundSpriteBatch);
         SAFE_DELETE(_splashForegroundSpriteBatch);
         ResourceManager::getInstance().finalize();
@@ -292,8 +289,7 @@ namespace game
 
     void Platformer::render(float elapsedTime)
     {
-        clear(gameplay::Game::CLEAR_COLOR_DEPTH, gameplay::Vector4::zero(), 1.0f, 0);
-        gameobjects::GameObjectController::getInstance().render(elapsedTime);
+        gameobjects::GameObjectController::getInstance().broadcastMessage(_renderLevelMessage);
         renderSplashScreen();
 
         if (_splashScreenAlpha <= 0.0f)
@@ -308,35 +304,28 @@ namespace game
         }
 
 #ifndef _FINAL
-        gameobjects::GameObjectController::getInstance().renderDebug(elapsedTime, _debugFont);
-
-        if (gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_physics"))
-        {
-            gameplay::Game::getInstance()->getPhysicsController()->drawDebug(
-                        gameobjects::GameObjectController::getInstance().getScene()->getActiveCamera()->getViewProjectionMatrix());
-        }
-
         std::array<char, CHAR_MAX> buffer;
         static const int paddingX = 5;
-        int const paddingY = _debugFont->getSize();
+        gameplay::Font * debugFont = ResourceManager::getInstance().getDebugFront();
+        int const paddingY = debugFont->getSize();
         int y = paddingY / 2;
-        _debugFont->start();
+        debugFont->start();
 
         if (gameplay::Game::getInstance()->getConfig()->getBool("debug_show_fps"))
         {
             sprintf(&buffer[0], "%d FPS", getFrameRate());
-            _debugFont->drawText(&buffer[0], paddingX, y, gameplay::Vector4(1, 0, 0, 1));
+            debugFont->drawText(&buffer[0], paddingX, y, gameplay::Vector4(1, 0, 0, 1));
             y += paddingY;
         }
 
         if (gameplay::Game::getInstance()->getConfig()->getBool("debug_show_resolution"))
         {
             sprintf(&buffer[0], "%dx%d", getWidth(), getHeight());
-            _debugFont->drawText(&buffer[0], paddingX, y, gameplay::Vector4(1, 0, 0, 1));
+            debugFont->drawText(&buffer[0], paddingX, y, gameplay::Vector4(1, 0, 0, 1));
             y += paddingY;
         }
 
-        _debugFont->finish();
+        debugFont->finish();
 #endif
     }
 
@@ -344,6 +333,7 @@ namespace game
     {
         if(_splashScreenAlpha > 0.0f)
         {
+            gameplay::Font * debugFont = ResourceManager::getInstance().getDebugFront();
             gameplay::Vector4 bgColor = gameplay::Vector4::fromColor(_splashScreenShowsLogo ? 0xF5F5F5FF : 0x0000FF);
             bgColor.w = _splashScreenAlpha;
 
@@ -371,9 +361,9 @@ namespace game
 #if !defined(_FINAL) && !defined(__ANDROID__)
             if(_splashScreenAlpha == 1.0f && getConfig()->getBool("debug_enable_tools"))
             {
-                _debugFont->start();
-                _debugFont->drawText("Running tools...", 5, 5, gameplay::Vector4(1, 0, 0, 1));
-                _debugFont->finish();
+                debugFont->start();
+                debugFont->drawText("Running tools...", 5, 5, gameplay::Vector4(1, 0, 0, 1));
+                debugFont->finish();
             }
 #endif
         }

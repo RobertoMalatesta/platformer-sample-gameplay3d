@@ -56,7 +56,7 @@ namespace game
         _audioNodes[audioSourcePath] = node;
     }
 
-    void PlayerAudioComponent::onMessageReceived(gameobjects::Message * message, int messageType)
+    bool PlayerAudioComponent::onMessageReceived(gameobjects::Message * message, int messageType)
     {
         switch (messageType)
         {
@@ -70,6 +70,8 @@ namespace game
             }
             break;
         }
+
+        return true;
     }
 
     void PlayerAudioComponent::readProperties(gameplay::Properties & properties)

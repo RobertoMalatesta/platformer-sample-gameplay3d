@@ -106,7 +106,7 @@ namespace game
         return !_gamepadButtonState[button] && _previousGamepadButtonState[button];
     }
 
-    void PlayerInputComponent::onMessageReceived(gameobjects::Message * message, int messageType)
+    bool PlayerInputComponent::onMessageReceived(gameobjects::Message * message, int messageType)
     {
         switch (messageType)
         {
@@ -120,6 +120,8 @@ namespace game
             onPinchInput(std::move(PinchMessage(message)));
             break;
         }
+
+        return true;
     }
 
     float PlayerInputComponent::calculateCameraZoomStep(float scale) const

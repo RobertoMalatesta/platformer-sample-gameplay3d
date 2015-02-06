@@ -25,7 +25,7 @@ namespace game
     {
     }
 
-    void LevelComponent::onMessageReceived(gameobjects::Message * message, int messageType)
+    bool LevelComponent::onMessageReceived(gameobjects::Message * message, int messageType)
     {
 #ifndef _FINAL
         // Reload on F5 pressed so we can iterate upon it at runtime
@@ -45,6 +45,7 @@ namespace game
             break;
         }
 #endif
+        return true;
     }
 
     void LevelComponent::reload()

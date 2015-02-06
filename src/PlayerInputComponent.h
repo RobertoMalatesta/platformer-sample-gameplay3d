@@ -29,7 +29,7 @@ namespace game
         virtual void finalize() override;
         virtual void update(float) override;
         virtual void onStart() override;
-        virtual void onMessageReceived(gameobjects::Message * message, int messageType);
+        virtual bool onMessageReceived(gameobjects::Message * message, int messageType);
     private:
         struct GamepadButtons
         {

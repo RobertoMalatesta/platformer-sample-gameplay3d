@@ -58,7 +58,7 @@ namespace game
         }
     }
 
-    void PlayerHandOfGodComponent::onMessageReceived(gameobjects::Message * message, int messageType)
+    bool PlayerHandOfGodComponent::onMessageReceived(gameobjects::Message * message, int messageType)
     {
         switch (messageType)
         {
@@ -82,5 +82,7 @@ namespace game
             _forceNextReset = true;
             break;
         }
+
+        return true;
     }
 }

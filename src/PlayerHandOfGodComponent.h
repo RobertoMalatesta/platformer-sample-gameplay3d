@@ -23,7 +23,7 @@ namespace game
         virtual void initialize() override;
         virtual void finalize() override;
         virtual void onStart() override;
-        virtual void onMessageReceived(gameobjects::Message * message, int messageType) override;
+        virtual bool onMessageReceived(gameobjects::Message * message, int messageType) override;
     private:
         gameplay::Vector2 _resetPosition;
         gameplay::Rectangle _boundary;

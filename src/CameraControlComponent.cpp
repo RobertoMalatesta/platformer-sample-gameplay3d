@@ -58,7 +58,7 @@ namespace game
         }
     }
 
-    void CameraControlComponent::onMessageReceived(gameobjects::Message * message, int messageType)
+    bool CameraControlComponent::onMessageReceived(gameobjects::Message * message, int messageType)
     {
         switch (messageType)
         {
@@ -67,6 +67,8 @@ namespace game
             _targetZoom = _initialTargetZoom;
             break;
         }
+
+        return true;
     }
 
     void CameraControlComponent::update(float elapsedTime)

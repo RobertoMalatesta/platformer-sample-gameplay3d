@@ -26,7 +26,7 @@ namespace game
     {
     }
 
-    void CollisionHandlerComponent::onMessageReceived(gameobjects::Message * message, int messageType)
+    bool CollisionHandlerComponent::onMessageReceived(gameobjects::Message * message, int messageType)
     {
         switch (messageType)
         {
@@ -39,6 +39,8 @@ namespace game
             onLevelUnloaded();
             break;
         }
+
+        return true;
     }
 
     void CollisionHandlerComponent::onLevelLoaded()

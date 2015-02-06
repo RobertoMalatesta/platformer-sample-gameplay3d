@@ -16,7 +16,7 @@ namespace game
         explicit PlatformerEventForwarderComponent();
         ~PlatformerEventForwarderComponent();
     protected:
-        virtual void onMessageReceived(gameobjects::Message * message, int messageType) override;
+        virtual bool onMessageReceived(gameobjects::Message * message, int messageType) override;
     private:
         PlatformerEventForwarderComponent(PlatformerEventForwarderComponent const &);
     };

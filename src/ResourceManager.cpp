@@ -2,6 +2,7 @@
 
 #include "Common.h"
 #include "FileSystem.h"
+#include "Font.h"
 #include "Game.h"
 #include "PropertiesRef.h"
 #include "SpriteBatch.h"
@@ -11,6 +12,7 @@
 namespace game
 {
     ResourceManager::ResourceManager()
+        : _debugFont(nullptr)
     {
     }
 
@@ -140,6 +142,10 @@ namespace game
         _cachedProperties.clear();
         _cachedSpriteSheets.clear();
         _cachedTextures.clear();
+
+#ifndef _FINAL
+        SAFE_RELEASE(_debugFont);
+#endif
     }
 
     PropertiesRef * ResourceManager::getProperties(std::string const & url)
@@ -177,4 +183,17 @@ namespace game
         texture->release();
         return spriteBatch;
     }
+
+#ifndef _FINAL
+    gameplay::Font * ResourceManager::getDebugFront()
+    {
+        if(!_debugFont)
+        {
+            PERF_SCOPE("ResourceManager::getDebugFront")
+            _debugFont = gameplay::Font::create(gameplay::Game::getInstance()->getConfig()->getString("debug_font"));
+        }
+
+        return _debugFont;
+    }
+#endif
 }

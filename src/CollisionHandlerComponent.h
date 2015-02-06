@@ -26,7 +26,7 @@ namespace game
         explicit CollisionHandlerComponent();
         ~CollisionHandlerComponent();
 
-        virtual void onMessageReceived(gameobjects::Message * message, int messageType) override;
+        virtual bool onMessageReceived(gameobjects::Message * message, int messageType) override;
         virtual void update(float elapsedTime) override;
         virtual void initialize() override;
         virtual void finalize() override;

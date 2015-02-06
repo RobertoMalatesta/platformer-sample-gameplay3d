@@ -32,7 +32,7 @@ namespace game
 
         virtual void initialize() override;
         virtual void finalize() override;
-        virtual void onMessageReceived(gameobjects::Message * message, int messageType) override;
+        virtual bool onMessageReceived(gameobjects::Message * message, int messageType) override;
         virtual void readProperties(gameplay::Properties & properties) override;
         virtual void update(float) override;
 

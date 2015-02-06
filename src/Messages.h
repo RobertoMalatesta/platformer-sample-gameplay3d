@@ -17,6 +17,7 @@ namespace game
         GAMEOBJECTS_MESSAGE_TYPE(LevelUnloaded)
         GAMEOBJECTS_MESSAGE_TYPE(RequestLevelReload)
         GAMEOBJECTS_MESSAGE_TYPE(RequestSplashScreenFade)
+        GAMEOBJECTS_MESSAGE_TYPE(RenderLevel)
     GAMEOBJECTS_MESSAGE_TYPES_END()
 
     GAMEOBJECTS_MESSAGE_0(LevelLoaded)
@@ -30,6 +31,7 @@ namespace game
     GAMEOBJECTS_MESSAGE_3(Pinch, int, x, int, y, float, scale)
     GAMEOBJECTS_MESSAGE_4(Touch, int, event, int, x, int, y, int, contactIndex)
     GAMEOBJECTS_MESSAGE_4(Mouse, int, event, int, x, int, y, int, wheelDelta)
+    GAMEOBJECTS_MESSAGE_0(RenderLevel)
 }
 
 #endif

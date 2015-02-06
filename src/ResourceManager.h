@@ -11,6 +11,10 @@ namespace gameplay
     class Properties;
     class Texture;
     class SpriteBatch;
+
+#ifndef _FINAL
+    class Font;
+#endif
 }
 
 namespace game
@@ -30,6 +34,10 @@ namespace game
 
         PropertiesRef * getProperties(std::string const & url);
         SpriteSheet * getSpriteSheet(std::string const & url);
+
+#ifndef _FINAL
+        gameplay::Font * getDebugFront();
+#endif
     private:
         explicit ResourceManager();
         ~ResourceManager();
@@ -38,6 +46,10 @@ namespace game
         std::vector<gameplay::Texture *> _cachedTextures;
         std::map<std::string, PropertiesRef *> _cachedProperties;
         std::map<std::string, SpriteSheet *> _cachedSpriteSheets;
+
+#ifndef _FINAL
+        gameplay::Font * _debugFont;
+#endif
     };
 }
 

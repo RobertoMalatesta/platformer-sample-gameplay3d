@@ -11,6 +11,7 @@
 #include "PhysicsCharacter.h"
 #include "PlayerComponent.h"
 #include "ResourceManager.h"
+#include "Scene.h"
 #include "SpriteSheet.h"
 
 namespace game
@@ -36,7 +37,7 @@ namespace game
     {
     }
 
-    void LevelRendererComponent::onMessageReceived(gameobjects::Message * message, int messageType)
+    bool LevelRendererComponent::onMessageReceived(gameobjects::Message * message, int messageType)
     {
         switch (messageType)
         {
@@ -47,7 +48,12 @@ namespace game
         case(Messages::Type::LevelUnloaded):
             onLevelUnloaded();
             break;
+        case(Messages::Type::RenderLevel):
+            render();
+            return false;
         }
+
+        return true;
     }
 
     gameplay::Rectangle getSafeDrawRect(gameplay::Rectangle const & src, float paddingX = 0.5f, float paddingY = 0.5f)
@@ -595,7 +601,7 @@ namespace game
         }
     }
 
-    bool LevelRendererComponent::render(float)
+    void LevelRendererComponent::render()
     {
         bool renderingEnabled = _levelLoaded;
 #ifndef _FINAL
@@ -629,9 +635,11 @@ namespace game
             renderCollectables(projection, viewport);
             renderCharacters(projection, viewport);
             renderWater(projection, viewport);
-        }
 
-        return false;
+#ifndef _FINAL
+            renderDebug();
+#endif
+        }
     }
 
     LevelRendererComponent::CharacterRenderer::CharacterRenderer()
@@ -724,8 +732,9 @@ namespace game
         font->drawText(text.c_str(), renderPosition.x - (width / 4), -renderPosition.y, gameplay::Vector4(1,0,0,1));
     }
 
-    void LevelRendererComponent::renderDebug(float, gameplay::Font * font)
+    void LevelRendererComponent::renderDebug()
     {
+        gameplay::Font * font = ResourceManager::getInstance().getDebugFront();
         gameplay::Rectangle const & screenDimensions = gameplay::Game::getInstance()->getViewport();
 
         bool const drawPositions = gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_character_positions");
@@ -796,6 +805,11 @@ namespace game
             _pixelSpritebatch->start();
             _pixelSpritebatch->draw(getRenderDestination(viewport), gameplay::Rectangle(), gameplay::Vector4(0,0,0,0.5f));
             _pixelSpritebatch->finish();
+        }
+
+        if (gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_physics"))
+        {
+            gameplay::Game::getInstance()->getPhysicsController()->drawDebug(getParent()->getNode()->getScene()->getActiveCamera()->getViewProjectionMatrix());
         }
     }
 #endif

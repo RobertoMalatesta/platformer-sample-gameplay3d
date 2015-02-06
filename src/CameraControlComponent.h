@@ -32,7 +32,7 @@ namespace game
         virtual void update(float elapsedTime) override;
         virtual void onStart() override;
         virtual void finalize() override;
-        virtual void onMessageReceived(gameobjects::Message * message, int messageType) override;
+        virtual bool onMessageReceived(gameobjects::Message * message, int messageType) override;
     private:
         CameraControlComponent(CameraControlComponent const &);
 

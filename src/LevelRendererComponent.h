@@ -28,11 +28,7 @@ namespace game
         virtual void initialize() override;
         virtual void finalize() override;
         virtual void update(float elaspedTime);
-        virtual bool render(float);
-#ifndef _FINAL
-        virtual void renderDebug(float, gameplay::Font * font);
-#endif
-        virtual void onMessageReceived(gameobjects::Message * message, int messageType) override;
+        virtual bool onMessageReceived(gameobjects::Message * message, int messageType) override;
         virtual void readProperties(gameplay::Properties & properties) override;
     private:
         class CharacterRenderer
@@ -62,6 +58,7 @@ namespace game
 
         void onLevelLoaded();
         void onLevelUnloaded();
+        void render();
         void renderBackground(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
         void renderTileMap(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
         void renderInteractables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
@@ -69,6 +66,11 @@ namespace game
         void renderCharacters(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
         void renderWater(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
         float getWaterTimeUniform() const;
+
+
+#ifndef _FINAL
+        void renderDebug();
+#endif
 
         PlayerComponent * _player;
         LevelComponent * _level;
