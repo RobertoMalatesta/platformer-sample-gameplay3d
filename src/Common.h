@@ -29,6 +29,21 @@ namespace game
     // 1 metre = 32 pixels
     #define GAME_UNIT_SCALAR 0.03125f
 
+#ifndef _FINAL
+    struct PerfScope
+    {
+        PerfScope(std::string const & id);
+        ~PerfScope();
+
+        double _start;
+        std::string _id;
+    };
+
+    #define PERF_SCOPE(id) PerfScope scope(id);
+#else
+    #define PERF_SCOPE(id)
+#endif
+
     /** @script{ignore} */
     void loggingCallback(gameplay::Logger::Level level, char const * msg);
 #ifndef _FINAL

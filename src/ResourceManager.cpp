@@ -28,31 +28,10 @@ namespace game
         return instance;
     }
 
-#ifndef _FINAL
-    struct LoadScope
-    {
-        LoadScope(std::string const & url)
-        {
-            _start = gameplay::Game::getAbsoluteTime();
-            _url = url;
-        }
-
-        ~LoadScope()
-        {
-            GAME_LOG("%.2fs loading %s", (gameplay::Game::getAbsoluteTime() - _start) * 0.001, _url.c_str());
-        }
-
-        double _start;
-        std::string _url;
-    };
-
-    #define LOAD_SCOPE(url) LoadScope scope(url);
-#else
-    #define LOAD_SCOPE(url)
-#endif
-
     void ResourceManager::initialize()
     {
+        PERF_SCOPE("ResourceManager::initialize")
+
         std::vector<std::string> fileList;
 
         std::string const textureDirectory = gameplay::FileSystem::resolvePath("@res/textures");
@@ -61,7 +40,7 @@ namespace game
         for (std::string & fileName : fileList)
         {
             std::string const texturePath = textureDirectory + "/" + fileName;
-            LOAD_SCOPE(texturePath)
+            PERF_SCOPE(texturePath)
             gameplay::Texture * texture = gameplay::Texture::create(texturePath.c_str());
             texture->addRef();
             _cachedTextures.push_back(texture);
@@ -80,7 +59,7 @@ namespace game
                     PropertiesRef * propertiesRef = nullptr;
 
                     {
-                        LOAD_SCOPE(propertyPath)
+                        PERF_SCOPE(propertyPath)
                         propertiesRef = new PropertiesRef(gameplay::Properties::create(propertyPath.c_str()));
                     }
 
@@ -96,7 +75,7 @@ namespace game
                             PropertiesRef * childPropertiesRef = nullptr;
 
                             {
-                                LOAD_SCOPE(childPropertiesPath)
+                                PERF_SCOPE(childPropertiesPath)
                                 childPropertiesRef = new PropertiesRef(gameplay::Properties::create(childPropertiesPath.c_str()));
                             }
 
@@ -122,7 +101,7 @@ namespace game
         for (std::string & fileName : fileList)
         {
             std::string const spriteSheetPath = spriteSheetDirectory + "/" + fileName;
-            LOAD_SCOPE(spriteSheetPath)
+            PERF_SCOPE(spriteSheetPath)
             SpriteSheet * spriteSheet = new SpriteSheet();
             spriteSheet->initialize(spriteSheetPath);
             spriteSheet->addRef();

@@ -56,6 +56,26 @@ namespace game
     {
         getLogHistory().clear();
     }
+
+    int & getIndent()
+    {
+        static int indent = -1;
+        return indent;
+    }
+
+    PerfScope::PerfScope(std::string const & id)
+    {
+        ++getIndent();
+        _start = gameplay::Game::getAbsoluteTime();
+        _id = id;
+    }
+
+    PerfScope::~PerfScope()
+    {
+        std::string indent(getIndent(), '-');
+        GAME_LOG("%s %.3fs %s", indent.c_str(), (gameplay::Game::getAbsoluteTime() - _start) * 0.001, _id.c_str());
+        --getIndent();
+    }
 #endif
 
     void loggingCallback(gameplay::Logger::Level level, const char* msg)

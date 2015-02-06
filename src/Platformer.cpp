@@ -115,7 +115,11 @@ namespace game
         gameobjects::GameObjectController::getInstance().registerComponent<PlatformerEventForwarderComponent>("platformer_event_forwarder");
         gameobjects::GameObjectController::getInstance().registerComponent<SpriteAnimationComponent>("sprite_animation");
         gameobjects::GameObjectController::getInstance().registerComponent<CollisionHandlerComponent>("collision_handler");
-        gameobjects::GameObjectController::getInstance().initialize();
+
+        {
+            PERF_SCOPE("GameObjectController::initialize")
+            gameobjects::GameObjectController::getInstance().initialize();
+        }
 
         _pinchMessage = PinchMessage::create();
         _keyMessage = KeyMessage::create();

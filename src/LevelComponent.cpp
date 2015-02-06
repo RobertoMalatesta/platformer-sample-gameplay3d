@@ -100,6 +100,8 @@ namespace game
     {
         if (gameplay::Properties * dataNamespace = layerNamespace->getNamespace("data", true))
         {
+            PERF_SCOPE("LevelComponent::loadTerrain")
+
             int x = 0;
             int y = 0;
 
@@ -139,6 +141,8 @@ namespace game
     {
         if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
         {
+            PERF_SCOPE("LevelComponent::loadCharacters")
+
             while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
             {
                 char const * gameObjectTypeName = objectNamespace->getString("name");
@@ -256,6 +260,8 @@ namespace game
     {
         if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
         {
+            PERF_SCOPE("LevelComponent::loadStaticCollision")
+
             std::string collisionId;
 
             switch (collisionType)
@@ -314,6 +320,8 @@ namespace game
     {
         if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
         {
+            PERF_SCOPE("LevelComponent::loadDynamicCollision")
+
             while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
             {
                 bool const isBoulder = objectNamespace->exists("ellipse");
@@ -419,6 +427,8 @@ namespace game
     {
         if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
         {
+            PERF_SCOPE("LevelComponent::loadBridges")
+
             PropertiesRef * collisionPropertiesRef = ResourceManager::getInstance().getProperties("res/physics/level.physics#bridge");
             gameplay::Properties * collisionProperties = collisionPropertiesRef->get();
 
@@ -490,6 +500,8 @@ namespace game
 
     void LevelComponent::load()
     {
+        PERF_SCOPE("LevelComponent::load")
+
         PropertiesRef * rootRef = ResourceManager::getInstance().getProperties(_level.c_str());
         gameplay::Properties * root = rootRef->get();
 
@@ -625,6 +637,8 @@ namespace game
 
     void LevelComponent::unload()
     {
+        PERF_SCOPE("LevelComponent::unload")
+
         for (auto & listPair : _collisionNodes)
         {
             for (gameplay::Node* node : listPair.second)
