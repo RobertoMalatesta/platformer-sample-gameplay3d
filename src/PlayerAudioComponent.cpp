@@ -44,7 +44,7 @@ namespace game
 
     void PlayerAudioComponent::addAudioNode(std::string const & audioSourcePath)
     {
-        PERF_SCOPE("PlayerAudioComponent::addAudioNode")
+        PERF_SCOPE("PlayerAudioComponent::addAudioNode");
         gameplay::Node * node = gameplay::Node::create();
         gameplay::AudioSource * audioSource = gameplay::AudioSource::create(audioSourcePath.c_str());
         node->setAudioSource(audioSource);

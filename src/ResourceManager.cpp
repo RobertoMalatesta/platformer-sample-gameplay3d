@@ -34,17 +34,17 @@ namespace game
 
     void ResourceManager::initializeForBoot()
     {
-        PERF_SCOPE("ResourceManager::initializeForBoot")
+        PERF_SCOPE("ResourceManager::initializeForBoot");
 #ifndef _FINAL
         {
             std::string const fontPath = gameplay::Game::getInstance()->getConfig()->getString("debug_font");
-            PERF_SCOPE(fontPath)
+            PERF_SCOPE(fontPath);
             _debugFont = gameplay::Font::create(fontPath.c_str());
             _debugFont->addRef();
         }
 #endif
         {
-            PERF_SCOPE("pixel")
+            PERF_SCOPE("pixel");
             std::array<unsigned char, 4> rgba;
             rgba.fill(std::numeric_limits<unsigned char>::max());
             gameplay::Texture * texture = gameplay::Texture::create(gameplay::Texture::Format::RGBA, 1, 1, &rgba.front());
@@ -54,7 +54,7 @@ namespace game
 
         {
             std::string const splashTexturePath = "@res/textures/splash";
-            PERF_SCOPE(splashTexturePath)
+            PERF_SCOPE(splashTexturePath);
             gameplay::Texture * texture = gameplay::Texture::create(splashTexturePath.c_str());
             texture->addRef();
             _cachedTextures.push_back(texture);
@@ -63,7 +63,7 @@ namespace game
 
     void ResourceManager::initialize()
     {
-        PERF_SCOPE("ResourceManager::initialize")
+        PERF_SCOPE("ResourceManager::initialize");
 
         std::vector<std::string> fileList;
 
@@ -73,7 +73,7 @@ namespace game
         for (std::string & fileName : fileList)
         {
             std::string const texturePath = textureDirectory + "/" + fileName;
-            PERF_SCOPE(texturePath)
+            PERF_SCOPE(texturePath);
             gameplay::Texture * texture = gameplay::Texture::create(texturePath.c_str());
             texture->addRef();
             _cachedTextures.push_back(texture);
@@ -92,7 +92,7 @@ namespace game
                     PropertiesRef * propertiesRef = nullptr;
 
                     {
-                        PERF_SCOPE(propertyPath)
+                        PERF_SCOPE(propertyPath);
                         propertiesRef = new PropertiesRef(gameplay::Properties::create(propertyPath.c_str()));
                     }
 
@@ -108,7 +108,7 @@ namespace game
                             PropertiesRef * childPropertiesRef = nullptr;
 
                             {
-                                PERF_SCOPE(childPropertiesPath)
+                                PERF_SCOPE(childPropertiesPath);
                                 childPropertiesRef = new PropertiesRef(gameplay::Properties::create(childPropertiesPath.c_str()));
                             }
 
@@ -134,7 +134,7 @@ namespace game
         for (std::string & fileName : fileList)
         {
             std::string const spriteSheetPath = spriteSheetDirectory + "/" + fileName;
-            PERF_SCOPE(spriteSheetPath)
+            PERF_SCOPE(spriteSheetPath);
             SpriteSheet * spriteSheet = new SpriteSheet();
             spriteSheet->initialize(spriteSheetPath);
             spriteSheet->addRef();

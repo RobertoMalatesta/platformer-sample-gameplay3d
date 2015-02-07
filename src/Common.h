@@ -40,7 +40,7 @@ namespace game
         std::string _id;
     };
 
-    #define PERF_SCOPE(id) PerfScope scope(id);
+    #define PERF_SCOPE(id) PerfScope scope(id)
 #else
     #define PERF_SCOPE(id)
 #endif

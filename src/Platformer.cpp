@@ -100,7 +100,7 @@ namespace game
         gameobjects::GameObjectController::getInstance().registerComponent<CollisionHandlerComponent>("collision_handler");
 
         {
-            PERF_SCOPE("GameObjectController::initialize")
+            PERF_SCOPE("GameObjectController::initialize");
             gameobjects::GameObjectController::getInstance().initialize();
         }
 

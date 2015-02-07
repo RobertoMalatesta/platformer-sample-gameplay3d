@@ -74,7 +74,7 @@ namespace game
 
     void LevelRendererComponent::onLevelLoaded()
     {
-        PERF_SCOPE("LevelRendererComponent::onLevelLoaded")
+        PERF_SCOPE("LevelRendererComponent::onLevelLoaded");
 
         std::vector<gameplay::SpriteBatch *> uninitialisedSpriteBatches;
 
@@ -217,7 +217,7 @@ namespace game
 
     void LevelRendererComponent::onLevelUnloaded()
     {
-        PERF_SCOPE("LevelRendererComponent::onLevelUnLoaded")
+        PERF_SCOPE("LevelRendererComponent::onLevelUnLoaded");
 
         SAFE_RELEASE(_cameraControl);
         SAFE_RELEASE(_level);
