@@ -27,16 +27,16 @@ namespace game
     {
     public:
         static ResourceManager & getInstance();
-        static gameplay::SpriteBatch * createSinglePixelSpritebatch();
 
+        void initializeForBoot();
         void initialize();
         void finalize();
 
+        gameplay::SpriteBatch * createSinglePixelSpritebatch();
         PropertiesRef * getProperties(std::string const & url);
         SpriteSheet * getSpriteSheet(std::string const & url);
-
 #ifndef _FINAL
-        gameplay::Font * getDebugFront();
+        gameplay::Font * getDebugFront() const;
 #endif
     private:
         explicit ResourceManager();

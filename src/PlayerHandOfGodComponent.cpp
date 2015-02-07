@@ -6,6 +6,7 @@
 #include "LevelComponent.h"
 #include "Messages.h"
 #include "PlayerComponent.h"
+#include "ScreenRenderer.h"
 
 namespace game
 {
@@ -29,12 +30,10 @@ namespace game
 
     void PlayerHandOfGodComponent::initialize()
     {
-        _splashScreenFadeMessage = RequestSplashScreenFadeMessage::create();
     }
 
     void PlayerHandOfGodComponent::finalize()
     {
-        GAMEOBJECTS_DELETE_MESSAGE(_splashScreenFadeMessage);
         SAFE_RELEASE(_player);
         SAFE_RELEASE(_camera);
     }
@@ -45,14 +44,11 @@ namespace game
         {
             _forceNextReset = false;
 
-            if (gameplay::Node * node = _player->getCharacterNode())
+            if (_player)
             {
-                float const fadeInDuration = 0.0f;
-                RequestSplashScreenFadeMessage::setMessage(_splashScreenFadeMessage, fadeInDuration, true, false);
-                getRootParent()->broadcastMessage(_splashScreenFadeMessage);
                 float const fadeOutDuration = 1.15f;
-                RequestSplashScreenFadeMessage::setMessage(_splashScreenFadeMessage, fadeOutDuration, false, false);
-                getRootParent()->broadcastMessage(_splashScreenFadeMessage);
+                ScreenRenderer::getInstance().queueFadeToBlack(0.0f);
+                ScreenRenderer::getInstance().queueFadeOut(fadeOutDuration);
                 _player->reset(_resetPosition);
             }
         }

@@ -25,7 +25,6 @@ namespace game
         ~LevelRendererComponent();
         static unsigned int const SKY_COLOR = 0xD0F4F7FF;
     protected:
-        virtual void initialize() override;
         virtual void finalize() override;
         virtual void update(float elaspedTime);
         virtual bool onMessageReceived(gameobjects::Message * message, int messageType) override;
@@ -76,7 +75,6 @@ namespace game
         LevelComponent * _level;
         std::map<int, gameplay::SpriteBatch *> _playerAnimationBatches;
         std::map<EnemyComponent *, std::map<int, gameplay::SpriteBatch *>> _enemyAnimationBatches;
-        gameobjects::Message * _splashScreenFadeMessage;
         gameplay::SpriteBatch * _tileBatch;
         CameraControlComponent * _cameraControl;
         CharacterRenderer _characterRenderer;

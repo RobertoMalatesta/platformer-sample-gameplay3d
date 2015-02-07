@@ -12,6 +12,7 @@
 #include "PlayerComponent.h"
 #include "ResourceManager.h"
 #include "Scene.h"
+#include "ScreenRenderer.h"
 #include "SpriteSheet.h"
 
 namespace game
@@ -139,7 +140,7 @@ namespace game
 
         if (!_levelLoadedOnce)
         {
-            _pixelSpritebatch = ResourceManager::createSinglePixelSpritebatch();
+            _pixelSpritebatch = ResourceManager::getInstance().createSinglePixelSpritebatch();
             uninitialisedSpriteBatches.push_back(_pixelSpritebatch);
 
             uninitialisedSpriteBatches.push_back(_parallaxSpritebatch);
@@ -211,8 +212,7 @@ namespace game
         _levelLoadedOnce = true;
 
         float const fadeOutDuration = 1.5f;
-        RequestSplashScreenFadeMessage::setMessage(_splashScreenFadeMessage, fadeOutDuration, false, true);
-        this->getRootParent()->broadcastMessage(_splashScreenFadeMessage);
+        ScreenRenderer::getInstance().queueFadeOut(fadeOutDuration);
     }
 
     void LevelRendererComponent::onLevelUnloaded()
@@ -257,19 +257,13 @@ namespace game
         _enemyAnimationBatches.clear();
         _waterBounds.clear();
         _collectables.clear();
-        _levelLoaded = false;
 
-        if(_splashScreenFadeMessage)
+        if(_levelLoaded)
         {
-            float const fadeInDuration = 0.0f;
-            RequestSplashScreenFadeMessage::setMessage(_splashScreenFadeMessage, fadeInDuration, true, true);
-            getRootParent()->broadcastMessage(_splashScreenFadeMessage);
+            ScreenRenderer::getInstance().queueFadeToLoadingScreen(0.0f);
         }
-    }
 
-    void LevelRendererComponent::initialize()
-    {
-        _splashScreenFadeMessage = RequestSplashScreenFadeMessage::create();
+        _levelLoaded = false;
     }
 
     void LevelRendererComponent::finalize()
@@ -280,7 +274,6 @@ namespace game
         SAFE_DELETE(_collectablesSpritebatch);
         SAFE_DELETE(_waterSpritebatch);
         SAFE_RELEASE(_interactablesSpritesheet);
-        GAMEOBJECTS_DELETE_MESSAGE(_splashScreenFadeMessage);
         onLevelUnloaded();
     }
 

@@ -31,7 +31,6 @@ namespace game
         CameraControlComponent * _camera;
         bool _levelLoaded;
         bool _forceNextReset;
-        gameobjects::Message * _splashScreenFadeMessage;
     };
 }
 

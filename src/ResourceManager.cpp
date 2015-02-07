@@ -11,6 +11,8 @@
 
 namespace game
 {
+    static int const PIXEL_TEXTURE_INDEX = 0;
+
     ResourceManager::ResourceManager()
         : _debugFont(nullptr)
     {
@@ -28,6 +30,35 @@ namespace game
     {
         static ResourceManager instance;
         return instance;
+    }
+
+    void ResourceManager::initializeForBoot()
+    {
+        PERF_SCOPE("ResourceManager::initializeForBoot")
+#ifndef _FINAL
+        {
+            std::string const fontPath = gameplay::Game::getInstance()->getConfig()->getString("debug_font");
+            PERF_SCOPE(fontPath)
+            _debugFont = gameplay::Font::create(fontPath.c_str());
+            _debugFont->addRef();
+        }
+#endif
+        {
+            PERF_SCOPE("pixel")
+            std::array<unsigned char, 4> rgba;
+            rgba.fill(std::numeric_limits<unsigned char>::max());
+            gameplay::Texture * texture = gameplay::Texture::create(gameplay::Texture::Format::RGBA, 1, 1, &rgba.front());
+            texture->addRef();
+            _cachedTextures.push_back(texture);
+        }
+
+        {
+            std::string const splashTexturePath = "@res/textures/splash";
+            PERF_SCOPE(splashTexturePath)
+            gameplay::Texture * texture = gameplay::Texture::create(splashTexturePath.c_str());
+            texture->addRef();
+            _cachedTextures.push_back(texture);
+        }
     }
 
     void ResourceManager::initialize()
@@ -144,7 +175,7 @@ namespace game
         _cachedTextures.clear();
 
 #ifndef _FINAL
-        SAFE_RELEASE(_debugFont);
+        releaseCacheRefs(_debugFont);
 #endif
     }
 
@@ -176,23 +207,12 @@ namespace game
 
     gameplay::SpriteBatch * ResourceManager::createSinglePixelSpritebatch()
     {
-        std::array<unsigned char, 4> rgba;
-        rgba.fill(std::numeric_limits<unsigned char>::max());
-        gameplay::Texture * texture = gameplay::Texture::create(gameplay::Texture::Format::RGBA, 1, 1, &rgba.front());
-        gameplay::SpriteBatch * spriteBatch = gameplay::SpriteBatch::create(texture);
-        texture->release();
-        return spriteBatch;
+        return gameplay::SpriteBatch::create(_cachedTextures[PIXEL_TEXTURE_INDEX]);
     }
 
 #ifndef _FINAL
-    gameplay::Font * ResourceManager::getDebugFront()
+    gameplay::Font * ResourceManager::getDebugFront() const
     {
-        if(!_debugFont)
-        {
-            PERF_SCOPE("ResourceManager::getDebugFront")
-            _debugFont = gameplay::Font::create(gameplay::Game::getInstance()->getConfig()->getString("debug_font"));
-        }
-
         return _debugFont;
     }
 #endif

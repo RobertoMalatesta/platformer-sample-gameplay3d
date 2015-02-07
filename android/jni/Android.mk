@@ -53,13 +53,13 @@ LOCAL_SRC_FILES :=  ../external/GamePlay/gameplay/src/gameplay-main-android.cpp 
                     LevelRendererComponent.cpp \
                     PlatformerCollision.cpp \
                     Platformer.cpp \
-                    PlatformerEventForwarderComponent.cpp \
                     PlayerAudioComponent.cpp \
                     PlayerComponent.cpp \
                     PlayerHandOfGodComponent.cpp \
                     PlayerInputComponent.cpp \
                     PropertiesRef.cpp \
                     ResourceManager.cpp \
+                    ScreenRenderer.cpp \
                     SpriteAnimationComponent.cpp \
                     SpriteSheet.cpp \
 

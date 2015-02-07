@@ -4,11 +4,6 @@
 #include "Game.h"
 #include "GameObjectMessage.h"
 
-namespace gameplay
-{
-    class SpriteBatch;
-}
-
 namespace game
 {
     /**
@@ -18,8 +13,6 @@ namespace game
     */
     class Platformer : public gameplay::Game
     {
-        friend class PlatformerEventForwarderComponent;
-
     public:
         explicit Platformer();
         virtual ~Platformer();
@@ -34,27 +27,13 @@ namespace game
         virtual void update(float elapsedTime) override;
         virtual void render(float elapsedTime) override;
     private:
-        void renderLoadingMessage(void * message);
         void broadcastKeyEvent(gameplay::Keyboard::KeyEvent evt, int key);
-        void renderSplashScreen(void * = nullptr);
-        void setSplashScreenFade(float duration, bool isFadingIn, bool showLogo);
-        void updateSplashScreenFade(float dt = 0.0f);
 
         gameobjects::Message * _pinchMessage;
         gameobjects::Message * _keyMessage;
         gameobjects::Message * _touchMessage;
         gameobjects::Message * _mouseMessage;
         gameobjects::Message * _renderLevelMessage;
-        gameplay::SpriteBatch * _splashForegroundSpriteBatch;
-        gameplay::SpriteBatch * _splashBackgroundSpriteBatch;
-        std::queue<std::tuple<float,bool,bool>> _splashScreenFadeRequests;
-        float _splashScreenAlpha;
-        float _splashScreenFadeDuration;
-        float _splashScreenIsFadingIn;
-        float _splashScreenFadeTimer;
-        bool _splashScreenFadeActive;
-        bool _splashScreenShowsLogo;
-        bool _splashScreenUpdatedThisFrame;
 #ifndef WIN32
         int _previousReleasedKey;
         int _framesSinceKeyReleaseEvent;

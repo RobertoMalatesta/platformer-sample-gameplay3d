@@ -351,6 +351,7 @@ namespace game
     void PlayerComponent::reset(gameplay::Vector2 const position)
     {
         _state = State::Idle;
+        _isLeftFacing = false;
         gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
         _characterNode->setTranslation(gameplay::Vector3(position.x, position.y, 0));
         character->resetVelocityState();

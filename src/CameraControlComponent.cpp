@@ -58,19 +58,6 @@ namespace game
         }
     }
 
-    bool CameraControlComponent::onMessageReceived(gameobjects::Message * message, int messageType)
-    {
-        switch (messageType)
-        {
-        case(Messages::Type::RequestSplashScreenFade):
-            _currentZoom = _initialCurrentZoom;
-            _targetZoom = _initialTargetZoom;
-            break;
-        }
-
-        return true;
-    }
-
     void CameraControlComponent::update(float elapsedTime)
     {
         if(_currentZoom != _targetZoom)
