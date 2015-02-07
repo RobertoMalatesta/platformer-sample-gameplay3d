@@ -2,6 +2,7 @@
 #define GAME_SCREEN_RENDERER
 
 #include <queue>
+#include "Rectangle.h"
 #include "Vector4.h"
 
 namespace gameplay
@@ -20,6 +21,7 @@ namespace game
         void finalize();
         void update(float elapsedTime);
         void render();
+        void renderImmediate();
         bool isVisible() const;
 
         void queueFadeToBlack(float duration = 1.0f);
@@ -45,10 +47,14 @@ namespace game
         ScreenRenderer(ScreenRenderer const &);
 
         void queue(Request const & request);
-        void renderImmediate();
-        void updateSplashScreenFade(float dt = 0.0f);
+        void renderSpinner();
+        void updateRequests(float dt = 0.0f);
 
-        gameplay::SpriteBatch * _loadingForegroundSpriteBatch;
+        gameplay::Rectangle _spinnerSrc;
+        gameplay::Rectangle _spinnerDst;
+        gameplay::Rectangle _bannersDst;
+        gameplay::Rectangle _bannersSrc;
+        gameplay::SpriteBatch * _texuturesSpriteBatch;
         gameplay::SpriteBatch * _fillSpriteBatch;
         std::queue<Request> _requests;
         float _alpha;

@@ -171,8 +171,6 @@ namespace game
         Sprite & sprite = _sprites[_frameIndex];
         int width = (flip & Flip::Horizontal) != 0 ? -sprite._src.width : sprite._src.width;
         int height = (flip & Flip::Vertical) != 0 ? -sprite._src.height : sprite._src.height;
-        float rotationDirection = width >= 0.0f ? -1.0f : 1.0f;
-        float  rotation = sprite._isRotated ? MATH_DEG_TO_RAD(90.0f * rotationDirection) + rotationRadians : rotationRadians;
         gameplay::Vector2 realScale = gameplay::Vector2(width * scale.x, height * scale.y);
         gameplay::Vector2 flipOffset = gameplay::Vector2(width >= 0.0f ? 0.0f : abs(realScale.x), height >= 0.0f ? 0.0f : abs(realScale.y));
         gameplay::Vector3 destination = gameplay::Vector3(flipOffset.x, flipOffset.y, 0.0f);

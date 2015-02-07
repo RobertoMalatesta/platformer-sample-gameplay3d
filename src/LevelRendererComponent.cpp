@@ -211,7 +211,7 @@ namespace game
         _levelLoaded = true;
         _levelLoadedOnce = true;
 
-        float const fadeOutDuration = 1.5f;
+        float const fadeOutDuration = 2.5f;
         ScreenRenderer::getInstance().queueFadeOut(fadeOutDuration);
     }
 

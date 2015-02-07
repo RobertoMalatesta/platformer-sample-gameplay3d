@@ -5,13 +5,14 @@
 #include "Font.h"
 #include "Game.h"
 #include "PropertiesRef.h"
+#include "ScreenRenderer.h"
 #include "SpriteBatch.h"
 #include "SpriteSheet.h"
 #include "Texture.h"
 
 namespace game
 {
-    static int const PIXEL_TEXTURE_INDEX = 0;
+    static char const * PIXEL_TEXTURE_PATH = "pixel";
 
     ResourceManager::ResourceManager()
         : _debugFont(nullptr)
@@ -44,20 +45,30 @@ namespace game
         }
 #endif
         {
-            PERF_SCOPE("pixel");
+            PERF_SCOPE(PIXEL_TEXTURE_PATH);
             std::array<unsigned char, 4> rgba;
             rgba.fill(std::numeric_limits<unsigned char>::max());
-            gameplay::Texture * texture = gameplay::Texture::create(gameplay::Texture::Format::RGBA, 1, 1, &rgba.front());
-            texture->addRef();
-            _cachedTextures.push_back(texture);
+            cacheTexture(PIXEL_TEXTURE_PATH, gameplay::Texture::create(gameplay::Texture::Format::RGBA, 1, 1, &rgba.front()));
         }
 
+        if(gameplay::Properties * bootNs = gameplay::Game::getInstance()->getConfig()->getNamespace("boot", true))
         {
-            std::string const splashTexturePath = "@res/textures/splash";
-            PERF_SCOPE(splashTexturePath);
-            gameplay::Texture * texture = gameplay::Texture::create(splashTexturePath.c_str());
-            texture->addRef();
-            _cachedTextures.push_back(texture);
+            if(gameplay::Properties * bootTexturesNs = bootNs->getNamespace("textures", true))
+            {
+                while(char const * texturePath = bootTexturesNs->getNextProperty())
+                {
+                    cacheTexture(texturePath);
+                }
+            }
+
+            if(gameplay::Properties * bootSpritesheetsNs = bootNs->getNamespace("spritesheets", true))
+            {
+                while(char const * spritesheetPath = bootSpritesheetsNs->getNextProperty())
+                {
+                    cacheProperties(spritesheetPath);
+                    cacheSpriteSheet(spritesheetPath);
+                }
+            }
         }
     }
 
@@ -72,12 +83,13 @@ namespace game
 
         for (std::string & fileName : fileList)
         {
-            std::string const texturePath = textureDirectory + "/" + fileName;
-            PERF_SCOPE(texturePath);
-            gameplay::Texture * texture = gameplay::Texture::create(texturePath.c_str());
-            texture->addRef();
-            _cachedTextures.push_back(texture);
+            queueSlowTask([this, &fileName, &textureDirectory]()
+            {
+                cacheTexture(textureDirectory + "/" + fileName);
+            });
         }
+
+        processSlowTasks();
 
         if(gameplay::Properties * propertyDirNamespace = gameplay::Game::getInstance()->getConfig()->getNamespace("properties_directories", true))
         {
@@ -91,10 +103,13 @@ namespace game
                     std::string const propertyPath = std::string(dir) + std::string("/") + propertyUrl;
                     PropertiesRef * propertiesRef = nullptr;
 
+                    queueSlowTask([&propertiesRef, &propertyPath]
                     {
                         PERF_SCOPE(propertyPath);
                         propertiesRef = new PropertiesRef(gameplay::Properties::create(propertyPath.c_str()));
-                    }
+                    });
+
+                    processSlowTasks();
 
                     bool const usesTopLevelNamespaceUrls = propertyDirNamespace->getBool();
 
@@ -104,18 +119,14 @@ namespace game
 
                         while(gameplay::Properties * topLevelChildNS = properties->getNextNamespace())
                         {
-                            std::string const childPropertiesPath = std::string(propertyPath + std::string("#") + topLevelChildNS->getId()).c_str();
-                            PropertiesRef * childPropertiesRef = nullptr;
-
+                            std::string const id = topLevelChildNS->getId();
+                            queueSlowTask([this, &propertiesRef, &propertyPath, id]
                             {
-                                PERF_SCOPE(childPropertiesPath);
-                                childPropertiesRef = new PropertiesRef(gameplay::Properties::create(childPropertiesPath.c_str()));
-                            }
-
-                            childPropertiesRef->addRef();
-                            _cachedProperties[childPropertiesPath] = childPropertiesRef;
+                                cacheProperties(propertyPath + std::string("#") + id);
+                            });
                         }
 
+                        processSlowTasks();
                         SAFE_RELEASE(propertiesRef);
                     }
                     else
@@ -133,13 +144,74 @@ namespace game
 
         for (std::string & fileName : fileList)
         {
-            std::string const spriteSheetPath = spriteSheetDirectory + "/" + fileName;
-            PERF_SCOPE(spriteSheetPath);
-            SpriteSheet * spriteSheet = new SpriteSheet();
-            spriteSheet->initialize(spriteSheetPath);
-            spriteSheet->addRef();
-            _cachedSpriteSheets[spriteSheetPath] = spriteSheet;
+            queueSlowTask([this, &fileName, &spriteSheetDirectory]
+            {
+                cacheSpriteSheet(spriteSheetDirectory + "/" + fileName);
+            });
         }
+
+        processSlowTasks();
+    }
+
+    void ResourceManager::cacheTexture(std::string const & texturePath)
+    {
+        if(_cachedTextures.find(texturePath) == _cachedTextures.end())
+        {
+            PERF_SCOPE(texturePath);
+            gameplay::Texture * texture = gameplay::Texture::create(texturePath.c_str());
+            texture->addRef();
+            _cachedTextures[texturePath] = texture;
+        }
+    }
+
+    void ResourceManager::cacheTexture(std::string const & texturePath, gameplay::Texture * texture)
+    {
+        texture->addRef();
+        _cachedTextures[texturePath] = texture;
+    }
+
+    void ResourceManager::cacheSpriteSheet(std::string const & spritesheetPath)
+    {
+        if(_cachedSpriteSheets.find(spritesheetPath) == _cachedSpriteSheets.end())
+        {
+            PERF_SCOPE(spritesheetPath);
+            SpriteSheet * spriteSheet = new SpriteSheet();
+            spriteSheet->initialize(spritesheetPath);
+            spriteSheet->addRef();
+            _cachedSpriteSheets[spritesheetPath] = spriteSheet;
+        }
+    }
+
+    void ResourceManager::cacheProperties(std::string const & propertiesPath)
+    {
+        if(_cachedProperties.find(propertiesPath) == _cachedProperties.end())
+        {
+            PERF_SCOPE(propertiesPath);
+            PropertiesRef * childPropertiesRef = new PropertiesRef(gameplay::Properties::create(propertiesPath.c_str()));
+            childPropertiesRef->addRef();
+            _cachedProperties[propertiesPath] = childPropertiesRef;
+        }
+    }
+
+    void ResourceManager::queueSlowTask(std::function<void()> task)
+    {
+        _slowTasks.push_back(task);
+    }
+
+    void ResourceManager::queueAndProcessSlowTask(std::function<void()> task)
+    {
+        task();
+        ScreenRenderer::getInstance().renderImmediate();
+    }
+
+    void ResourceManager::processSlowTasks()
+    {
+        for(std::function<void()>  & task : _slowTasks)
+        {
+            queueAndProcessSlowTask(task);
+        }
+
+        _slowTasks.clear();
     }
 
     void releaseCacheRefs(gameplay::Ref * ref)
@@ -165,9 +237,9 @@ namespace game
             releaseCacheRefs(pair.second);
         }
 
-        for (gameplay::Ref * texture : _cachedTextures)
+        for(auto pair : _cachedTextures)
         {
-            releaseCacheRefs(texture);
+            releaseCacheRefs(pair.second);
         }
 
         _cachedProperties.clear();
@@ -207,7 +279,7 @@ namespace game
 
     gameplay::SpriteBatch * ResourceManager::createSinglePixelSpritebatch()
     {
-        return gameplay::SpriteBatch::create(_cachedTextures[PIXEL_TEXTURE_INDEX]);
+        return gameplay::SpriteBatch::create(_cachedTextures[PIXEL_TEXTURE_PATH]);
     }
 
 #ifndef _FINAL

@@ -2,6 +2,7 @@
 #define GAME_RESOURCE_MANAGER
 
 #include <map>
+#include <functional>
 #include <string>
 #include <vector>
 #include "Ref.h"
@@ -31,10 +32,14 @@ namespace game
         void initializeForBoot();
         void initialize();
         void finalize();
+        void queueAndProcessSlowTask(std::function<void()> task);
+        void queueSlowTask(std::function<void()> task);
+        void processSlowTasks();
 
         gameplay::SpriteBatch * createSinglePixelSpritebatch();
         PropertiesRef * getProperties(std::string const & url);
         SpriteSheet * getSpriteSheet(std::string const & url);
+
 #ifndef _FINAL
         gameplay::Font * getDebugFront() const;
 #endif
@@ -43,9 +48,15 @@ namespace game
         ~ResourceManager();
         ResourceManager(ResourceManager const &);
 
-        std::vector<gameplay::Texture *> _cachedTextures;
+        void cacheTexture(std::string const & texturePath);
+        void cacheTexture(std::string const & texturePath, gameplay::Texture * texture);
+        void cacheSpriteSheet(std::string const & spritesheetPath);
+        void cacheProperties(std::string const & propertiesPath);
+
+        std::map<std::string, gameplay::Texture *> _cachedTextures;
         std::map<std::string, PropertiesRef *> _cachedProperties;
         std::map<std::string, SpriteSheet *> _cachedSpriteSheets;
+        std::vector<std::function<void()>> _slowTasks;
 
 #ifndef _FINAL
         gameplay::Font * _debugFont;

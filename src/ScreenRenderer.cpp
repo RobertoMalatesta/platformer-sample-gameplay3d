@@ -4,14 +4,17 @@
 #include "Font.h"
 #include "Game.h"
 #include "ResourceManager.h"
+#include "SpriteSheet.h"
 
 namespace  game
 {
+    static const gameplay::Vector4 LOADING_BG_COLOR(gameplay::Vector4::fromColor(0xF5F5F5FF));
+
     ScreenRenderer::ScreenRenderer()
         : _alpha(1.0f)
         , _fadeDuration(0.0f)
         , _fadeActive(false)
-        , _loadingForegroundSpriteBatch(nullptr)
+        , _texuturesSpriteBatch(nullptr)
         , _fillSpriteBatch(nullptr)
         , _isFadingIn(true)
         , _requestType(Request::Type::COLOR_FILL)
@@ -38,23 +41,37 @@ namespace  game
     void ScreenRenderer::initialize()
     {
         _fillSpriteBatch = ResourceManager::getInstance().createSinglePixelSpritebatch();
-        _loadingForegroundSpriteBatch = gameplay::SpriteBatch::create("@res/textures/splash");
+
+        SpriteSheet * textureSpritesheet = ResourceManager::getInstance().getSpriteSheet("res/spritesheets/screen.ss");
+        _spinnerSrc = textureSpritesheet->getSprite("spinner")->_src;
+        _spinnerDst = _spinnerSrc;
+        _spinnerDst.x = (gameplay::Game::getInstance()->getWidth() / 2) - (_spinnerDst.width / 2);
+        _spinnerDst.y = (gameplay::Game::getInstance()->getHeight() / 2) - (_spinnerDst.height / 2);
+
+        _bannersSrc = textureSpritesheet->getSprite("banners")->_src;
+        _bannersDst = _bannersSrc;
+        _bannersDst.x = (gameplay::Game::getInstance()->getWidth() / 2) - (_bannersDst.width / 2);
+        _bannersDst.y = (gameplay::Game::getInstance()->getHeight() / 2) + _spinnerDst.height / 2;
+
+        _texuturesSpriteBatch = gameplay::SpriteBatch::create(textureSpritesheet->getTexture());
+        SAFE_RELEASE(textureSpritesheet);
+
         queueFadeToLoadingScreen(0.0f);
     }
 
     void ScreenRenderer::finalize()
     {
         SAFE_DELETE(_fillSpriteBatch);
-        SAFE_DELETE(_loadingForegroundSpriteBatch);
+        SAFE_DELETE(_texuturesSpriteBatch);
     }
 
     void ScreenRenderer::update(float elapsedTime)
     {
-        updateSplashScreenFade(elapsedTime / 1000.0f);
+        updateRequests(elapsedTime / 1000.0f);
         _wasUpdatedThisFrame = false;
     }
 
-    void ScreenRenderer::updateSplashScreenFade(float dt)
+    void ScreenRenderer::updateRequests(float dt)
     {
         if(_wasUpdatedThisFrame)
         {
@@ -117,19 +134,23 @@ namespace  game
                                                bgColor);
             _fillSpriteBatch->finish();
 
-            if (_requestType == Request::Type::LOADING_SPINNER)
+            if(_requestType == Request::Type::LOADING_SPINNER)
             {
-                gameplay::Rectangle bounds(_loadingForegroundSpriteBatch->getSampler()->getTexture()->getWidth(),
-                    _loadingForegroundSpriteBatch->getSampler()->getTexture()->getHeight());
-                gameplay::Vector2 drawPos;
-                drawPos.x = (gameplay::Game::getInstance()->getWidth() / 2) - (bounds.width / 2);
-                drawPos.y = (gameplay::Game::getInstance()->getHeight() / 2) - (bounds.height / 2);
+                _texuturesSpriteBatch->start();
 
-                _loadingForegroundSpriteBatch->start();
-                _loadingForegroundSpriteBatch->draw(gameplay::Rectangle(drawPos.x, drawPos.y, bounds.width, bounds.height),
-                    gameplay::Rectangle(0, 0, bounds.width, bounds.height),
-                    gameplay::Vector4(1, 1, 1, _alpha));
-                _loadingForegroundSpriteBatch->finish();
+                static float previousSpinnerTime = gameplay::Game::getAbsoluteTime();
+                static float rotation = 0.0f;
+                rotation += MATH_CLAMP((gameplay::Game::getAbsoluteTime() - previousSpinnerTime) / 500.0f, 0, 1.0f / 15.0f);
+
+                _texuturesSpriteBatch->draw(gameplay::Vector3(_spinnerDst.x, _spinnerDst.y + _spinnerDst.height, 0),
+                                            _spinnerSrc, gameplay::Vector2(_spinnerDst.width, -_spinnerDst.height),
+                                            gameplay::Vector4(1, 1, 1, _alpha),
+                                            gameplay::Vector2(0.5f, 0.5f),
+                                            rotation);
+                previousSpinnerTime = gameplay::Game::getAbsoluteTime();
+
+                _texuturesSpriteBatch->draw(_bannersDst, _bannersSrc, gameplay::Vector4(1, 1, 1, _alpha));
+                _texuturesSpriteBatch->finish();
             }
 
 #if !defined(_FINAL) && !defined(__ANDROID__)
@@ -146,7 +167,7 @@ namespace  game
     void ScreenRenderer::queue(Request const & request)
     {
         _requests.push(request);
-        updateSplashScreenFade();
+        updateRequests();
         renderImmediate();
     }
 
@@ -166,7 +187,7 @@ namespace  game
         request._duration = duration;
         request._type = Request::Type::LOADING_SPINNER;
         request._isFadingIn = true;
-        request._backgroundColor = gameplay::Vector4::fromColor(0xF5F5F5FF);
+        request._backgroundColor = LOADING_BG_COLOR;
         queue(request);
     }
 
