@@ -45,11 +45,15 @@ namespace  game
         SpriteSheet * textureSpritesheet = ResourceManager::getInstance().getSpriteSheet("res/spritesheets/screen.ss");
         _spinnerSrc = textureSpritesheet->getSprite("spinner")->_src;
         _spinnerDst = _spinnerSrc;
+        float const spinnerVeticalScreenScale = 0.33f;
+        _spinnerDst.width = MATH_CLAMP(gameplay::Game::getInstance()->getHeight() * spinnerVeticalScreenScale, 0, _spinnerSrc.width);
+        _spinnerDst.height = _spinnerDst.width;
         _spinnerDst.x = (gameplay::Game::getInstance()->getWidth() / 2) - (_spinnerDst.width / 2);
         _spinnerDst.y = (gameplay::Game::getInstance()->getHeight() / 2) - (_spinnerDst.height / 2);
 
         _bannersSrc = textureSpritesheet->getSprite("banners")->_src;
-        _bannersDst = _bannersSrc;
+        _bannersDst.height = MATH_CLAMP(gameplay::Game::getInstance()->getHeight() - (_spinnerDst.width * 2.0f), 0, _bannersSrc.height);
+        _bannersDst.width = ((1.0f / _bannersSrc.height) * _bannersDst.height) * _bannersSrc.width;
         _bannersDst.x = (gameplay::Game::getInstance()->getWidth() / 2) - (_bannersDst.width / 2);
         _bannersDst.y = (gameplay::Game::getInstance()->getHeight() / 2) + _spinnerDst.height / 2;
 
