@@ -153,13 +153,7 @@ namespace game
                 if (gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_enemy_spawn") || isPlayer)
 #endif
                 {
-                    gameobjects::GameObject * gameObject = nullptr;
-
-                    ResourceManager::getInstance().queueAndProcessSlowTask([this, &gameObject, &gameObjectTypeName]()
-                    {
-                        gameObject = gameobjects::GameObjectController::getInstance().createGameObject(gameObjectTypeName, getParent());
-                    });
-
+                    gameobjects::GameObject * gameObject = gameobjects::GameObjectController::getInstance().createGameObject(gameObjectTypeName, getParent());
                     gameplay::Rectangle boumds = getObjectBounds(objectNamespace);
                     gameplay::Vector2 spawnPos(boumds.x, boumds.y);
 
@@ -569,10 +563,7 @@ namespace game
                     }
                     else
                     {
-                        ResourceManager::getInstance().queueAndProcessSlowTask([this, &layerNamespace]()
-                        {
-                            loadBridges(layerNamespace);
-                        });
+                        loadBridges(layerNamespace);
                     }
                 }
                 else if (layerName == "interactive_props")

@@ -32,9 +32,6 @@ namespace game
         void initializeForBoot();
         void initialize();
         void finalize();
-        void queueAndProcessSlowTask(std::function<void()> task);
-        void queueSlowTask(std::function<void()> task);
-        void processSlowTasks();
 
         gameplay::SpriteBatch * createSinglePixelSpritebatch();
         PropertiesRef * getProperties(std::string const & url);

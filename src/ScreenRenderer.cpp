@@ -12,6 +12,7 @@ namespace  game
 
     ScreenRenderer::ScreenRenderer()
         : _alpha(1.0f)
+        , _previousAlpha(0.0f)
         , _fadeDuration(0.0f)
         , _fadeActive(false)
         , _texuturesSpriteBatch(nullptr)
@@ -20,6 +21,8 @@ namespace  game
         , _requestType(Request::Type::COLOR_FILL)
         , _wasUpdatedThisFrame(false)
         , _fadeTimer(0.0f)
+        , _spinnerRotation(0.0f)
+        , _previousSpinnerTime(0.0f)
         , _backgroundColor(gameplay::Vector4::one())
     {
     }
@@ -124,11 +127,12 @@ namespace  game
     }
 
 
-    void ScreenRenderer::render()
+    bool ScreenRenderer::render()
     {
+        bool stateChanged = false;
+
         if(_alpha > 0.0f)
         {
-            gameplay::Font * debugFont = ResourceManager::getInstance().getDebugFront();
             gameplay::Vector4 bgColor = _backgroundColor;
             bgColor.w = _alpha;
 
@@ -142,30 +146,33 @@ namespace  game
             {
                 _texuturesSpriteBatch->start();
 
-                static float previousSpinnerTime = gameplay::Game::getAbsoluteTime();
-                static float rotation = 0.0f;
-                rotation += MATH_CLAMP((gameplay::Game::getAbsoluteTime() - previousSpinnerTime) / 500.0f, 0, 1.0f / 15.0f);
+                static float const spinnerDeltaMs = 250.0f;
+                float const elapsed = gameplay::Game::getAbsoluteTime() - _previousSpinnerTime;
+                bool const shouldRotate = elapsed >= spinnerDeltaMs;
+
+                if(shouldRotate)
+                {
+                    static float const rotationPerUpdate = MATH_DEG_TO_RAD(15.0f);
+                    _spinnerRotation += rotationPerUpdate;
+                    stateChanged |= true;
+                    _previousSpinnerTime = gameplay::Game::getAbsoluteTime();
+                }
 
                 _texuturesSpriteBatch->draw(gameplay::Vector3(_spinnerDst.x, _spinnerDst.y + _spinnerDst.height, 0),
                                             _spinnerSrc, gameplay::Vector2(_spinnerDst.width, -_spinnerDst.height),
                                             gameplay::Vector4(1, 1, 1, _alpha),
                                             gameplay::Vector2(0.5f, 0.5f),
-                                            rotation);
-                previousSpinnerTime = gameplay::Game::getAbsoluteTime();
+                                            _spinnerRotation);
+
 
                 _texuturesSpriteBatch->draw(_bannersDst, _bannersSrc, gameplay::Vector4(1, 1, 1, _alpha));
                 _texuturesSpriteBatch->finish();
             }
-
-#if !defined(_FINAL) && !defined(__ANDROID__)
-            if(_alpha == 1.0f && gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_tools"))
-            {
-                debugFont->start();
-                debugFont->drawText("Running tools...", 5, 5, gameplay::Vector4(1, 0, 0, 1));
-                debugFont->finish();
-            }
-#endif
         }
+
+        stateChanged |= _previousAlpha != _alpha;
+        _previousAlpha = _alpha;
+        return stateChanged;
     }
 
     void ScreenRenderer::queue(Request const & request)
@@ -207,9 +214,20 @@ namespace  game
 
     void ScreenRenderer::renderImmediate()
     {
-        if(_alpha > 0)
+        if(render())
         {
-            render();
+#if !_FINAL && !__ANDROID__
+            static bool isFirstRender = false;
+
+            if(!isFirstRender && gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_tools"))
+            {
+                gameplay::Font * debugFont = ResourceManager::getInstance().getDebugFront();
+                debugFont->start();
+                debugFont->drawText("Running tools...", 5, 5, gameplay::Vector4(1, 0, 0, 1));
+                debugFont->finish();
+                isFirstRender = true;
+            }
+#endif
             gameplay::Platform::swapBuffers();
         }
     }

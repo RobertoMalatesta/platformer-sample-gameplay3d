@@ -30,6 +30,13 @@ namespace game
     // 1 metre = 32 pixels
     #define GAME_UNIT_SCALAR 0.03125f
 
+    struct StallScope
+    {
+        ~StallScope();
+    };
+
+    #define STALL_SCOPE() StallScope stallScope;
+
 #ifndef _FINAL
     struct PerfScope
     {
@@ -40,7 +47,7 @@ namespace game
         std::string _id;
     };
 
-    #define PERF_SCOPE(id) PerfScope scope(id)
+    #define PERF_SCOPE(id) PerfScope perfScope(id)
 #else
     #define PERF_SCOPE(id)
 #endif

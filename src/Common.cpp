@@ -2,6 +2,7 @@
 
 #include "Font.h"
 #include "ScreenDisplayer.h"
+#include "ScreenRenderer.h"
 #include "Texture.h"
 
 namespace game
@@ -77,6 +78,11 @@ namespace game
         --getIndent();
     }
 #endif
+
+    StallScope::~StallScope()
+    {
+        ScreenRenderer::getInstance().renderImmediate();
+    }
 
     void loggingCallback(gameplay::Logger::Level level, const char* msg)
     {

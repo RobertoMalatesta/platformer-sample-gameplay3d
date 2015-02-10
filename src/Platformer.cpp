@@ -245,6 +245,7 @@ namespace game
 #ifndef _FINAL
         std::array<char, CHAR_MAX> buffer;
         static const int paddingX = 5;
+        static const gameplay::Vector4 textColor = gameplay::Vector4(1, 0, 0, 1);
         gameplay::Font * debugFont = ResourceManager::getInstance().getDebugFront();
         int const paddingY = debugFont->getSize();
         int y = paddingY / 2;
@@ -253,14 +254,14 @@ namespace game
         if (gameplay::Game::getInstance()->getConfig()->getBool("debug_show_fps"))
         {
             sprintf(&buffer[0], "%d FPS", getFrameRate());
-            debugFont->drawText(&buffer[0], paddingX, y, gameplay::Vector4(1, 0, 0, 1));
+            debugFont->drawText(&buffer[0], paddingX, y, textColor);
             y += paddingY;
         }
 
         if (gameplay::Game::getInstance()->getConfig()->getBool("debug_show_resolution"))
         {
             sprintf(&buffer[0], "%dx%d", getWidth(), getHeight());
-            debugFont->drawText(&buffer[0], paddingX, y, gameplay::Vector4(1, 0, 0, 1));
+            debugFont->drawText(&buffer[0], paddingX, y, textColor);
             y += paddingY;
         }
 

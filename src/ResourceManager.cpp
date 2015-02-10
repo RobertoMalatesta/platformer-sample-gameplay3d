@@ -5,7 +5,6 @@
 #include "Font.h"
 #include "Game.h"
 #include "PropertiesRef.h"
-#include "ScreenRenderer.h"
 #include "SpriteBatch.h"
 #include "SpriteSheet.h"
 #include "Texture.h"
@@ -83,13 +82,9 @@ namespace game
 
         for (std::string & fileName : fileList)
         {
-            queueSlowTask([this, &fileName, &textureDirectory]()
-            {
-                cacheTexture(textureDirectory + "/" + fileName);
-            });
+            STALL_SCOPE();
+            cacheTexture(textureDirectory + "/" + fileName);
         }
-
-        processSlowTasks();
 
         if(gameplay::Properties * propertyDirNamespace = gameplay::Game::getInstance()->getConfig()->getNamespace("properties_directories", true))
         {
@@ -103,13 +98,11 @@ namespace game
                     std::string const propertyPath = std::string(dir) + std::string("/") + propertyUrl;
                     PropertiesRef * propertiesRef = nullptr;
 
-                    queueSlowTask([&propertiesRef, &propertyPath]
                     {
+                        STALL_SCOPE();
                         PERF_SCOPE(propertyPath);
                         propertiesRef = new PropertiesRef(gameplay::Properties::create(propertyPath.c_str()));
-                    });
-
-                    processSlowTasks();
+                    }
 
                     bool const usesTopLevelNamespaceUrls = propertyDirNamespace->getBool();
 
@@ -119,14 +112,10 @@ namespace game
 
                         while(gameplay::Properties * topLevelChildNS = properties->getNextNamespace())
                         {
-                            std::string const id = topLevelChildNS->getId();
-                            queueSlowTask([this, &propertiesRef, &propertyPath, id]
-                            {
-                                cacheProperties(propertyPath + std::string("#") + id);
-                            });
+                            STALL_SCOPE();
+                            cacheProperties(propertyPath + std::string("#") + topLevelChildNS->getId());
                         }
 
-                        processSlowTasks();
                         SAFE_RELEASE(propertiesRef);
                     }
                     else
@@ -144,13 +133,9 @@ namespace game
 
         for (std::string & fileName : fileList)
         {
-            queueSlowTask([this, &fileName, &spriteSheetDirectory]
-            {
-                cacheSpriteSheet(spriteSheetDirectory + "/" + fileName);
-            });
+            STALL_SCOPE();
+            cacheSpriteSheet(spriteSheetDirectory + "/" + fileName);
         }
-
-        processSlowTasks();
     }
 
     void ResourceManager::cacheTexture(std::string const & texturePath)
@@ -191,27 +176,6 @@ namespace game
             childPropertiesRef->addRef();
             _cachedProperties[propertiesPath] = childPropertiesRef;
         }
-    }
-
-    void ResourceManager::queueSlowTask(std::function<void()> task)
-    {
-        _slowTasks.push_back(task);
-    }
-
-    void ResourceManager::queueAndProcessSlowTask(std::function<void()> task)
-    {
-        task();
-        ScreenRenderer::getInstance().renderImmediate();
-    }
-
-    void ResourceManager::processSlowTasks()
-    {
-        for(std::function<void()>  & task : _slowTasks)
-        {
-            queueAndProcessSlowTask(task);
-        }
-
-        _slowTasks.clear();
     }
 
     void releaseCacheRefs(gameplay::Ref * ref)

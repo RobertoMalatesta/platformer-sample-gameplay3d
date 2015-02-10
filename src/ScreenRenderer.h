@@ -20,7 +20,7 @@ namespace game
         void initialize();
         void finalize();
         void update(float elapsedTime);
-        void render();
+        bool render();
         void renderImmediate();
         bool isVisible() const;
 
@@ -58,9 +58,12 @@ namespace game
         gameplay::SpriteBatch * _fillSpriteBatch;
         std::queue<Request> _requests;
         float _alpha;
+        float _previousAlpha;
         float _fadeDuration;
         float _isFadingIn;
         float _fadeTimer;
+        float _previousSpinnerTime;
+        float _spinnerRotation;
         bool _fadeActive;
         bool _wasUpdatedThisFrame;
         Request::Type  _requestType;
