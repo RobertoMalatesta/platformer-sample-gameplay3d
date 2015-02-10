@@ -43,8 +43,8 @@ frames
 
         frame
         {
-            h = 128
-            w = 128
+            h = 256
+            w = 256
             x = 0
             y = 256
         }
@@ -59,14 +59,14 @@ frames
 
         sourceSize
         {
-            h = 128
-            w = 128
+            h = 256
+            w = 256
         }
 
         spriteSourceSize
         {
-            h = 128
-            w = 128
+            h = 256
+            w = 256
             x = 0
             y = 0
         }
@@ -88,6 +88,6 @@ meta
         w = 1024
     }
 
-    smartupdate = $TexturePacker:SmartUpdate:4837ea001ef49a34231ad0a506b009bd:a5d333cc084ed69484d2c98dafe2b518:9477d2328ff24f8b98d8b34e53683107$
+    smartupdate = $TexturePacker:SmartUpdate:850db225e8e7ceea30921a5d4d4e3faa:5f9ccabec808428c3b0e33e60624f75e:9477d2328ff24f8b98d8b34e53683107$
     version = 1.0
 }
