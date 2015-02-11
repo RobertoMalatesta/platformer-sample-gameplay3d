@@ -149,14 +149,13 @@ namespace game
             _interactablesSpritebatch = gameplay::SpriteBatch::create(_interactablesSpritesheet->getTexture());
             uninitialisedSpriteBatches.push_back(_interactablesSpritebatch);
 
-
             gameplay::Effect* waterEffect = gameplay::Effect::createFromFile("res/shaders/sprite.vert", "res/shaders/water.frag");
             _waterSpritebatch = gameplay::SpriteBatch::create("@res/textures/water", waterEffect);
             _waterSpritebatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::REPEAT, gameplay::Texture::Wrap::CLAMP);
             SAFE_RELEASE(waterEffect);
             uninitialisedSpriteBatches.push_back(_waterSpritebatch);
             gameplay::Material* waterMaterial = _waterSpritebatch->getMaterial();
-            gameplay::Texture::Sampler* noiseSampler = gameplay::Texture::Sampler::create("res/textures/water-noise.png");
+            gameplay::Texture::Sampler* noiseSampler = gameplay::Texture::Sampler::create("@res/textures/water-noise");
             waterMaterial->getParameter("u_texture_noise")->setValue(noiseSampler);
             SAFE_RELEASE(noiseSampler);
             waterMaterial->getParameter("u_time")->bindValue(this, &LevelRendererComponent::getWaterTimeUniform);
