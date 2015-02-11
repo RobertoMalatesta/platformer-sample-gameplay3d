@@ -101,8 +101,6 @@ namespace game
     {
         if (gameplay::Properties * dataNamespace = layerNamespace->getNamespace("data", true))
         {
-            PERF_SCOPE("LevelComponent::loadTerrain");
-
             int x = 0;
             int y = 0;
 
@@ -229,7 +227,10 @@ namespace game
             shape = gameplay::PhysicsCollisionShape::sphere(radius);
         }
 
-        node->setCollisionObject(type, shape, &rigidBodyParams);
+        {
+            STALL_SCOPE();
+            node->setCollisionObject(type, shape, &rigidBodyParams);
+        }
         _collisionNodes[collisionType].push_back(node);
         return node;
     }
@@ -261,8 +262,6 @@ namespace game
     {
         if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
         {
-            PERF_SCOPE("LevelComponent::loadStaticCollision");
-
             std::string collisionId;
 
             switch (collisionType)
@@ -321,8 +320,6 @@ namespace game
     {
         if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
         {
-            PERF_SCOPE("LevelComponent::loadDynamicCollision");
-
             while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
             {
                 bool const isBoulder = objectNamespace->exists("ellipse");
@@ -428,8 +425,6 @@ namespace game
     {
         if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
         {
-            PERF_SCOPE("LevelComponent::loadBridges");
-
             PropertiesRef * collisionPropertiesRef = ResourceManager::getInstance().getProperties("res/physics/level.physics#bridge");
             gameplay::Properties * collisionProperties = collisionPropertiesRef->get();
 
@@ -644,6 +639,7 @@ namespace game
         {
             for (gameplay::Node* node : listPair.second)
             {
+                STALL_SCOPE();
                 NodeCollisionInfo * info = NodeCollisionInfo::getNodeCollisionInfo(node);
                 node->setUserObject(nullptr);
                 SAFE_RELEASE(info);
@@ -654,6 +650,7 @@ namespace game
 
         for(auto & collectablePair : _collectables)
         {
+            STALL_SCOPE();
             getParent()->getNode()->removeChild(collectablePair.second._node);
             SAFE_RELEASE(collectablePair.second._node);
         }
@@ -665,6 +662,7 @@ namespace game
 
         for(auto childItr = _children.begin(); childItr != _children.end(); ++childItr)
         {
+            STALL_SCOPE();
             gameobjects::GameObjectController::getInstance().destroyGameObject(*childItr);
         }
 

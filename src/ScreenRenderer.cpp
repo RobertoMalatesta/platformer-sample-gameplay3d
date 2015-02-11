@@ -146,8 +146,17 @@ namespace  game
             {
                 _texuturesSpriteBatch->start();
 
-                static float const spinnerDeltaMs = 250.0f;
+                static float const spinnerDeltaMs = 200.0f;
                 float const elapsed = gameplay::Game::getAbsoluteTime() - _previousSpinnerTime;
+#ifndef _FINAL
+                static float const spinnerDeltaPaddingMs = 50.0f;
+                if (elapsed > spinnerDeltaMs + spinnerDeltaPaddingMs)
+                {
+                    std::array<char, 256> buffer;
+                    sprintf(&buffer[0], "LOADING SPINNER STALLED %.3f", elapsed - (spinnerDeltaMs + spinnerDeltaPaddingMs));
+                    PERF_SCOPE(&buffer[0]);
+                }
+#endif
                 bool const shouldRotate = elapsed >= spinnerDeltaMs;
 
                 if(shouldRotate)
@@ -168,6 +177,10 @@ namespace  game
                 _texuturesSpriteBatch->draw(_bannersDst, _bannersSrc, gameplay::Vector4(1, 1, 1, _alpha));
                 _texuturesSpriteBatch->finish();
             }
+        }
+        else
+        {
+            _previousSpinnerTime = gameplay::Game::getAbsoluteTime();
         }
 
         stateChanged |= _previousAlpha != _alpha;

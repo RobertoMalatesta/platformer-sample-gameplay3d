@@ -46,7 +46,11 @@ namespace game
     {
         PERF_SCOPE("PlayerAudioComponent::addAudioNode");
         gameplay::Node * node = gameplay::Node::create();
-        gameplay::AudioSource * audioSource = gameplay::AudioSource::create(audioSourcePath.c_str());
+        gameplay::AudioSource * audioSource = nullptr;
+        {
+            STALL_SCOPE();
+            audioSource = gameplay::AudioSource::create(audioSourcePath.c_str());
+        }
         node->setAudioSource(audioSource);
         _player->getParent()->getNode()->addChild(node);
         // Play it silently so that it performs lazy initialisation
