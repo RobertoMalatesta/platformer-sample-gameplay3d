@@ -228,6 +228,7 @@ namespace game
 
     void Platformer::render(float elapsedTime)
     {
+        RenderLevelMessage::setMessage(_renderLevelMessage, elapsedTime);
         gameobjects::GameObjectController::getInstance().broadcastMessage(_renderLevelMessage);
         ScreenRenderer::getInstance().render();
 

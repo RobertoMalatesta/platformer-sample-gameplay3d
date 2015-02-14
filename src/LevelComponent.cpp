@@ -64,22 +64,6 @@ namespace game
             getRootParent()->broadcastMessage(_loadedMessage);
             _loadBroadcasted = true;
         }
-
-        if(!_collectables.empty())
-        {
-            for(auto & collectablePair : _collectables)
-            {
-                Collectable & collectable = collectablePair.second;
-
-                if(collectable._active && collectable._visible)
-                {
-                    float const speed = 5.0f;
-                    float const height = collectable._node->getScaleY() * 0.05f;
-                    float bounce = sin((gameplay::Game::getAbsoluteTime() / 1000.0f) * speed + (collectable._node->getTranslationX() + collectable._node->getTranslationY())) * height;
-                    collectable._node->setTranslation(collectable._startPosition + gameplay::Vector3(0, bounce, 0));
-                }
-            }
-        }
     }
 
     void LevelComponent::initialize()

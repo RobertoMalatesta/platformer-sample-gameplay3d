@@ -139,6 +139,7 @@ namespace game
     {
         _state = State::Dead;
         getCurrentAnimation()->play();
+        _triggerNode->getCollisionObject()->setEnabled(false);
     }
 
     bool EnemyComponent::isSnappedToCollisionY() const

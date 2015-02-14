@@ -23,10 +23,8 @@ namespace game
     public:
         explicit LevelRendererComponent();
         ~LevelRendererComponent();
-        static unsigned int const SKY_COLOR = 0xD0F4F7FF;
     protected:
         virtual void finalize() override;
-        virtual void update(float elaspedTime);
         virtual bool onMessageReceived(gameobjects::Message * message, int messageType) override;
         virtual void readProperties(gameplay::Properties & properties) override;
     private:
@@ -38,7 +36,7 @@ namespace game
             void finish();
             bool render(SpriteAnimationComponent * animation, gameplay::SpriteBatch * spriteBatch,
                                  gameplay::Matrix const & spriteBatchProjection, SpriteAnimationComponent::Flip::Enum orientation,
-                                 gameplay::Vector2 const & position, gameplay::Rectangle const & viewport, float alpha = 1.0f);
+                                 gameplay::Vector2 const & position, gameplay::Rectangle const & viewport, float alpha = 1.0f, gameplay::Rectangle * dstOut = nullptr);
         private:
             gameplay::SpriteBatch * _previousSpritebatch;
             bool _started;
@@ -57,18 +55,18 @@ namespace game
 
         void onLevelLoaded();
         void onLevelUnloaded();
-        void render();
-        void renderBackground(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
+        void render(float elapsedTime);
+        void renderBackground(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, float elapsedTime);
         void renderTileMap(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
         void renderInteractables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
-        void renderCollectables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
-        void renderCharacters(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
-        void renderWater(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
+        void renderCollectables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport);
+        void renderCharacters(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport);
+        void renderWater(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, float elapsedTime);
         float getWaterTimeUniform() const;
 
 
 #ifndef _FINAL
-        void renderDebug();
+        void renderDebug(gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport);
 #endif
 
         PlayerComponent * _player;

@@ -50,7 +50,10 @@ namespace game
             onLevelUnloaded();
             break;
         case(Messages::Type::RenderLevel):
-            render();
+        {
+            RenderLevelMessage msg(message);
+            render(msg._elapsedTime);
+        }
             return false;
         }
 
@@ -314,25 +317,10 @@ namespace game
         }
     }
 
-    void LevelRendererComponent::update(float elapsedTime)
-    {
-        float const dt = elapsedTime / 1000.0f;
-        _waterUniformTimer += dt;
-
-        for (auto itr = _parallaxLayers.rbegin(); itr != _parallaxLayers.rend(); ++itr)
-        {
-            ParallaxLayer & layer = *itr;
-
-            if (layer._cameraIndependent)
-            {
-                layer._src.x += (layer._speed * dt) / GAME_UNIT_SCALAR;
-            }
-        }
-    }
-
-    void LevelRendererComponent::renderBackground(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport)
+    void LevelRendererComponent::renderBackground(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, float elapsedTime)
     {
         // Clear the screen to the colour of the sky
+        static unsigned int const SKY_COLOR = 0xD0F4F7FF;
         gameplay::Game::getInstance()->clear(gameplay::Game::ClearFlags::CLEAR_COLOR_DEPTH, gameplay::Vector4::fromColor(SKY_COLOR), 1.0f, 0);
 
         // Draw the solid colour parallax fill layer
@@ -355,6 +343,12 @@ namespace game
         for(auto itr = _parallaxLayers.rbegin(); itr != _parallaxLayers.rend(); ++itr)
         {
             ParallaxLayer & layer = *itr;
+
+            if (layer._cameraIndependent && gameplay::Game::getInstance()->getState() == gameplay::Game::State::RUNNING)
+            {
+                layer._src.x += (layer._speed * (elapsedTime / 1000.0f)) / GAME_UNIT_SCALAR;
+            }
+
             layer._dst.width = layerWidth;
             layer._dst.x = layerPosX;
 
@@ -493,12 +487,18 @@ namespace game
         }
     }
 
-    void LevelRendererComponent::renderCollectables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport)
+    void LevelRendererComponent::renderCollectables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport)
     {
         bool collectableDrawn = false;
 
         for(LevelComponent::Collectable * collectable : _collectables)
         {
+            gameplay::Rectangle dst;
+            dst.width = collectable->_node->getScaleX();
+            dst.height = collectable->_node->getScaleY();
+            dst.x = collectable->_startPosition.x - dst.width / 2;
+            dst.y = collectable->_startPosition.y - dst.height / 2;
+
             if (collectable->_active)
             {
                 if (!collectableDrawn)
@@ -508,26 +508,19 @@ namespace game
                     collectableDrawn = true;
                 }
 
-                gameplay::Rectangle dst;
-                dst.width = collectable->_node->getScaleX();
-                dst.height = collectable->_node->getScaleY();
-                dst.x = collectable->_node->getTranslationX() - dst.width / 2;
-                dst.y = collectable->_node->getTranslationY() - dst.height / 2;
-
                 collectable->_visible = dst.intersects(viewport);
-
-                gameplay::PhysicsCollisionObject * collision = collectable->_node->getCollisionObject();
 
                 if (collectable->_visible)
                 {
-                    collision->setEnabled(true);
+                    float const speed = 5.0f;
+                    float const height = collectable->_node->getScaleY() * 0.05f;
+                    float bounce = sin((gameplay::Game::getGameTime() / 1000.0f) * speed + (collectable->_node->getTranslationX() + collectable->_node->getTranslationY())) * height;
+                    dst.y += bounce;
                     _collectablesSpritebatch->draw(getRenderDestination(dst), getSafeDrawRect(collectable->_src));
                 }
-                else
-                {
-                    collision->setEnabled(false);
-                }
             }
+
+            collectable->_node->getCollisionObject()->setEnabled(collectable->_active && dst.intersects(triggerViewport));
         }
 
         if(collectableDrawn)
@@ -536,7 +529,7 @@ namespace game
         }
     }
 
-    void LevelRendererComponent::renderCharacters(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport)
+    void LevelRendererComponent::renderCharacters(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport)
     {
         _characterRenderer.start();
 
@@ -549,11 +542,12 @@ namespace game
             if(alpha > 0.0f)
             {
                 std::map<int, gameplay::SpriteBatch *> & enemyBatches = enemyAnimPairItr.second;
-                bool isVisible = _characterRenderer.render(enemy->getCurrentAnimation(),
+                gameplay::Rectangle dst;
+                _characterRenderer.render(enemy->getCurrentAnimation(),
                                 enemyBatches[enemy->getState()], projection,
                                 enemy->isLeftFacing() ? SpriteAnimationComponent::Flip::Horizontal : SpriteAnimationComponent::Flip::None,
-                                enemy->getPosition(), viewport, alpha);
-                enemy->getTriggerNode()->getCollisionObject()->setEnabled(isVisible);
+                                enemy->getPosition(), viewport, alpha, &dst);
+                enemy->getTriggerNode()->getCollisionObject()->setEnabled(dst.intersects(triggerViewport) && alpha == 1.0f);
             }
         }
 
@@ -566,10 +560,16 @@ namespace game
         _characterRenderer.finish();
     }
 
-    void LevelRendererComponent::renderWater(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport)
+    void LevelRendererComponent::renderWater(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, float elapsedTime)
     {
         if (!_waterBounds.empty())
         {
+            if(gameplay::Game::getInstance()->getState() == gameplay::Game::State::RUNNING)
+            {
+                float const dt = elapsedTime / 1000.0f;
+                _waterUniformTimer += dt;
+            }
+
             bool waterDrawn = false;
 
             for (gameplay::Rectangle const & dst : _waterBounds)
@@ -601,7 +601,7 @@ namespace game
         }
     }
 
-    void LevelRendererComponent::render()
+    void LevelRendererComponent::render(float elapsedTime)
     {
         bool renderingEnabled = _levelLoaded;
 #ifndef _FINAL
@@ -625,19 +625,26 @@ namespace game
             viewport.x = _cameraControl->getPosition().x - (viewport.width / 2.0f);
             viewport.y = _cameraControl->getPosition().y - (viewport.height / 2.0f);
 
+            gameplay::Rectangle triggerViewport;
+            float const triggerViewportScale = (1.0f / GAME_UNIT_SCALAR) * _cameraControl->getMinZoom();
+            triggerViewport.width = viewport.width * triggerViewportScale;
+            triggerViewport.height = viewport.height * triggerViewportScale;
+            triggerViewport.x = _player->getPosition().x - (triggerViewport.width / 2.0f);
+            triggerViewport.y = _player->getPosition().y - (triggerViewport.height / 2.0f);
+
             gameplay::Matrix projection = _cameraControl->getViewProjectionMatrix();
             projection.rotateX(MATH_DEG_TO_RAD(180));
             projection.scale(GAME_UNIT_SCALAR, GAME_UNIT_SCALAR, 0);
 
-            renderBackground(projection, viewport);
+            renderBackground(projection, viewport, elapsedTime);
             renderTileMap(projection, viewport);
             renderInteractables(projection, viewport);
-            renderCollectables(projection, viewport);
-            renderCharacters(projection, viewport);
-            renderWater(projection, viewport);
+            renderCollectables(projection, viewport, triggerViewport);
+            renderCharacters(projection, viewport, triggerViewport);
+            renderWater(projection, viewport, elapsedTime);
 
 #ifndef _FINAL
-            renderDebug();
+            renderDebug(viewport, triggerViewport);
 #endif
         }
     }
@@ -673,7 +680,8 @@ namespace game
 
     bool LevelRendererComponent::CharacterRenderer::render(SpriteAnimationComponent * animation, gameplay::SpriteBatch * spriteBatch,
                          gameplay::Matrix const & projection, SpriteAnimationComponent::Flip::Enum orientation,
-                         gameplay::Vector2 const & position, gameplay::Rectangle const & viewport, float alpha)
+                         gameplay::Vector2 const & position, gameplay::Rectangle const & viewport, float alpha,
+                         gameplay::Rectangle * dstOut)
     {
         bool wasRendered = false;
         SpriteAnimationComponent::DrawTarget drawTarget = animation->getDrawTarget(gameplay::Vector2::one(), 0.0f, orientation);
@@ -708,6 +716,11 @@ namespace game
             wasRendered = true;
         }
 
+        if(dstOut)
+        {
+            *dstOut = std::move(bounds);
+        }
+
         return wasRendered;
     }
 
@@ -736,7 +749,7 @@ namespace game
         font->drawText(text.c_str(), renderPosition.x - (width / 4), -renderPosition.y, gameplay::Vector4(1,0,0,1));
     }
 
-    void LevelRendererComponent::renderDebug()
+    void LevelRendererComponent::renderDebug(gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport)
     {
         gameplay::Font * font = ResourceManager::getInstance().getDebugFront();
         gameplay::Rectangle const & screenDimensions = gameplay::Game::getInstance()->getViewport();
@@ -744,7 +757,7 @@ namespace game
         bool const drawPositions = gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_character_positions");
         bool const drawPlayerVelocity = gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_player_velocity");
         bool const drawCameraTarget = gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_camera_target");
-        bool const drawViewport = !gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_zoom_draw_culling");
+        bool const drawViewports = !gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_zoom_draw_culling");
 
         if(drawPlayerVelocity || drawPositions)
         {
@@ -797,17 +810,12 @@ namespace game
             _pixelSpritebatch->finish();
         }
 
-        if(drawViewport)
+        if(drawViewports)
         {
-            float const zoomScale = (1.0f / GAME_UNIT_SCALAR) * _cameraControl->getZoom();
-            gameplay::Rectangle viewport;
-            viewport.width = gameplay::Game::getInstance()->getViewport().width * GAME_UNIT_SCALAR,
-            viewport.height = gameplay::Game::getInstance()->getViewport().height * GAME_UNIT_SCALAR;
-            viewport.x = _cameraControl->getPosition().x - (viewport.width / 2.0f);
-            viewport.y = _cameraControl->getPosition().y - (viewport.height / 2.0f);
             _pixelSpritebatch->setProjectionMatrix(projection);
             _pixelSpritebatch->start();
             _pixelSpritebatch->draw(getRenderDestination(viewport), gameplay::Rectangle(), gameplay::Vector4(0,0,0,0.5f));
+            _pixelSpritebatch->draw(getRenderDestination(triggerViewport), gameplay::Rectangle(), gameplay::Vector4(0,1,0,0.25f));
             _pixelSpritebatch->finish();
         }
 
