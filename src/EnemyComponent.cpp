@@ -106,6 +106,7 @@ namespace game
             float const fadeOutSpeed = 0.5f;
             float const dt = elapsedTime / 1000.0f;
             _alpha = MATH_CLAMP(_alpha - (dt * fadeOutSpeed), 0, 1.0f);
+            _triggerNode->getCollisionObject()->setEnabled(false);
         }
     }
 
@@ -139,7 +140,6 @@ namespace game
     {
         _state = State::Dead;
         getCurrentAnimation()->play();
-        _triggerNode->getCollisionObject()->setEnabled(false);
     }
 
     bool EnemyComponent::isSnappedToCollisionY() const
