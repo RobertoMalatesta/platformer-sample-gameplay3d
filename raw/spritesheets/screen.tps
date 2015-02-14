@@ -190,6 +190,7 @@
         <array>
             <filename>../textures/banners.png</filename>
             <filename>../textures/spinner.png</filename>
+            <filename>../textures/logo.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

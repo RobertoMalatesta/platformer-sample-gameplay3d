@@ -46,6 +46,7 @@ namespace  game
         _fillSpriteBatch = ResourceManager::getInstance().createSinglePixelSpritebatch();
 
         SpriteSheet * textureSpritesheet = ResourceManager::getInstance().getSpriteSheet("res/spritesheets/screen.ss");
+        _logoSrc = textureSpritesheet->getSprite("logo")->_src;;
         _spinnerSrc = textureSpritesheet->getSprite("spinner")->_src;
         _spinnerDst = _spinnerSrc;
         float const spinnerVeticalScreenScale = 0.33f;
@@ -167,6 +168,7 @@ namespace  game
                     _previousSpinnerTime = gameplay::Game::getAbsoluteTime();
                 }
 
+                _texuturesSpriteBatch->draw(_spinnerDst, _logoSrc, gameplay::Vector4(1, 1, 1, _alpha));
                 _texuturesSpriteBatch->draw(gameplay::Vector3(_spinnerDst.x, _spinnerDst.y + _spinnerDst.height, 0),
                                             _spinnerSrc, gameplay::Vector2(_spinnerDst.width, -_spinnerDst.height),
                                             gameplay::Vector4(1, 1, 1, _alpha),

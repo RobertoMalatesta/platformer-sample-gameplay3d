@@ -50,6 +50,7 @@ namespace game
         void renderSpinner();
         void updateRequests(float dt = 0.0f);
 
+        gameplay::Rectangle _logoSrc;
         gameplay::Rectangle _spinnerSrc;
         gameplay::Rectangle _spinnerDst;
         gameplay::Rectangle _bannersDst;
