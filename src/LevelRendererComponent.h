@@ -36,7 +36,7 @@ namespace game
             explicit CharacterRenderer();
             void start();
             void finish();
-            void render(SpriteAnimationComponent * animation, gameplay::SpriteBatch * spriteBatch,
+            bool render(SpriteAnimationComponent * animation, gameplay::SpriteBatch * spriteBatch,
                                  gameplay::Matrix const & spriteBatchProjection, SpriteAnimationComponent::Flip::Enum orientation,
                                  gameplay::Vector2 const & position, gameplay::Rectangle const & viewport, float alpha = 1.0f);
         private:

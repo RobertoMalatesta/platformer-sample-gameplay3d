@@ -516,9 +516,16 @@ namespace game
 
                 collectable->_visible = dst.intersects(viewport);
 
+                gameplay::PhysicsCollisionObject * collision = collectable->_node->getCollisionObject();
+
                 if (collectable->_visible)
                 {
+                    collision->setEnabled(true);
                     _collectablesSpritebatch->draw(getRenderDestination(dst), getSafeDrawRect(collectable->_src));
+                }
+                else
+                {
+                    collision->setEnabled(false);
                 }
             }
         }
@@ -542,10 +549,11 @@ namespace game
             if(alpha > 0.0f)
             {
                 std::map<int, gameplay::SpriteBatch *> & enemyBatches = enemyAnimPairItr.second;
-                _characterRenderer.render(enemy->getCurrentAnimation(),
+                bool isVisible = _characterRenderer.render(enemy->getCurrentAnimation(),
                                 enemyBatches[enemy->getState()], projection,
                                 enemy->isLeftFacing() ? SpriteAnimationComponent::Flip::Horizontal : SpriteAnimationComponent::Flip::None,
                                 enemy->getPosition(), viewport, alpha);
+                enemy->getTriggerNode()->getCollisionObject()->setEnabled(isVisible);
             }
         }
 
@@ -663,10 +671,11 @@ namespace game
         return _waterUniformTimer * MATH_PIX2;
     }
 
-    void LevelRendererComponent::CharacterRenderer::render(SpriteAnimationComponent * animation, gameplay::SpriteBatch * spriteBatch,
+    bool LevelRendererComponent::CharacterRenderer::render(SpriteAnimationComponent * animation, gameplay::SpriteBatch * spriteBatch,
                          gameplay::Matrix const & projection, SpriteAnimationComponent::Flip::Enum orientation,
                          gameplay::Vector2 const & position, gameplay::Rectangle const & viewport, float alpha)
     {
+        bool wasRendered = false;
         SpriteAnimationComponent::DrawTarget drawTarget = animation->getDrawTarget(gameplay::Vector2::one(), 0.0f, orientation);
         gameplay::Rectangle const bounds(position.x - ((fabs(drawTarget._scale.x / 2) * GAME_UNIT_SCALAR)),
                                                   position.y - ((fabs(drawTarget._scale.y / 2) * GAME_UNIT_SCALAR)),
@@ -696,7 +705,10 @@ namespace game
             spriteBatch->draw(drawTarget._dst, getSafeDrawRect(drawTarget._src), drawTarget._scale, gameplay::Vector4(1.0f, 1.0f, 1.0f, alpha));
 
             _previousSpritebatch = spriteBatch;
+            wasRendered = true;
         }
+
+        return wasRendered;
     }
 
 #ifndef _FINAL
