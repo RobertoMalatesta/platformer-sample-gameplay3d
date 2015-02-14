@@ -96,15 +96,24 @@ namespace game
                 for(std::string & propertyUrl : fileList)
                 {
                     std::string const propertyPath = std::string(dir) + std::string("/") + propertyUrl;
-                    PropertiesRef * propertiesRef = nullptr;
+                    PropertiesRef * propertiesRef = getProperties(propertyPath);
+                    bool const usesTopLevelNamespaceUrls = propertyDirNamespace->getBool();
 
+                    if (!propertiesRef)
                     {
                         STALL_SCOPE();
                         PERF_SCOPE(propertyPath);
                         propertiesRef = new PropertiesRef(gameplay::Properties::create(propertyPath.c_str()));
-                    }
 
-                    bool const usesTopLevelNamespaceUrls = propertyDirNamespace->getBool();
+                        if (!usesTopLevelNamespaceUrls)
+                        {
+                            propertiesRef->addRef();
+                        }
+                    }
+                    else
+                    {
+                        propertiesRef->release();
+                    }
 
                     if(usesTopLevelNamespaceUrls)
                     {
@@ -120,7 +129,6 @@ namespace game
                     }
                     else
                     {
-                        propertiesRef->addRef();
                         _cachedProperties[propertyPath] = propertiesRef;
                     }
                 }
