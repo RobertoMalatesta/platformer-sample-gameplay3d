@@ -512,10 +512,13 @@ namespace game
 
                 if (collectable->_visible)
                 {
-                    float const speed = 5.0f;
-                    float const height = collectable->_node->getScaleY() * 0.05f;
-                    float bounce = sin((gameplay::Game::getGameTime() / 1000.0f) * speed + (collectable->_node->getTranslationX() + collectable->_node->getTranslationY())) * height;
-                    dst.y += bounce;
+                    if(gameplay::Game::getInstance()->getState() != gameplay::Game::State::PAUSED)
+                    {
+                        float const speed = 5.0f;
+                        float const height = collectable->_node->getScaleY() * 0.05f;
+                        float bounce = sin((gameplay::Game::getGameTime() / 1000.0f) * speed + (collectable->_node->getTranslationX() + collectable->_node->getTranslationY())) * height;
+                        dst.y += bounce;
+                    }
                     _collectablesSpritebatch->draw(getRenderDestination(dst), getSafeDrawRect(collectable->_src));
                 }
             }

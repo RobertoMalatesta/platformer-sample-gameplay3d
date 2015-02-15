@@ -29,6 +29,7 @@ namespace game
         , _touchMessage(nullptr)
         , _mouseMessage(nullptr)
         , _renderLevelMessage(nullptr)
+        , _optionsForm(nullptr)
 #ifndef WIN32
         , _previousReleasedKey(gameplay::Keyboard::Key::KEY_NONE)
         , _framesSinceKeyReleaseEvent(0)
@@ -39,6 +40,9 @@ namespace game
     Platformer::~Platformer()
     {
     }
+
+    char const * PAUSE_TOGGLE_ID = "pauseToggle";
+    char const * SOUND_TOGGLE_ID = "soundToggle";
 
     void Platformer::initialize()
     {
@@ -55,6 +59,9 @@ namespace game
 #endif
         ResourceManager::getInstance().initializeForBoot();
         ScreenRenderer::getInstance().initialize();
+        _optionsForm = gameplay::Form::create("res/ui/options.form");
+        _optionsForm->getControl(PAUSE_TOGGLE_ID)->addListener(this, gameplay::Control::Listener::VALUE_CHANGED);
+        _optionsForm->getControl(SOUND_TOGGLE_ID)->addListener(this, gameplay::Control::Listener::VALUE_CHANGED);
 
 #if !_FINAL && !NO_LUA_BINDINGS
         if(getConfig()->getBool("debug_enable_tools"))
@@ -117,15 +124,16 @@ namespace game
 
     void Platformer::finalize()
     {
-        // Only perform resource cleanup for the purposes of detecting memory leaks, in final builds we want
-        // to shutdown as fast as possible, the platform will free up all resources used by this process
 #ifdef GP_USE_MEM_LEAK_DETECTION
+        _optionsForm->getControl(PAUSE_TOGGLE_ID)->removeListener(this);
+        _optionsForm->getControl(SOUND_TOGGLE_ID)->removeListener(this);
         gameobjects::GameObjectController::getInstance().finalize();
         GAMEOBJECTS_DELETE_MESSAGE(_pinchMessage);
         GAMEOBJECTS_DELETE_MESSAGE(_keyMessage);
         GAMEOBJECTS_DELETE_MESSAGE(_touchMessage);
         GAMEOBJECTS_DELETE_MESSAGE(_mouseMessage);
         GAMEOBJECTS_DELETE_MESSAGE(_renderLevelMessage);
+        SAFE_DELETE(_optionsForm);
         ScreenRenderer::getInstance().finalize();
         ResourceManager::getInstance().finalize();
 
@@ -146,7 +154,7 @@ namespace game
 
     void Platformer::gesturePinchEvent(int x, int y, float scale)
     {
-        if(_pinchMessage && !ScreenRenderer::getInstance().isVisible())
+        if(_pinchMessage && !ScreenRenderer::getInstance().isVisible() && getState() != gameplay::Game::State::PAUSED)
         {
             PinchMessage::setMessage(_pinchMessage, x, y, scale);
             gameobjects::GameObjectController::getInstance().broadcastMessage(_pinchMessage);
@@ -155,7 +163,7 @@ namespace game
 
     void Platformer::keyEvent(gameplay::Keyboard::KeyEvent evt, int key)
     {
-        if (_keyMessage && !ScreenRenderer::getInstance().isVisible())
+        if (_keyMessage && !ScreenRenderer::getInstance().isVisible() && getState() != gameplay::Game::State::PAUSED)
         {
 #ifndef WIN32
             if(evt != gameplay::Keyboard::KeyEvent::KEY_RELEASE)
@@ -187,7 +195,7 @@ namespace game
 
     void Platformer::touchEvent(gameplay::Touch::TouchEvent evt, int x, int y, unsigned int contactIndex)
     {
-        if (_touchMessage && !ScreenRenderer::getInstance().isVisible())
+        if (_touchMessage && !ScreenRenderer::getInstance().isVisible() && getState() != gameplay::Game::State::PAUSED)
         {
             TouchMessage::setMessage(_touchMessage, evt, x, y, contactIndex);
             gameobjects::GameObjectController::getInstance().broadcastMessage(_touchMessage);
@@ -196,7 +204,7 @@ namespace game
 
     bool Platformer::mouseEvent(gameplay::Mouse::MouseEvent evt, int x, int y, int wheelDelta)
     {
-        if (_mouseMessage && !ScreenRenderer::getInstance().isVisible())
+        if (_mouseMessage && !ScreenRenderer::getInstance().isVisible() && getState() != gameplay::Game::State::PAUSED)
         {
             MouseMessage::setMessage(_mouseMessage, evt, x, y, wheelDelta);
             gameobjects::GameObjectController::getInstance().broadcastMessage(_mouseMessage);
@@ -207,6 +215,7 @@ namespace game
 
     void Platformer::update(float elapsedTime)
     {
+        _optionsForm->update(elapsedTime);
         // Work-around for receiving false key release events due to auto repeat in x11
 #ifndef WIN32
         if(_previousReleasedKey != gameplay::Keyboard::Key::KEY_NONE)
@@ -241,6 +250,8 @@ namespace game
                     gamepadForm->draw();
                 }
             }
+
+            _optionsForm->draw();
         }
 
 #ifndef _FINAL
@@ -268,5 +279,17 @@ namespace game
 
         debugFont->finish();
 #endif
+    }
+
+    void Platformer::controlEvent(gameplay::Control * control, gameplay::Control::Listener::EventType)
+    {
+        if(strcmp(control->getId(), PAUSE_TOGGLE_ID) == 0)
+        {
+            getState() == gameplay::Game::State::PAUSED ? resume() : pause();
+        }
+        else if(strcmp(control->getId(), SOUND_TOGGLE_ID) == 0)
+        {
+            getAudioListener()->setGain(getAudioListener()->getGain() == 1.0f ? 0.0f : 1.0f);
+        }
     }
 }

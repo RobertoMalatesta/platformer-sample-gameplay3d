@@ -1,6 +1,7 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "Control.h"
 #include "Game.h"
 #include "GameObjectMessage.h"
 
@@ -11,7 +12,7 @@ namespace game
      *
      * @script{ignore}
     */
-    class Platformer : public gameplay::Game
+    class Platformer : public gameplay::Game, public gameplay::Control::Listener
     {
     public:
         explicit Platformer();
@@ -26,6 +27,7 @@ namespace game
         virtual bool mouseEvent(gameplay::Mouse::MouseEvent evt, int x, int y, int wheelDelta) override;
         virtual void update(float elapsedTime) override;
         virtual void render(float elapsedTime) override;
+        virtual void controlEvent(gameplay::Control * control, gameplay::Control::Listener::EventType);
     private:
         void broadcastKeyEvent(gameplay::Keyboard::KeyEvent evt, int key);
 
@@ -34,6 +36,7 @@ namespace game
         gameobjects::Message * _touchMessage;
         gameobjects::Message * _mouseMessage;
         gameobjects::Message * _renderLevelMessage;
+        gameplay::Form * _optionsForm;
 #ifndef WIN32
         int _previousReleasedKey;
         int _framesSinceKeyReleaseEvent;
