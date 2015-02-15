@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="platformer" default="help">
+<project name="platformer-sample" default="help">
 
     <!-- The local.properties file is created and updated by the 'android' tool.
          It contains the path to the SDK. It should *NOT* be checked into
@@ -50,22 +50,20 @@
      in between standard targets -->
 
     <target name="-pre-build">
-        <mkdir dir="src"/>
-        <copy todir="assets/res">
-            <fileset dir="../res" />
-        </copy>
-        <copy todir="assets/res/shaders">
-            <fileset dir="../external/GamePlay/gameplay/res/shaders" />
-       </copy>
-       <copy todir="assets">
-            <fileset file="../game.config" />
-       </copy>
-       <mkdir dir="src/org/gameplay3d"/>
-       <copy todir="src/org/gameplay3d">
-           <fileset dir="../external/GamePlay/gameplay/src/org/gameplay3d"/>
-       </copy>
+      <copy todir="assets/res">
+          <fileset dir="../res" />
+      </copy>
+      <copy todir="assets/res/shaders">
+          <fileset dir="../external/GamePlay/gameplay/res/shaders" />
+      </copy>
+      <copy todir="assets">
+          <fileset file="../game.config" />
+      </copy>
+      <mkdir dir="../src/org/gameplay3d"/>
+      <copy todir="../src/org/gameplay3d">
+        <fileset dir="../external/GamePlay/gameplay/src/org/gameplay3d"/>
+      </copy>
     </target>
-	
 <!--
     <target name="-pre-compile">
     </target>

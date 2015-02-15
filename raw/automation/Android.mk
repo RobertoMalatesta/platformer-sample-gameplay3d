@@ -41,7 +41,7 @@ include $(PREBUILT_STATIC_LIBRARY)
 LOCAL_PATH := $(SAMPLE_PATH)
 include $(CLEAR_VARS)
 
-LOCAL_MODULE    := platformer
+LOCAL_MODULE    := platformer-sample
 LOCAL_SRC_FILES :=  ../external/GamePlay/gameplay/src/gameplay-main-android.cpp \
 ###INSERT_AUTO_GENERATED_CPP_LIST###
 
@@ -50,7 +50,8 @@ LOCAL_ARM_MODE := arm
 LOCAL_LDLIBS    := -llog -landroid -lEGL -lGLESv2 -lOpenSLES
 LOCAL_CFLAGS    := -D__ANDROID__ -DNO_LUA_BINDINGS -I"../external/GamePlay/external-deps/include" -I"../external/GamePlay/gameplay/src" -I"../external/gameobjects-gameplay3d/src"
 
-LOCAL_STATIC_LIBRARIES := android_native_app_glue libgameplay libgameobjects libpng libz liblua libBulletDynamics libBulletCollision libvorbis libOpenAL
+LOCAL_STATIC_LIBRARIES := android_native_app_glue libgameplay-deps gameobjects
+LOCAL_SHARED_LIBRARIES := gameplay
 
 include $(BUILD_SHARED_LIBRARY)
 $(call import-module,android/native_app_glue)

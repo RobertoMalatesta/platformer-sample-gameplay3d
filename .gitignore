@@ -4,7 +4,8 @@
 /android/libs
 /android/obj
 /android/src
-/android/local*
-/android/pro*
+/android/local.properties
+/android/proguard-project.txt
 /build
+/src/org
 *.user
