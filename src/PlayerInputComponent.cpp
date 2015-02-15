@@ -4,6 +4,7 @@
 #include "Common.h"
 #include "Game.h"
 #include "GameObject.h"
+#include "ScreenRenderer.h"
 
 #ifndef _FINAL
 #include "Messages.h"
@@ -48,7 +49,9 @@ namespace game
 
     void PlayerInputComponent::update(float)
     {
-        if (_gamePad = gameplay::Game::getInstance()->getGamepad(0))
+        _gamePad = gameplay::Game::getInstance()->getGamepad(0);
+
+        if (_gamePad && !ScreenRenderer::getInstance().isVisible())
         {
             bool isAnyButtonDown = false;
 
