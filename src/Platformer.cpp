@@ -243,11 +243,14 @@ namespace game
 
         if (!ScreenRenderer::getInstance().isVisible())
         {
-            if (gameplay::Gamepad * gamepad = getGamepad(0))
+            if(getState() != gameplay::Game::State::PAUSED)
             {
-                if (gameplay::Form * gamepadForm = gamepad->getForm())
+                if (gameplay::Gamepad * gamepad = getGamepad(0))
                 {
-                    gamepadForm->draw();
+                    if (gameplay::Form * gamepadForm = gamepad->getForm())
+                    {
+                        gamepadForm->draw();
+                    }
                 }
             }
 
