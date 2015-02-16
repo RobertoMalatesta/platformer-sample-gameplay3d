@@ -90,6 +90,8 @@ namespace game
         std::vector<std::pair<gameplay::Node *, gameplay::Rectangle>> _dynamicCollisionNodes;
         std::vector<LevelComponent::Collectable *> _collectables;
         std::vector<gameplay::Rectangle> _waterBounds;
+        gameplay::FrameBuffer * _frameBuffer;
+        gameplay::SpriteBatch * _pauseSpriteBatch;
         float _waterUniformTimer;
     };
 }

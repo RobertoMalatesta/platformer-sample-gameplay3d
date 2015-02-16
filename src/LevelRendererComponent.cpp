@@ -30,6 +30,7 @@ namespace game
         , _pixelSpritebatch(nullptr)
         , _interactablesSpritesheet(nullptr)
         , _waterSpritebatch(nullptr)
+        , _frameBuffer(nullptr)
         , _waterUniformTimer(0.0f)
     {
     }
@@ -167,6 +168,13 @@ namespace game
             _collectablesSpritebatch = gameplay::SpriteBatch::create(collectablesSpriteSheet->getTexture());
             SAFE_RELEASE(collectablesSpriteSheet);
             uninitialisedSpriteBatches.push_back(_collectablesSpritebatch);
+
+            _frameBuffer = gameplay::FrameBuffer::create("lr_buffer");
+            gameplay::RenderTarget * pauseRenderTarget = gameplay::RenderTarget::create("pause", gameplay::Game::getInstance()->getWidth(), gameplay::Game::getInstance()->getHeight());
+            _frameBuffer->setRenderTarget(pauseRenderTarget);
+            gameplay::Effect * pauseEffect = gameplay::Effect::createFromFile("res/shaders/sprite.vert", "res/shaders/sepia.frag");
+            _pauseSpriteBatch = gameplay::SpriteBatch::create(pauseRenderTarget->getTexture(), pauseEffect);
+            SAFE_RELEASE(pauseEffect);
         }
 
 
@@ -275,7 +283,9 @@ namespace game
         SAFE_DELETE(_interactablesSpritebatch);
         SAFE_DELETE(_collectablesSpritebatch);
         SAFE_DELETE(_waterSpritebatch);
+        SAFE_DELETE(_pauseSpriteBatch);
         SAFE_RELEASE(_interactablesSpritesheet);
+        SAFE_RELEASE(_frameBuffer);
         onLevelUnloaded();
     }
 
@@ -612,6 +622,13 @@ namespace game
 #endif
         if(renderingEnabled)
         {
+            gameplay::FrameBuffer * previousFrameBuffer = nullptr;
+
+            if(gameplay::Game::getInstance()->getState() == gameplay::Game::State::PAUSED)
+            {
+                previousFrameBuffer = _frameBuffer->bind();
+            }
+
             float const zoomScale = (1.0f / GAME_UNIT_SCALAR) * _cameraControl->getZoom();
             gameplay::Rectangle viewport;
             viewport.width = gameplay::Game::getInstance()->getViewport().width * GAME_UNIT_SCALAR,
@@ -646,6 +663,14 @@ namespace game
             renderCharacters(projection, viewport, triggerViewport);
             renderWater(projection, viewport, elapsedTime);
 
+            if(previousFrameBuffer)
+            {
+                previousFrameBuffer->bind();
+
+                _pauseSpriteBatch->start();
+                _pauseSpriteBatch->draw(gameplay::Game::getInstance()->getViewport(), gameplay::Game::getInstance()->getViewport());
+                _pauseSpriteBatch->finish();
+            }
 #ifndef _FINAL
             renderDebug(viewport, triggerViewport);
 #endif
