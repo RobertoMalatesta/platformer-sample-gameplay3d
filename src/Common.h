@@ -26,7 +26,6 @@ namespace game
     #define GAME_FONT_SIZE_LARGE 50
     #define GAME_FONT_SIZE_REGULAR_INDEX 0
     #define GAME_FONT_SIZE_LARGE_INDEX 1
-    #define GAME_MAX_GAMEPADS 1
     // 1 metre = 32 pixels
     #define GAME_UNIT_SCALAR 0.03125f
 
