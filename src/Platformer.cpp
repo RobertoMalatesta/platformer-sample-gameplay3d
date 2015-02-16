@@ -233,6 +233,7 @@ namespace game
 
         gameobjects::GameObjectController::getInstance().update(elapsedTime);
         ScreenRenderer::getInstance().update(elapsedTime);
+        _optionsForm->setEnabled(!ScreenRenderer::getInstance().isVisible());
     }
 
     void Platformer::render(float elapsedTime)
@@ -288,7 +289,14 @@ namespace game
     {
         if(strcmp(control->getId(), PAUSE_TOGGLE_ID) == 0)
         {
-            getState() == gameplay::Game::State::PAUSED ? resume() : pause();
+            // Pause is ref-counted and resume will be called when the game re-gains focus on mobile platforms. We
+            // don't want to resume the game if the player had paused it when it did have focus so create a large ref-count.
+            // Needs a better sollution
+            bool const isPaused = getState() == gameplay::Game::State::PAUSED;
+            for(int i = 0; i < 256; ++i)
+            {
+                 isPaused ? resume() : pause();
+            }
         }
         else if(strcmp(control->getId(), SOUND_TOGGLE_ID) == 0)
         {
