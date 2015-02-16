@@ -133,7 +133,7 @@ namespace game
         GAMEOBJECTS_DELETE_MESSAGE(_touchMessage);
         GAMEOBJECTS_DELETE_MESSAGE(_mouseMessage);
         GAMEOBJECTS_DELETE_MESSAGE(_renderLevelMessage);
-        SAFE_DELETE(_optionsForm);
+        SAFE_RELEASE(_optionsForm);
         ScreenRenderer::getInstance().finalize();
         ResourceManager::getInstance().finalize();
 

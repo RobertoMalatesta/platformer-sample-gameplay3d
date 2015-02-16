@@ -175,6 +175,7 @@ namespace game
             gameplay::Effect * pauseEffect = gameplay::Effect::createFromFile("res/shaders/sprite.vert", "res/shaders/sepia.frag");
             _pauseSpriteBatch = gameplay::SpriteBatch::create(pauseRenderTarget->getTexture(), pauseEffect);
             SAFE_RELEASE(pauseEffect);
+            SAFE_RELEASE(pauseRenderTarget);
         }
 
 
