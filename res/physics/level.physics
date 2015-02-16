@@ -21,8 +21,8 @@ collisionObject bridge : world_collision
 {
     kinematic = false
     mass = 50
-    angularDamping = 0.75
-    linearDamping = 0.75
+    angularDamping = 0.4
+    linearDamping = 0.4
 }
 
 collisionObject reset : world_collision
