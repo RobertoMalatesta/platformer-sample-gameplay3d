@@ -1,7 +1,7 @@
 #include "LevelComponent.h"
 
 #include "CameraControlComponent.h"
-#include "CollisionObjectComponent.h"
+#include "CollisionHandlerComponent.h"
 #include "Common.h"
 #include "EnemyComponent.h"
 #include "Game.h"
@@ -22,6 +22,7 @@ namespace game
         , _levelLoadedOnce(false)
         , _player(nullptr)
         , _level(nullptr)
+        , _levelCollisionHandler(nullptr)
         , _tileBatch(nullptr)
         , _cameraControl(nullptr)
         , _parallaxSpritebatch(nullptr)
@@ -50,10 +51,10 @@ namespace game
         case(Messages::Type::LevelUnloaded):
             onLevelUnloaded();
             break;
-        case(Messages::Type::RenderLevel):
+        case(Messages::Type::UpdateAndRenderLevel):
         {
-            RenderLevelMessage msg(message);
-            render(msg._elapsedTime);
+            UpdateAndRenderLevelMessage msg(message);
+            updateAndRender(msg._elapsedTime);
         }
             return false;
         }
@@ -82,16 +83,12 @@ namespace game
 
         std::vector<gameplay::SpriteBatch *> uninitialisedSpriteBatches;
 
-        _level = getRootParent()->getComponentInChildren<LevelLoaderComponent>();
-        _level->addRef();
         _tileBatch = gameplay::SpriteBatch::create(_level->getTexturePath().c_str());
         _tileBatch->getSampler()->setFilterMode(gameplay::Texture::Filter::NEAREST, gameplay::Texture::Filter::NEAREST);
         _tileBatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::CLAMP, gameplay::Texture::Wrap::CLAMP);
         uninitialisedSpriteBatches.push_back(_tileBatch);
         _player = _level->getParent()->getComponentInChildren<PlayerComponent>();
         _player->addRef();
-        _cameraControl = getRootParent()->getComponentInChildren<CameraControlComponent>();
-        _cameraControl->addRef();
         _cameraControl->setBoundary(gameplay::Rectangle(_level->getTileWidth() * 2.0f * GAME_UNIT_SCALAR, 0,
             (_level->getTileWidth() * _level->getWidth() - (_level->getTileWidth() * 2.0f))  * GAME_UNIT_SCALAR,
             std::numeric_limits<float>::max()));
@@ -230,8 +227,6 @@ namespace game
     {
         PERF_SCOPE("LevelComponent::onLevelUnLoaded");
 
-        SAFE_RELEASE(_cameraControl);
-        SAFE_RELEASE(_level);
         SAFE_RELEASE(_player);
         SAFE_DELETE(_tileBatch);
 
@@ -277,8 +272,21 @@ namespace game
         _levelLoaded = false;
     }
 
+    void LevelComponent::initialize()
+    {
+        _level = getRootParent()->getComponentInChildren<LevelLoaderComponent>();
+        _level->addRef();
+        _levelCollisionHandler = getRootParent()->getComponentInChildren<CollisionHandlerComponent>();
+        _levelCollisionHandler->addRef();
+        _cameraControl = getRootParent()->getComponentInChildren<CameraControlComponent>();
+        _cameraControl->addRef();
+    }
+
     void LevelComponent::finalize()
     {
+        SAFE_RELEASE(_level);
+        SAFE_RELEASE(_levelCollisionHandler);
+        SAFE_RELEASE(_cameraControl);
         SAFE_DELETE(_pixelSpritebatch);
         SAFE_DELETE(_parallaxSpritebatch);
         SAFE_DELETE(_interactablesSpritebatch);
@@ -328,7 +336,7 @@ namespace game
         }
     }
 
-    void LevelComponent::renderBackground(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, float elapsedTime)
+    void LevelComponent::updateAndRenderBackground(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, float elapsedTime)
     {
         // Clear the screen to the colour of the sky
         static unsigned int const SKY_COLOR = 0xD0F4F7FF;
@@ -543,11 +551,11 @@ namespace game
         }
     }
 
-    void LevelComponent::renderCharacters(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport)
+    void LevelComponent::updateAndRenderCharacters(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport, float elapsedTime)
     {
         _characterRenderer.start();
 
-        // Draw the enemies
+        // Enemies
         for (auto & enemyAnimPairItr : _enemyAnimationBatches)
         {
             EnemyComponent * enemy = enemyAnimPairItr.first;
@@ -562,10 +570,11 @@ namespace game
                                 enemy->isLeftFacing() ? SpriteAnimationComponent::Flip::Horizontal : SpriteAnimationComponent::Flip::None,
                                 enemy->getPosition(), viewport, alpha, &dst);
                 enemy->getTriggerNode()->getCollisionObject()->setEnabled(dst.intersects(triggerViewport) && alpha == 1.0f);
+                enemy->update(elapsedTime);
             }
         }
 
-        // Draw the player
+        // Player
         _characterRenderer.render(_player->getCurrentAnimation(),
                         _playerAnimationBatches[_player->getState()], projection,
                         _player->isLeftFacing() ? SpriteAnimationComponent::Flip::Horizontal : SpriteAnimationComponent::Flip::None,
@@ -615,8 +624,23 @@ namespace game
         }
     }
 
-    void LevelComponent::render(float elapsedTime)
+    void LevelComponent::updateAndRender(float elapsedTime)
     {
+        bool const isPaused = gameplay::Game::getInstance()->getState() == gameplay::Game::State::PAUSED;
+
+        if(!isPaused)
+        {
+            _cameraControl->update(elapsedTime);
+
+            if(_levelLoaded)
+            {
+                _player->update(elapsedTime);
+            }
+
+            _level->update();
+            _levelCollisionHandler->update(elapsedTime);
+        }
+
         bool renderingEnabled = _levelLoaded;
 #ifndef _FINAL
         renderingEnabled &= gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_level_rendering");
@@ -625,7 +649,7 @@ namespace game
         {
             gameplay::FrameBuffer * previousFrameBuffer = nullptr;
 
-            if(gameplay::Game::getInstance()->getState() == gameplay::Game::State::PAUSED)
+            if(isPaused)
             {
                 previousFrameBuffer = _frameBuffer->bind();
             }
@@ -657,11 +681,11 @@ namespace game
             projection.rotateX(MATH_DEG_TO_RAD(180));
             projection.scale(GAME_UNIT_SCALAR, GAME_UNIT_SCALAR, 0);
 
-            renderBackground(projection, viewport, elapsedTime);
+            updateAndRenderBackground(projection, viewport, elapsedTime);
             renderTileMap(projection, viewport);
             renderInteractables(projection, viewport);
             renderCollectables(projection, viewport, triggerViewport);
-            renderCharacters(projection, viewport, triggerViewport);
+            updateAndRenderCharacters(projection, viewport, triggerViewport, elapsedTime);
             renderWater(projection, viewport, elapsedTime);
 
             if(previousFrameBuffer)

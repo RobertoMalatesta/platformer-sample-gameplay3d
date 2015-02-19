@@ -23,13 +23,13 @@ namespace game
         float getMaxZoom() const;
         void setZoom(float zoom);
         void setBoundary(gameplay::Rectangle boundary);
+        void update(float elapsedTime);
         gameplay::Matrix const & getViewProjectionMatrix() const;
         gameplay::Vector2 const &  getPosition() const;
         gameplay::Vector2 const & getTargetPosition() const;
         gameplay::Rectangle const & getTargetBoundary() const;
     protected:
         virtual void readProperties(gameplay::Properties & properties) override;
-        virtual void update(float elapsedTime) override;
         virtual void onStart() override;
         virtual void finalize() override;
     private:

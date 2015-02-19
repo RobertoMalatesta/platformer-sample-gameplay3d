@@ -54,12 +54,12 @@ namespace game
 
         virtual void initialize() override;
         virtual void readProperties(gameplay::Properties & properties) override;
-        virtual void update(float elapsedTime) override;
 
         void play();
         void pause();
         void stop();
         void setSpeed(float speed);
+        void update(float elapsedTime);
 
         PlaybackState::Enum getState() const;
         gameplay::Rectangle const & getCurrentSpriteSrc() const;

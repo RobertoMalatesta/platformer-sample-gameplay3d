@@ -16,6 +16,7 @@ namespace game
         gameplay::Logger::log(gameplay::Logger::Level::LEVEL_INFO, (std::string(&logTimeStamp[0]) + std::string(message) + "\n").c_str(), __VA_ARGS__);\
     }
 
+    #define GAME_SAFE_ADD(ref) if(ref) ref->addRef()
     #define GAME_PRINT_VEC2(id, vec) GAME_LOG("%s: %f,%f", id, vec.x, vec.y)
     #define GAME_PRINT_VEC3(id, vec) GAME_LOG("%s: %f,%f,%f,", id, vec.x, vec.y, vec.z)
     #define GAME_PRINT_VEC4(id, vec) GAME_LOG("%s: %f,%f,%f,%f,", id, vec.x, vec.y, vec.z, vec.w)

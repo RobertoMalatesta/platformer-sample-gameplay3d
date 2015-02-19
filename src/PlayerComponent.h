@@ -11,6 +11,8 @@ namespace gameplay
 namespace game
 {
     class CameraControlComponent;
+    class PlayerInputComponent;
+    class PlayerHandOfGodComponent;
     class SpriteAnimationComponent;
 
     /**
@@ -69,7 +71,7 @@ namespace game
 
         virtual void onStart() override;
         virtual void finalize() override;
-        virtual void update(float elapsedTime) override;
+        void update(float elapsedTime);
         virtual void readProperties(gameplay::Properties & properties) override;
         void forEachAnimation(std::function <bool(State::Enum, SpriteAnimationComponent *)> func);
 
@@ -87,6 +89,8 @@ namespace game
     private:
         PlayerComponent(PlayerComponent const &);
 
+        PlayerInputComponent * _playerInputComponent;
+        PlayerHandOfGodComponent * _playerHandOfGodComponent;
         gameplay::Node * _characterNode;
         gameplay::Node * _characterNormalNode;
         std::map<State::Enum, SpriteAnimationComponent*> _animations;

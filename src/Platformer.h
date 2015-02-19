@@ -35,7 +35,7 @@ namespace game
         gameobjects::Message * _keyMessage;
         gameobjects::Message * _touchMessage;
         gameobjects::Message * _mouseMessage;
-        gameobjects::Message * _renderLevelMessage;
+        gameobjects::Message * _UpdateAndRenderLevelMessage;
         gameplay::Form * _optionsForm;
 #ifndef WIN32
         int _previousReleasedKey;

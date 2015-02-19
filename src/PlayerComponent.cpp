@@ -6,6 +6,8 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Messages.h"
+#include "PlayerInputComponent.h"
+#include "PlayerHandOfGodComponent.h"
 #include "PhysicsCharacter.h"
 #include "SpriteAnimationComponent.h"
 
@@ -25,6 +27,8 @@ namespace game
         , _swimmingEnabled(false)
         , _climbingSnapPositionX(0.0f)
         , _swimSpeedScale(1.0f)
+        , _playerInputComponent(nullptr)
+        , _playerHandOfGodComponent(nullptr)
     {
     }
 
@@ -48,6 +52,11 @@ namespace game
         _state = State::Idle;
         _camera = getRootParent()->getComponent<CameraControlComponent>();
         _camera->addRef();
+
+        _playerHandOfGodComponent = getParent()->getComponent<PlayerHandOfGodComponent>();
+        GAME_SAFE_ADD(_playerHandOfGodComponent);
+        _playerInputComponent = getParent()->getComponent<PlayerInputComponent>();
+        GAME_SAFE_ADD(_playerInputComponent);
     }
 
     void PlayerComponent::finalize()
@@ -55,6 +64,8 @@ namespace game
         _characterNode = nullptr;
         SAFE_RELEASE(_camera);
         SAFE_RELEASE(_characterNormalNode);
+        SAFE_RELEASE(_playerHandOfGodComponent);
+        SAFE_RELEASE(_playerInputComponent);
         GAMEOBJECTS_DELETE_MESSAGE(_jumpMessage);
     }
 
@@ -95,6 +106,11 @@ namespace game
 
     void PlayerComponent::update(float elapsedTime)
     {
+        if(_playerInputComponent)
+        {
+            _playerInputComponent->update();
+        }
+
         gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
 
         if(character->isPhysicsEnabled())
@@ -187,6 +203,13 @@ namespace game
         _previousState = _state;
 
         _camera->setTargetPosition(getPosition(), elapsedTime);
+
+        getCurrentAnimation()->update(elapsedTime);
+
+        if(_playerHandOfGodComponent)
+        {
+            _playerHandOfGodComponent->update(elapsedTime);
+        }
     }
 
     SpriteAnimationComponent * PlayerComponent::getCurrentAnimation()

@@ -28,7 +28,7 @@ namespace game
         , _pinchMessage(nullptr)
         , _touchMessage(nullptr)
         , _mouseMessage(nullptr)
-        , _renderLevelMessage(nullptr)
+        , _UpdateAndRenderLevelMessage(nullptr)
         , _optionsForm(nullptr)
 #ifndef WIN32
         , _previousReleasedKey(gameplay::Keyboard::Key::KEY_NONE)
@@ -115,7 +115,7 @@ namespace game
         _keyMessage = KeyMessage::create();
         _touchMessage = TouchMessage::create();
         _mouseMessage = MouseMessage::create();
-        _renderLevelMessage = RenderLevelMessage::create();
+        _UpdateAndRenderLevelMessage = UpdateAndRenderLevelMessage::create();
 
         getAudioListener()->setCamera(nullptr);
         gameobjects::GameObject * rootGameObject = gameobjects::GameObjectController::getInstance().createGameObject("root");
@@ -132,7 +132,7 @@ namespace game
         GAMEOBJECTS_DELETE_MESSAGE(_keyMessage);
         GAMEOBJECTS_DELETE_MESSAGE(_touchMessage);
         GAMEOBJECTS_DELETE_MESSAGE(_mouseMessage);
-        GAMEOBJECTS_DELETE_MESSAGE(_renderLevelMessage);
+        GAMEOBJECTS_DELETE_MESSAGE(_UpdateAndRenderLevelMessage);
         SAFE_RELEASE(_optionsForm);
         ScreenRenderer::getInstance().finalize();
         ResourceManager::getInstance().finalize();
@@ -231,15 +231,14 @@ namespace game
         }
 #endif
 
-        gameobjects::GameObjectController::getInstance().update(elapsedTime);
         ScreenRenderer::getInstance().update(elapsedTime);
         _optionsForm->setEnabled(!ScreenRenderer::getInstance().isVisible());
     }
 
     void Platformer::render(float elapsedTime)
     {
-        RenderLevelMessage::setMessage(_renderLevelMessage, elapsedTime);
-        gameobjects::GameObjectController::getInstance().broadcastMessage(_renderLevelMessage);
+        UpdateAndRenderLevelMessage::setMessage(_UpdateAndRenderLevelMessage, elapsedTime);
+        gameobjects::GameObjectController::getInstance().broadcastMessage(_UpdateAndRenderLevelMessage);
         ScreenRenderer::getInstance().render();
 
         if (!ScreenRenderer::getInstance().isVisible())

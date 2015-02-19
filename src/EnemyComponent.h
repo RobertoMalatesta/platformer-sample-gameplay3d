@@ -13,8 +13,7 @@ namespace game
     class SpriteAnimationComponent;
 
     /**
-     * A simple enemy behaviour that walks horizontally along a surface until it reaches an edge,
-     * after which, it will head in the opposite direciton.
+     * A simple enemy behaviour that travels horizontally back and forth
      *
      * @script{ignore}
     */
@@ -36,7 +35,7 @@ namespace game
 
         void onStart() override;
         void finalize() override;
-        void update(float elapsedTime) override;
+        void update(float elapsedTime);
         void readProperties(gameplay::Properties & properties) override;
         void forEachAnimation(std::function <bool(State::Enum, SpriteAnimationComponent *)> func);
         void setHorizontalConstraints(float minX, float maxX);

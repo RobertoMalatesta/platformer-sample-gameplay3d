@@ -27,7 +27,7 @@ namespace game
         ~CollisionHandlerComponent();
 
         virtual bool onMessageReceived(gameobjects::Message * message, int messageType) override;
-        virtual void update(float elapsedTime) override;
+        void update(float elapsedTime);
         virtual void initialize() override;
         virtual void finalize() override;
         virtual void collisionEvent(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,

@@ -18,8 +18,8 @@ namespace game
     public:
         explicit PlayerHandOfGodComponent();
         ~PlayerHandOfGodComponent();
+        void update(float elapsedTime);
     protected:
-        virtual void update(float elapsedTime) override;
         virtual void initialize() override;
         virtual void finalize() override;
         virtual void onStart() override;

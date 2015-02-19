@@ -8,6 +8,7 @@
 namespace game
 {
     class CameraControlComponent;
+    class CollisionHandlerComponent;
     class EnemyComponent;
     class LevelLoaderComponent;
     class PlayerComponent;
@@ -24,6 +25,7 @@ namespace game
         explicit LevelComponent();
         ~LevelComponent();
     protected:
+        virtual void initialize() override;
         virtual void finalize() override;
         virtual bool onMessageReceived(gameobjects::Message * message, int messageType) override;
         virtual void readProperties(gameplay::Properties & properties) override;
@@ -55,12 +57,12 @@ namespace game
 
         void onLevelLoaded();
         void onLevelUnloaded();
-        void render(float elapsedTime);
-        void renderBackground(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, float elapsedTime);
+        void updateAndRender(float elapsedTime);
+        void updateAndRenderCharacters(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport, float elapsedTime);
+        void updateAndRenderBackground(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, float elapsedTime);
         void renderTileMap(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
         void renderInteractables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
         void renderCollectables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport);
-        void renderCharacters(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport);
         void renderWater(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, float elapsedTime);
         float getWaterTimeUniform() const;
 
@@ -71,6 +73,7 @@ namespace game
 
         PlayerComponent * _player;
         LevelLoaderComponent * _level;
+        CollisionHandlerComponent * _levelCollisionHandler;
         std::map<int, gameplay::SpriteBatch *> _playerAnimationBatches;
         std::map<EnemyComponent *, std::map<int, gameplay::SpriteBatch *>> _enemyAnimationBatches;
         gameplay::SpriteBatch * _tileBatch;

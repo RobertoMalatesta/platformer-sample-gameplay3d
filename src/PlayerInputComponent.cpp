@@ -47,7 +47,7 @@ namespace game
         SAFE_RELEASE(_camera);
     }
 
-    void PlayerInputComponent::update(float)
+    void PlayerInputComponent::update()
     {
         _gamePad = gameplay::Game::getInstance()->getGamepad(0);
 

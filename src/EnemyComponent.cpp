@@ -100,6 +100,7 @@ namespace game
             }
 
             _triggerNode->translateX(velocityX);
+            getCurrentAnimation()->update(elapsedTime);
         }
         else if(_alpha > 0.0f)
         {

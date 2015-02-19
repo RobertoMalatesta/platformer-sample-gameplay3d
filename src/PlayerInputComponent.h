@@ -24,10 +24,10 @@ namespace game
     public:
         explicit PlayerInputComponent();
         ~PlayerInputComponent();
+        void update();
     protected:
         virtual void initialize() override;
         virtual void finalize() override;
-        virtual void update(float) override;
         virtual void onStart() override;
         virtual bool onMessageReceived(gameobjects::Message * message, int messageType);
     private:

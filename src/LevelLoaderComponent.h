@@ -34,7 +34,7 @@ namespace game
         virtual void finalize() override;
         virtual bool onMessageReceived(gameobjects::Message * message, int messageType) override;
         virtual void readProperties(gameplay::Properties & properties) override;
-        virtual void update(float) override;
+        void update();
 
         void consumeCollectable(gameplay::Node * collectableNode);
         void reload();
