@@ -50,7 +50,7 @@ LOCAL_SRC_FILES :=  ../external/GamePlay/gameplay/src/gameplay-main-android.cpp 
                     Common.cpp \
                     EnemyComponent.cpp \
                     LevelComponent.cpp \
-                    LevelRendererComponent.cpp \
+                    LevelLoaderComponent.cpp \
                     PlatformerCollision.cpp \
                     Platformer.cpp \
                     PlayerAudioComponent.cpp \

@@ -3,7 +3,7 @@
 #include "CameraControlComponent.h"
 #include "Common.h"
 #include "GameObject.h"
-#include "LevelComponent.h"
+#include "LevelLoaderComponent.h"
 #include "Messages.h"
 #include "PlayerComponent.h"
 #include "ScreenRenderer.h"
@@ -60,7 +60,7 @@ namespace game
         {
         case(Messages::Type::LevelLoaded):
         {
-            LevelComponent * level = getRootParent()->getComponentInChildren<LevelComponent>();
+            LevelLoaderComponent * level = getRootParent()->getComponentInChildren<LevelLoaderComponent>();
             _resetPosition = level->getPlayerSpawnPosition();
             float const height = ((level->getHeight() + 1) * level->getTileHeight()) * GAME_UNIT_SCALAR;
             _boundary.width = _camera->getTargetBoundary().width;

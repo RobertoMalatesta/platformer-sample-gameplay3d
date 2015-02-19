@@ -12,7 +12,7 @@ namespace gameplay
 namespace game
 {
     class EnemyComponent;
-    class LevelComponent;
+    class LevelLoaderComponent;
     class PlayerComponent;
 
     /**
@@ -56,7 +56,7 @@ namespace game
 
         std::map<gameplay::PhysicsCollisionObject *, EnemyComponent *> _enemies;
         PlayerComponent * _player;
-        LevelComponent * _level;
+        LevelLoaderComponent * _level;
         std::set<gameplay::Node *> _playerCharacterNodes;
         gameobjects::Message * _forceHandOfGodMessage;
         int _playerClimbingTerrainRefCount;

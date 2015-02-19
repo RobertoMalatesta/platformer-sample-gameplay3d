@@ -1,23 +1,37 @@
-﻿#include "LevelComponent.h"
+#include "LevelComponent.h"
 
-#include "Common.h"
+#include "CameraControlComponent.h"
 #include "CollisionObjectComponent.h"
+#include "Common.h"
 #include "EnemyComponent.h"
 #include "Game.h"
 #include "GameObject.h"
 #include "GameObjectController.h"
 #include "Messages.h"
-#include "PropertiesRef.h"
+#include "PhysicsCharacter.h"
+#include "PlayerComponent.h"
 #include "ResourceManager.h"
+#include "Scene.h"
+#include "ScreenRenderer.h"
 #include "SpriteSheet.h"
 
 namespace game
 {
     LevelComponent::LevelComponent()
-        : _loadedMessage(nullptr)
-        , _unloadedMessage(nullptr)
-        , _preUnloadedMessage(nullptr)
-        , _loadBroadcasted(false)
+        : _levelLoaded(false)
+        , _levelLoadedOnce(false)
+        , _player(nullptr)
+        , _level(nullptr)
+        , _tileBatch(nullptr)
+        , _cameraControl(nullptr)
+        , _parallaxSpritebatch(nullptr)
+        , _interactablesSpritebatch(nullptr)
+        , _collectablesSpritebatch(nullptr)
+        , _pixelSpritebatch(nullptr)
+        , _interactablesSpritesheet(nullptr)
+        , _waterSpritebatch(nullptr)
+        , _frameBuffer(nullptr)
+        , _waterUniformTimer(0.0f)
     {
     }
 
@@ -27,697 +41,817 @@ namespace game
 
     bool LevelComponent::onMessageReceived(gameobjects::Message * message, int messageType)
     {
-#ifndef _FINAL
-        // Reload on F5 pressed so we can iterate upon it at runtime
         switch (messageType)
         {
-        case Messages::Type::Key:
-            {
-                KeyMessage keyMessage(message);
-                if(keyMessage._event == gameplay::Keyboard::KeyEvent::KEY_PRESS && keyMessage._key == gameplay::Keyboard::Key::KEY_F5)
-                {
-                    reload();
-                }
-            }
+        case(Messages::Type::LevelLoaded):
+            onLevelUnloaded();
+            onLevelLoaded();
             break;
-        case Messages::Type::RequestLevelReload:
-            reload();
+        case(Messages::Type::LevelUnloaded):
+            onLevelUnloaded();
             break;
+        case(Messages::Type::RenderLevel):
+        {
+            RenderLevelMessage msg(message);
+            render(msg._elapsedTime);
         }
-#endif
+            return false;
+        }
+
         return true;
     }
 
-    void LevelComponent::reload()
+    gameplay::Rectangle getSafeDrawRect(gameplay::Rectangle const & src, float paddingX = 0.5f, float paddingY = 0.5f)
     {
-        _loadBroadcasted = false;
+        return gameplay::Rectangle(src.x + paddingX, src.y + paddingY, src.width - (paddingX * 2), src.height - (paddingY * 2));
     }
 
-    void LevelComponent::update(float)
+    gameplay::Rectangle getRenderDestination(gameplay::Rectangle const & worldDestination)
     {
-        if(!_loadBroadcasted)
+        gameplay::Rectangle result;
+        result.width = worldDestination.width / GAME_UNIT_SCALAR;
+        result.height = worldDestination.height / GAME_UNIT_SCALAR;
+        result.x = worldDestination.x / GAME_UNIT_SCALAR;
+        result.y = -worldDestination.y / GAME_UNIT_SCALAR - result.height;
+        return result;
+    }
+
+    void LevelComponent::onLevelLoaded()
+    {
+        PERF_SCOPE("LevelComponent::onLevelLoaded");
+
+        std::vector<gameplay::SpriteBatch *> uninitialisedSpriteBatches;
+
+        _level = getRootParent()->getComponentInChildren<LevelLoaderComponent>();
+        _level->addRef();
+        _tileBatch = gameplay::SpriteBatch::create(_level->getTexturePath().c_str());
+        _tileBatch->getSampler()->setFilterMode(gameplay::Texture::Filter::NEAREST, gameplay::Texture::Filter::NEAREST);
+        _tileBatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::CLAMP, gameplay::Texture::Wrap::CLAMP);
+        uninitialisedSpriteBatches.push_back(_tileBatch);
+        _player = _level->getParent()->getComponentInChildren<PlayerComponent>();
+        _player->addRef();
+        _cameraControl = getRootParent()->getComponentInChildren<CameraControlComponent>();
+        _cameraControl->addRef();
+        _cameraControl->setBoundary(gameplay::Rectangle(_level->getTileWidth() * 2.0f * GAME_UNIT_SCALAR, 0,
+            (_level->getTileWidth() * _level->getWidth() - (_level->getTileWidth() * 2.0f))  * GAME_UNIT_SCALAR,
+            std::numeric_limits<float>::max()));
+
+        _player->forEachAnimation([this, &uninitialisedSpriteBatches](PlayerComponent::State::Enum state, SpriteAnimationComponent * animation) -> bool
         {
-            getRootParent()->broadcastMessage(_preUnloadedMessage);
-            unload();
-            getRootParent()->broadcastMessage(_unloadedMessage);
-            load();
-            getRootParent()->broadcastMessage(_loadedMessage);
-            _loadBroadcasted = true;
+            SpriteSheet * animSheet = ResourceManager::getInstance().getSpriteSheet(animation->getSpriteSheetPath());
+             gameplay::SpriteBatch * spriteBatch = gameplay::SpriteBatch::create(animSheet->getTexture());
+            spriteBatch->getSampler()->setFilterMode(gameplay::Texture::Filter::NEAREST, gameplay::Texture::Filter::NEAREST);
+            spriteBatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::CLAMP, gameplay::Texture::Wrap::CLAMP);
+            _playerAnimationBatches[state] = spriteBatch;
+            uninitialisedSpriteBatches.push_back(spriteBatch);
+            SAFE_RELEASE(animSheet);
+            return false;
+        });
+
+        std::map<std::string, gameplay::SpriteBatch *> enemyuninitialisedSpriteBatches;
+        std::vector<EnemyComponent *> enemies;
+        _level->getParent()->getComponentsInChildren(enemies);
+
+        for(EnemyComponent * enemy  : enemies)
+        {
+            enemy->addRef();
+
+            enemy->forEachAnimation([this, &enemyuninitialisedSpriteBatches, &enemy, &uninitialisedSpriteBatches](EnemyComponent::State::Enum state, SpriteAnimationComponent * animation) -> bool
+            {
+                SpriteSheet * animSheet = ResourceManager::getInstance().getSpriteSheet(animation->getSpriteSheetPath());
+                gameplay::SpriteBatch * spriteBatch = nullptr;
+
+                auto enemyBatchItr = enemyuninitialisedSpriteBatches.find(animation->getSpriteSheetPath());
+
+                if(enemyBatchItr != enemyuninitialisedSpriteBatches.end())
+                {
+                    spriteBatch = enemyBatchItr->second;
+                }
+                else
+                {
+                    spriteBatch = gameplay::SpriteBatch::create(animSheet->getTexture());
+                    spriteBatch->getSampler()->setFilterMode(gameplay::Texture::Filter::NEAREST, gameplay::Texture::Filter::NEAREST);
+                    spriteBatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::CLAMP, gameplay::Texture::Wrap::CLAMP);
+                    enemyuninitialisedSpriteBatches[animation->getSpriteSheetPath()] = spriteBatch;
+                    uninitialisedSpriteBatches.push_back(spriteBatch);
+                }
+
+                _enemyAnimationBatches[enemy][state] = spriteBatch;
+                SAFE_RELEASE(animSheet);
+                return false;
+            });
         }
+
+        if (!_levelLoadedOnce)
+        {
+            _pixelSpritebatch = ResourceManager::getInstance().createSinglePixelSpritebatch();
+            uninitialisedSpriteBatches.push_back(_pixelSpritebatch);
+
+            uninitialisedSpriteBatches.push_back(_parallaxSpritebatch);
+
+            _interactablesSpritesheet = ResourceManager::getInstance().getSpriteSheet("res/spritesheets/interactables.ss");
+            _interactablesSpritebatch = gameplay::SpriteBatch::create(_interactablesSpritesheet->getTexture());
+            uninitialisedSpriteBatches.push_back(_interactablesSpritebatch);
+
+            gameplay::Effect* waterEffect = gameplay::Effect::createFromFile("res/shaders/sprite.vert", "res/shaders/water.frag");
+            _waterSpritebatch = gameplay::SpriteBatch::create("@res/textures/water", waterEffect);
+            _waterSpritebatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::REPEAT, gameplay::Texture::Wrap::CLAMP);
+            SAFE_RELEASE(waterEffect);
+            uninitialisedSpriteBatches.push_back(_waterSpritebatch);
+            gameplay::Material* waterMaterial = _waterSpritebatch->getMaterial();
+            gameplay::Texture::Sampler* noiseSampler = gameplay::Texture::Sampler::create("@res/textures/water-noise");
+            waterMaterial->getParameter("u_texture_noise")->setValue(noiseSampler);
+            SAFE_RELEASE(noiseSampler);
+            waterMaterial->getParameter("u_time")->bindValue(this, &LevelComponent::getWaterTimeUniform);
+
+            SpriteSheet * collectablesSpriteSheet = ResourceManager::getInstance().getSpriteSheet("res/spritesheets/collectables.ss");
+            _collectablesSpritebatch = gameplay::SpriteBatch::create(collectablesSpriteSheet->getTexture());
+            SAFE_RELEASE(collectablesSpriteSheet);
+            uninitialisedSpriteBatches.push_back(_collectablesSpritebatch);
+
+            _frameBuffer = gameplay::FrameBuffer::create("lr_buffer");
+            gameplay::RenderTarget * pauseRenderTarget = gameplay::RenderTarget::create("pause", gameplay::Game::getInstance()->getWidth(), gameplay::Game::getInstance()->getHeight());
+            _frameBuffer->setRenderTarget(pauseRenderTarget);
+            gameplay::Effect * pauseEffect = gameplay::Effect::createFromFile("res/shaders/sprite.vert", "res/shaders/sepia.frag");
+            _pauseSpriteBatch = gameplay::SpriteBatch::create(pauseRenderTarget->getTexture(), pauseEffect);
+            SAFE_RELEASE(pauseEffect);
+            SAFE_RELEASE(pauseRenderTarget);
+        }
+
+
+
+        _level->getCollectables(_collectables);
+
+        _level->forEachCachedNode(CollisionType::COLLISION_DYNAMIC, [this](gameplay::Node * node)
+        {
+            node->addRef();
+            bool const isBoulder = node->getCollisionObject()->getShapeType() == gameplay::PhysicsCollisionShape::SHAPE_SPHERE;
+            _dynamicCollisionNodes.emplace_back(node, getSafeDrawRect(isBoulder ? _interactablesSpritesheet->getSprite("boulder")->_src : 
+                _interactablesSpritesheet->getSprite("crate")->_src));
+        });
+
+        _level->forEachCachedNode(CollisionType::BRIDGE, [this](gameplay::Node * node)
+        {
+            node->addRef();
+            _dynamicCollisionNodes.emplace_back(node, _interactablesSpritesheet->getSprite("bridge")->_src);
+        });
+
+        _waterUniformTimer = 0.0f;
+
+        _level->forEachCachedNode(CollisionType::WATER, [this](gameplay::Node * node)
+        {
+            gameplay::Rectangle bounds;
+            bounds.width = node->getScaleX();
+            bounds.height = node->getScaleY();
+            bounds.x = node->getTranslationX() - bounds.width / 2.0f;
+            bounds.y = node->getTranslationY() - bounds.height / 2.0f;
+            // Scale the boundary height to add the area that was removed to make room for waves in the texture (95px of 512px)
+            float const textureScale = 1.18f;
+            bounds.height *= textureScale;
+            _waterBounds.push_back(bounds);
+        });
+
+        // The first call to draw will perform some lazy initialisation in Effect::Bind
+        for (gameplay::SpriteBatch * spriteBatch : uninitialisedSpriteBatches)
+        {
+            spriteBatch->start();
+            spriteBatch->draw(gameplay::Rectangle(), gameplay::Rectangle());
+            spriteBatch->finish();
+        }
+
+        _levelLoaded = true;
+        _levelLoadedOnce = true;
+
+        float const fadeOutDuration = 2.5f;
+        ScreenRenderer::getInstance().queueFadeOut(fadeOutDuration);
     }
 
-    void LevelComponent::initialize()
+    void LevelComponent::onLevelUnloaded()
     {
-        _loadedMessage = LevelLoadedMessage::create();
-        _unloadedMessage = LevelUnloadedMessage::create();
-        _preUnloadedMessage = PreLevelUnloadedMessage::create();
+        PERF_SCOPE("LevelComponent::onLevelUnLoaded");
+
+        SAFE_RELEASE(_cameraControl);
+        SAFE_RELEASE(_level);
+        SAFE_RELEASE(_player);
+        SAFE_DELETE(_tileBatch);
+
+        for (auto & playerAnimBatchPairItr : _playerAnimationBatches)
+        {
+            SAFE_DELETE(playerAnimBatchPairItr.second);
+        }
+
+        std::set<gameplay::SpriteBatch *> uniqueEnemyBatches;
+
+        for (auto & enemyAnimPairItr : _enemyAnimationBatches)
+        {
+            EnemyComponent * enemy = enemyAnimPairItr.first;
+            SAFE_RELEASE(enemy);
+
+            for (auto & enemyAnimBatchPairItr : enemyAnimPairItr.second)
+            {
+                uniqueEnemyBatches.insert(enemyAnimBatchPairItr.second);
+            }
+        }
+
+        for(gameplay::SpriteBatch * spriteBatch : uniqueEnemyBatches)
+        {
+            SAFE_DELETE(spriteBatch);
+        }
+
+        for (auto & nodePair : _dynamicCollisionNodes)
+        {
+            SAFE_RELEASE(nodePair.first);
+        }
+
+        _dynamicCollisionNodes.clear();
+        _playerAnimationBatches.clear();
+        _enemyAnimationBatches.clear();
+        _waterBounds.clear();
+        _collectables.clear();
+
+        if(_levelLoaded)
+        {
+            ScreenRenderer::getInstance().queueFadeToLoadingScreen(0.0f);
+        }
+
+        _levelLoaded = false;
     }
 
     void LevelComponent::finalize()
     {
-        unload();
-        GAMEOBJECTS_DELETE_MESSAGE(_loadedMessage);
-        GAMEOBJECTS_DELETE_MESSAGE(_unloadedMessage);
-        GAMEOBJECTS_DELETE_MESSAGE(_preUnloadedMessage);
-    }
-
-    void LevelComponent::loadTerrain(gameplay::Properties * layerNamespace)
-    {
-        if (gameplay::Properties * dataNamespace = layerNamespace->getNamespace("data", true))
-        {
-            int x = 0;
-            int y = 0;
-
-            while (dataNamespace->getNextProperty())
-            {
-                int const currentTileId = _grid[y][x]._tileId;
-
-                if (currentTileId == EMPTY_TILE)
-                {
-                    int const newTileId = dataNamespace->getInt();
-                    GAME_ASSERT(currentTileId == EMPTY_TILE || newTileId == EMPTY_TILE, 
-                        "Multi layered tile rendering not isn't supported [%d][%d]", x, y);
-                    _grid[y][x]._tileId = newTileId;
-                }
-
-                ++x;
-
-                if (x == _width)
-                {
-                    x = 0;
-                    ++y;
-
-                    if (y == _height)
-                    {
-                        x = 0;
-                        y = 0;
-                        break;
-                    }
-                }
-            }
-
-            dataNamespace->rewind();
-        }
-    }
-
-    void LevelComponent::loadCharacters(gameplay::Properties * layerNamespace)
-    {
-        if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
-        {
-            PERF_SCOPE("LevelComponent::loadCharacters");
-
-            while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
-            {
-                char const * gameObjectTypeName = objectNamespace->getString("name");
-                bool const isPlayer = strcmp(gameObjectTypeName, "player") == 0;
-
-#ifndef _FINAL
-                if (gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_enemy_spawn") || isPlayer)
-#endif
-                {
-                    gameobjects::GameObject * gameObject = gameobjects::GameObjectController::getInstance().createGameObject(gameObjectTypeName, getParent());
-                    gameplay::Rectangle boumds = getObjectBounds(objectNamespace);
-                    gameplay::Vector2 spawnPos(boumds.x, boumds.y);
-
-                    if (isPlayer)
-                    {
-                        _playerSpawnPosition = spawnPos;
-                    }
-
-                    std::vector<CollisionObjectComponent*> collisionComponents;
-                    gameObject->getComponents(collisionComponents);
-
-                    for (CollisionObjectComponent * collisionComponent : collisionComponents)
-                    {
-                        collisionComponent->getNode()->setTranslation(spawnPos.x, spawnPos.y, 0);
-                    }
-
-                    _children.push_back(gameObject);
-                }
-            }
-
-            objectsNamespace->rewind();
-        }
-    }
-
-    gameplay::Rectangle LevelComponent::getObjectBounds(gameplay::Properties * objectNamespace) const
-    {
-        gameplay::Rectangle rect;
-        rect.width = objectNamespace->getInt("width") * GAME_UNIT_SCALAR;
-        rect.height = objectNamespace->getInt("height") * GAME_UNIT_SCALAR;
-        rect.x = objectNamespace->getInt("x") * GAME_UNIT_SCALAR;
-        rect.y = ((_tileHeight * _height) - objectNamespace->getInt("y")) * GAME_UNIT_SCALAR;
-        return rect;
-    }
-
-    gameplay::Node * LevelComponent::createCollisionObject(CollisionType::Enum collisionType, gameplay::Properties * collisionProperties, gameplay::Rectangle const & bounds, float rotationZ)
-    {
-        gameplay::Node * node = gameplay::Node::create();
-        NodeCollisionInfo * info = new NodeCollisionInfo();
-        info->_CollisionType = collisionType;
-        node->setUserObject(info);
-        node->translate(bounds.x, bounds.y, 0);
-        node->rotateZ(rotationZ);
-        getParent()->getNode()->addChild(node);
-        node->setScale(bounds.width, bounds.height, 1.0f);
-
-        gameplay::PhysicsCollisionObject::Type type = gameplay::PhysicsCollisionObject::GHOST_OBJECT;
-        gameplay::PhysicsRigidBody::Parameters rigidBodyParams;
-        gameplay::PhysicsCollisionShape::Definition shape;
-        collisionProperties->getVector3("linearFactor", &rigidBodyParams.linearFactor);
-        collisionProperties->getVector3("angularFactor", &rigidBodyParams.angularFactor);
-
-        rigidBodyParams.friction = collisionProperties->getFloat("friction");
-        rigidBodyParams.restitution = collisionProperties->getFloat("restitution");
-        rigidBodyParams.linearDamping = collisionProperties->getFloat("linearDamping");
-        rigidBodyParams.angularDamping = collisionProperties->getFloat("angularDamping");
-        rigidBodyParams.mass = collisionProperties->getFloat("mass");
-        rigidBodyParams.kinematic = collisionProperties->getBool("kinematic");
-
-        if(strcmp(collisionProperties->getString("type"), "RIGID_BODY") == 0)
-        {
-            type = gameplay::PhysicsCollisionObject::Type::RIGID_BODY;
-        }
-
-        if(strcmp(collisionProperties->getString("shape"), "BOX") == 0)
-        {
-            gameplay::Vector3 extents;
-            collisionProperties->getVector3("extents", &extents);
-            shape = gameplay::PhysicsCollisionShape::box(extents);
-        }
-        else if(strcmp(collisionProperties->getString("shape"), "SPHERE") == 0)
-        {
-            float radius = collisionProperties->getFloat("radius");
-            shape = gameplay::PhysicsCollisionShape::sphere(radius);
-        }
-
-        {
-            STALL_SCOPE();
-            node->setCollisionObject(type, shape, &rigidBodyParams);
-        }
-        _collisionNodes[collisionType].push_back(node);
-        return node;
-    }
-
-    void setProperty(char const * id, gameplay::Vector3 const & vec, gameplay::Properties * properties)
-    {
-        std::array<char, 255> buffer;
-        sprintf(&buffer[0], "%f, %f, %f", vec.x, vec.y, vec.z);
-        properties->setString(id, &buffer[0]);
-    }
-
-    void getLineCollisionObjectParams(gameplay::Properties * lineVectorNamespace, gameplay::Rectangle & bounds, float & rotationZ, gameplay::Vector2 & direction)
-    {
-        gameplay::Vector2 const start(bounds.x, bounds.y);
-        gameplay::Vector2 localEnd(lineVectorNamespace->getFloat("x")  * GAME_UNIT_SCALAR,
-            lineVectorNamespace->getFloat("y") * GAME_UNIT_SCALAR);
-        direction = localEnd;
-        direction.normalize();
-        rotationZ = -acos(direction.dot(gameplay::Vector2::unitX() * (direction.y > 0 ? 1.0f : -1.0f)));
-        float deg = MATH_RAD_TO_DEG(rotationZ);
-        gameplay::Vector2 end(start.x + localEnd.x, start.y + localEnd.y);
-        gameplay::Vector2 tranlsation = start - (start + end) / 2;
-        bounds.x -= tranlsation.x;
-        bounds.y += tranlsation.y;
-        bounds.width = start.distance(end);
-    }
-
-    void LevelComponent::loadStaticCollision(gameplay::Properties * layerNamespace, CollisionType::Enum collisionType)
-    {
-        if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
-        {
-            std::string collisionId;
-
-            switch (collisionType)
-            {
-            case CollisionType::COLLISION_STATIC:
-                collisionId = "world_collision";
-                break;
-            case CollisionType::LADDER:
-                collisionId = "ladder";
-                break;
-            case CollisionType::RESET:
-                collisionId = "reset";
-                break;
-            case CollisionType::WATER:
-                collisionId = "water";
-                break;
-            default:
-                GAME_ASSERTFAIL("Unhandled CollisionType %d", collisionType);
-                break;
-            }
-
-            PropertiesRef * collisionPropertiesRef = ResourceManager::getInstance().getProperties((std::string("res/physics/level.physics#") + collisionId).c_str());
-            gameplay::Properties * collisionProperties = collisionPropertiesRef->get();
-
-            while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
-            {
-                float rotationZ = 0.0f;
-                gameplay::Rectangle bounds = getObjectBounds(objectNamespace);
-
-                if (objectNamespace->getNamespace("polyline", true))
-                {
-                    if (gameplay::Properties * lineVectorNamespace = objectNamespace->getNamespace("polyline_1", true))
-                    {
-                        gameplay::Vector2 direction;
-                        getLineCollisionObjectParams(lineVectorNamespace, bounds, rotationZ, direction);
-                        static float const lineHeight = 0.05f;
-                        bounds.height = lineHeight;
-                    }
-                }
-                else
-                {
-                    bounds.x += bounds.width / 2;
-                    bounds.y -= bounds.height / 2;
-                }
-
-                setProperty("extents", gameplay::Vector3(bounds.width, bounds.height, 1), collisionProperties);
-                createCollisionObject(collisionType, collisionProperties, bounds, rotationZ);
-            }
-
-            objectsNamespace->rewind();
-            SAFE_RELEASE(collisionPropertiesRef);
-        }
-    }
-
-    void LevelComponent::loadDynamicCollision(gameplay::Properties * layerNamespace)
-    {
-        if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
-        {
-            while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
-            {
-                bool const isBoulder = objectNamespace->exists("ellipse");
-                std::string collisionId = isBoulder ? "boulder" : "crate";
-
-                PropertiesRef * collisionPropertiesRef = ResourceManager::getInstance().getProperties((std::string("res/physics/level.physics#") + collisionId).c_str());
-                gameplay::Properties * collisionProperties = collisionPropertiesRef->get();
-                gameplay::Rectangle bounds = getObjectBounds(objectNamespace);
-                std::array<char, 255> dimensionsBuffer;
-                std::string dimensionsId = "extents";
-                bounds.x += bounds.width / 2;
-                bounds.y -= bounds.height / 2;
-
-                if (isBoulder)
-                {
-                    dimensionsId = "radius";
-                    sprintf(&dimensionsBuffer[0], "%f", bounds.height / 2);
-                }
-                else
-                {
-                    sprintf(&dimensionsBuffer[0], "%f, %f, 1", bounds.width, bounds.height);
-                }
-
-                collisionProperties->setString(dimensionsId.c_str(), &dimensionsBuffer[0]);
-                createCollisionObject(CollisionType::COLLISION_DYNAMIC, collisionProperties, bounds);
-                SAFE_RELEASE(collisionPropertiesRef);
-            }
-
-            objectsNamespace->rewind();
-        }
-    }
-
-    void LevelComponent::loadCollectables(gameplay::Properties * layerNamespace)
-    {
-        if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
-        {
-            SpriteSheet * spriteSheet = ResourceManager::getInstance().getSpriteSheet("res/spritesheets/collectables.ss");
-            PropertiesRef * collisionPropertiesRef = ResourceManager::getInstance().getProperties("res/physics/level.physics#collectable");
-            gameplay::Properties * collisionProperties = collisionPropertiesRef->get();
-            std::vector<Sprite> sprites;
-
-            spriteSheet->forEachSprite([&sprites](Sprite const & sprite)
-            {
-                sprites.push_back(sprite);
-            });
-
-            while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
-            {
-                gameplay::Rectangle const dst = getObjectBounds(objectNamespace);
-                gameplay::Vector2 position(dst.x, dst.y);
-
-                if (objectNamespace->getNamespace("polyline", true))
-                {
-                    if (gameplay::Properties * lineVectorNamespace = objectNamespace->getNamespace("polyline_1", true))
-                    {
-                        gameplay::Vector2 line(lineVectorNamespace->getFloat("x")  * GAME_UNIT_SCALAR,
-                                              -lineVectorNamespace->getFloat("y") * GAME_UNIT_SCALAR);
-                        float lineLength = line.length();
-                        gameplay::Vector2 direction = line;
-                        direction.normalize();
-
-                        while(true)
-                        {
-                            Sprite & sprite = sprites[GAME_RANDOM_RANGE_INT(0, sprites.size() - 1)];
-                            float const collectableWidth = sprite._src.width * GAME_UNIT_SCALAR;
-                            lineLength -= collectableWidth;
-
-                            if(lineLength > 0)
-                            {
-                                std::array<char, 255> radiusBuffer;
-                                sprintf(&radiusBuffer[0], "%f", collectableWidth / 2);
-                                collisionProperties->setString("radius", &radiusBuffer[0]);
-                                gameplay::Rectangle bounds(position.x, position.y, collectableWidth, collectableWidth);
-                                gameplay::Node * collectableNode = createCollisionObject(CollisionType::COLLECTABLE, collisionProperties, bounds);
-                                collectableNode->addRef();
-                                Collectable collectable;
-                                collectable._src = sprite._src;
-                                collectable._node = collectableNode;
-                                collectable._startPosition = collectableNode->getTranslation();
-                                collectable._active = true;
-                                collectable._visible = false;
-                                _collectables[collectableNode] = collectable;
-                                float const padding = 1.25f;
-                                position += direction * (collectableWidth * padding);
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-
-            objectsNamespace->rewind();
-            sprites.clear();
-            SAFE_RELEASE(collisionPropertiesRef);
-            SAFE_RELEASE(spriteSheet);
-        }
-    }
-
-    void LevelComponent::loadBridges(gameplay::Properties * layerNamespace)
-    {
-        if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
-        {
-            PropertiesRef * collisionPropertiesRef = ResourceManager::getInstance().getProperties("res/physics/level.physics#bridge");
-            gameplay::Properties * collisionProperties = collisionPropertiesRef->get();
-
-            while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
-            {
-                if (objectNamespace->getNamespace("polyline", true))
-                {
-                    if (gameplay::Properties * lineVectorNamespace = objectNamespace->getNamespace("polyline_1", true))
-                    {
-                        // Get the params for a line
-                        gameplay::Rectangle bounds = getObjectBounds(objectNamespace);
-                        float rotationZ = 0.0f;
-                        gameplay::Vector2 bridgeDirection;
-                        getLineCollisionObjectParams(lineVectorNamespace, bounds, rotationZ, bridgeDirection);
-
-                        // Recalculate its starting position based on the size and orientation of the bridge segment(s)
-                        bounds.x += (bounds.width / 2) * -bridgeDirection.x;
-                        bounds.y += (bounds.width / 2) * bridgeDirection.y;
-                        int const numSegments = std::ceil(bounds.width / (getTileWidth() * GAME_UNIT_SCALAR));
-                        bounds.width = bounds.width / numSegments;
-                        bounds.x += (bounds.width / 2) * bridgeDirection.x;
-                        bounds.y += (bounds.width / 2) * -bridgeDirection.y;
-                        bounds.height = (getTileHeight() * GAME_UNIT_SCALAR) * 0.25f;
-                        setProperty("extents", gameplay::Vector3(bounds.width, bounds.height, 0.0f), collisionProperties);
-
-                        // Create collision nodes for them
-                        std::vector<gameplay::Node *> segmentNodes;
-                        for (int i = 0; i < numSegments; ++i)
-                        {
-                            segmentNodes.push_back(createCollisionObject(CollisionType::BRIDGE, collisionProperties, bounds, rotationZ));
-                            bounds.x += bridgeDirection.x * bounds.width;
-                            bounds.y -= bridgeDirection.y * bounds.width;
-                        }
-
-                        // Link them to each other and the end pieces with the world
-                        for (int segmentIndex = 0; segmentIndex < numSegments; ++segmentIndex)
-                        {
-                            gameplay::Node * segmentNode = segmentNodes[segmentIndex];
-                            gameplay::PhysicsRigidBody * segmentRigidBody = static_cast<gameplay::PhysicsRigidBody*>(segmentNode->getCollisionObject());
-                            gameplay::Vector3 const hingeOffset((bounds.width / 2) * (1.0f / segmentNode->getScaleX()) * (bridgeDirection.y >= 0 ? 1.0f : -1.0f), 0.0f, 0.0f);
-                            gameplay::PhysicsController * physicsController = gameplay::Game::getInstance()->getPhysicsController();
-
-                            bool const isFirstSegment = segmentIndex == 0;
-                            if (isFirstSegment)
-                            {
-                                physicsController->createHingeConstraint(segmentRigidBody, gameplay::Quaternion(), -hingeOffset);
-                            }
-
-                            bool const isEndSegment = segmentIndex == numSegments - 1;
-                            if (!isEndSegment)
-                            {
-                                gameplay::PhysicsRigidBody * nextSegmentRigidBody = static_cast<gameplay::PhysicsRigidBody*>(segmentNodes[segmentIndex + 1]->getCollisionObject());
-                                physicsController->createHingeConstraint(segmentRigidBody, gameplay::Quaternion(), hingeOffset, nextSegmentRigidBody, gameplay::Quaternion(), -hingeOffset);
-                            }
-                            else
-                            {
-                                physicsController->createHingeConstraint(segmentRigidBody, gameplay::Quaternion(), hingeOffset);
-                            }
-                        }
-                    }
-                }
-            }
-
-            objectsNamespace->rewind();
-
-            SAFE_RELEASE(collisionPropertiesRef);
-        }
-    }
-
-    void LevelComponent::load()
-    {
-        PERF_SCOPE("LevelComponent::load");
-
-        PropertiesRef * rootRef = ResourceManager::getInstance().getProperties(_level.c_str());
-        gameplay::Properties * root = rootRef->get();
-
-        if (gameplay::Properties * propertiesNamespace = root->getNamespace("properties", true, false))
-        {
-            _texturePath = propertiesNamespace->getString("texture");
-        }
-
-        _width = root->getInt("width");
-        _height = root->getInt("height");
-        _tileWidth = root->getInt("tilewidth");
-        _tileHeight = root->getInt("tileheight");
-        _grid.resize(_height);
-        
-        for (std::vector<Tile> & horizontalTiles : _grid)
-        {
-            horizontalTiles.resize(_width);
-        }
-
-        if (gameplay::Properties * layersNamespace = root->getNamespace("layers", true))
-        {
-            while (gameplay::Properties * layerNamespace = layersNamespace->getNextNamespace())
-            {
-                std::string const layerName = layerNamespace->getString("name");
-
-                if (layerName == "terrain" || layerName == "props")
-                {
-                    loadTerrain(layerNamespace);
-                }
-                else if (layerName == "characters")
-                {
-                    loadCharacters(layerNamespace);
-                }
-                else if (layerName.find("collision") != std::string::npos)
-                {
-                    CollisionType::Enum collisionType = CollisionType::COLLISION_STATIC;
-
-                    if (layerName == "collision_ladder")
-                    {
-                        collisionType = CollisionType::LADDER;
-                    }
-                    else if (layerName == "collision_hand_of_god")
-                    {
-                        collisionType = CollisionType::RESET;
-                    }
-                    else if (layerName == "collision_water")
-                    {
-                        collisionType = CollisionType::WATER;
-                    }
-                    else if (layerName == "collision_bridge")
-                    {
-                        collisionType = CollisionType::BRIDGE;
-                    }
-
-                    if (collisionType != CollisionType::BRIDGE)
-                    {
-                        loadStaticCollision(layerNamespace, collisionType);
-                    }
-                    else
-                    {
-                        loadBridges(layerNamespace);
-                    }
-                }
-                else if (layerName == "interactive_props")
-                {
-#ifndef _FINAL
-                    if (gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_interactables_spawn"))
-#endif
-                        loadDynamicCollision(layerNamespace);
-                }
-                else if(layerName == "collectables")
-                {
-#ifndef _FINAL
-                    if (gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_collectables_spawn"))
-#endif
-                        loadCollectables(layerNamespace);
-                }
-            }
-
-            layersNamespace->rewind();
-        }
-
-        placeEnemies();
-        root->rewind();
-        SAFE_RELEASE(rootRef);
-    }
-
-    void LevelComponent::placeEnemies()
-    {
-        for(gameobjects::GameObject * gameObject : _children)
-        {
-            if(EnemyComponent * enemyComponent = gameObject->getComponent<EnemyComponent>())
-            {
-                gameplay::Node * nearestCollisionNode = nullptr;
-                float nearestDistance = std::numeric_limits<float>::max();
-                gameplay::Vector3 const & enemyPosition = enemyComponent->getTriggerNode()->getTranslation();
-
-                forEachCachedNode(CollisionType::COLLISION_STATIC, [&nearestCollisionNode, &nearestDistance, &enemyPosition](gameplay::Node * collisionNode)
-                {
-                    gameplay::Vector3 const collisionNodePosition = collisionNode->getTranslation();
-
-                    if (collisionNodePosition.y <= enemyPosition.y)
-                    {
-                        float const distance = collisionNode->getTranslation().distanceSquared(enemyPosition);
-
-                        if (distance < nearestDistance)
-                        {
-                            nearestCollisionNode = collisionNode;
-                            nearestDistance = distance;
-                        }
-                    }
-                });
-
-                if(nearestCollisionNode)
-                {
-                    if (enemyComponent->isSnappedToCollisionY())
-                    {
-                        enemyComponent->getTriggerNode()->setTranslationY(nearestCollisionNode->getTranslationY() +
-                            nearestCollisionNode->getScaleY() / 2 +
-                            enemyComponent->getTriggerNode()->getScaleY() / 2);
-                    }
-
-                    enemyComponent->setHorizontalConstraints(nearestCollisionNode->getTranslationX() - (nearestCollisionNode->getScaleX() / 2) - (enemyComponent->getTriggerNode()->getScaleX() / 2),
-                                                    nearestCollisionNode->getTranslationX() + (nearestCollisionNode->getScaleX() / 2) + (enemyComponent->getTriggerNode()->getScaleX() / 2));
-                }
-                else
-                {
-                    GAME_ASSERTFAIL("Unable to place %s", enemyComponent->getId().c_str());
-                }
-            }
-        }
-    }
-
-    void LevelComponent::unload()
-    {
-        PERF_SCOPE("LevelComponent::unload");
-
-        for (auto & listPair : _collisionNodes)
-        {
-            for (gameplay::Node* node : listPair.second)
-            {
-                STALL_SCOPE();
-                NodeCollisionInfo * info = NodeCollisionInfo::getNodeCollisionInfo(node);
-                node->setUserObject(nullptr);
-                SAFE_RELEASE(info);
-                getParent()->getNode()->removeChild(node);
-                SAFE_RELEASE(node);
-            }
-        }
-
-        for(auto & collectablePair : _collectables)
-        {
-            STALL_SCOPE();
-            getParent()->getNode()->removeChild(collectablePair.second._node);
-            SAFE_RELEASE(collectablePair.second._node);
-        }
-
-        _collectables.clear();
-        _collisionNodes.clear();
-
-        _grid.clear();
-
-        for(auto childItr = _children.begin(); childItr != _children.end(); ++childItr)
-        {
-            STALL_SCOPE();
-            gameobjects::GameObjectController::getInstance().destroyGameObject(*childItr);
-        }
-
-        _children.clear();
+        SAFE_DELETE(_pixelSpritebatch);
+        SAFE_DELETE(_parallaxSpritebatch);
+        SAFE_DELETE(_interactablesSpritebatch);
+        SAFE_DELETE(_collectablesSpritebatch);
+        SAFE_DELETE(_waterSpritebatch);
+        SAFE_DELETE(_pauseSpriteBatch);
+        SAFE_RELEASE(_interactablesSpritesheet);
+        SAFE_RELEASE(_frameBuffer);
+        onLevelUnloaded();
     }
 
     void LevelComponent::readProperties(gameplay::Properties & properties)
     {
-        _level = properties.getString("level", _level.c_str());
-        GAME_ASSERT(gameplay::FileSystem::fileExists(_level.c_str()), "Level '%s' not found", _level.c_str());
-    }
-
-    void LevelComponent::consumeCollectable(gameplay::Node * collectableNode)
-    {
-        auto itr = _collectables.find(collectableNode);
-
-        if(itr != _collectables.end())
+        while (gameplay::Properties * ns = properties.getNextNamespace())
         {
-            Collectable & collectable = itr->second;
-            collectable._active = false;
+            if (strcmp(ns->getNamespace(), "parallax") == 0)
+            {
+                SpriteSheet * spritesheet = ResourceManager::getInstance().getSpriteSheet(ns->getString("spritesheet"));
+                ns->getVector4("fill", &_parallaxFillColor);
+                ns->getVector2("offset", &_parallaxOffset);
+                _parallaxOffset *= GAME_UNIT_SCALAR;
+                _parallaxSpritebatch = gameplay::SpriteBatch::create(spritesheet->getTexture());
+                _parallaxSpritebatch->getSampler()->setWrapMode(gameplay::Texture::Wrap::REPEAT, gameplay::Texture::Wrap::CLAMP);
+                _parallaxSpritebatch->getSampler()->setFilterMode(gameplay::Texture::Filter::NEAREST, gameplay::Texture::Filter::NEAREST);
+
+                while (gameplay::Properties * childNs = ns->getNextNamespace())
+                {
+                    if (strcmp(childNs->getNamespace(), "layer") == 0)
+                    {
+                        ParallaxLayer layer;
+                        layer._src = spritesheet->getSprite(childNs->getString("id"))->_src;
+                        layer._dst = layer._src;
+                        layer._dst.width *= GAME_UNIT_SCALAR;
+                        layer._dst.height *= GAME_UNIT_SCALAR;
+                        childNs->getVector2("offset", &layer._offset);
+                        layer._offset *= GAME_UNIT_SCALAR;
+                        layer._dst.y = layer._offset.y + _parallaxOffset.y;
+                        layer._src.x = layer._offset.x + _parallaxOffset.x;
+                        layer._speed = childNs->getFloat("speed");
+                        layer._cameraIndependent = childNs->getBool("camera_independent");
+                        _parallaxLayers.push_back(layer);
+                    }
+                }
+
+                SAFE_RELEASE(spritesheet);
+            }
         }
     }
 
-    std::string const & LevelComponent::getTexturePath() const
+    void LevelComponent::renderBackground(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, float elapsedTime)
     {
-        return _texturePath;
-    }
+        // Clear the screen to the colour of the sky
+        static unsigned int const SKY_COLOR = 0xD0F4F7FF;
+        gameplay::Game::getInstance()->clear(gameplay::Game::ClearFlags::CLEAR_COLOR_DEPTH, gameplay::Vector4::fromColor(SKY_COLOR), 1.0f, 0);
 
-    int LevelComponent::getTileWidth() const
-    {
-        return _tileWidth;
-    }
+        // Draw the solid colour parallax fill layer
+        float const layerWidth = viewport.width;
+        float const layerPosX = viewport.x;
 
-    int LevelComponent::getTileHeight() const
-    {
-        return _tileHeight;
-    }
+        gameplay::Rectangle parallaxFillLayer(layerPosX, 0.0f, layerWidth, _parallaxOffset.y);
 
-    int LevelComponent::getTile(int x, int y) const
-    {
-        return _grid[y][x]._tileId;
-    }
-
-    int LevelComponent::getWidth() const
-    {
-        return _width;
-    }
-
-    int LevelComponent::getHeight() const
-    {
-        return _height;
-    }
-
-    gameplay::Vector2 const & LevelComponent::getPlayerSpawnPosition() const
-    {
-        return _playerSpawnPosition;
-    }
-
-    void LevelComponent::forEachCachedNode(CollisionType::Enum collisionType, std::function<void(gameplay::Node *)> func)
-    {
-        for (gameplay::Node * node : _collisionNodes[collisionType])
+        if(parallaxFillLayer.intersects(viewport))
         {
-            func(node);
+            _pixelSpritebatch->setProjectionMatrix(projection);
+            _pixelSpritebatch->start();
+            _pixelSpritebatch->draw(getRenderDestination(parallaxFillLayer), gameplay::Rectangle(), _parallaxFillColor);
+            _pixelSpritebatch->finish();
+        }
+
+        // Draw the parallax texture layers
+        bool parallaxLayerDrawn = false;
+
+        for(auto itr = _parallaxLayers.rbegin(); itr != _parallaxLayers.rend(); ++itr)
+        {
+            ParallaxLayer & layer = *itr;
+
+            if (layer._cameraIndependent && gameplay::Game::getInstance()->getState() == gameplay::Game::State::RUNNING)
+            {
+                layer._src.x += (layer._speed * (elapsedTime / 1000.0f)) / GAME_UNIT_SCALAR;
+            }
+
+            layer._dst.width = layerWidth;
+            layer._dst.x = layerPosX;
+
+            if (layer._dst.intersects(viewport))
+            {
+                if (!parallaxLayerDrawn)
+                {
+                    _parallaxSpritebatch->setProjectionMatrix(projection);
+                    _parallaxSpritebatch->start();
+                    parallaxLayerDrawn = true;
+                }
+
+                if (!layer._cameraIndependent)
+                {
+                    layer._src.x = ((layerPosX + layer._offset.x + _parallaxOffset.x + viewport.x) * layer._speed) / GAME_UNIT_SCALAR;
+                }
+
+                layer._src.width = layer._dst.width / GAME_UNIT_SCALAR;
+
+                _parallaxSpritebatch->draw(getRenderDestination(layer._dst), getSafeDrawRect(layer._src, 0, 0.5f));
+            }
+        }
+
+        if (parallaxLayerDrawn)
+        {
+            _parallaxSpritebatch->finish();
         }
     }
 
-    void LevelComponent::getCollectables(std::vector<Collectable *> & collectablesOut)
+    void LevelComponent::renderTileMap(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport)
     {
-        for (auto & collectablePair : _collectables)
+        gameplay::Rectangle const levelArea((_level->getTileWidth() * _level->getWidth()) * GAME_UNIT_SCALAR,
+            (_level->getTileHeight() * _level->getHeight()) * GAME_UNIT_SCALAR);
+
+        if(levelArea.intersects(viewport))
         {
-            collectablesOut.push_back(&collectablePair.second);
+            // Draw only the tiles the player can see
+            int const tileWidth = _level->getTileWidth();
+            int const tileHeight = _level->getTileHeight();
+            float const renderedOffsetY = _level->getHeight() * tileHeight;
+            gameplay::Rectangle renderedViewport = getRenderDestination(viewport);
+            renderedViewport.y *= -1.0f;
+            renderedViewport.y -= renderedOffsetY;
+
+            int const minXUnClamped = ceil((renderedViewport.x - tileWidth) / tileWidth);
+            int const minX = MATH_CLAMP(minXUnClamped, 0, _level->getWidth());
+            int const maxX = MATH_CLAMP(minXUnClamped + ((renderedViewport.width + tileWidth * 2.0f) / tileWidth), 0, _level->getWidth());
+
+            int const minYUnClamped = -ceil((renderedViewport.y) / tileHeight);
+            int const minY = MATH_CLAMP(minYUnClamped, 0, _level->getHeight());
+            int const maxY = MATH_CLAMP(minYUnClamped + ((renderedViewport.height + (tileHeight * 2.0f)) / tileHeight), 0, _level->getHeight());
+
+            int const numSpritesX = _tileBatch->getSampler()->getTexture()->getWidth() / tileWidth;
+            bool tilesRendered = false;
+
+            for (int y = minY; y < maxY; ++y)
+            {
+                for (int x = minX; x < maxX; ++x)
+                {
+                    int tile = _level->getTile(x, y);
+
+                    if (tile != LevelLoaderComponent::EMPTY_TILE)
+                    {
+                        if(!tilesRendered)
+                        {
+                            _tileBatch->setProjectionMatrix(projection);
+                            _tileBatch->start();
+                            tilesRendered = true;
+                        }
+
+                        int const tileIndex = tile - 1;
+                        int const tileX = (tileIndex % numSpritesX) * tileWidth;
+                        int const tileY = (tileIndex / numSpritesX) * tileHeight;
+                        _tileBatch->draw(gameplay::Rectangle(x * tileWidth, (y * tileHeight) - renderedOffsetY, tileWidth, tileHeight),
+                            getSafeDrawRect(gameplay::Rectangle(tileX, tileY, tileWidth, tileHeight)));
+                    }
+                }
+            }
+
+            if(tilesRendered)
+            {
+                _tileBatch->finish();
+            }
         }
     }
+
+    void LevelComponent::renderInteractables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport)
+    {
+        bool interactableDrawn = false;
+
+        // Draw dynamic collision (crates, boulders etc)
+        for (auto & nodePair : _dynamicCollisionNodes)
+        {
+            gameplay::Node * dynamicCollisionNode = nodePair.first;
+            gameplay::Rectangle dst;
+            dst.width = dynamicCollisionNode->getScaleX();
+            dst.height = dynamicCollisionNode->getScaleY();
+            dst.x = dynamicCollisionNode->getTranslationX() - (dst.width / 2);
+            dst.y = dynamicCollisionNode->getTranslationY() - (dst.height / 2);
+
+            gameplay::Rectangle maxBounds = dst;
+
+            // Extend non-spherical shapes for viewport intersection test, prevents shapes being culled when still visible during rotation
+            if(dynamicCollisionNode->getCollisionObject()->getShapeType() != gameplay::PhysicsCollisionShape::Type::SHAPE_SPHERE)
+            {
+                maxBounds.width = gameplay::Vector2(dst.width, dst.height).length();
+                maxBounds.height = maxBounds.width;
+                maxBounds.x = dynamicCollisionNode->getTranslationX() - (maxBounds.width / 2);
+                maxBounds.y = dynamicCollisionNode->getTranslationY() - (maxBounds.height / 2);
+            }
+
+            if (maxBounds.intersects(viewport))
+            {
+                if (!interactableDrawn)
+                {
+                    _interactablesSpritebatch->setProjectionMatrix(projection);
+                    _interactablesSpritebatch->start();
+                    interactableDrawn = true;
+                }
+
+                gameplay::Quaternion const & q = dynamicCollisionNode->getRotation();
+                float const rotation = -static_cast<float>(atan2f(2.0f * q.x * q.y + 2.0f * q.z * q.w, 1.0f - 2.0f * ((q.y * q.y) + (q.z * q.z))));
+                gameplay::Rectangle const renderDst = getRenderDestination(dst);
+                _interactablesSpritebatch->draw(gameplay::Vector3(renderDst.x, renderDst.y, 0),
+                    nodePair.second,
+                    gameplay::Vector2(renderDst.width, renderDst.height),
+                    gameplay::Vector4::one(),
+                    (gameplay::Vector2::one() / 2),
+                    rotation);
+            }
+        }
+
+        if (interactableDrawn)
+        {
+            _interactablesSpritebatch->finish();
+        }
+    }
+
+    void LevelComponent::renderCollectables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport)
+    {
+        bool collectableDrawn = false;
+
+        for(LevelLoaderComponent::Collectable * collectable : _collectables)
+        {
+            gameplay::Rectangle dst;
+            dst.width = collectable->_node->getScaleX();
+            dst.height = collectable->_node->getScaleY();
+            dst.x = collectable->_startPosition.x - dst.width / 2;
+            dst.y = collectable->_startPosition.y - dst.height / 2;
+
+            if (collectable->_active)
+            {
+                if (!collectableDrawn)
+                {
+                    _collectablesSpritebatch->setProjectionMatrix(projection);
+                    _collectablesSpritebatch->start();
+                    collectableDrawn = true;
+                }
+
+                collectable->_visible = dst.intersects(viewport);
+
+                if (collectable->_visible)
+                {
+                    if(gameplay::Game::getInstance()->getState() != gameplay::Game::State::PAUSED)
+                    {
+                        float const speed = 5.0f;
+                        float const height = collectable->_node->getScaleY() * 0.05f;
+                        float bounce = sin((gameplay::Game::getGameTime() / 1000.0f) * speed + (collectable->_node->getTranslationX() + collectable->_node->getTranslationY())) * height;
+                        dst.y += bounce;
+                    }
+                    _collectablesSpritebatch->draw(getRenderDestination(dst), getSafeDrawRect(collectable->_src));
+                }
+            }
+
+            collectable->_node->getCollisionObject()->setEnabled(collectable->_active && dst.intersects(triggerViewport));
+        }
+
+        if(collectableDrawn)
+        {
+            _collectablesSpritebatch->finish();
+        }
+    }
+
+    void LevelComponent::renderCharacters(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport)
+    {
+        _characterRenderer.start();
+
+        // Draw the enemies
+        for (auto & enemyAnimPairItr : _enemyAnimationBatches)
+        {
+            EnemyComponent * enemy = enemyAnimPairItr.first;
+            float const alpha = enemy->getAlpha();
+
+            if(alpha > 0.0f)
+            {
+                std::map<int, gameplay::SpriteBatch *> & enemyBatches = enemyAnimPairItr.second;
+                gameplay::Rectangle dst;
+                _characterRenderer.render(enemy->getCurrentAnimation(),
+                                enemyBatches[enemy->getState()], projection,
+                                enemy->isLeftFacing() ? SpriteAnimationComponent::Flip::Horizontal : SpriteAnimationComponent::Flip::None,
+                                enemy->getPosition(), viewport, alpha, &dst);
+                enemy->getTriggerNode()->getCollisionObject()->setEnabled(dst.intersects(triggerViewport) && alpha == 1.0f);
+            }
+        }
+
+        // Draw the player
+        _characterRenderer.render(_player->getCurrentAnimation(),
+                        _playerAnimationBatches[_player->getState()], projection,
+                        _player->isLeftFacing() ? SpriteAnimationComponent::Flip::Horizontal : SpriteAnimationComponent::Flip::None,
+                        _player->getPosition(), viewport);
+
+        _characterRenderer.finish();
+    }
+
+    void LevelComponent::renderWater(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, float elapsedTime)
+    {
+        if (!_waterBounds.empty())
+        {
+            if(gameplay::Game::getInstance()->getState() == gameplay::Game::State::RUNNING)
+            {
+                float const dt = elapsedTime / 1000.0f;
+                _waterUniformTimer += dt;
+            }
+
+            bool waterDrawn = false;
+
+            for (gameplay::Rectangle const & dst : _waterBounds)
+            {
+                if(dst.intersects((viewport)))
+                {
+                    if(!waterDrawn)
+                    {
+                        _waterSpritebatch->setProjectionMatrix(projection);
+                        _waterSpritebatch->start();
+                        waterDrawn = true;
+                    }
+
+                    gameplay::Rectangle src;
+                    src.width = _waterSpritebatch->getSampler()->getTexture()->getWidth();
+                    src.height = _waterSpritebatch->getSampler()->getTexture()->getHeight();
+                    _waterSpritebatch->draw(getRenderDestination(dst), getSafeDrawRect(src));
+                }
+            }
+
+            if(waterDrawn)
+            {
+                _waterSpritebatch->finish();
+            }
+            else
+            {
+                _waterUniformTimer = 0;
+            }
+        }
+    }
+
+    void LevelComponent::render(float elapsedTime)
+    {
+        bool renderingEnabled = _levelLoaded;
+#ifndef _FINAL
+        renderingEnabled &= gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_level_rendering");
+#endif
+        if(renderingEnabled)
+        {
+            gameplay::FrameBuffer * previousFrameBuffer = nullptr;
+
+            if(gameplay::Game::getInstance()->getState() == gameplay::Game::State::PAUSED)
+            {
+                previousFrameBuffer = _frameBuffer->bind();
+            }
+
+            float const zoomScale = (1.0f / GAME_UNIT_SCALAR) * _cameraControl->getZoom();
+            gameplay::Rectangle viewport;
+            viewport.width = gameplay::Game::getInstance()->getViewport().width * GAME_UNIT_SCALAR,
+            viewport.height = gameplay::Game::getInstance()->getViewport().height * GAME_UNIT_SCALAR;
+
+#ifndef _FINAL
+            if(gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_zoom_draw_culling"))
+#endif
+            {
+                viewport.width *= zoomScale;
+                viewport.height *= zoomScale;
+            }
+
+            viewport.x = _cameraControl->getPosition().x - (viewport.width / 2.0f);
+            viewport.y = _cameraControl->getPosition().y - (viewport.height / 2.0f);
+
+            gameplay::Rectangle triggerViewport;
+            float const triggerViewportScale = (1.0f / GAME_UNIT_SCALAR) * _cameraControl->getMinZoom();
+            triggerViewport.width = viewport.width * triggerViewportScale;
+            triggerViewport.height = viewport.height * triggerViewportScale;
+            triggerViewport.x = _player->getPosition().x - (triggerViewport.width / 2.0f);
+            triggerViewport.y = _player->getPosition().y - (triggerViewport.height / 2.0f);
+
+            gameplay::Matrix projection = _cameraControl->getViewProjectionMatrix();
+            projection.rotateX(MATH_DEG_TO_RAD(180));
+            projection.scale(GAME_UNIT_SCALAR, GAME_UNIT_SCALAR, 0);
+
+            renderBackground(projection, viewport, elapsedTime);
+            renderTileMap(projection, viewport);
+            renderInteractables(projection, viewport);
+            renderCollectables(projection, viewport, triggerViewport);
+            renderCharacters(projection, viewport, triggerViewport);
+            renderWater(projection, viewport, elapsedTime);
+
+            if(previousFrameBuffer)
+            {
+                previousFrameBuffer->bind();
+
+                _pauseSpriteBatch->start();
+                _pauseSpriteBatch->draw(gameplay::Game::getInstance()->getViewport(), gameplay::Game::getInstance()->getViewport());
+                _pauseSpriteBatch->finish();
+            }
+#ifndef _FINAL
+            renderDebug(viewport, triggerViewport);
+#endif
+        }
+    }
+
+    LevelComponent::CharacterRenderer::CharacterRenderer()
+        : _started(false)
+        , _previousSpritebatch(nullptr)
+    {
+    }
+
+    void LevelComponent::CharacterRenderer::start()
+    {
+        GAME_ASSERT(!_started, "Start called before Finish");
+        _started = true;
+    }
+
+    void LevelComponent::CharacterRenderer::finish()
+    {
+        GAME_ASSERT(_started, "Finsh called before Start");
+        _started = false;
+
+        if(_previousSpritebatch)
+        {
+            _previousSpritebatch->finish();
+            _previousSpritebatch = nullptr;
+        }
+    }
+
+    float LevelComponent::getWaterTimeUniform() const
+    {
+        return _waterUniformTimer * MATH_PIX2;
+    }
+
+    bool LevelComponent::CharacterRenderer::render(SpriteAnimationComponent * animation, gameplay::SpriteBatch * spriteBatch,
+                         gameplay::Matrix const & projection, SpriteAnimationComponent::Flip::Enum orientation,
+                         gameplay::Vector2 const & position, gameplay::Rectangle const & viewport, float alpha,
+                         gameplay::Rectangle * dstOut)
+    {
+        bool wasRendered = false;
+        SpriteAnimationComponent::DrawTarget drawTarget = animation->getDrawTarget(gameplay::Vector2::one(), 0.0f, orientation);
+        gameplay::Rectangle const bounds(position.x - ((fabs(drawTarget._scale.x / 2) * GAME_UNIT_SCALAR)),
+                                                  position.y - ((fabs(drawTarget._scale.y / 2) * GAME_UNIT_SCALAR)),
+                                                  fabs(drawTarget._scale.x) * GAME_UNIT_SCALAR,
+                                                  fabs(drawTarget._scale.y) * GAME_UNIT_SCALAR);
+
+        if(bounds.intersects(viewport))
+        {
+            gameplay::Vector2 drawPosition = position / GAME_UNIT_SCALAR;
+            drawPosition.x -= fabs(drawTarget._scale.x / 2);
+            drawPosition.y += fabs(drawTarget._scale.y / 2);
+            drawPosition.y *= -1.0f;
+            drawTarget._dst.x += drawPosition.x;
+            drawTarget._dst.y += drawPosition.y;
+
+            if(_previousSpritebatch != spriteBatch)
+            {
+                if(_previousSpritebatch)
+                {
+                    _previousSpritebatch->finish();
+                }
+
+                spriteBatch->start();
+            }
+
+            spriteBatch->setProjectionMatrix(projection);
+            spriteBatch->draw(drawTarget._dst, getSafeDrawRect(drawTarget._src), drawTarget._scale, gameplay::Vector4(1.0f, 1.0f, 1.0f, alpha));
+
+            _previousSpritebatch = spriteBatch;
+            wasRendered = true;
+        }
+
+        if(dstOut)
+        {
+            *dstOut = std::move(bounds);
+        }
+
+        return wasRendered;
+    }
+
+#ifndef _FINAL
+    void renderCharacterDataDebug(gameplay::Vector2 * position, gameplay::Vector2 * velocity,
+                                  gameplay::Vector2 const & renderPosition, gameplay::Font * font)
+    {
+        std::array<char, 32> buffer;
+        static std::string text;
+        text = "";
+
+        if(position)
+        {
+            sprintf(&buffer[0], " {%.2f, %.2f} ", position->x, position->y);
+            text += &buffer[0];
+        }
+
+        if(velocity)
+        {
+            sprintf(&buffer[0], " {%.2f, %.2f} ", velocity->x, velocity->y);
+            text += &buffer[0];
+        }
+
+        unsigned int width, height = 0;
+        font->measureText(text.c_str(), font->getSize(GAME_FONT_SIZE_LARGE_INDEX), &width, &height);
+        font->drawText(text.c_str(), renderPosition.x - (width / 4), -renderPosition.y, gameplay::Vector4(1,0,0,1));
+    }
+
+    void LevelComponent::renderDebug(gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport)
+    {
+        gameplay::Font * font = ResourceManager::getInstance().getDebugFront();
+        gameplay::Rectangle const & screenDimensions = gameplay::Game::getInstance()->getViewport();
+
+        bool const drawPositions = gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_character_positions");
+        bool const drawPlayerVelocity = gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_player_velocity");
+        bool const drawCameraTarget = gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_camera_target");
+        bool const drawViewports = !gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_zoom_draw_culling");
+
+        if(drawPlayerVelocity || drawPositions)
+        {
+            font->start();
+
+            font->drawText("",0,0, gameplay::Vector4::one());
+
+            gameplay::Matrix projection = _cameraControl->getViewProjectionMatrix();
+            projection.rotateX(MATH_DEG_TO_RAD(180));
+            float const spriteCameraZoomScale = (1.0f / GAME_UNIT_SCALAR) * _cameraControl->getZoom();
+            float const unitToPixelScale = (1.0f / screenDimensions.height) * (screenDimensions.height * GAME_UNIT_SCALAR * spriteCameraZoomScale);
+            projection.scale(unitToPixelScale, unitToPixelScale, 0);
+            gameplay::SpriteBatch * spriteBatch = font->getSpriteBatch(font->getSize());
+            spriteBatch->setProjectionMatrix(projection);
+
+            gameplay::PhysicsCharacter * playerCharacter = static_cast<gameplay::PhysicsCharacter*>(_player->getCharacterNode()->getCollisionObject());
+            gameplay::Vector2 playerVelocity(playerCharacter->getCurrentVelocity().x, playerCharacter->getCurrentVelocity().y);
+            gameplay::Vector2 playerPosition(_player->getPosition());
+            renderCharacterDataDebug(drawPositions ? &playerPosition : nullptr, drawPlayerVelocity ? &playerVelocity : nullptr, _player->getPosition() / unitToPixelScale, font);
+
+            if(drawPositions)
+            {
+                for (auto & enemyAnimPairItr : _enemyAnimationBatches)
+                {
+                    EnemyComponent * enemy = enemyAnimPairItr.first;
+                    gameplay::Vector2 enemyPosition = enemy->getPosition();
+                    renderCharacterDataDebug(&enemyPosition, nullptr, enemy->getPosition() / unitToPixelScale, font);
+                }
+            }
+
+            font->finish();
+        }
+
+        gameplay::Matrix projection = _cameraControl->getViewProjectionMatrix();
+        projection.rotateX(MATH_DEG_TO_RAD(180));
+        projection.scale(GAME_UNIT_SCALAR, GAME_UNIT_SCALAR, 0);
+        _pixelSpritebatch->setProjectionMatrix(projection);
+
+        if(drawCameraTarget)
+        {
+            _pixelSpritebatch->start();
+
+            float const dimensions = 10.0f;
+            gameplay::Vector4 targetColour;
+            gameplay::Game::getInstance()->getConfig()->getVector4("debug_camera_target_colour", &targetColour);
+            gameplay::Rectangle targetBounds(_cameraControl->getTargetPosition().x / GAME_UNIT_SCALAR,
+                                          -_cameraControl->getTargetPosition().y / GAME_UNIT_SCALAR, dimensions, dimensions);
+            _pixelSpritebatch->draw(targetBounds, gameplay::Rectangle(1,1), targetColour);
+
+            _pixelSpritebatch->finish();
+        }
+
+        if(drawViewports)
+        {
+            _pixelSpritebatch->setProjectionMatrix(projection);
+            _pixelSpritebatch->start();
+            _pixelSpritebatch->draw(getRenderDestination(viewport), gameplay::Rectangle(), gameplay::Vector4(0,0,0,0.5f));
+            _pixelSpritebatch->draw(getRenderDestination(triggerViewport), gameplay::Rectangle(), gameplay::Vector4(0,1,0,0.25f));
+            _pixelSpritebatch->finish();
+        }
+
+        if (gameplay::Game::getInstance()->getConfig()->getBool("debug_draw_physics"))
+        {
+            gameplay::Game::getInstance()->getPhysicsController()->drawDebug(getParent()->getNode()->getScene()->getActiveCamera()->getViewProjectionMatrix());
+        }
+    }
+#endif
 }

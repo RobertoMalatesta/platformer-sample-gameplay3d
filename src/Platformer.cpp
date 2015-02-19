@@ -6,8 +6,8 @@
 #include "CollisionObjectComponent.h"
 #include "EnemyComponent.h"
 #include "GameObjectController.h"
+#include "LevelLoaderComponent.h"
 #include "LevelComponent.h"
-#include "LevelRendererComponent.h"
 #include "Messages.h"
 #include "PlayerAudioComponent.h"
 #include "PlayerComponent.h"
@@ -97,8 +97,8 @@ namespace game
         gameobjects::GameObjectController::getInstance().registerComponent<CameraControlComponent>("camera_control");
         gameobjects::GameObjectController::getInstance().registerComponent<CollisionObjectComponent>("collision_object");
         gameobjects::GameObjectController::getInstance().registerComponent<EnemyComponent>("enemy");
+        gameobjects::GameObjectController::getInstance().registerComponent<LevelLoaderComponent>("level_loader");
         gameobjects::GameObjectController::getInstance().registerComponent<LevelComponent>("level");
-        gameobjects::GameObjectController::getInstance().registerComponent<LevelRendererComponent>("level_renderer");
         gameobjects::GameObjectController::getInstance().registerComponent<PlayerAudioComponent>("player_audio");
         gameobjects::GameObjectController::getInstance().registerComponent<PlayerComponent>("player");
         gameobjects::GameObjectController::getInstance().registerComponent<PlayerHandOfGodComponent>("player_hand_of_god");

@@ -3,7 +3,7 @@
 #include "Common.h"
 #include "EnemyComponent.h"
 #include "GameObject.h"
-#include "LevelComponent.h"
+#include "LevelLoaderComponent.h"
 #include "PlayerComponent.h"
 #include "Messages.h"
 #include "PhysicsCharacter.h"
@@ -57,7 +57,7 @@ namespace game
 
         playerCharacterNode->addRef();
         _playerCharacterNodes.insert(playerCharacterNode);
-        LevelComponent * level = getParent()->getComponent<LevelComponent>();
+        LevelLoaderComponent * level = getParent()->getComponent<LevelLoaderComponent>();
 
         for(EnemyComponent * enemy  : enemyComponents)
         {
@@ -73,7 +73,7 @@ namespace game
 
     void addOrRemoveCollisionListener(CollisionType::Enum collisionType,
                                       gameplay::PhysicsRigidBody::CollisionListener * listener,
-                                      LevelComponent * level,
+                                      LevelLoaderComponent * level,
                                       gameplay::PhysicsCollisionObject * collisionObject,
                                       bool add)
     {
@@ -93,7 +93,7 @@ namespace game
 
     void CollisionHandlerComponent::onLevelUnloaded()
     {
-        LevelComponent * level = getParent()->getComponent<LevelComponent>();
+        LevelLoaderComponent * level = getParent()->getComponent<LevelLoaderComponent>();
 
         for(auto & enemyPair  : _enemies)
         {
@@ -130,7 +130,7 @@ namespace game
 
     void CollisionHandlerComponent::addPlayerCollisionListeners(gameplay::PhysicsCollisionObject * playerCollisionObject)
     {
-        LevelComponent * level = getParent()->getComponent<LevelComponent>();
+        LevelLoaderComponent * level = getParent()->getComponent<LevelLoaderComponent>();
         addOrRemoveCollisionListener(CollisionType::LADDER, this, level, playerCollisionObject, true);
         addOrRemoveCollisionListener(CollisionType::RESET, this, level, playerCollisionObject, true);
         addOrRemoveCollisionListener(CollisionType::COLLECTABLE, this, level, playerCollisionObject, true);
@@ -267,7 +267,7 @@ namespace game
                     }
                     case CollisionType::COLLECTABLE:
                     {
-                        LevelComponent * level = getParent()->getComponent<LevelComponent>();
+                        LevelLoaderComponent * level = getParent()->getComponent<LevelLoaderComponent>();
                         level->consumeCollectable(collisionPair.objectB->getNode());
                         return true;
                     }

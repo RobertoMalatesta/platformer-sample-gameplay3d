@@ -1,4 +1,4 @@
-level
+level_loader
 {
     level = res/levels/0.level
 }
@@ -7,7 +7,7 @@ collision_handler
 {
 }
 
-level_renderer
+level
 {
     parallax
     {
@@ -36,44 +36,5 @@ level_renderer
             offset = 0, 200
         }
 
-        layer
-        {
-            id = bg_3
-            speed = -1
-            camera_independent = true
-            offset = 0, 500
-        }
-
-        layer
-        {
-            id = bg_4
-            speed = -0.65
-            camera_independent = true
-            offset = 0, 600
-        }
-
-        layer
-        {
-            id = bg_5
-            speed = -0.25
-            camera_independent = true
-            offset = 0, 350
-        }
-
-        layer
-        {
-            id = bg_3
-            speed = -1.8
-            camera_independent = true
-            offset = 400, 800
-        }
-
-        layer
-        {
-            id = bg_5
-            speed = -0.4
-            camera_independent = true
-            offset = 400, 850
-        }
     }
 }
