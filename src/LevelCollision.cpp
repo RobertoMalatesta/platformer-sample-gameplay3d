@@ -1,4 +1,4 @@
-#include "PlatformerCollision.h"
+#include "LevelCollision.h"
 #include "GameObject.h"
 
 namespace game

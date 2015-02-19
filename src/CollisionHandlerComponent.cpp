@@ -7,7 +7,7 @@
 #include "PlayerComponent.h"
 #include "Messages.h"
 #include "PhysicsCharacter.h"
-#include "PlatformerCollision.h"
+#include "LevelCollision.h"
 
 namespace game
 {

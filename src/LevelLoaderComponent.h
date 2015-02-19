@@ -2,7 +2,7 @@
 #define GAME_LEVEL_COMPONENT_H
 
 #include "Component.h"
-#include "PlatformerCollision.h"
+#include "LevelCollision.h"
 
 namespace gameplay
 {
