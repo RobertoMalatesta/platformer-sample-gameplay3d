@@ -626,6 +626,8 @@ namespace game
 
     void LevelComponent::updateAndRender(float elapsedTime)
     {
+        _level->processLoadRequests();
+
         bool const isPaused = gameplay::Game::getInstance()->getState() == gameplay::Game::State::PAUSED;
 
         if(!isPaused)
@@ -637,7 +639,6 @@ namespace game
                 _player->update(elapsedTime);
             }
 
-            _level->update();
             _levelCollisionHandler->update(elapsedTime);
         }
 

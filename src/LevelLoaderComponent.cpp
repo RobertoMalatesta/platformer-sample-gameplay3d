@@ -53,7 +53,7 @@ namespace game
         _loadBroadcasted = false;
     }
 
-    void LevelLoaderComponent::update()
+    void LevelLoaderComponent::processLoadRequests()
     {
         if(!_loadBroadcasted)
         {
