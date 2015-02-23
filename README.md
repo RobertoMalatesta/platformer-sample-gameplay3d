@@ -1,4 +1,4 @@
-#2D platformer sample v2.0.0
+#2D platformer sample v2.0.0 [W.I.P]
 
 A 2D physics based platformer made using the open source game framework Gameplay3D, other freely available libraries, tools and free to use assets.
 
@@ -6,7 +6,7 @@ A 2D physics based platformer made using the open source game framework Gameplay
 
 ### Watch it
 
-[WIP Video (720p@60fps)](https://www.youtube.com/watch?v=03jDCVnvTzA)
+[Preview Video (720p@60fps)](https://www.youtube.com/watch?v=eEO--8jTL4w&feature=youtu.be)
 
 ### Try it
 
