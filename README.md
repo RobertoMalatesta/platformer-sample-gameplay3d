@@ -1,5 +1,7 @@
 #2D platformer sample v1.0.0
 
+**[ONLY COMPATIBLE WITH GAMEPLAY 2.0, SEE NEXT BRANCH]**
+
 A 2D platformer made using the open source game framework Gameplay3D, other freely available cross platform tools and free to use assets.
 
 ![ScreenShot](https://raw.githubusercontent.com/louis-mclaughlin/platformer-sample-gameplay3d/master/raw/textures/platformer_big.jpg)
