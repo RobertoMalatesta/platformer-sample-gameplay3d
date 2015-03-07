@@ -1,0 +1,8 @@
+cmake_minimum_required(VERSION 2.7)
+PROJECT(pngcrush)
+file(GLOB SRC ./repo/*.c ./repo/.h)
+add_definitions(-DZ_SOLO)
+add_executable(pngcrush ${SRC})
+if(NOT MSVC)
+    target_link_libraries(pngcrush m)
+endif()
