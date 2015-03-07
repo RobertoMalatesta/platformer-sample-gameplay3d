@@ -18,7 +18,7 @@ SAMPLE_PATH := $(call my-dir)/../../src
 GAMEPLAY_DEPS := ../external/GamePlay/external-deps/lib/android/$(TARGET_ARCH_ABI)
 
 # gameplay
-LOCAL_PATH := ../external/GamePlay/gameplay/android/obj/local/$(TARGET_ARCH_ABI)
+LOCAL_PATH := ../android/gameplay/obj/local/$(TARGET_ARCH_ABI)
 include $(CLEAR_VARS)
 LOCAL_MODULE    := libgameplay
 LOCAL_SRC_FILES := libgameplay.so

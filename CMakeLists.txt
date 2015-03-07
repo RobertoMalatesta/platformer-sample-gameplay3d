@@ -133,7 +133,7 @@ else()
 endif()
 
 # A listing of all the project files
-set(GAME_CONFIG ./build/game.config)
+set(GAME_CONFIG ./build/game.config .gitignore)
 set(ANDROID ./android/AndroidManifest.xml ./android/build.xml ./android/res/values/strings.xml ./android/jni/Android.mk ./android/jni/Application.mk)
 file(GLOB RAW_LEVELS ./raw/levels/*)
 file(GLOB RAW_SPRITESHEETS ./raw/spritesheets/*)

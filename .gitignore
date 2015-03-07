@@ -1,5 +1,7 @@
 /android/assets
 /android/bin
+/android/gameplay/libs
+/android/gameplay/obj
 /android/gen
 /android/libs
 /android/obj
