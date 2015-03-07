@@ -10,16 +10,19 @@ namespace game
 {
     CameraControlComponent::CameraControlComponent()
         : _camera(nullptr)
-        , _minZoom(GAME_UNIT_SCALAR / 2)
-        , _maxZoom(GAME_UNIT_SCALAR * 2)
-        , _currentZoom(_maxZoom)
         , _previousZoom(0.0f)
-        , _targetZoom(GAME_UNIT_SCALAR)
         , _zoomSpeedScale(0.003f)
         , _smoothSpeedScale(0.25f)
         , _targetBoundaryScale(gameplay::Vector2(0.25f, 0.5))
         , _boundary(std::numeric_limits<float>::max(), std::numeric_limits<float>::max())
     {
+        float const viewportWidth = 1280.0f;
+        float const screenWidth =  gameplay::Game::getInstance()->getWidth();
+        float const viewportZoom = GAME_UNIT_SCALAR * ((1.0f / screenWidth) * viewportWidth);
+        _minZoom = viewportZoom / 2;
+        _maxZoom = viewportZoom;
+        _currentZoom = _maxZoom;
+        _targetZoom = (_minZoom + _maxZoom) / 2;
     }
 
     CameraControlComponent::~CameraControlComponent()
