@@ -16,7 +16,7 @@ namespace game
         explicit CameraControlComponent();
         ~CameraControlComponent();
 
-        void setTargetPosition(gameplay::Vector2 const & target, float);
+        void setTargetPosition(gameplay::Vector2 const & target);
         float getZoom() const;
         float getTargetZoom() const;
         float getMinZoom() const;

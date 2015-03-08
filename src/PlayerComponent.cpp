@@ -1,6 +1,5 @@
 #include "PlayerComponent.h"
 
-#include "CameraControlComponent.h"
 #include "Common.h"
 #include "CollisionObjectComponent.h"
 #include "Game.h"
@@ -50,8 +49,6 @@ namespace game
         _characterNode = _characterNormalNode;
         _jumpMessage = PlayerJumpMessage::create();
         _state = State::Idle;
-        _camera = getRootParent()->getComponent<CameraControlComponent>();
-        _camera->addRef();
 
         _playerHandOfGodComponent = getParent()->getComponent<PlayerHandOfGodComponent>();
         GAME_SAFE_ADD(_playerHandOfGodComponent);
@@ -62,7 +59,6 @@ namespace game
     void PlayerComponent::finalize()
     {
         _characterNode = nullptr;
-        SAFE_RELEASE(_camera);
         SAFE_RELEASE(_characterNormalNode);
         SAFE_RELEASE(_playerHandOfGodComponent);
         SAFE_RELEASE(_playerInputComponent);
@@ -91,6 +87,12 @@ namespace game
     gameplay::Vector2 PlayerComponent::getPosition() const
     {
         return gameplay::Vector2(_characterNode->getTranslation().x, _characterNode->getTranslation().y);
+    }
+
+    gameplay::Vector2 PlayerComponent::getRenderPosition() const
+    {
+        gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
+        return gameplay::Vector2(character->getInterpolatedPosition().x, character->getInterpolatedPosition().y);
     }
 
     void PlayerComponent::forEachAnimation(std::function <bool(State::Enum, SpriteAnimationComponent *)> func)
@@ -201,8 +203,6 @@ namespace game
         _characterNode->setTranslationZ(0);
 
         _previousState = _state;
-
-        _camera->setTargetPosition(getPosition(), elapsedTime);
 
         getCurrentAnimation()->update(elapsedTime);
 

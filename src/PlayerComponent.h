@@ -10,7 +10,6 @@ namespace gameplay
 
 namespace game
 {
-    class CameraControlComponent;
     class PlayerInputComponent;
     class PlayerHandOfGodComponent;
     class SpriteAnimationComponent;
@@ -77,6 +76,7 @@ namespace game
 
         State::Enum getState() const;
         gameplay::Vector2 getPosition() const;
+        gameplay::Vector2 getRenderPosition() const;
         SpriteAnimationComponent * getCurrentAnimation();
         gameplay::Node * getCharacterNode() const;
         void setSwimmingEnabled(bool enabled);
@@ -115,7 +115,6 @@ namespace game
         std::string _swimmingCharacterComponentId;
 
         gameobjects::Message * _jumpMessage;
-        CameraControlComponent * _camera;
     };
 }
 

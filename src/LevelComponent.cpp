@@ -578,7 +578,7 @@ namespace game
         _characterRenderer.render(_player->getCurrentAnimation(),
                         _playerAnimationBatches[_player->getState()], projection,
                         _player->isLeftFacing() ? SpriteAnimationComponent::Flip::Horizontal : SpriteAnimationComponent::Flip::None,
-                        _player->getPosition(), viewport);
+                        _player->getRenderPosition(), viewport);
 
         _characterRenderer.finish();
     }
@@ -637,6 +637,7 @@ namespace game
             if(_levelLoaded)
             {
                 _player->update(elapsedTime);
+                _cameraControl->setTargetPosition(_player->getRenderPosition());
             }
 
             _levelCollisionHandler->update(elapsedTime);
