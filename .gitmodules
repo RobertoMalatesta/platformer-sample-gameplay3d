@@ -5,3 +5,7 @@
 	path = external/pngcrush/repo
 	url = git://git.code.sf.net/p/pmt/code
 	branch = pngcrush
+[submodule "external/GamePlay"]
+	path = external/GamePlay
+	url = https://github.com/louis-mclaughlin/GamePlay.git
+	branch = platformer
