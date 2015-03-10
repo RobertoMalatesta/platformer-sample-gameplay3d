@@ -84,8 +84,7 @@ namespace game
 
     void CameraControlComponent::setTargetPosition(gameplay::Vector2 const & target)
     {
-        GAME_PRINT_VEC2("setTargetPosition", target);
-        GAME_ASSERT(!isnan(target.x) && !isnan(target.y), "NaN!");
+        GAME_ASSERT(!isnan(target.x) && !isnan(target.y), "Camera target is NaN!");
         _targetPosition = target;
         gameplay::Game::getInstance()->getAudioListener()->setPosition(_targetPosition.x, _targetPosition.y, 0.0);
         float const offsetX = (gameplay::Game::getInstance()->getWidth() / 2) *  _currentZoom;
