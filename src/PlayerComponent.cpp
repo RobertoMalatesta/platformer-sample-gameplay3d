@@ -210,6 +210,8 @@ namespace game
         {
             _playerHandOfGodComponent->update(elapsedTime);
         }
+
+        character->update(elapsedTime);
     }
 
     SpriteAnimationComponent * PlayerComponent::getCurrentAnimation()
