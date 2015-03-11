@@ -63,7 +63,7 @@ namespace game
         _optionsForm->getControl(PAUSE_TOGGLE_ID)->addListener(this, gameplay::Control::Listener::VALUE_CHANGED);
         _optionsForm->getControl(SOUND_TOGGLE_ID)->addListener(this, gameplay::Control::Listener::VALUE_CHANGED);
 
-#if !_FINAL && !NO_LUA_BINDINGS
+#if !_FINAL && !GP_NO_LUA_BINDINGS
         if(getConfig()->getBool("debug_enable_tools"))
         {
             getScriptController()->loadScript("res/lua/run_tools.lua");
