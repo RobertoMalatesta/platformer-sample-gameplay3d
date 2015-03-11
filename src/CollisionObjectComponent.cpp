@@ -23,9 +23,8 @@ namespace game
         _node = gameplay::Node::create(getId().c_str());
 
         {
-            // I/O bottleneck, bypasses cached properties
             STALL_SCOPE();
-            _node->setCollisionObject(_physics.c_str());
+            _node->setCollisionObject(physicsProperties);
         }
 
         if (physicsProperties->exists("extents"))
