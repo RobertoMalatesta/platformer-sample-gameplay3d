@@ -9,3 +9,6 @@
 	path = external/GamePlay
 	url = https://github.com/louis-mclaughlin/GamePlay.git
 	branch = platformer
+[submodule "external/json-to-gameplay3d"]
+	path = external/json-to-gameplay3d
+	url = https://github.com/louis-mclaughlin/json-to-gameplay3d.git

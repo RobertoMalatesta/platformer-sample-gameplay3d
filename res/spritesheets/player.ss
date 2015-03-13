@@ -1,722 +1,298 @@
 frames
 {
-    frames_0
+  frames_0
+  {
+    filename = player_climb__00
+
+    frame
     {
-        filename = player_climb__00
-
-        frame
-        {
-            h = 93
-            w = 67
-            x = 0
-            y = 0
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 93
-            w = 67
-        }
-
-        spriteSourceSize
-        {
-            h = 93
-            w = 67
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 93
+      w = 67
+      x = 0
+      y = 0
     }
 
-    frames_1
+    rotated = false
+  }
+
+  frames_1
+  {
+    filename = player_climb__01
+
+    frame
     {
-        filename = player_climb__01
-
-        frame
-        {
-            h = 93
-            w = 67
-            x = 67
-            y = 0
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 93
-            w = 67
-        }
-
-        spriteSourceSize
-        {
-            h = 93
-            w = 67
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 93
+      w = 67
+      x = 67
+      y = 0
     }
 
-    frames_2
+    rotated = false
+  }
+
+  frames_2
+  {
+    filename = player_front
+
+    frame
     {
-        filename = player_front
-
-        frame
-        {
-            h = 93
-            w = 67
-            x = 134
-            y = 0
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 93
-            w = 67
-        }
-
-        spriteSourceSize
-        {
-            h = 93
-            w = 67
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 93
+      w = 67
+      x = 134
+      y = 0
     }
 
-    frames_3
+    rotated = false
+  }
+
+  frames_3
+  {
+    filename = player_hurt
+
+    frame
     {
-        filename = player_hurt
-
-        frame
-        {
-            h = 93
-            w = 70
-            x = 201
-            y = 0
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 93
-            w = 70
-        }
-
-        spriteSourceSize
-        {
-            h = 93
-            w = 70
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 93
+      w = 70
+      x = 201
+      y = 0
     }
 
-    frames_4
+    rotated = false
+  }
+
+  frames_4
+  {
+    filename = player_jump
+
+    frame
     {
-        filename = player_jump
-
-        frame
-        {
-            h = 95
-            w = 69
-            x = 271
-            y = 0
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 95
-            w = 69
-        }
-
-        spriteSourceSize
-        {
-            h = 95
-            w = 69
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 95
+      w = 69
+      x = 271
+      y = 0
     }
 
-    frames_5
+    rotated = false
+  }
+
+  frames_5
+  {
+    filename = player_stand
+
+    frame
     {
-        filename = player_stand
-
-        frame
-        {
-            h = 93
-            w = 67
-            x = 340
-            y = 0
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 93
-            w = 67
-        }
-
-        spriteSourceSize
-        {
-            h = 93
-            w = 67
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 93
+      w = 67
+      x = 340
+      y = 0
     }
 
-    frames_6
+    rotated = false
+  }
+
+  frames_6
+  {
+    filename = player_swim__00
+
+    frame
     {
-        filename = player_swim__00
-
-        frame
-        {
-            h = 97
-            w = 71
-            x = 407
-            y = 0
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 97
-            w = 71
-        }
-
-        spriteSourceSize
-        {
-            h = 97
-            w = 71
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 97
+      w = 71
+      x = 407
+      y = 0
     }
 
-    frames_7
+    rotated = false
+  }
+
+  frames_7
+  {
+    filename = player_swim__01
+
+    frame
     {
-        filename = player_swim__01
-
-        frame
-        {
-            h = 97
-            w = 71
-            x = 0
-            y = 97
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 97
-            w = 71
-        }
-
-        spriteSourceSize
-        {
-            h = 97
-            w = 71
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 97
+      w = 71
+      x = 0
+      y = 97
     }
 
-    frames_8
+    rotated = false
+  }
+
+  frames_8
+  {
+    filename = player_walk__00
+
+    frame
     {
-        filename = player_walk__00
-
-        frame
-        {
-            h = 97
-            w = 72
-            x = 71
-            y = 97
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 97
-            w = 72
-        }
-
-        spriteSourceSize
-        {
-            h = 97
-            w = 72
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 97
+      w = 72
+      x = 71
+      y = 97
     }
 
-    frames_9
+    rotated = false
+  }
+
+  frames_9
+  {
+    filename = player_walk__01
+
+    frame
     {
-        filename = player_walk__01
-
-        frame
-        {
-            h = 97
-            w = 73
-            x = 143
-            y = 97
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 97
-            w = 73
-        }
-
-        spriteSourceSize
-        {
-            h = 97
-            w = 73
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 97
+      w = 73
+      x = 143
+      y = 97
     }
 
-    frames_10
+    rotated = false
+  }
+
+  frames_10
+  {
+    filename = player_walk__02
+
+    frame
     {
-        filename = player_walk__02
-
-        frame
-        {
-            h = 98
-            w = 73
-            x = 216
-            y = 97
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 98
-            w = 73
-        }
-
-        spriteSourceSize
-        {
-            h = 98
-            w = 73
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 98
+      w = 73
+      x = 216
+      y = 97
     }
 
-    frames_11
+    rotated = false
+  }
+
+  frames_11
+  {
+    filename = player_walk__03
+
+    frame
     {
-        filename = player_walk__03
-
-        frame
-        {
-            h = 97
-            w = 72
-            x = 289
-            y = 97
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 97
-            w = 72
-        }
-
-        spriteSourceSize
-        {
-            h = 97
-            w = 72
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 97
+      w = 72
+      x = 289
+      y = 97
     }
 
-    frames_12
+    rotated = false
+  }
+
+  frames_12
+  {
+    filename = player_walk__04
+
+    frame
     {
-        filename = player_walk__04
-
-        frame
-        {
-            h = 97
-            w = 73
-            x = 361
-            y = 97
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 97
-            w = 73
-        }
-
-        spriteSourceSize
-        {
-            h = 97
-            w = 73
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 97
+      w = 73
+      x = 361
+      y = 97
     }
 
-    frames_13
+    rotated = false
+  }
+
+  frames_13
+  {
+    filename = player_walk__05
+
+    frame
     {
-        filename = player_walk__05
-
-        frame
-        {
-            h = 97
-            w = 73
-            x = 434
-            y = 97
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 97
-            w = 73
-        }
-
-        spriteSourceSize
-        {
-            h = 97
-            w = 73
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 97
+      w = 73
+      x = 434
+      y = 97
     }
 
-    frames_14
+    rotated = false
+  }
+
+  frames_14
+  {
+    filename = player_walk__06
+
+    frame
     {
-        filename = player_walk__06
-
-        frame
-        {
-            h = 97
-            w = 73
-            x = 0
-            y = 195
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 97
-            w = 73
-        }
-
-        spriteSourceSize
-        {
-            h = 97
-            w = 73
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 97
+      w = 73
+      x = 0
+      y = 195
     }
 
-    frames_15
+    rotated = false
+  }
+
+  frames_15
+  {
+    filename = player_walk__07
+
+    frame
     {
-        filename = player_walk__07
-
-        frame
-        {
-            h = 97
-            w = 72
-            x = 73
-            y = 195
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 97
-            w = 72
-        }
-
-        spriteSourceSize
-        {
-            h = 97
-            w = 72
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 97
+      w = 72
+      x = 73
+      y = 195
     }
 
-    frames_16
+    rotated = false
+  }
+
+  frames_16
+  {
+    filename = player_walk__08
+
+    frame
     {
-        filename = player_walk__08
-
-        frame
-        {
-            h = 97
-            w = 72
-            x = 145
-            y = 195
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 97
-            w = 72
-        }
-
-        spriteSourceSize
-        {
-            h = 97
-            w = 72
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 97
+      w = 72
+      x = 145
+      y = 195
     }
 
-    frames_17
+    rotated = false
+  }
+
+  frames_17
+  {
+    filename = player_walk__09
+
+    frame
     {
-        filename = player_walk__09
-
-        frame
-        {
-            h = 97
-            w = 72
-            x = 217
-            y = 195
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 97
-            w = 72
-        }
-
-        spriteSourceSize
-        {
-            h = 97
-            w = 72
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 97
+      w = 72
+      x = 217
+      y = 195
     }
 
-    frames_18
+    rotated = false
+  }
+
+  frames_18
+  {
+    filename = player_walk__10
+
+    frame
     {
-        filename = player_walk__10
-
-        frame
-        {
-            h = 97
-            w = 72
-            x = 289
-            y = 195
-        }
-
-        pivot
-        {
-            x = 0.5
-            y = 0.5
-        }
-
-        rotated = false
-
-        sourceSize
-        {
-            h = 97
-            w = 72
-        }
-
-        spriteSourceSize
-        {
-            h = 97
-            w = 72
-            x = 0
-            y = 0
-        }
-
-        trimmed = false
+      h = 97
+      w = 72
+      x = 289
+      y = 195
     }
+
+    rotated = false
+  }
 }
 
 meta
 {
-    app = http://www.codeandweb.com/texturepacker
-    format = RGBA8888
-    image = @res/textures/player
-    scale = 1
+  image = @res/textures/player
 
-    size
-    {
-        h = 512
-        w = 512
-    }
-
-    smartupdate = $TexturePacker:SmartUpdate:89815c240e19e29dafd7e26f63cb5526:c2dceaf45204137a3f01cec146dfa968:86d5339b780aedd87b35e2b7c0a7e11b$
-    version = 1.0
+  size
+  {
+    h = 512
+    w = 512
+  }
 }

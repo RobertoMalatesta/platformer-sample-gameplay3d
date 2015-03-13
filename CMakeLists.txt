@@ -251,6 +251,7 @@ endif()
 
 set(GAMEPLAY_VERSION 3.0.0)
 add_subdirectory(external/pngcrush)
+add_subdirectory(external/json-to-gameplay3d)
 add_subdirectory(${PLATFORMER_EXT_LIBS_PATH}/${GAMEPLAY_LIB_DIR_NAME}/gameplay)
 add_subdirectory(${PLATFORMER_EXT_LIBS_PATH}/${GAMEOBJECTS_LIB_DIR_NAME})
 add_dependencies(${GAME_NAME} ${GAMEPLAY_LIB_NAME} ${GAMEOBJECTS_LIB_NAME})
