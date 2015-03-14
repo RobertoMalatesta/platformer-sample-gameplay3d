@@ -1,0 +1,37 @@
+{
+    "vars" : 
+    [
+        {"Members" : "[^/]*$"},
+        {"LayerNSPath" : "/layers"},
+        {"LayerChildNSPath" : "{LayerNSPath}/layers_([\\d]*)"},
+        {"LayerChildObjectNSPath" : "{LayerChildNSPath}/objects"},
+        {"LayerChildObjectChildNSPath" : "{LayerChildObjectNSPath}/objects_([\\d]*)"}
+    ],
+
+    "includes" :
+    [
+        "/width",
+        "/height",
+        "/tilewidth",
+        "/tileheight",
+        "/properties",
+        "/properties/texture",
+        "{LayerNSPath}",
+        "{LayerChildNSPath}",
+        "{LayerChildNSPath}/name",
+        "{LayerChildNSPath}/data",
+        "{LayerChildNSPath}/data/{Members}",
+        "{LayerChildObjectNSPath}",
+        "{LayerChildObjectNSPath}/name",
+        "{LayerChildObjectChildNSPath}",
+        "{LayerChildObjectChildNSPath}/x",
+        "{LayerChildObjectChildNSPath}/y",
+        "{LayerChildObjectChildNSPath}/width",
+        "{LayerChildObjectChildNSPath}/height",
+        "{LayerChildObjectChildNSPath}/name",
+        "{LayerChildObjectChildNSPath}/ellipse",
+        "{LayerChildObjectChildNSPath}/polyline",
+        "{LayerChildObjectChildNSPath}/polyline/polyline_1",
+        "{LayerChildObjectChildNSPath}/polyline/polyline_1/{Members}"
+    ]
+}

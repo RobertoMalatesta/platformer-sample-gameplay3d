@@ -1,22 +1,17 @@
 local convertCommand = _toolsRoot .. "/build/external/json-to-gameplay3d/json2gp3d"
 
-function convert(resourceDirName, hasRules)
+function convert(resourceDirName, extension)
   local rawDir = _toolsRoot .. "/raw/" .. resourceDirName
   local resDir = _toolsRoot .. "/res/" .. resourceDirName
   for index,fileName in pairs(ls(rawDir)) do
       if string.match(fileName, "%.json") and not string.match(fileName, "rules.json") then
         local rawPath = rawDir .. "/" .. fileName
-        local resPath = resDir .. "/" .. string.gsub(fileName, ".json", ".ss")
-        local command = convertCommand .. " -i " .. rawPath .. " -o " .. resPath
-
-        if hasRules then
-          command = command .. " -r " .. rawDir .. "/rules.json"
-        end
-
+        local resPath = resDir .. "/" .. string.gsub(fileName, ".json", extension)
+        local command = convertCommand .. " -i " .. rawPath .. " -o " .. resPath .. " -r " .. rawDir .. "/rules.json"
         os.execute(command)
       end
   end
 end
 
-convert("levels", false)
-convert("spritesheets", true)
+convert("spritesheets", ".ss")
+convert("levels", ".level")
