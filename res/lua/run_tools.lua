@@ -45,9 +45,9 @@ function runTool(toolName)
     end
 end
 
+runTool("crush_pngs")
+runTool("convert_json")
 runTool("generate_android")
 runTool("clean_android")
 runTool("build_android")
 runTool("deploy_android")
-runTool("crush_pngs")
-runTool("convert_json")

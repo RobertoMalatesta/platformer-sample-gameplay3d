@@ -87,33 +87,50 @@ namespace game
         {
             int x = 0;
             int y = 0;
+            int index = 0;
 
             while (dataNamespace->getNextProperty())
             {
-                int const currentTileId = _grid[y][x]._tileId;
-
-                if (currentTileId == EMPTY_TILE)
+                gameplay::Vector4 line;
+                std::ostringstream ss;
+                ss << index;
+                dataNamespace->getVector4(ss.str().c_str(), &line);
+                for(int i = 0; i < 2; ++i)
                 {
-                    int const newTileId = dataNamespace->getInt();
-                    GAME_ASSERT(currentTileId == EMPTY_TILE || newTileId == EMPTY_TILE, 
-                        "Multi layered tile rendering not isn't supported [%d][%d]", x, y);
-                    _grid[y][x]._tileId = newTileId;
-                }
+                    int const newTileId = i == 0 ? line.x : line.z;
+                    int count = i == 0 ? line.y : line.w;
 
-                ++x;
-
-                if (x == _width)
-                {
-                    x = 0;
-                    ++y;
-
-                    if (y == _height)
+                    while (count > 0)
                     {
-                        x = 0;
-                        y = 0;
-                        break;
+                        int const currentTileId = _grid[y][x]._tileId;
+
+                        if (currentTileId == EMPTY_TILE)
+                        {
+                            GAME_ASSERT(currentTileId == EMPTY_TILE || newTileId == EMPTY_TILE,
+                                "Multi layered tile rendering not isn't supported [%d][%d]", x, y);
+                            _grid[y][x]._tileId = newTileId;
+                        }
+
+                        ++x;
+
+                        if (x == _width)
+                        {
+                            x = 0;
+                            ++y;
+
+                            if (y == _height)
+                            {
+                                x = 0;
+                                y = 0;
+                                break;
+                            }
+                        }
+
+                        --count;
                     }
                 }
+
+                ++index;
             }
 
             dataNamespace->rewind();
