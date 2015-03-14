@@ -34,17 +34,12 @@ namespace game
                     Sprite sprite;
                     sprite._isRotated = frameNamespace->getBool("rotated");
                     sprite._name = frameNamespace->getString("filename");
-
-                    while (gameplay::Properties * frameChildNamespace = frameNamespace->getNextNamespace())
-                    {
-                        if (strcmp(frameChildNamespace->getNamespace(), "frame") == 0)
-                        {
-                            sprite._src.width = frameChildNamespace->getInt("w");
-                            sprite._src.height = frameChildNamespace->getInt("h");
-                            sprite._src.x = frameChildNamespace->getInt("x");
-                            sprite._src.y = frameChildNamespace->getInt("y");
-                        }
-                    }
+                    gameplay::Vector4 frame;
+                    frameNamespace->getVector4("frame", &frame);
+                    sprite._src.x = frame.x;
+                    sprite._src.y = frame.y;
+                    sprite._src.width = frame.z;
+                    sprite._src.height = frame.w;
 
                     GAME_ASSERT(_sprites.find(sprite._name) == _sprites.end(),
                         "Duplicate sprite name '%s' in '%s'", sprite._name.c_str(), filePath.c_str());
@@ -57,8 +52,10 @@ namespace game
                 std::string const texturePath = currentNamespace->getString("image");
                 _texture = gameplay::Texture::create(texturePath.c_str());
                 gameplay::Properties * dimensionsNamespace = currentNamespace->getNextNamespace();
-                int const width = dimensionsNamespace->getInt("w");
-                int const height = dimensionsNamespace->getInt("h");
+                gameplay::Vector2 size;
+                currentNamespace->getVector2("size", &size);
+                int const width = size.x;
+                int const height = size.y;
                 GAME_ASSERT(_texture && _texture->getWidth() == width && _texture->getHeight() == height,
                     "Spritesheet '%s' width/height meta texture meta data is incorrect for '%s'", filePath.c_str(), texturePath.c_str());
             }

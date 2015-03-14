@@ -25,5 +25,11 @@
         {"/meta/image" : {".png": ""}},
         {"/meta/image" : {"^": "@res/textures/"}},
         {"{FrameChildNSPath}/filename" : {".png": ""}}
+    ],
+
+    "conversions" :
+    [
+        {"{FrameChildNSPath}/frame" : { "frame" : {"Vector4" : {"true" : ["x", "y", "w", "h"] } } } },
+        {"/meta/size" : { "size" : {"Vector2" : {"true" : ["w", "h"] } } } }
     ]
 }

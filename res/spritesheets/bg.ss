@@ -3,90 +3,42 @@ frames
   frames_0
   {
     filename = bg_0
-
-    frame
-    {
-      h = 350
-      w = 1024
-      x = 0
-      y = 0
-    }
-
+    frame = 0, 0, 1024, 350
     rotated = false
   }
 
   frames_1
   {
     filename = bg_1
-
-    frame
-    {
-      h = 224
-      w = 1024
-      x = 0
-      y = 350
-    }
-
+    frame = 0, 350, 1024, 224
     rotated = false
   }
 
   frames_2
   {
     filename = bg_2
-
-    frame
-    {
-      h = 112
-      w = 1024
-      x = 0
-      y = 574
-    }
-
+    frame = 0, 574, 1024, 112
     rotated = false
   }
 
   frames_3
   {
     filename = bg_3
-
-    frame
-    {
-      h = 110
-      w = 1024
-      x = 0
-      y = 686
-    }
-
+    frame = 0, 686, 1024, 110
     rotated = false
   }
 
   frames_4
   {
     filename = bg_4
-
-    frame
-    {
-      h = 165
-      w = 1024
-      x = 0
-      y = 796
-    }
-
+    frame = 0, 796, 1024, 165
     rotated = false
   }
 
   frames_5
   {
     filename = bg_5
-
-    frame
-    {
-      h = 274
-      w = 1024
-      x = 0
-      y = 961
-    }
-
+    frame = 0, 961, 1024, 274
     rotated = false
   }
 }
@@ -94,10 +46,5 @@ frames
 meta
 {
   image = @res/textures/bg
-
-  size
-  {
-    h = 2048
-    w = 1024
-  }
+  size = 1024, 2048
 }
