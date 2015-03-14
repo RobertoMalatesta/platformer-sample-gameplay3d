@@ -29,9 +29,16 @@
         "{LayerChildObjectChildNSPath}/width",
         "{LayerChildObjectChildNSPath}/height",
         "{LayerChildObjectChildNSPath}/name",
+        "{LayerChildObjectChildNSPath}/dst",
         "{LayerChildObjectChildNSPath}/ellipse",
         "{LayerChildObjectChildNSPath}/polyline",
         "{LayerChildObjectChildNSPath}/polyline/polyline_1",
         "{LayerChildObjectChildNSPath}/polyline/polyline_1/{Members}"
+    ],
+
+    "conversions" :
+    [
+        {"{LayerChildObjectChildNSPath}" : { "dst" : {"Vector4" : {"false" : ["x", "y", "width", "height"] } } } },
+        {"{LayerChildObjectChildNSPath}/polyline/polyline_1" : { "line" : {"Vector2" : {"true" : ["x", "y"] } } } }
     ]
 }

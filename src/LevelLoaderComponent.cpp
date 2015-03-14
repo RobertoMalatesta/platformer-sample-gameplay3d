@@ -163,10 +163,12 @@ namespace game
     gameplay::Rectangle LevelLoaderComponent::getObjectBounds(gameplay::Properties * objectNamespace) const
     {
         gameplay::Rectangle rect;
-        rect.width = objectNamespace->getInt("width") * GAME_UNIT_SCALAR;
-        rect.height = objectNamespace->getInt("height") * GAME_UNIT_SCALAR;
-        rect.x = objectNamespace->getInt("x") * GAME_UNIT_SCALAR;
-        rect.y = ((_tileHeight * _height) - objectNamespace->getInt("y")) * GAME_UNIT_SCALAR;
+        gameplay::Vector4 bounds;
+        objectNamespace->getVector4("dst", &bounds);
+        rect.width = bounds.z * GAME_UNIT_SCALAR;
+        rect.height = bounds.w * GAME_UNIT_SCALAR;
+        rect.x = bounds.x * GAME_UNIT_SCALAR;
+        rect.y = ((_tileHeight * _height) - bounds.y) * GAME_UNIT_SCALAR;
         return rect;
     }
 
@@ -199,8 +201,9 @@ namespace game
     void getLineCollisionObjectParams(gameplay::Properties * lineVectorNamespace, gameplay::Rectangle & bounds, float & rotationZ, gameplay::Vector2 & direction)
     {
         gameplay::Vector2 const start(bounds.x, bounds.y);
-        gameplay::Vector2 localEnd(lineVectorNamespace->getFloat("x")  * GAME_UNIT_SCALAR,
-            lineVectorNamespace->getFloat("y") * GAME_UNIT_SCALAR);
+        gameplay::Vector2 localEnd;
+        lineVectorNamespace->getVector2("line", &localEnd);
+        localEnd *= GAME_UNIT_SCALAR;
         direction = localEnd;
         direction.normalize();
         rotationZ = -acos(direction.dot(gameplay::Vector2::unitX() * (direction.y > 0 ? 1.0f : -1.0f)));
@@ -245,15 +248,12 @@ namespace game
                 float rotationZ = 0.0f;
                 gameplay::Rectangle bounds = getObjectBounds(objectNamespace);
 
-                if (objectNamespace->getNamespace("polyline", true))
+                if (gameplay::Properties * lineVectorNamespace = objectNamespace->getNamespace("polyline", true))
                 {
-                    if (gameplay::Properties * lineVectorNamespace = objectNamespace->getNamespace("polyline_1", true))
-                    {
-                        gameplay::Vector2 direction;
-                        getLineCollisionObjectParams(lineVectorNamespace, bounds, rotationZ, direction);
-                        static float const lineHeight = 0.05f;
-                        bounds.height = lineHeight;
-                    }
+                    gameplay::Vector2 direction;
+                    getLineCollisionObjectParams(lineVectorNamespace, bounds, rotationZ, direction);
+                    static float const lineHeight = 0.05f;
+                    bounds.height = lineHeight;
                 }
                 else
                 {
@@ -325,44 +325,42 @@ namespace game
                 gameplay::Rectangle const dst = getObjectBounds(objectNamespace);
                 gameplay::Vector2 position(dst.x, dst.y);
 
-                if (objectNamespace->getNamespace("polyline", true))
+                if (gameplay::Properties * lineVectorNamespace = objectNamespace->getNamespace("polyline", true))
                 {
-                    if (gameplay::Properties * lineVectorNamespace = objectNamespace->getNamespace("polyline_1", true))
+                    gameplay::Vector2 line;
+                    lineVectorNamespace->getVector2("line", &line);
+                    line *= GAME_UNIT_SCALAR;
+                    float lineLength = line.length();
+                    gameplay::Vector2 direction = line;
+                    direction.normalize();
+
+                    while(true)
                     {
-                        gameplay::Vector2 line(lineVectorNamespace->getFloat("x")  * GAME_UNIT_SCALAR,
-                                              -lineVectorNamespace->getFloat("y") * GAME_UNIT_SCALAR);
-                        float lineLength = line.length();
-                        gameplay::Vector2 direction = line;
-                        direction.normalize();
+                        Sprite & sprite = sprites[GAME_RANDOM_RANGE_INT(0, sprites.size() - 1)];
+                        float const collectableWidth = sprite._src.width * GAME_UNIT_SCALAR;
+                        lineLength -= collectableWidth;
 
-                        while(true)
+                        if(lineLength > 0)
                         {
-                            Sprite & sprite = sprites[GAME_RANDOM_RANGE_INT(0, sprites.size() - 1)];
-                            float const collectableWidth = sprite._src.width * GAME_UNIT_SCALAR;
-                            lineLength -= collectableWidth;
-
-                            if(lineLength > 0)
-                            {
-                                std::array<char, 255> radiusBuffer;
-                                sprintf(&radiusBuffer[0], "%f", collectableWidth / 2);
-                                collisionProperties->setString("radius", &radiusBuffer[0]);
-                                gameplay::Rectangle bounds(position.x, position.y, collectableWidth, collectableWidth);
-                                gameplay::Node * collectableNode = createCollisionObject(CollisionType::COLLECTABLE, collisionProperties, bounds);
-                                collectableNode->addRef();
-                                Collectable collectable;
-                                collectable._src = sprite._src;
-                                collectable._node = collectableNode;
-                                collectable._startPosition = collectableNode->getTranslation();
-                                collectable._active = true;
-                                collectable._visible = false;
-                                _collectables[collectableNode] = collectable;
-                                float const padding = 1.25f;
-                                position += direction * (collectableWidth * padding);
-                            }
-                            else
-                            {
-                                break;
-                            }
+                            std::array<char, 255> radiusBuffer;
+                            sprintf(&radiusBuffer[0], "%f", collectableWidth / 2);
+                            collisionProperties->setString("radius", &radiusBuffer[0]);
+                            gameplay::Rectangle bounds(position.x, position.y, collectableWidth, collectableWidth);
+                            gameplay::Node * collectableNode = createCollisionObject(CollisionType::COLLECTABLE, collisionProperties, bounds);
+                            collectableNode->addRef();
+                            Collectable collectable;
+                            collectable._src = sprite._src;
+                            collectable._node = collectableNode;
+                            collectable._startPosition = collectableNode->getTranslation();
+                            collectable._active = true;
+                            collectable._visible = false;
+                            _collectables[collectableNode] = collectable;
+                            float const padding = 1.25f;
+                            position += direction * (collectableWidth * padding);
+                        }
+                        else
+                        {
+                            break;
                         }
                     }
                 }
@@ -384,59 +382,56 @@ namespace game
 
             while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
             {
-                if (objectNamespace->getNamespace("polyline", true))
+                if (gameplay::Properties * lineVectorNamespace = objectNamespace->getNamespace("polyline", true))
                 {
-                    if (gameplay::Properties * lineVectorNamespace = objectNamespace->getNamespace("polyline_1", true))
+                    // Get the params for a line
+                    gameplay::Rectangle bounds = getObjectBounds(objectNamespace);
+                    float rotationZ = 0.0f;
+                    gameplay::Vector2 bridgeDirection;
+                    getLineCollisionObjectParams(lineVectorNamespace, bounds, rotationZ, bridgeDirection);
+
+                    // Recalculate its starting position based on the size and orientation of the bridge segment(s)
+                    bounds.x += (bounds.width / 2) * -bridgeDirection.x;
+                    bounds.y += (bounds.width / 2) * bridgeDirection.y;
+                    int const numSegments = std::ceil(bounds.width / (getTileWidth() * GAME_UNIT_SCALAR));
+                    bounds.width = bounds.width / numSegments;
+                    bounds.x += (bounds.width / 2) * bridgeDirection.x;
+                    bounds.y += (bounds.width / 2) * -bridgeDirection.y;
+                    bounds.height = (getTileHeight() * GAME_UNIT_SCALAR) * 0.25f;
+                    setProperty("extents", gameplay::Vector3(bounds.width, bounds.height, 0.0f), collisionProperties);
+
+                    // Create collision nodes for them
+                    std::vector<gameplay::Node *> segmentNodes;
+                    for (int i = 0; i < numSegments; ++i)
                     {
-                        // Get the params for a line
-                        gameplay::Rectangle bounds = getObjectBounds(objectNamespace);
-                        float rotationZ = 0.0f;
-                        gameplay::Vector2 bridgeDirection;
-                        getLineCollisionObjectParams(lineVectorNamespace, bounds, rotationZ, bridgeDirection);
+                        segmentNodes.push_back(createCollisionObject(CollisionType::BRIDGE, collisionProperties, bounds, rotationZ));
+                        bounds.x += bridgeDirection.x * bounds.width;
+                        bounds.y -= bridgeDirection.y * bounds.width;
+                    }
 
-                        // Recalculate its starting position based on the size and orientation of the bridge segment(s)
-                        bounds.x += (bounds.width / 2) * -bridgeDirection.x;
-                        bounds.y += (bounds.width / 2) * bridgeDirection.y;
-                        int const numSegments = std::ceil(bounds.width / (getTileWidth() * GAME_UNIT_SCALAR));
-                        bounds.width = bounds.width / numSegments;
-                        bounds.x += (bounds.width / 2) * bridgeDirection.x;
-                        bounds.y += (bounds.width / 2) * -bridgeDirection.y;
-                        bounds.height = (getTileHeight() * GAME_UNIT_SCALAR) * 0.25f;
-                        setProperty("extents", gameplay::Vector3(bounds.width, bounds.height, 0.0f), collisionProperties);
+                    // Link them to each other and the end pieces with the world
+                    for (int segmentIndex = 0; segmentIndex < numSegments; ++segmentIndex)
+                    {
+                        gameplay::Node * segmentNode = segmentNodes[segmentIndex];
+                        gameplay::PhysicsRigidBody * segmentRigidBody = static_cast<gameplay::PhysicsRigidBody*>(segmentNode->getCollisionObject());
+                        gameplay::Vector3 const hingeOffset((bounds.width / 2) * (1.0f / segmentNode->getScaleX()) * (bridgeDirection.y >= 0 ? 1.0f : -1.0f), 0.0f, 0.0f);
+                        gameplay::PhysicsController * physicsController = gameplay::Game::getInstance()->getPhysicsController();
 
-                        // Create collision nodes for them
-                        std::vector<gameplay::Node *> segmentNodes;
-                        for (int i = 0; i < numSegments; ++i)
+                        bool const isFirstSegment = segmentIndex == 0;
+                        if (isFirstSegment)
                         {
-                            segmentNodes.push_back(createCollisionObject(CollisionType::BRIDGE, collisionProperties, bounds, rotationZ));
-                            bounds.x += bridgeDirection.x * bounds.width;
-                            bounds.y -= bridgeDirection.y * bounds.width;
+                            physicsController->createHingeConstraint(segmentRigidBody, gameplay::Quaternion(), -hingeOffset);
                         }
 
-                        // Link them to each other and the end pieces with the world
-                        for (int segmentIndex = 0; segmentIndex < numSegments; ++segmentIndex)
+                        bool const isEndSegment = segmentIndex == numSegments - 1;
+                        if (!isEndSegment)
                         {
-                            gameplay::Node * segmentNode = segmentNodes[segmentIndex];
-                            gameplay::PhysicsRigidBody * segmentRigidBody = static_cast<gameplay::PhysicsRigidBody*>(segmentNode->getCollisionObject());
-                            gameplay::Vector3 const hingeOffset((bounds.width / 2) * (1.0f / segmentNode->getScaleX()) * (bridgeDirection.y >= 0 ? 1.0f : -1.0f), 0.0f, 0.0f);
-                            gameplay::PhysicsController * physicsController = gameplay::Game::getInstance()->getPhysicsController();
-
-                            bool const isFirstSegment = segmentIndex == 0;
-                            if (isFirstSegment)
-                            {
-                                physicsController->createHingeConstraint(segmentRigidBody, gameplay::Quaternion(), -hingeOffset);
-                            }
-
-                            bool const isEndSegment = segmentIndex == numSegments - 1;
-                            if (!isEndSegment)
-                            {
-                                gameplay::PhysicsRigidBody * nextSegmentRigidBody = static_cast<gameplay::PhysicsRigidBody*>(segmentNodes[segmentIndex + 1]->getCollisionObject());
-                                physicsController->createHingeConstraint(segmentRigidBody, gameplay::Quaternion(), hingeOffset, nextSegmentRigidBody, gameplay::Quaternion(), -hingeOffset);
-                            }
-                            else
-                            {
-                                physicsController->createHingeConstraint(segmentRigidBody, gameplay::Quaternion(), hingeOffset);
-                            }
+                            gameplay::PhysicsRigidBody * nextSegmentRigidBody = static_cast<gameplay::PhysicsRigidBody*>(segmentNodes[segmentIndex + 1]->getCollisionObject());
+                            physicsController->createHingeConstraint(segmentRigidBody, gameplay::Quaternion(), hingeOffset, nextSegmentRigidBody, gameplay::Quaternion(), -hingeOffset);
+                        }
+                        else
+                        {
+                            physicsController->createHingeConstraint(segmentRigidBody, gameplay::Quaternion(), hingeOffset);
                         }
                     }
                 }
