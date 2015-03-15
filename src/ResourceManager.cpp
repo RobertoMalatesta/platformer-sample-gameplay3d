@@ -75,17 +75,21 @@ namespace game
     {
         PERF_SCOPE("ResourceManager::initialize");
 
-        std::vector<std::string> fileList;
-
-        std::string const textureDirectory = gameplay::FileSystem::resolvePath("@res/textures");
-        gameplay::FileSystem::listFiles(textureDirectory.c_str(), fileList);
-
-        for (std::string & fileName : fileList)
+        if (gameplay::Properties * aliases = gameplay::Game::getInstance()->getConfig()->getNamespace("aliases", true))
         {
-            STALL_SCOPE();
-            cacheTexture(textureDirectory + "/" + fileName);
+            while(char const * path = aliases->getNextProperty())
+            {
+                if(strstr(aliases->getString(), "."))
+                {
+                    STALL_SCOPE();
+                    cacheTexture("@" + std::string(path));
+                }
+            }
+
+            aliases->rewind();
         }
 
+        std::vector<std::string> fileList;
         if(gameplay::Properties * propertyDirNamespace = gameplay::Game::getInstance()->getConfig()->getNamespace("properties_directories", true))
         {
             while(char const * dir = propertyDirNamespace->getNextProperty())
