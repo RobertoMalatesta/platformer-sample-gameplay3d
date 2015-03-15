@@ -60,7 +60,8 @@ namespace game
         void updateAndRender(float elapsedTime);
         void updateAndRenderCharacters(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport, float elapsedTime);
         void updateAndRenderBackground(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, float elapsedTime);
-        void renderTileMap(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
+        int renderBackgroundTiles(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
+        void renderForegroundTiles(int tileCount);
         void renderInteractables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
         void renderCollectables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport);
         void renderWater(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, float elapsedTime);
@@ -71,6 +72,14 @@ namespace game
         void renderDebug(gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport);
 #endif
 
+        struct Tile
+        {
+            int id;
+            bool foreground;
+        };
+
+        std::vector<std::vector<Tile>> _tileMap;
+        std::vector<std::pair<gameplay::Rectangle, gameplay::Rectangle>> _foregroundTileDrawCommands;
         PlayerComponent * _player;
         LevelLoaderComponent * _level;
         CollisionHandlerComponent * _levelCollisionHandler;

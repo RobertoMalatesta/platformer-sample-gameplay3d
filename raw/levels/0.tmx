@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="63" height="25" tilewidth="64" tileheight="64" nextobjectid="110">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="63" height="25" tilewidth="64" tileheight="64" nextobjectid="112">
  <properties>
   <property name="texture" value="@res/textures/tiles"/>
  </properties>
  <tileset firstgid="1" name="Terrain" tilewidth="64" tileheight="64">
   <image source="../../res/textures/tiles.png" width="1024" height="1024"/>
  </tileset>
- <layer name="props" width="63" height="25">
+ <layer name="props" width="63" height="25" visible="0">
   <data encoding="base64" compression="zlib">
    eJzt1bsNgDAMRVF3iExCpmCLZCUIS0NJQz4u8ijukSy5sOJXOWYAAAB+izoAIBZffZalAMbE9ggemzoAXE51AKFDHaDhmrCj9hevVr9/ybkzdMwU59vAn+0fBfS6AXYMBWI=
   </data>
  </layer>
  <layer name="terrain" width="63" height="25">
   <data encoding="base64" compression="zlib">
-   eJztluEKgjAURvcOPlX5Lj5LYJFSmmAP2h1sKNW2i113t3UPHPqhwXcUVKUEQQjxACePZ4ZNQt5UG4+VwL+3+xTy4gp2YM89JDJP7gHEHMAjwhqcmTamgKu9VZ/fRZcYgyIi970s9LMb89wusT2Efa/N5tfqu143cNh/Gim+9zf2vuvuOziq/PpdYNpt98mYWn+z8X+h9vfu1PqnHf3Wve5fn4vZR41rW2wx+6jhbpb2366PtC+8AFNLmRM=
+   eJztlmEKgzAMRnsHT7XtLjvLYJMpm5ugBzUFC2Vb2thp09Y8+PCHFb7XQKtSgiD4eEN6R24MnYS8qQLflcDe3V0R8uIOaSAtd5HIjNwFVuYAORJyggxMHVMAc7+q7/+iOkahiMjcy0Kf3ZRzu0R3H+ZeG+aniWu/HpBu+2qr4rq/qXPX3k/IS+Xnj0FxN96XOan5nwO/87l/eqfkr7v1G+aXt+1vr8WgrFkKNhOuYFDWLMF4V4yuHO62d0ru/+xPiHep7hNSxJ78
   </data>
  </layer>
- <objectgroup name="characters">
+ <objectgroup name="characters" visible="0">
   <object id="1" name="player" x="715.495" y="1175.52" width="36.3734" height="31.4506">
    <ellipse/>
   </object>
@@ -135,17 +135,20 @@
   <object id="48" x="2752" y="320" width="64" height="128"/>
   <object id="49" x="2304" y="320" width="64" height="128"/>
   <object id="50" x="832" y="192" width="576" height="64"/>
-  <object id="51" x="0" y="1362" width="640" height="128"/>
+  <object id="51" x="0" y="1362" width="576" height="128"/>
   <object id="52" x="3392" y="1357" width="640" height="128"/>
+  <object id="111" x="640" y="1280">
+   <polyline points="0,0 -128,128"/>
+  </object>
  </objectgroup>
- <objectgroup name="collision_hand_of_god">
+ <objectgroup name="collision_hand_of_god" visible="0">
   <object id="53" x="2813.82" y="1438.91" width="377.956" height="26.5418"/>
   <object id="54" x="3264" y="1152" width="64" height="128"/>
  </objectgroup>
- <objectgroup name="collision_ladder">
+ <objectgroup name="collision_ladder" visible="0">
   <object id="55" x="1621" y="704" width="19.8454" height="543.916"/>
  </objectgroup>
- <objectgroup name="interactive_props">
+ <objectgroup name="interactive_props" visible="0">
   <object id="56" x="1858.73" y="1167.97" width="100" height="100">
    <ellipse/>
   </object>
@@ -158,7 +161,7 @@
   </object>
   <object id="67" x="943.142" y="489.604" width="192" height="192"/>
  </objectgroup>
- <objectgroup name="collectables">
+ <objectgroup name="collectables" visible="0">
   <object id="68" x="960" y="1216">
    <polyline points="0,0 320,0"/>
   </object>
@@ -255,7 +258,7 @@
   <object id="106" x="0" y="1324" width="640" height="276"/>
   <object id="107" x="3392" y="1269" width="640" height="333"/>
  </objectgroup>
- <objectgroup name="collision_bridge">
+ <objectgroup name="collision_bridge" visible="0">
   <object id="108" x="1856" y="576">
    <polyline points="0,0 448,-64"/>
   </object>

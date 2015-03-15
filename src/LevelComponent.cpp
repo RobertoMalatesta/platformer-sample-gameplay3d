@@ -109,6 +109,23 @@ namespace game
         std::vector<EnemyComponent *> enemies;
         _level->getParent()->getComponentsInChildren(enemies);
 
+
+        _tileMap.resize(_level->getHeight());
+
+        for (auto & horizontalTiles : _tileMap)
+        {
+            horizontalTiles.resize(_level->getWidth());
+        }
+
+        for(int y = 0; y < _level->getHeight(); ++y)
+        {
+            for(int x = 0; x < _level->getWidth(); ++x)
+            {
+                _tileMap[y][x].id = _level->getTile(x, y);
+                _tileMap[y][x].foreground = false;
+            }
+        }
+
         for(EnemyComponent * enemy  : enemies)
         {
             enemy->addRef();
@@ -176,7 +193,6 @@ namespace game
         }
 
 
-
         _level->getCollectables(_collectables);
 
         _level->forEachCachedNode(CollisionType::COLLISION_DYNAMIC, [this](gameplay::Node * node)
@@ -195,7 +211,9 @@ namespace game
 
         _waterUniformTimer = 0.0f;
 
-        _level->forEachCachedNode(CollisionType::WATER, [this](gameplay::Node * node)
+        int foregroundTileDrawCommandSize = 0;
+
+        _level->forEachCachedNode(CollisionType::WATER, [this, &foregroundTileDrawCommandSize](gameplay::Node * node)
         {
             gameplay::Rectangle bounds;
             bounds.width = node->getScaleX();
@@ -205,8 +223,26 @@ namespace game
             // Scale the boundary height to add the area that was removed to make room for waves in the texture (95px of 512px)
             float const textureScale = 1.18f;
             bounds.height *= textureScale;
+
+            gameplay::Rectangle waterTileArea;
+            waterTileArea.width = (node->getScaleX() / GAME_UNIT_SCALAR) / _level->getTileWidth();
+            waterTileArea.height = (node->getScaleY() / GAME_UNIT_SCALAR) / _level->getTileHeight();
+            waterTileArea.x = (bounds.x / GAME_UNIT_SCALAR) / _level->getTileWidth();
+            waterTileArea.y = _level->getHeight() - (((bounds.y + bounds.height) / GAME_UNIT_SCALAR) / _level->getTileHeight());
+
+            for(int y = waterTileArea.y; y < waterTileArea.y + waterTileArea.height; ++y)
+            {
+                for(int x = waterTileArea.x; x < waterTileArea.x + waterTileArea.width; ++x)
+                {
+                    _tileMap[y][x].foreground = true;
+                    ++foregroundTileDrawCommandSize;
+                }
+            }
+
             _waterBounds.push_back(bounds);
         });
+
+        _foregroundTileDrawCommands.resize(foregroundTileDrawCommandSize);
 
         // The first call to draw will perform some lazy initialisation in Effect::Bind
         for (gameplay::SpriteBatch * spriteBatch : uninitialisedSpriteBatches)
@@ -263,6 +299,8 @@ namespace game
         _enemyAnimationBatches.clear();
         _waterBounds.clear();
         _collectables.clear();
+        _tileMap.clear();
+        _foregroundTileDrawCommands.clear();
 
         if(_levelLoaded)
         {
@@ -397,8 +435,9 @@ namespace game
         }
     }
 
-    void LevelComponent::renderTileMap(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport)
+    int LevelComponent::renderBackgroundTiles(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport)
     {
+        int foregroundTilesCount = 0;
         gameplay::Rectangle const levelArea((_level->getTileWidth() * _level->getWidth()) * GAME_UNIT_SCALAR,
             (_level->getTileHeight() * _level->getHeight()) * GAME_UNIT_SCALAR);
 
@@ -427,22 +466,34 @@ namespace game
             {
                 for (int x = minX; x < maxX; ++x)
                 {
-                    int tile = _level->getTile(x, y);
+                    Tile const & tile =  _tileMap[y][x];
 
-                    if (tile != LevelLoaderComponent::EMPTY_TILE)
+                    if (tile.id != LevelLoaderComponent::EMPTY_TILE)
                     {
-                        if(!tilesRendered)
+                        if(!tilesRendered && !tile.foreground)
                         {
                             _tileBatch->setProjectionMatrix(projection);
                             _tileBatch->start();
                             tilesRendered = true;
                         }
 
-                        int const tileIndex = tile - 1;
+                        int const tileIndex = tile.id - 1;
                         int const tileX = (tileIndex % numSpritesX) * tileWidth;
                         int const tileY = (tileIndex / numSpritesX) * tileHeight;
-                        _tileBatch->draw(gameplay::Rectangle(x * tileWidth, (y * tileHeight) - renderedOffsetY, tileWidth, tileHeight),
-                            getSafeDrawRect(gameplay::Rectangle(tileX, tileY, tileWidth, tileHeight)));
+                        gameplay::Rectangle dst(x * tileWidth, (y * tileHeight) - renderedOffsetY, tileWidth, tileHeight);
+                        gameplay::Rectangle src(getSafeDrawRect(gameplay::Rectangle(tileX, tileY, tileWidth, tileHeight)));
+
+                        if(!tile.foreground)
+                        {
+                            _tileBatch->draw(dst,src);
+                        }
+                        else
+                        {
+                            auto & drawCommandPair = _foregroundTileDrawCommands[foregroundTilesCount];
+                            drawCommandPair.first = dst;
+                            drawCommandPair.second = src;
+                            ++foregroundTilesCount;
+                        }
                     }
                 }
             }
@@ -451,6 +502,22 @@ namespace game
             {
                 _tileBatch->finish();
             }
+        }
+
+        return foregroundTilesCount;
+    }
+
+    void LevelComponent::renderForegroundTiles(int tileCount)
+    {
+        if(tileCount > 0)
+        {
+            _tileBatch->start();
+            for(int i = 0; i < tileCount; ++i)
+            {
+                auto const & drawCommandPair = _foregroundTileDrawCommands[i];
+                _tileBatch->draw(drawCommandPair.first, drawCommandPair.second);
+            }
+            _tileBatch->finish();
         }
     }
 
@@ -682,11 +749,12 @@ namespace game
             projection.scale(GAME_UNIT_SCALAR, GAME_UNIT_SCALAR, 0);
 
             updateAndRenderBackground(projection, viewport, elapsedTime);
-            renderTileMap(projection, viewport);
+            int const foregroundTileCount = renderBackgroundTiles(projection, viewport);
             renderInteractables(projection, viewport);
             renderCollectables(projection, viewport, triggerViewport);
             updateAndRenderCharacters(projection, viewport, triggerViewport, elapsedTime);
             renderWater(projection, viewport, elapsedTime);
+            renderForegroundTiles(foregroundTileCount);
 
             if(previousFrameBuffer)
             {
