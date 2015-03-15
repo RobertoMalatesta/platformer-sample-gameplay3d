@@ -302,6 +302,11 @@ namespace game
 
     void PlayerComponent::setSwimmingEnabled(bool enabled)
     {
+        if(!enabled && _swimmingEnabled && _state == State::Swimming)
+        {
+            _state = State::Idle;
+        }
+
         _swimmingEnabled = enabled;
     }
 
