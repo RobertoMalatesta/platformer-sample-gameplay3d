@@ -234,8 +234,11 @@ namespace game
             {
                 for(int x = waterTileArea.x; x < waterTileArea.x + waterTileArea.width; ++x)
                 {
-                    _tileMap[y][x].foreground = true;
-                    ++foregroundTileDrawCommandSize;
+                    if(_tileMap[y][x].id != LevelLoaderComponent::EMPTY_TILE)
+                    {
+                        _tileMap[y][x].foreground = true;
+                        ++foregroundTileDrawCommandSize;
+                    }
                 }
             }
 
