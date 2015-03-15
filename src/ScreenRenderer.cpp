@@ -183,6 +183,23 @@ namespace  game
         else
         {
             _previousSpinnerTime = gameplay::Game::getAbsoluteTime();
+
+            if(gameplay::Game::getInstance()->getState() == gameplay::Game::State::PAUSED)
+            {
+                _fillSpriteBatch->start();
+                _fillSpriteBatch->draw(gameplay::Rectangle(0, _bannersDst.y,gameplay::Game::getInstance()->getWidth(),
+                                                           gameplay::Game::getInstance()->getHeight() - _bannersDst.y),
+                                                            gameplay::Rectangle(0, 0, 1, 1),
+                                                            LOADING_BG_COLOR);
+                _fillSpriteBatch->draw(gameplay::Rectangle(0, _bannersDst.y,gameplay::Game::getInstance()->getWidth(),
+                                                           (gameplay::Game::getInstance()->getHeight() - _bannersDst.y) * 0.025f),
+                                                   gameplay::Rectangle(0, 0, 1, 1),
+                                                   gameplay::Vector4(0, 0, 0, 1));
+                _fillSpriteBatch->finish();
+                _texuturesSpriteBatch->start();
+                _texuturesSpriteBatch->draw(_bannersDst, _bannersSrc, gameplay::Vector4::one());
+                _texuturesSpriteBatch->finish();
+            }
         }
 
         stateChanged |= _previousAlpha != _alpha;
