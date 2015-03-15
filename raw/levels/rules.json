@@ -39,6 +39,7 @@
     "conversions" :
     [
         {"{LayerChildObjectChildNSPath}" : { "dst" : {"Vector4" : {"false" : ["x", "y", "width", "height"] } } } },
-        {"{LayerChildObjectChildNSPath}/polyline/polyline_1" : { "line" : {"Vector2" : {"true" : ["x", "y"] } } } }
+        {"{LayerChildObjectChildNSPath}/polyline/polyline_1" : { "line" : {"Vector2" : {"true" : ["x", "y"] } } } },
+        {"{LayerChildNSPath}/data" : { "data" : {"PackedIntArray" : {"false" : [] } } } }
     ]
 }
