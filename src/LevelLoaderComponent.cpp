@@ -347,6 +347,7 @@ namespace game
                     gameplay::Vector2 line;
                     lineVectorNamespace->getVector2("line", &line);
                     line *= GAME_UNIT_SCALAR;
+                    line.y *= -1.0f;
                     float lineLength = line.length();
                     gameplay::Vector2 direction = line;
                     direction.normalize();
