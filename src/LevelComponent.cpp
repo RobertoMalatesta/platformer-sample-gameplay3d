@@ -632,12 +632,10 @@ namespace game
 
         if(!isPaused)
         {
-            _cameraControl->update(elapsedTime);
-
             if(_levelLoaded)
             {
                 _player->update(elapsedTime);
-                _cameraControl->setTargetPosition(_player->getRenderPosition());
+                _cameraControl->update(_player->getRenderPosition(), elapsedTime);
             }
 
             _levelCollisionHandler->update(elapsedTime);

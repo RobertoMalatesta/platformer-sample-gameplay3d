@@ -61,7 +61,12 @@ namespace game
         }
     }
 
-    void CameraControlComponent::update(float elapsedTime)
+    void CameraControlComponent::finalize()
+    {
+        SAFE_RELEASE(_camera);
+    }
+
+    void CameraControlComponent::update(gameplay::Vector2 const & target,float elapsedTime)
     {
         if(_currentZoom != _targetZoom)
         {
@@ -75,15 +80,7 @@ namespace game
 
             _previousZoom = _currentZoom;
         }
-    }
 
-    void CameraControlComponent::finalize()
-    {
-        SAFE_RELEASE(_camera);
-    }
-
-    void CameraControlComponent::setTargetPosition(gameplay::Vector2 const & target)
-    {
         GAME_ASSERT(!isnan(target.x) && !isnan(target.y), "Camera target is NaN!");
         _targetPosition = target;
         gameplay::Game::getInstance()->getAudioListener()->setPosition(_targetPosition.x, _targetPosition.y, 0.0);
