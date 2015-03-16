@@ -231,8 +231,7 @@ namespace game
                         gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
                         gameplay::Vector3 const &, gameplay::Vector3 const &)
     {
-        if(collisionPair.objectA == _player->getCharacterNode()->getCollisionObject() &&
-            collisionPair.objectB->getType() == gameplay::PhysicsCollisionObject::Type::GHOST_OBJECT)
+        if(collisionPair.objectA == _player->getCharacterNode()->getCollisionObject())
         {
             if(NodeCollisionInfo * NodeCollisionInfo = NodeCollisionInfo::getNodeCollisionInfo(collisionPair.objectB->getNode()))
             {

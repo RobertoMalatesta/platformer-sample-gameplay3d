@@ -215,24 +215,27 @@ namespace game
 
         _level->forEachCachedNode(CollisionType::WATER, [this, &foregroundTileDrawCommandSize](gameplay::Node * node)
         {
+            float const submergeHeight = _player->getCharacterNode()->getScaleY();
             gameplay::Rectangle bounds;
             bounds.width = node->getScaleX();
-            bounds.height = node->getScaleY();
+            bounds.height = node->getScaleY() + submergeHeight;
             bounds.x = node->getTranslationX() - bounds.width / 2.0f;
-            bounds.y = node->getTranslationY() - bounds.height / 2.0f;
+            bounds.y = node->getTranslationY() + (submergeHeight * 0.5f) - bounds.height / 2.0f;
             // Scale the boundary height to add the area that was removed to make room for waves in the texture (95px of 512px)
             float const textureScale = 1.18f;
             bounds.height *= textureScale;
 
             gameplay::Rectangle waterTileArea;
-            waterTileArea.width = (node->getScaleX() / GAME_UNIT_SCALAR) / _level->getTileWidth();
-            waterTileArea.height = (node->getScaleY() / GAME_UNIT_SCALAR) / _level->getTileHeight();
+            waterTileArea.width = (bounds.width / GAME_UNIT_SCALAR) / _level->getTileWidth();
+            waterTileArea.height = (bounds.height/ GAME_UNIT_SCALAR) / _level->getTileHeight();
             waterTileArea.x = (bounds.x / GAME_UNIT_SCALAR) / _level->getTileWidth();
             waterTileArea.y = _level->getHeight() - (((bounds.y + bounds.height) / GAME_UNIT_SCALAR) / _level->getTileHeight());
+            int const targetX = MATH_CLAMP(waterTileArea.x + waterTileArea.width, 0, _level->getWidth());
+            int const targetY = MATH_CLAMP(waterTileArea.y + waterTileArea.height, 0, _level->getHeight());
 
-            for(int y = waterTileArea.y; y < waterTileArea.y + waterTileArea.height; ++y)
+            for(int y = waterTileArea.y; y < targetY; ++y)
             {
-                for(int x = waterTileArea.x; x < waterTileArea.x + waterTileArea.width; ++x)
+                for(int x = waterTileArea.x; x < targetX; ++x)
                 {
                     if(_tileMap[y][x].id != LevelLoaderComponent::EMPTY_TILE)
                     {

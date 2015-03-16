@@ -32,7 +32,6 @@ collisionObject reset : world_collision
 
 collisionObject water : world_collision
 {
-    type = GHOST_OBJECT
 }
 
 collisionObject boulder : world_collision

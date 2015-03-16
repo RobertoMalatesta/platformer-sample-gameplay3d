@@ -562,11 +562,13 @@ namespace game
                 float nearestDistance = std::numeric_limits<float>::max();
                 gameplay::Vector3 const & enemyPosition = enemyComponent->getTriggerNode()->getTranslation();
 
-                forEachCachedNode(CollisionType::COLLISION_STATIC, [&nearestCollisionNode, &nearestDistance, &enemyPosition](gameplay::Node * collisionNode)
+                CollisionType::Enum const collisionSearchType = strstr(enemyComponent->getTriggerNode()->getId(), "fish") ? CollisionType::WATER : CollisionType::COLLISION_STATIC;
+
+                forEachCachedNode(collisionSearchType, [&nearestCollisionNode, &nearestDistance, &enemyPosition](gameplay::Node * collisionNode)
                 {
                     gameplay::Vector3 const collisionNodePosition = collisionNode->getTranslation();
 
-                    if (collisionNodePosition.y <= enemyPosition.y)
+                    if (collisionNodePosition.y <= enemyPosition.y && collisionNode->getRotation().isIdentity())
                     {
                         float const distance = collisionNode->getTranslation().distanceSquared(enemyPosition);
 
