@@ -902,8 +902,8 @@ namespace game
 
             gameplay::PhysicsCharacter * playerCharacter = static_cast<gameplay::PhysicsCharacter*>(_player->getCharacterNode()->getCollisionObject());
             gameplay::Vector2 playerVelocity(playerCharacter->getCurrentVelocity().x, playerCharacter->getCurrentVelocity().y);
-            gameplay::Vector2 playerPosition(_player->getPosition());
-            renderCharacterDataDebug(drawPositions ? &playerPosition : nullptr, drawPlayerVelocity ? &playerVelocity : nullptr, _player->getPosition() / unitToPixelScale, font);
+            gameplay::Vector2 playerPosition(_player->getRenderPosition());
+            renderCharacterDataDebug(drawPositions ? &playerPosition : nullptr, drawPlayerVelocity ? &playerVelocity : nullptr, _player->getRenderPosition() / unitToPixelScale, font);
 
             if(drawPositions)
             {
