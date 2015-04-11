@@ -231,10 +231,7 @@ add_executable(${GAME_NAME}
     ${RES_SHADERS}
 )
 
-if ( "${CMAKE_BUILD_TYPE}" STREQUAL "DEBUG" )
-    # add_definitions(-DGP_USE_MEM_LEAK_DETECTION)
-    add_definitions(-D_DEBUG)
-endif()
+add_definitions(-DGP_USE_MEM_LEAK_DETECTION)
 
 if(MSVC)
     # Enable multi-processor compilation for faster compile times
