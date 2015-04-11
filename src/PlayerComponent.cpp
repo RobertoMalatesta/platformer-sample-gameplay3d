@@ -114,14 +114,16 @@ namespace game
         }
 
         gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
+        gameplay::Vector3 velocity = character->getCurrentVelocity();
         float const minVerticalScaleToInitiateClimb = 0.35f;
         float const minDistToLadderCentre = _characterNode->getScaleX() * 0.15f;
         gameplay::Vector3 const ladderVeritcallyAlignedPosition = gameplay::Vector3(_ladderPosition.x, _characterNode->getTranslationY(), 0.0f);
         bool const isClimbRequested = fabs(_verticalMovementScale) > minVerticalScaleToInitiateClimb;
         bool const isPlayerWithinLadderClimbingDistance = _characterNode->getTranslation().distance(ladderVeritcallyAlignedPosition) <= minDistToLadderCentre;
+        bool const isPlayerAscending = velocity.y > 0;
 
         // Initiate climbing if possible
-        if(_climbingEnabled && isClimbRequested && isPlayerWithinLadderClimbingDistance)
+        if(_climbingEnabled && isClimbRequested && isPlayerWithinLadderClimbingDistance && !isPlayerAscending)
         {
             _state = State::Climbing;
 
@@ -132,8 +134,6 @@ namespace game
 
         if(character->isPhysicsEnabled())
         {
-            gameplay::Vector3 velocity = character->getCurrentVelocity();
-
             // Zero velocity once the player has stopped falling and there isn't a desired movement direction
             if(_horizontalMovementDirection == MovementDirection::None)
             {
@@ -340,7 +340,7 @@ namespace game
         gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
         gameplay::Vector3 const characterOriginalVelocity = character->getCurrentVelocity();
         gameplay::Vector3 preJumpVelocity;
-        bool jumpAllowed = _state != State::Climbing;
+        bool jumpAllowed = characterOriginalVelocity.y == 0;
         float jumpHeight = (_jumpHeight * scale);
         bool resetVelocityState = true;
 
@@ -350,8 +350,6 @@ namespace game
             {
                 preJumpVelocity.x = _state != State::Swimming || characterOriginalVelocity.x == 0 ? characterOriginalVelocity.x :
                     (_movementSpeed * _swimSpeedScale) * (!_isLeftFacing ? 1.0f : -1.0f);
-
-                jumpAllowed &= _state == State::Walking || _state == State::Swimming || _state == State::Idle;
 #ifndef _FINAL
                 if(gameplay::Game::getInstance()->getConfig()->getBool("debug_enable_unlimited_jump"))
                 {
@@ -369,7 +367,7 @@ namespace game
             case JumpSource::EnemyCollision:
             {
                 preJumpVelocity.x = characterOriginalVelocity.x;
-                jumpAllowed &= true;
+                jumpAllowed = true;
                 break;
             }
             default:
