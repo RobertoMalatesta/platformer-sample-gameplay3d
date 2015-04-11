@@ -9,6 +9,9 @@
 #include "PhysicsCharacter.h"
 #include "LevelCollision.h"
 
+// REMOVE
+#include "Game.h"
+
 namespace game
 {
     CollisionHandlerComponent::CollisionHandlerComponent()
@@ -183,7 +186,7 @@ namespace game
 
     bool CollisionHandlerComponent::onEnemyCollision(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
                                                      gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
-                                                     gameplay::Vector3 const & contactPointA, gameplay::Vector3 const & contactPointB)
+                                                     gameplay::Vector3 const &, gameplay::Vector3 const &)
     {
         if(type == gameplay::PhysicsCollisionObject::CollisionListener::EventType::COLLIDING)
         {
@@ -195,9 +198,16 @@ namespace game
 
                     if(enemy->getState() != EnemyComponent::State::Dead)
                     {
-                        gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(collisionPair.objectB);
-                        float const playerVelY = character->getCurrentVelocity().y;
-                        if((contactPointB.y >= contactPointA.y && playerVelY != 0) || playerVelY)
+                        float const height = std::min(collisionPair.objectA->getNode()->getScaleY(), collisionPair.objectB->getNode()->getScaleY()) * 0.5f;
+                        gameplay::Rectangle playerBottom(collisionPair.objectB->getNode()->getTranslationX() - ( collisionPair.objectB->getNode()->getScaleX() / 2),
+                                                         collisionPair.objectB->getNode()->getTranslationY() - (collisionPair.objectB->getNode()->getScaleY() / 2),
+                                                         collisionPair.objectB->getNode()->getScaleX(), height);
+
+                        gameplay::Rectangle enemyTop(collisionPair.objectA->getNode()->getTranslationX() -  (( collisionPair.objectA->getNode()->getScaleX()) / 2),
+                                                         collisionPair.objectA->getNode()->getTranslationY() + (collisionPair.objectA->getNode()->getScaleY() / 2) - (collisionPair.objectA->getNode()->getScaleY() * 0.2f),
+                                                         collisionPair.objectA->getNode()->getScaleX(), height);
+
+                        if(playerBottom.intersects(enemyTop))
                         {
                             enemy->kill();
                             _player->jump(PlayerComponent::JumpSource::EnemyCollision);

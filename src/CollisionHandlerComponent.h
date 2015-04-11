@@ -45,7 +45,7 @@ namespace game
          */
         bool onEnemyCollision(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
                               gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
-                              gameplay::Vector3 const & contactPointA, gameplay::Vector3 const & contactPointB);
+                              gameplay::Vector3 const &, gameplay::Vector3 const &);
 
         /**
          * Handles collision events between the player (contact A) and the terrain (contact B)

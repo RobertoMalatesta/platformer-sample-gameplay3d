@@ -33,6 +33,10 @@ namespace game
             physicsProperties->getVector3("extents", &scale);
             _node->setScale(scale);
         }
+        else if (physicsProperties->exists("radius"))
+        {
+            _node->setScale(gameplay::Vector3(physicsProperties->getFloat("radius") * 2, physicsProperties->getFloat("height"), 0.0f));
+        }
 
         getParent()->getNode()->addChild(_node);
         SAFE_RELEASE(physicsPropertiesRef);
