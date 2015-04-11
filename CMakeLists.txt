@@ -143,6 +143,7 @@ file(GLOB RES_LUA ./res/lua/*.lua)
 file(GLOB RES_LUA_TOOLS ./res/lua/tools/*)
 file(GLOB RES_GAME_OBJECTS ./res/gameobjects/*)
 file(GLOB RES_LEVELS ./res/levels/*)
+file(GLOB RES_PARALLAX ./res/parallax/*)
 file(GLOB RES_PHYSICS ./res/physics/*)
 file(GLOB RES_SCENES ./res/scenes/*)
 file(GLOB RES_SHADERS ./res/shaders/*)
@@ -163,6 +164,7 @@ set(SG_RES_LUA "res/lua")
 set(SG_RES_LUA_TOOLS "res/lua/tools")
 set(SG_RES_GAME_OBJECTS "res/gameobjects")
 set(SG_RES_LEVELS "res/levels")
+set(SG_RES_PARALLAX "res/parallax")
 set(SG_RES_PHYSICS "res/physics")
 set(SG_RES_SCENES "res/scenes")
 set(SG_RES_SHADERS "res/shaders")
@@ -187,6 +189,7 @@ if(WIN32)
     add_source_group(${SG_RES_LUA_TOOLS} "${RES_LUA_TOOLS}")
     add_source_group(${SG_RES_GAME_OBJECTS} "${RES_GAME_OBJECTS}")
     add_source_group(${SG_RES_LEVELS} "${RES_LEVELS}")
+    add_source_group(${SG_RES_PARALLAX} "${RES_PARALLAX}")
     add_source_group(${SG_RES_PHYSICS} "${RES_PHYSICS}")
     add_source_group(${SG_RES_SCENES} "${RES_SCENES}")
     add_source_group(${SG_RES_SPRITESHEETS} "${RES_SPRITESHEETS}")
@@ -204,6 +207,7 @@ else()
     add_source_group(${SG_RES_LUA_TOOLS} ${RES_LUA_TOOLS})
     add_source_group(${SG_RES_GAME_OBJECTS} ${RES_GAME_OBJECTS})
     add_source_group(${SG_RES_LEVELS} ${RES_LEVELS})
+    add_source_group(${SG_RES_PARALLAX} ${RES_PARALLAX})
     add_source_group(${SG_RES_PHYSICS} ${RES_PHYSICS})
     add_source_group(${SG_RES_SCENES} ${RES_SCENES})
     add_source_group(${SG_RES_SPRITESHEETS} ${RES_SPRITESHEETS})
@@ -223,6 +227,7 @@ add_executable(${GAME_NAME}
     ${RAW_LEVELS}
     ${RES_AUDIO}
     ${RES_LEVELS}
+    ${RES_PARALLAX}
     ${RES_PHYSICS}
     ${RES_LUA}
     ${RES_LUA_TOOLS}

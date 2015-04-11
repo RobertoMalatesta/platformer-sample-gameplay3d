@@ -10,6 +10,7 @@
 #include "Messages.h"
 #include "PhysicsCharacter.h"
 #include "PlayerComponent.h"
+#include "PropertiesRef.h"
 #include "ResourceManager.h"
 #include "Scene.h"
 #include "ScreenRenderer.h"
@@ -344,10 +345,11 @@ namespace game
 
     void LevelComponent::readProperties(gameplay::Properties & properties)
     {
-        while (gameplay::Properties * ns = properties.getNextNamespace())
+        if(properties.exists("parallax"))
         {
-            if (strcmp(ns->getNamespace(), "parallax") == 0)
+            if (PropertiesRef * parallaxRef = ResourceManager::getInstance().getProperties(properties.getString("parallax")))
             {
+                gameplay::Properties * ns = parallaxRef->get();
                 SpriteSheet * spritesheet = ResourceManager::getInstance().getSpriteSheet(ns->getString("spritesheet"));
                 ns->getVector4("fill", &_parallaxFillColor);
                 ns->getVector2("offset", &_parallaxOffset);
@@ -376,6 +378,8 @@ namespace game
                 }
 
                 SAFE_RELEASE(spritesheet);
+                ns->rewind();
+                SAFE_RELEASE(parallaxRef);
             }
         }
     }
