@@ -231,14 +231,12 @@ add_executable(${GAME_NAME}
     ${RES_SHADERS}
 )
 
-add_definitions(-DGP_USE_MEM_LEAK_DETECTION)
-
 if(MSVC)
     # Enable multi-processor compilation for faster compile times
     add_definitions(/MP)
     add_definitions(/Gm-)
     add_definitions(-DUNICODE)
-    add_definitions(-DGP_USE_GAMEPAD)
+    add_definitions(-DGP_USE_MEM_LEAK_DETECTION)
 else()
     # Enable C++11
     set(CMAKE_CXX_FLAGS "-std=c++11")
