@@ -31,10 +31,6 @@ namespace game
 
     void PlayerInputComponent::initialize()
     {
-        _joystickMovementDirections[PlayerComponent::MovementDirection::Up] = gameplay::Vector2(0, 1);
-        _joystickMovementDirections[PlayerComponent::MovementDirection::Down] = gameplay::Vector2(0, -1);
-        _joystickMovementDirections[PlayerComponent::MovementDirection::Left] = gameplay::Vector2(-1, 0);
-        _joystickMovementDirections[PlayerComponent::MovementDirection::Right] = gameplay::Vector2(1, 0);
         _gamepadButtonMapping[GamepadButtons::Jump] = gameplay::Gamepad::BUTTON_A;
 #ifndef _FINAL
         _gamepadButtonMapping[GamepadButtons::Reload] = gameplay::Gamepad::BUTTON_MENU1;
@@ -80,17 +76,10 @@ namespace game
 
             if(_previousJoystickValue != joystickValue)
             {
-                gameplay::Vector2 joystickValueUnit = joystickValue;
-                joystickValueUnit.normalize();
-
-                float const maxDirectionDelta = cos(MATH_DEG_TO_RAD(25));
-
-                for(int i = PlayerComponent::MovementDirection::None + 1; i < PlayerComponent::MovementDirection::EnumCount; ++i)
-                {
-                    _player->setMovementEnabled(static_cast<PlayerComponent::MovementDirection::Enum>(i),
-                                             joystickValueUnit.dot(_joystickMovementDirections[i]) > maxDirectionDelta,
-                                             joystickValue.length());
-                }
+                _player->setMovementEnabled(PlayerComponent::MovementDirection::Left, joystickValue.x < 0, fabs(joystickValue.x));
+                _player->setMovementEnabled(PlayerComponent::MovementDirection::Right, joystickValue.x > 0, fabs(joystickValue.x));
+                _player->setMovementEnabled(PlayerComponent::MovementDirection::Down, joystickValue.y < 0, fabs(joystickValue.y));
+                _player->setMovementEnabled(PlayerComponent::MovementDirection::Up, joystickValue.y > 0, fabs(joystickValue.y));
             }
 
             _pinchEnabled = joystickValue.isZero() || !isAnyButtonDown;

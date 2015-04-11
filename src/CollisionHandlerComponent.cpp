@@ -243,7 +243,7 @@ namespace game
                     {
                         if (isColliding)
                         {
-                            _player->setClimpingSnapPositionX(collisionPair.objectB->getNode()->getTranslationX());
+                            _player->setLadderPosition(collisionPair.objectB->getNode()->getTranslation());
                             ++_playerClimbingTerrainRefCount;
                         }
                         else

@@ -81,7 +81,7 @@ namespace game
         gameplay::Node * getCharacterNode() const;
         void setSwimmingEnabled(bool enabled);
         void setClimbingEnabled(bool enabled);
-        void setClimpingSnapPositionX(float posX);
+        void setLadderPosition(gameplay::Vector3 const & pos);
         void setMovementEnabled(MovementDirection::Enum direction, bool enabled, float scale = 1.0f);
         void jump(JumpSource::Enum source, float scale = 1.0f);
         bool isLeftFacing() const;
@@ -98,13 +98,15 @@ namespace game
         bool _isLeftFacing;
         bool _climbingEnabled;
         bool _swimmingEnabled;
-        MovementDirection::Enum _movementDirection;
-        float _movementScale;
+        MovementDirection::Enum _horizontalMovementDirection;
+        float _horizontalMovementScale;
+        float _verticalMovementScale;
         State::Enum _previousState;
         float _movementSpeed;
         float _swimSpeedScale;
         float _jumpHeight;
-        float _climbingSnapPositionX;
+        gameplay::Vector3 _ladderPosition;
+        gameplay::Vector3 _previousClimbPosition;
 
         std::string _idleAnimComponentId;
         std::string _walkAnimComponentId;

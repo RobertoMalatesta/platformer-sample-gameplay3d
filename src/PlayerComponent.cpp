@@ -14,17 +14,17 @@ namespace game
 {
     PlayerComponent::PlayerComponent()
         : _isLeftFacing(false)
-        , _movementDirection(MovementDirection::None)
+        , _horizontalMovementDirection(MovementDirection::None)
         , _previousState(State::Idle)
         , _movementSpeed(5.0f)
         , _jumpHeight(1.0f)
         , _characterNode(nullptr)
         , _characterNormalNode(nullptr)
-        , _movementScale(0.0f)
+        , _horizontalMovementScale(0.0f)
+        , _verticalMovementScale(0.0f)
         , _jumpMessage(nullptr)
         , _climbingEnabled(false)
         , _swimmingEnabled(false)
-        , _climbingSnapPositionX(0.0f)
         , _swimSpeedScale(1.0f)
         , _playerInputComponent(nullptr)
         , _playerHandOfGodComponent(nullptr)
@@ -114,12 +114,28 @@ namespace game
         }
 
         gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
+        float const minVerticalScaleToInitiateClimb = 0.35f;
+        float const minDistToLadderCentre = _characterNode->getScaleX() * 0.15f;
+        gameplay::Vector3 const ladderVeritcallyAlignedPosition = gameplay::Vector3(_ladderPosition.x, _characterNode->getTranslationY(), 0.0f);
+        bool const isClimbRequested = fabs(_verticalMovementScale) > minVerticalScaleToInitiateClimb;
+        bool const isPlayerWithinLadderClimbingDistance = _characterNode->getTranslation().distance(ladderVeritcallyAlignedPosition) <= minDistToLadderCentre;
+
+        // Initiate climbing if possible
+        if(_climbingEnabled && isClimbRequested && isPlayerWithinLadderClimbingDistance)
+        {
+            _state = State::Climbing;
+
+            // Physics will be disabled so that we can translate the player vertically along the ladder
+            character->resetVelocityState();
+            character->setPhysicsEnabled(false);
+        }
 
         if(character->isPhysicsEnabled())
         {
             gameplay::Vector3 velocity = character->getCurrentVelocity();
 
-            if(_movementDirection == MovementDirection::None || (_movementDirection & MovementDirection::Vertical) != MovementDirection::None)
+            // Zero velocity once the player has stopped falling and there isn't a desired movement direction
+            if(_horizontalMovementDirection == MovementDirection::None)
             {
                 if (velocity.y == 0.0f && velocity.x != 0.0f)
                 {
@@ -131,32 +147,36 @@ namespace game
             {
                 if (velocity.isZero())
                 {
-                    if(_movementDirection == MovementDirection::None || _movementDirection == MovementDirection::Up)
+                    // Player should swim on the spot when idle while in water
+                    if(_horizontalMovementDirection == MovementDirection::None)
                     {
                         _state = _swimmingEnabled ? State::Swimming : State::Idle;
                     }
                 }
                 else
                 {
+                    // Handle when the player moves horizontally
                     if (velocity.y == 0.0f && velocity.x != 0.0f)
-                    { 
+                    {
+                        float moveScale = _horizontalMovementScale;
+
                         if (_swimmingEnabled && _state == State::Walking)
                         {
-                            character->setVelocity(velocity.x * _swimSpeedScale, 0, 0);
+                            // Player has moved into a water volume, transition from walking to swimming and move at swim speed
                             _state = State::Swimming;
+                            moveScale *= _swimSpeedScale;
                         }
                         else
                         {
+                            // Player has transitioned to walking from swimming
                             _state = State::Walking;
-
-                            if(fabs(velocity.x) == _movementSpeed * _swimSpeedScale)
-                            {
-                                character->setVelocity(_movementSpeed * (velocity.x >= 0 ? 1.0f : -1.0f) , 0, 0);
-                            }
                         }
+
+                        velocity.x = (_isLeftFacing ? -_movementSpeed : _movementSpeed) * moveScale;
                     }
 
-                    float const minFallVelocity = gameplay::Game::getInstance()->getPhysicsController()->getGravity().y / 5.0f;
+                    // Make the player cower when they are pushed/walk off a ledge
+                    float const minFallVelocity = gameplay::Game::getInstance()->getPhysicsController()->getGravity().y * 0.25f;
 
                     if (velocity.y < minFallVelocity && (_state == State::Idle || _state == State::Walking))
                     {
@@ -164,15 +184,8 @@ namespace game
                     }
                 }
             }
-            else
-            {
-                if(velocity.x == 0)
-                {
-                    static float const tideSpeed = -50.0f;
-                    velocity.x = tideSpeed * (elapsedTime / 1000.0f);
-                }
-            }
 
+            // Apply new velocity if different
             if(velocity != character->getCurrentVelocity())
             {
                 velocity.z = 0.0f;
@@ -181,23 +194,33 @@ namespace game
         }
         else
         {
-            if(_state == State::Climbing)
+            // Move the player along the ladder using the input vertical movement scale
+            float const elapsedTimeMs = elapsedTime / 1000.0f;
+            float const verticalMovementSpeed = _movementSpeed / 2.0f;
+            float const previousDistToLadder = _ladderPosition.distanceSquared(_characterNode->getTranslation());
+            gameplay::Vector3 const previousPosition = _characterNode->getTranslation();
+            _characterNode->translateY((_verticalMovementScale * verticalMovementSpeed) * elapsedTimeMs);
+
+            // If the player has moved away from the ladder but they are no longer intersecting it then restore their last position
+            // and zero their movement, this will prevent them from climing beyond the top/bottom
+            if(!_climbingEnabled && previousDistToLadder < _characterNode->getTranslation().distanceSquared(_ladderPosition))
             {
-                float const elapsedTimeMs = elapsedTime / 1000.0f;
-                float const verticalMovementSpeed = _movementSpeed / 2.0f;
-                _characterNode->translateY((_movementScale * verticalMovementSpeed) * elapsedTimeMs);
+                _characterNode->setTranslation(previousPosition);
+                _verticalMovementScale = 0.0f;
             }
         }
 
+        // Play animation if different
         if(_state != _previousState)
         {
             _animations[_previousState]->stop();
             getCurrentAnimation()->play();
         }
 
+        // Scale the animation speed using the movement scale
         if(_state == State::Walking || _state == State::Climbing)
         {
-            getCurrentAnimation()->setSpeed(_movementScale);
+            getCurrentAnimation()->setSpeed(fabs(_state == State::Climbing ? _verticalMovementScale : _horizontalMovementScale));
         }
 
         _characterNode->setTranslationZ(0);
@@ -226,66 +249,63 @@ namespace game
 
     void PlayerComponent::setMovementEnabled(MovementDirection::Enum direction, bool enabled, float scale /* = 1.0f */)
     {
+        gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
+
         if(enabled)
         {
-            float const minDownScale = 0.75f;
-
-            if (direction != MovementDirection::Down || scale > minDownScale)
+            if(direction & MovementDirection::Horizontal)
             {
-                _movementDirection = direction;
+                // Apply state based on horizontal movement immediatley
 
-                float const minDistToLadderCentre = std::pow(_characterNode->getScaleX() / 2.0f, 2);
-                gameplay::Vector3 const ladderPos = gameplay::Vector3(_climbingSnapPositionX, _characterNode->getTranslationY(), 0.0f);
-                gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
+                _horizontalMovementDirection = direction;
 
-                if(direction == MovementDirection::Up && _climbingEnabled && _characterNode->getTranslation().distanceSquared(ladderPos) <= minDistToLadderCentre)
+                float const minHorizontalScaleToCancelClimb = 0.75f;
+
+                if(_state == State::Climbing && scale > minHorizontalScaleToCancelClimb)
                 {
-                    float const velocityY =  character->getCurrentVelocity().y;
-                    float const maxVelocityYDelta = 0.1f;
-
-                    if(velocityY >= 0.0f && velocityY <= (velocityY + maxVelocityYDelta))
-                    {
-                        _state = State::Climbing;
-                        character->setVelocity(gameplay::Vector3::zero());
-                        character->setPhysicsEnabled(false);
-                    }
+                    // Player was climbing a ladder but they moved enough horizontally that climbing should be cancelled
+                    _verticalMovementScale = 0.0f;
+                    character->setPhysicsEnabled(true);
+                    _state = State::Cowering;
                 }
-                else
+                else if (_swimmingEnabled && character->getCurrentVelocity().y == 0)
                 {
-                    if(_state == State::Climbing)
-                    {
-                        character->setPhysicsEnabled(true);
-                        _state = State::Idle;
-                    }
-                    else if (_swimmingEnabled && character->getCurrentVelocity().y == 0)
-                    {
-                        _state = State::Swimming;
-                    }
-
-                    if((direction & MovementDirection::Horizontal) == direction)
-                    {
-                        _isLeftFacing = direction == MovementDirection::Left;
-                        float horizontalSpeed = _isLeftFacing ? -_movementSpeed : _movementSpeed;
-                        horizontalSpeed *= _state == State::Swimming ? _swimSpeedScale : scale;
-                        character->setVelocity(horizontalSpeed, 0.0f, 0.0f);
-                    }
+                    // Player is colliding with a swimming surface
+                    _state = State::Swimming;
                 }
 
-                _movementScale = scale;
+                // Apply the horizontal velocity and face the player in the direction of the input provided they aren't climbing
+                if(_state != State::Climbing)
+                {
+                    _isLeftFacing = direction == MovementDirection::Left;
+                    float horizontalSpeed = _isLeftFacing ? -_movementSpeed : _movementSpeed;
+                    horizontalSpeed *= _state == State::Swimming ? scale * _swimSpeedScale : scale;
+                    character->setVelocity(horizontalSpeed, 0.0f, 0.0f);
+                    _horizontalMovementScale = scale;
+                }
+            }
+            else
+            {
+                // Cache the desired vertical movement, state will only be applied in update since we want the player
+                // to be able to apply both horizontal and vertical movement at the same time
+                _verticalMovementScale = scale * (direction == MovementDirection::Up ? 1.0f : -1.0f);
             }
         }
         else
         {
-            if(_movementDirection == direction)
+            // Zero mutually exclusive pairs left/right and up/down if input to disable matches current movement scale
+
+            if(direction & MovementDirection::Vertical)
             {
-                if(direction == MovementDirection::Up)
+                if(direction & MovementDirection::Up && _verticalMovementScale > 0 || direction & MovementDirection::Down && _verticalMovementScale < 0)
                 {
-                    _movementScale = 0.0f;
+                    _verticalMovementScale = 0.0f;
                 }
-                else
-                {
-                    _movementDirection = MovementDirection::None;
-                }
+            }
+            else if(_horizontalMovementDirection == direction)
+            {
+                _horizontalMovementDirection = MovementDirection::None;
+                _horizontalMovementScale = 0.0f;
             }
         }
     }
@@ -294,7 +314,7 @@ namespace game
     {
         if(_climbingEnabled && !enabled && _state == State::Climbing)
         {
-            _movementScale = 0.0f;
+            _verticalMovementScale = 0.0f;
         }
 
         _climbingEnabled = enabled;
@@ -310,9 +330,9 @@ namespace game
         _swimmingEnabled = enabled;
     }
 
-    void PlayerComponent::setClimpingSnapPositionX(float posX)
+    void PlayerComponent::setLadderPosition(gameplay::Vector3 const & pos)
     {
-        _climbingSnapPositionX = posX;
+        _ladderPosition = pos;
     }
 
     void PlayerComponent::jump(JumpSource::Enum source, float scale)
@@ -370,6 +390,7 @@ namespace game
             character->setVelocity(preJumpVelocity);
             character->jump(jumpHeight, !resetVelocityState);
             getParent()->broadcastMessage(_jumpMessage);
+            _verticalMovementScale = 0.0f;
         }
     }
 
