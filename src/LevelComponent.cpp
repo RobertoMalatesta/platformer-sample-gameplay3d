@@ -841,7 +841,7 @@ namespace game
             }
 
             spriteBatch->setProjectionMatrix(projection);
-            spriteBatch->draw(drawTarget._dst, getSafeDrawRect(drawTarget._src), drawTarget._scale, gameplay::Vector4(1.0f, 1.0f, 1.0f, alpha));
+            spriteBatch->draw(drawTarget._dst, drawTarget._src, drawTarget._scale, gameplay::Vector4(1.0f, 1.0f, 1.0f, alpha));
 
             _previousSpritebatch = spriteBatch;
             wasRendered = true;
