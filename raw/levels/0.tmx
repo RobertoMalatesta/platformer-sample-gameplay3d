@@ -13,7 +13,7 @@
  </layer>
  <layer name="terrain" width="63" height="25">
   <data encoding="base64" compression="zlib">
-   eJztlmEKgzAMRnsHT7XtLjvLYJMpm5ugBzUFC2Vb2thp09Y8+PCHFb7XQKtSgiD4eEN6R24MnYS8qQLflcDe3V0R8uIOaSAtd5HIjNwFVuYAORJyggxMHVMAc7+q7/+iOkahiMjcy0Kf3ZRzu0R3H+ZeG+aniWu/HpBu+2qr4rq/qXPX3k/IS+Xnj0FxN96XOan5nwO/87l/eqfkr7v1G+aXt+1vr8WgrFkKNhOuYFDWLMF4V4yuHO62d0ru/+xPiHep7hNSxJ78
+   eJztllEKgzAMQHsHT+W8i2cRtqFD3YTtoKYwoaipsXNNW/PgfVkhr4WqUoIgbPECB4s3hpmEuMkcn6XA2dttCnFRgw344B7EMx/uAQ4mBy8EC/DNNGMIYO1XtfwvuvsYyCNy7mmh727KvZ1iOxXd3hja9qsFex9DHYjt+009d93dgU8VXz8GpX3qrr6G1l86vrfVPu8OqV/PNvzRtW6z31yLQVmzF+xMuMSgrNnD1J0xtnK0m90htf+yPy7dqbaPRQ6dzQ==
   </data>
  </layer>
  <objectgroup name="characters">
@@ -99,12 +99,11 @@
    <ellipse/>
   </object>
  </objectgroup>
- <objectgroup name="collision_static" visible="0">
+ <objectgroup name="collision_static">
   <object id="31" x="768" y="1280" width="1348.6" height="6.31092"/>
   <object id="32" x="3200" y="1280" width="192" height="320"/>
   <object id="33" x="1152" y="1088" width="189.057" height="38.4923"/>
   <object id="34" x="960" y="960" width="128" height="32.7035"/>
-  <object id="35" x="1472" y="1024" width="128.923" height="36.6743"/>
   <object id="36" x="1664" y="1024" width="259.067" height="36.8098"/>
   <object id="37" x="896" y="704" width="704.69" height="37.1627"/>
   <object id="38" x="1664" y="576" width="192.688" height="36.4745"/>
@@ -135,8 +134,8 @@
   <object id="53" x="2813.82" y="1438.91" width="377.956" height="26.5418"/>
   <object id="54" x="3264" y="1152" width="64" height="128"/>
  </objectgroup>
- <objectgroup name="collision_ladder" visible="0">
-  <object id="55" x="1621" y="704" width="19.8454" height="543.916"/>
+ <objectgroup name="collision_ladder">
+  <object id="55" x="1631" y="704" width="0.708333" height="483.833"/>
  </objectgroup>
  <objectgroup name="interactive_props" visible="0">
   <object id="56" x="1858.73" y="1167.97" width="100" height="100">
