@@ -215,7 +215,7 @@ namespace game
 
         _level->forEachCachedNode(CollisionType::WATER, [this, &foregroundTileDrawCommandSize](gameplay::Node * node)
         {
-            float const submergeHeight = _player->getCharacterNode()->getScaleY();
+            float const submergeHeight = _player->getCharacterNode()->getScaleY() / 2;
             gameplay::Rectangle bounds;
             bounds.width = node->getScaleX();
             bounds.height = node->getScaleY() + submergeHeight;
