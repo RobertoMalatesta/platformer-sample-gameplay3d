@@ -11,3 +11,4 @@
 /build
 /src/org
 *.user
+user.config
