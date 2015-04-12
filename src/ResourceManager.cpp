@@ -43,6 +43,14 @@ namespace game
             _debugFont->addRef();
         }
 #endif
+        if(gameplay::Properties * mipMapNs = gameplay::Game::getInstance()->getConfig()->getNamespace("mip_maps", true))
+        {
+            while(char const * texturePath = mipMapNs->getNextProperty())
+            {
+                _mipMappedTextures.insert(texturePath);
+            }
+        }
+
         {
             PERF_SCOPE(PIXEL_TEXTURE_PATH);
             std::array<unsigned char, 4> rgba;
@@ -155,7 +163,8 @@ namespace game
         if(_cachedTextures.find(texturePath) == _cachedTextures.end())
         {
             PERF_SCOPE(texturePath);
-            gameplay::Texture * texture = gameplay::Texture::create(texturePath.c_str());
+            gameplay::Texture * texture = gameplay::Texture::create(texturePath.c_str(),
+                _mipMappedTextures.find(texturePath) != _mipMappedTextures.end());
             texture->addRef();
             _cachedTextures[texturePath] = texture;
         }

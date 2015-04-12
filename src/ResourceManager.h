@@ -3,6 +3,7 @@
 
 #include <map>
 #include <functional>
+#include <set>
 #include <string>
 #include <vector>
 #include "Ref.h"
@@ -53,6 +54,7 @@ namespace game
         std::map<std::string, gameplay::Texture *> _cachedTextures;
         std::map<std::string, PropertiesRef *> _cachedProperties;
         std::map<std::string, SpriteSheet *> _cachedSpriteSheets;
+        std::set<std::string> _mipMappedTextures;
         std::vector<std::function<void()>> _slowTasks;
 
 #ifndef _FINAL
