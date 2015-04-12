@@ -120,10 +120,9 @@ namespace game
         gameplay::Vector3 const ladderVeritcallyAlignedPosition = gameplay::Vector3(_ladderPosition.x, _characterNode->getTranslationY(), 0.0f);
         bool const isClimbRequested = fabs(_verticalMovementScale) > minVerticalScaleToInitiateClimb;
         bool const isPlayerWithinLadderClimbingDistance = _characterNode->getTranslation().distance(ladderVeritcallyAlignedPosition) <= minDistToLadderCentre;
-        bool const isPlayerAscending = velocity.y > 0;
 
         // Initiate climbing if possible
-        if(_climbingEnabled && isClimbRequested && isPlayerWithinLadderClimbingDistance && !isPlayerAscending)
+        if(_climbingEnabled && isClimbRequested && isPlayerWithinLadderClimbingDistance)
         {
             _state = State::Climbing;
 
