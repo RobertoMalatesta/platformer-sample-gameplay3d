@@ -53,7 +53,7 @@ LOCAL_SRC_FILES :=  ../external/GamePlay/gameplay/src/gameplay-main-android.cpp 
                     LevelComponent.cpp \
                     LevelLoaderComponent.cpp \
                     Platformer.cpp \
-                    PlayerAudioComponent.cpp \
+                    AudioComponent.cpp \
                     PlayerComponent.cpp \
                     PlayerHandOfGodComponent.cpp \
                     PlayerInputComponent.cpp \

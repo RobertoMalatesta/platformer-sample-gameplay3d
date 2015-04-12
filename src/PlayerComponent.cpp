@@ -387,7 +387,10 @@ namespace game
 
             character->setVelocity(preJumpVelocity);
             character->jump(jumpHeight, !resetVelocityState);
-            getParent()->broadcastMessage(_jumpMessage);
+            if(source != JumpSource::EnemyCollision)
+            {
+                getRootParent()->broadcastMessage(_jumpMessage);
+            }
             _verticalMovementScale = 0.0f;
         }
     }

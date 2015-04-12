@@ -22,6 +22,7 @@ namespace game
         , _waitForPhysicsCleanup(false)
         , _framesSinceLevelReloaded(0)
         , _forceHandOfGodMessage(nullptr)
+        , _enemyKilledMessage(nullptr)
     {
     }
 
@@ -163,12 +164,14 @@ namespace game
     void CollisionHandlerComponent::initialize()
     {
         _forceHandOfGodMessage = PlayerForceHandOfGodResetMessage::create();
+        _enemyKilledMessage = EnemyKilledMessage::create();
     }
 
     void CollisionHandlerComponent::finalize()
     {
         onLevelUnloaded();
         GAMEOBJECTS_DELETE_MESSAGE(_forceHandOfGodMessage);
+        GAMEOBJECTS_DELETE_MESSAGE(_enemyKilledMessage);
     }
 
     void CollisionHandlerComponent::collisionEvent(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
@@ -210,6 +213,7 @@ namespace game
                         if(playerBottom.intersects(enemyTop))
                         {
                             enemy->kill();
+                            getRootParent()->broadcastMessage(_enemyKilledMessage);
                             _player->jump(PlayerComponent::JumpSource::EnemyCollision);
                         }
                         else

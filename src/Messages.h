@@ -6,6 +6,7 @@
 namespace game
 {
     GAMEOBJECTS_MESSAGE_TYPES_BEGIN()
+        GAMEOBJECTS_MESSAGE_TYPE(EnemyKilled)
         GAMEOBJECTS_MESSAGE_TYPE(Key)
         GAMEOBJECTS_MESSAGE_TYPE(Mouse)
         GAMEOBJECTS_MESSAGE_TYPE(Touch)
@@ -19,6 +20,7 @@ namespace game
         GAMEOBJECTS_MESSAGE_TYPE(UpdateAndRenderLevel)
     GAMEOBJECTS_MESSAGE_TYPES_END()
 
+    GAMEOBJECTS_MESSAGE_0(EnemyKilled)
     GAMEOBJECTS_MESSAGE_0(LevelLoaded)
     GAMEOBJECTS_MESSAGE_0(LevelUnloaded)
     GAMEOBJECTS_MESSAGE_0(RequestLevelReload)

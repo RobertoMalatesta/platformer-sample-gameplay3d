@@ -59,6 +59,7 @@ namespace game
         LevelLoaderComponent * _level;
         std::set<gameplay::Node *> _playerCharacterNodes;
         gameobjects::Message * _forceHandOfGodMessage;
+        gameobjects::Message * _enemyKilledMessage;
         int _playerClimbingTerrainRefCount;
         int _playerSwimmingRefCount;
         int _framesSinceLevelReloaded;

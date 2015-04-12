@@ -12,21 +12,24 @@ namespace game
      *
      * @script{ignore}
     */
-    class PlayerAudioComponent : public gameobjects::Component
+    class AudioComponent : public gameobjects::Component
     {
     public:
-        explicit PlayerAudioComponent();
-        ~PlayerAudioComponent();
+        explicit AudioComponent();
+        ~AudioComponent();
     protected:
         virtual void initialize() override;
         virtual void finalize() override;
-        virtual bool onMessageReceived(gameobjects::Message * message, int messageType) override;
+        virtual bool onMessageReceived(gameobjects::Message *, int messageType) override;
         virtual void readProperties(gameplay::Properties & properties) override;
     private:
-        PlayerAudioComponent(PlayerAudioComponent const &);
+        AudioComponent(AudioComponent const &);
 
         void addAudioNode(std::string const & audioSourcePath);
+        void playSoundEffect(std::string const & audioSourcePath);
         std::string _jumpAudioSourcePath;
+        std::string _enemyDeathAudioSourcePath;
+        std::string _playerDeathAudioSourcePath;
         std::map<std::string, gameplay::Node *> _audioNodes;
         PlayerComponent * _player;
     };

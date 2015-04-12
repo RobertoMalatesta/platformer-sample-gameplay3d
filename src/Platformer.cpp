@@ -1,6 +1,7 @@
 #include "Common.h"
 #include "Platformer.h"
 
+#include "AudioComponent.h"
 #include "CameraControlComponent.h"
 #include "CollisionHandlerComponent.h"
 #include "CollisionObjectComponent.h"
@@ -9,7 +10,6 @@
 #include "LevelLoaderComponent.h"
 #include "LevelComponent.h"
 #include "Messages.h"
-#include "PlayerAudioComponent.h"
 #include "PlayerComponent.h"
 #include "PlayerHandOfGodComponent.h"
 #include "PlayerInputComponent.h"
@@ -99,7 +99,7 @@ namespace game
         gameobjects::GameObjectController::getInstance().registerComponent<EnemyComponent>("enemy");
         gameobjects::GameObjectController::getInstance().registerComponent<LevelLoaderComponent>("level_loader");
         gameobjects::GameObjectController::getInstance().registerComponent<LevelComponent>("level");
-        gameobjects::GameObjectController::getInstance().registerComponent<PlayerAudioComponent>("player_audio");
+        gameobjects::GameObjectController::getInstance().registerComponent<AudioComponent>("audio");
         gameobjects::GameObjectController::getInstance().registerComponent<PlayerComponent>("player");
         gameobjects::GameObjectController::getInstance().registerComponent<PlayerHandOfGodComponent>("player_hand_of_god");
         gameobjects::GameObjectController::getInstance().registerComponent<PlayerInputComponent>("player_input");

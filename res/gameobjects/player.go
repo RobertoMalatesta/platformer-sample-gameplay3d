@@ -16,11 +16,6 @@ player_input
 {
 }
 
-player_audio
-{
-    jump_sound = res/audio/player.audio#jump
-}
-
 player_hand_of_god
 {
 }
