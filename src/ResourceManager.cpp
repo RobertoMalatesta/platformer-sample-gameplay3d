@@ -35,6 +35,23 @@ namespace game
     void ResourceManager::initializeForBoot()
     {
         PERF_SCOPE("ResourceManager::initializeForBoot");
+
+        if(gameplay::Properties * userConfig = gameplay::Properties::create("user.config"))
+        {
+            while(char const * propertyName = userConfig->getNextProperty())
+            {
+                gameplay::Game::getInstance()->getConfig()->setString(propertyName, userConfig->getString());
+            }
+
+#ifdef WIN32
+            gameplay::Game::getInstance()->getConfig()->setString("debug_os", "windows");
+#else
+            gameplay::Game::getInstance()->getConfig()->setString("debug_os", "linux");
+#endif
+
+            SAFE_DELETE(userConfig);
+        }
+
 #ifndef _FINAL
         {
             std::string const fontPath = gameplay::Game::getInstance()->getConfig()->getString("debug_font");

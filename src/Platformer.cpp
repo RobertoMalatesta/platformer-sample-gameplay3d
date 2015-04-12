@@ -49,14 +49,6 @@ namespace game
         gameplay::Logger::set(gameplay::Logger::Level::LEVEL_INFO, loggingCallback);
         gameplay::Logger::set(gameplay::Logger::Level::LEVEL_WARN, loggingCallback);
         gameplay::Logger::set(gameplay::Logger::Level::LEVEL_ERROR, loggingCallback);
-
-#ifndef _FINAL
-    #ifdef WIN32
-        getConfig()->setString("debug_os", "windows");
-    #else
-        getConfig()->setString("debug_os", "linux");
-    #endif
-#endif
         ResourceManager::getInstance().initializeForBoot();
         ScreenRenderer::getInstance().initialize();
         _optionsForm = gameplay::Form::create("res/ui/options.form");
