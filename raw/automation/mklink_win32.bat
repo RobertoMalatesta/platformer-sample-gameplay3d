@@ -1,5 +1,10 @@
 set GAME_DIR=bin/%1
 
+CALL mklink /H "game.config" "../game.config"
+CALL mklink /H "user.config" "../user.config"
+CALL mklink /H "default_user.config" "../default_user.config"
+CALL mklink /J "res" "../res"
+
 call :make_links Debug
 call :make_links MinSizeRel
 call :make_links Release
