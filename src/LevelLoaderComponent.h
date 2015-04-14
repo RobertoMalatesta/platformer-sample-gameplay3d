@@ -71,6 +71,7 @@ namespace game
         void loadCharacters(gameplay::Properties * layerNamespace);
         void loadStaticCollision(gameplay::Properties * layerNamespace, CollisionType::Enum terrainType);
         void loadDynamicCollision(gameplay::Properties * layerNamespace);
+        void loadKinematicCollision(gameplay::Properties * layerNamespace);
         void loadCollectables(gameplay::Properties * layerNamespace);
         void loadBridges(gameplay::Properties * layerNamespace);
         void unload();

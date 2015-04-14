@@ -323,6 +323,33 @@ namespace game
         }
     }
 
+    void LevelLoaderComponent::loadKinematicCollision(gameplay::Properties * layerNamespace)
+    {
+        if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
+        {
+            while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
+            {
+                PropertiesRef * collisionPropertiesRef = ResourceManager::getInstance().getProperties("res/physics/level.physics#platform");
+                gameplay::Properties * collisionProperties = collisionPropertiesRef->get();
+                gameplay::Rectangle bounds = getObjectBounds(objectNamespace);
+                std::array<char, 255> dimensionsBuffer;
+                std::string dimensionsId = "extents";
+                bounds.x += bounds.width / 2;
+                bounds.y -= bounds.height / 2;
+                sprintf(&dimensionsBuffer[0], "%f, %f, 1", bounds.width, bounds.height);
+                collisionProperties->setString(dimensionsId.c_str(), &dimensionsBuffer[0]);
+                gameplay::Node * node = createCollisionObject(CollisionType::KINEMATIC, collisionProperties, bounds);
+                gameplay::Node * parent = gameplay::Node::create();
+                parent->setTranslation(node->getTranslation());
+                node->setTranslation(gameplay::Vector3::zero());
+                parent->addChild(node);
+                SAFE_RELEASE(collisionPropertiesRef);
+            }
+
+            objectsNamespace->rewind();
+        }
+    }
+
     void LevelLoaderComponent::loadCollectables(gameplay::Properties * layerNamespace)
     {
         if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
@@ -518,14 +545,22 @@ namespace game
                     {
                         collisionType = CollisionType::BRIDGE;
                     }
-
-                    if (collisionType != CollisionType::BRIDGE)
+                    else if (layerName == "collision_kinematic")
                     {
-                        loadStaticCollision(layerNamespace, collisionType);
+                        collisionType = CollisionType::KINEMATIC;
+                    }
+
+                    if (collisionType == CollisionType::BRIDGE)
+                    {
+                        loadBridges(layerNamespace);
+                    }
+                    else if(collisionType == CollisionType::KINEMATIC)
+                    {
+                        loadKinematicCollision(layerNamespace);
                     }
                     else
                     {
-                        loadBridges(layerNamespace);
+                        loadStaticCollision(layerNamespace, collisionType);
                     }
                 }
                 else if (layerName == "interactive_props")

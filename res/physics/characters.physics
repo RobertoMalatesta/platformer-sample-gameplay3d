@@ -13,6 +13,8 @@ collisionObject enemy_trigger_base
 {
     type = GHOST_OBJECT
     shape = BOX
+    linearFactor = 1, 1, 0
+    angularFactor = 0, 0, 1
 }
 
 collisionObject enemy_slime_trigger : enemy_trigger_base

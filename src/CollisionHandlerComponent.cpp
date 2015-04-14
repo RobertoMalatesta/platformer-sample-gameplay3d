@@ -61,7 +61,6 @@ namespace game
 
         playerCharacterNode->addRef();
         _playerCharacterNodes.insert(playerCharacterNode);
-        LevelLoaderComponent * level = getParent()->getComponent<LevelLoaderComponent>();
 
         for(EnemyComponent * enemy  : enemyComponents)
         {
@@ -123,6 +122,7 @@ namespace game
             addOrRemoveCollisionListener(CollisionType::RESET, this, level, playerCollisionObject, false);
             addOrRemoveCollisionListener(CollisionType::COLLECTABLE, this, level, playerCollisionObject, false);
             addOrRemoveCollisionListener(CollisionType::WATER, this, level, playerCollisionObject, false);
+            addOrRemoveCollisionListener(CollisionType::KINEMATIC, this, level, playerCollisionObject, false);
 
             SAFE_RELEASE(node);
         }
@@ -139,6 +139,7 @@ namespace game
         addOrRemoveCollisionListener(CollisionType::RESET, this, level, playerCollisionObject, true);
         addOrRemoveCollisionListener(CollisionType::COLLECTABLE, this, level, playerCollisionObject, true);
         addOrRemoveCollisionListener(CollisionType::WATER, this, level, playerCollisionObject, true);
+        addOrRemoveCollisionListener(CollisionType::KINEMATIC, this, level, playerCollisionObject, true);
 
         for (auto & enemyPair : _enemies)
         {
@@ -178,7 +179,7 @@ namespace game
                         gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
                         gameplay::Vector3 const & contactPointA, gameplay::Vector3 const & contactPointB)
     {
-        if(!_waitForPhysicsCleanup && collisionPair.objectA->getNode()->getParent() != collisionPair.objectB->getNode()->getParent())
+        if(!_waitForPhysicsCleanup)
         {
             if(!onEnemyCollision(type, collisionPair, contactPointA, contactPointB))
             {
@@ -202,12 +203,12 @@ namespace game
                     if(enemy->getState() != EnemyComponent::State::Dead)
                     {
                         float const height = std::min(collisionPair.objectA->getNode()->getScaleY(), collisionPair.objectB->getNode()->getScaleY()) * 0.5f;
-                        gameplay::Rectangle playerBottom(collisionPair.objectB->getNode()->getTranslationX() - ( collisionPair.objectB->getNode()->getScaleX() / 2),
-                                                         collisionPair.objectB->getNode()->getTranslationY() - (collisionPair.objectB->getNode()->getScaleY() / 2),
+                        gameplay::Rectangle playerBottom(_player->getPosition().x - ( collisionPair.objectB->getNode()->getScaleX() / 2),
+                                                         _player->getPosition().y - (collisionPair.objectB->getNode()->getScaleY() / 2),
                                                          collisionPair.objectB->getNode()->getScaleX(), height);
 
-                        gameplay::Rectangle enemyTop(collisionPair.objectA->getNode()->getTranslationX() -  (( collisionPair.objectA->getNode()->getScaleX()) / 2),
-                                                         collisionPair.objectA->getNode()->getTranslationY() + (collisionPair.objectA->getNode()->getScaleY() / 2) - (collisionPair.objectA->getNode()->getScaleY() * 0.2f),
+                        gameplay::Rectangle enemyTop(enemy->getPosition().x -  (( collisionPair.objectA->getNode()->getScaleX()) / 2),
+                                                         enemy->getPosition().y + (collisionPair.objectA->getNode()->getScaleY() / 2) - (collisionPair.objectA->getNode()->getScaleY() * 0.2f),
                                                          collisionPair.objectA->getNode()->getScaleX(), height);
 
                         if(playerBottom.intersects(enemyTop))
@@ -290,6 +291,11 @@ namespace game
                         _player->setSwimmingEnabled(_playerSwimmingRefCount > 0);
                         GAME_ASSERT(_playerSwimmingRefCount == MATH_CLAMP(_playerSwimmingRefCount, 0, std::numeric_limits<int>::max()),
                             "_playerSwimmingRefCount invalid %d", _playerSwimmingRefCount);
+                        break;
+                    }
+                    case CollisionType::KINEMATIC:
+                    {
+                        _player->setIntersectingKinematic(isColliding ? collisionPair.objectB->getNode() : nullptr);
                         break;
                     }
                     default:

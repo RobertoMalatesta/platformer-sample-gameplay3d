@@ -20,7 +20,8 @@ namespace game
             RESET,
             COLLECTABLE,
             WATER,
-            BRIDGE
+            BRIDGE,
+            KINEMATIC
         };
     };
 

@@ -79,6 +79,7 @@ namespace game
         gameplay::Vector2 getRenderPosition() const;
         SpriteAnimationComponent * getCurrentAnimation();
         gameplay::Node * getCharacterNode() const;
+        void setIntersectingKinematic(gameplay::Node * node);
         void setSwimmingEnabled(bool enabled);
         void setClimbingEnabled(bool enabled);
         void setLadderPosition(gameplay::Vector3 const & pos);
@@ -89,10 +90,12 @@ namespace game
     private:
         PlayerComponent(PlayerComponent const &);
 
+        void attachToKinematic();
+        void detachFromKinematic();
+
         PlayerInputComponent * _playerInputComponent;
         PlayerHandOfGodComponent * _playerHandOfGodComponent;
         gameplay::Node * _characterNode;
-        gameplay::Node * _characterNormalNode;
         std::map<State::Enum, SpriteAnimationComponent*> _animations;
         State::Enum _state;
         bool _isLeftFacing;
@@ -107,6 +110,7 @@ namespace game
         float _jumpHeight;
         gameplay::Vector3 _ladderPosition;
         gameplay::Vector3 _previousClimbPosition;
+        gameplay::Node * _kinematicNode;
 
         std::string _idleAnimComponentId;
         std::string _walkAnimComponentId;

@@ -17,6 +17,12 @@ collisionObject ladder : world_collision
     type = GHOST_OBJECT
 }
 
+collisionObject platform : world_collision
+{
+    kinematic = true
+    mass = 100
+}
+
 collisionObject bridge : world_collision
 {
     kinematic = false

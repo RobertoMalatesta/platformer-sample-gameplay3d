@@ -8,6 +8,9 @@
 #include "PlayerInputComponent.h"
 #include "PlayerHandOfGodComponent.h"
 #include "PhysicsCharacter.h"
+#include "Properties.h"
+#include "PropertiesRef.h"
+#include "ResourceManager.h"
 #include "SpriteAnimationComponent.h"
 
 namespace game
@@ -19,7 +22,6 @@ namespace game
         , _movementSpeed(5.0f)
         , _jumpHeight(1.0f)
         , _characterNode(nullptr)
-        , _characterNormalNode(nullptr)
         , _horizontalMovementScale(0.0f)
         , _verticalMovementScale(0.0f)
         , _jumpMessage(nullptr)
@@ -28,6 +30,7 @@ namespace game
         , _swimSpeedScale(1.0f)
         , _playerInputComponent(nullptr)
         , _playerHandOfGodComponent(nullptr)
+        , _kinematicNode(nullptr)
     {
     }
 
@@ -44,9 +47,11 @@ namespace game
         _animations[State::Climbing] = getParent()->findComponent<SpriteAnimationComponent>(_climbingCharacterComponentId);
         _animations[State::Swimming] = getParent()->findComponent<SpriteAnimationComponent>(_swimmingCharacterComponentId);
 
-        _characterNormalNode = getParent()->findComponent<CollisionObjectComponent>(_normalCharacterComponentId)->getNode();
-        _characterNormalNode->addRef();
-        _characterNode = _characterNormalNode;
+        _characterNode = getParent()->findComponent<CollisionObjectComponent>(_normalCharacterComponentId)->getNode();
+        _characterNode->getParent()->removeChild(_characterNode);
+        getParent()->getNode()->addChild(_characterNode);
+        _characterNode->release();
+
         _jumpMessage = PlayerJumpMessage::create();
         _state = State::Idle;
 
@@ -58,8 +63,15 @@ namespace game
 
     void PlayerComponent::finalize()
     {
-        _characterNode = nullptr;
-        SAFE_RELEASE(_characterNormalNode);
+        getParent()->getNode()->removeAllChildren();
+
+        if(_kinematicNode)
+        {
+            _kinematicNode->getParent()->removeAllChildren();
+            SAFE_RELEASE(_kinematicNode);
+        }
+
+        SAFE_RELEASE(_characterNode);
         SAFE_RELEASE(_playerHandOfGodComponent);
         SAFE_RELEASE(_playerInputComponent);
         GAMEOBJECTS_DELETE_MESSAGE(_jumpMessage);
@@ -86,7 +98,8 @@ namespace game
 
     gameplay::Vector2 PlayerComponent::getPosition() const
     {
-        return gameplay::Vector2(_characterNode->getTranslation().x, _characterNode->getTranslation().y);
+        return gameplay::Vector2(_characterNode->getTranslation().x + _characterNode->getParent()->getTranslation().x,
+                                 _characterNode->getTranslation().y + _characterNode->getParent()->getTranslation().y);
     }
 
     gameplay::Vector2 PlayerComponent::getRenderPosition() const
@@ -117,9 +130,9 @@ namespace game
         gameplay::Vector3 velocity = character->getCurrentVelocity();
         float const minVerticalScaleToInitiateClimb = 0.35f;
         float const minDistToLadderCentre = _characterNode->getScaleX() * 0.15f;
-        gameplay::Vector3 const ladderVeritcallyAlignedPosition = gameplay::Vector3(_ladderPosition.x, _characterNode->getTranslationY(), 0.0f);
+        gameplay::Vector2 const ladderVeritcallyAlignedPosition = gameplay::Vector2(_ladderPosition.x, getPosition().y);
         bool const isClimbRequested = fabs(_verticalMovementScale) > minVerticalScaleToInitiateClimb;
-        bool const isPlayerWithinLadderClimbingDistance = _characterNode->getTranslation().distance(ladderVeritcallyAlignedPosition) <= minDistToLadderCentre;
+        bool const isPlayerWithinLadderClimbingDistance = getPosition().distance(ladderVeritcallyAlignedPosition) <= minDistToLadderCentre;
 
         // Initiate climbing if possible
         if(_climbingEnabled && isClimbRequested && isPlayerWithinLadderClimbingDistance)
@@ -306,6 +319,43 @@ namespace game
                 _horizontalMovementDirection = MovementDirection::None;
                 _horizontalMovementScale = 0.0f;
             }
+        }
+    }
+
+    void PlayerComponent::attachToKinematic()
+    {
+        _characterNode->setTranslation(_characterNode->getTranslation() - _kinematicNode->getParent()->getTranslation());
+        _kinematicNode->getParent()->addChild(_characterNode);
+    }
+
+    void PlayerComponent::detachFromKinematic()
+    {
+        _characterNode->setTranslation(_characterNode->getTranslation() + _kinematicNode->getParent()->getTranslation());
+        _kinematicNode->getParent()->removeChild(_characterNode);
+        getParent()->getNode()->addChild(_characterNode);
+        SAFE_RELEASE(_kinematicNode);
+    }
+
+    void PlayerComponent::setIntersectingKinematic(gameplay::Node * node)
+    {
+        if(node)
+        {
+            if(!_kinematicNode || _kinematicNode != node)
+            {
+                if(_kinematicNode)
+                {
+                    detachFromKinematic();
+                }
+
+                node->addRef();
+                _kinematicNode = node;
+
+                attachToKinematic();
+            }
+        }
+        else if(_kinematicNode)
+        {
+            detachFromKinematic();
         }
     }
 
