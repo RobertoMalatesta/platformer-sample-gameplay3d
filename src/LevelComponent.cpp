@@ -216,7 +216,7 @@ namespace game
 
         _level->forEachCachedNode(CollisionType::WATER, [this, &foregroundTileDrawCommandSize](gameplay::Node * node)
         {
-            float const submergeHeight = _player->getCharacterNode()->getScaleY() / 2;
+            float const submergeHeight = _player->getPhysicsNode()->getScaleY() / 2;
             gameplay::Rectangle bounds;
             bounds.width = node->getScaleX();
             bounds.height = node->getScaleY() + submergeHeight;
@@ -904,7 +904,7 @@ namespace game
             gameplay::SpriteBatch * spriteBatch = font->getSpriteBatch(font->getSize());
             spriteBatch->setProjectionMatrix(projection);
 
-            gameplay::PhysicsCharacter * playerCharacter = static_cast<gameplay::PhysicsCharacter*>(_player->getCharacterNode()->getCollisionObject());
+            gameplay::PhysicsCharacter * playerCharacter = static_cast<gameplay::PhysicsCharacter*>(_player->getPhysicsNode()->getCollisionObject());
             gameplay::Vector2 playerVelocity(playerCharacter->getCurrentVelocity().x, playerCharacter->getCurrentVelocity().y);
             gameplay::Vector2 playerPosition(_player->getRenderPosition());
             renderCharacterDataDebug(drawPositions ? &playerPosition : nullptr, drawPlayerVelocity ? &playerVelocity : nullptr, _player->getRenderPosition() / unitToPixelScale, font);

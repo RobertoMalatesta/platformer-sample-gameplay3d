@@ -20,8 +20,11 @@ namespace game
      *
      * @script{ignore}
     */
-    class CollisionHandlerComponent : public gameobjects::Component, public gameplay::PhysicsCollisionObject::CollisionListener
+    class CollisionHandlerComponent : public gameobjects::Component
     {
+        friend class EnemyCollisionListener;
+        friend class PlayerCollisionListener;
+
     public:
         explicit CollisionHandlerComponent();
         ~CollisionHandlerComponent();
@@ -30,34 +33,50 @@ namespace game
         void update(float elapsedTime);
         virtual void initialize() override;
         virtual void finalize() override;
-        virtual void collisionEvent(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
-                            gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
-                            gameplay::Vector3 const &, gameplay::Vector3 const &) override;
+
     private:
         CollisionHandlerComponent(CollisionHandlerComponent const &);
 
         void onLevelLoaded();
         void onLevelUnloaded();
-        void addPlayerCollisionListeners(gameplay::PhysicsCollisionObject * playerCollisionObject);
 
         /**
          * Handles collision events between an enemy (contact A) and the player (contact B)
          */
-        bool onEnemyCollision(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
+        void onEnemyCollision(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
                               gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
                               gameplay::Vector3 const &, gameplay::Vector3 const &);
 
         /**
          * Handles collision events between the player (contact A) and the terrain (contact B)
          */
-        bool onPlayerCollision(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
+        void onPlayerCollision(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
                             gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
                             gameplay::Vector3 const & contactPointA, gameplay::Vector3 const & contactPointB);
 
+        struct EnemyCollisionListener : public gameplay::PhysicsCollisionObject::CollisionListener, gameplay::Ref
+        {
+            virtual void collisionEvent(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
+                                gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
+                                gameplay::Vector3 const &, gameplay::Vector3 const &) override;
+            CollisionHandlerComponent * _collisionHandler;
+        };
+
+        struct PlayerCollisionListener : public gameplay::PhysicsCollisionObject::CollisionListener, gameplay::Ref
+        {
+            virtual void collisionEvent(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
+                                gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
+                                gameplay::Vector3 const &, gameplay::Vector3 const &) override;
+            CollisionHandlerComponent * _collisionHandler;
+        };
+
+        EnemyCollisionListener * _enemyCollisionListener;
+        PlayerCollisionListener * _playerCollisionListener;
         std::map<gameplay::PhysicsCollisionObject *, EnemyComponent *> _enemies;
         PlayerComponent * _player;
         LevelLoaderComponent * _level;
-        std::set<gameplay::Node *> _playerCharacterNodes;
+        gameplay::Node * _playerPhysicsNode;
+        gameplay::Node * _playerTriggerNode;
         gameobjects::Message * _forceHandOfGodMessage;
         gameobjects::Message * _enemyKilledMessage;
         int _playerClimbingTerrainRefCount;

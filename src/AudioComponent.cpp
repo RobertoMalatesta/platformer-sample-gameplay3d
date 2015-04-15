@@ -62,7 +62,7 @@ namespace game
     void AudioComponent::playSoundEffect(std::string const & audioSourcePath)
     {
         gameplay::Node * audioNode = _audioNodes[audioSourcePath];
-        audioNode->setTranslation(_player->getCharacterNode()->getTranslation());
+        audioNode->setTranslation(_player->getPhysicsNode()->getTranslation());
         gameplay::AudioSource * source = audioNode->getAudioSource();
         source->setGain(1.0f);
         source->play();

@@ -9,9 +9,6 @@
 #include "PhysicsCharacter.h"
 #include "LevelCollision.h"
 
-// REMOVE
-#include "Game.h"
-
 namespace game
 {
     CollisionHandlerComponent::CollisionHandlerComponent()
@@ -23,6 +20,10 @@ namespace game
         , _framesSinceLevelReloaded(0)
         , _forceHandOfGodMessage(nullptr)
         , _enemyKilledMessage(nullptr)
+        , _playerTriggerNode(nullptr)
+        , _playerPhysicsNode(nullptr)
+        , _enemyCollisionListener(nullptr)
+        , _playerCollisionListener(nullptr)
     {
     }
 
@@ -47,33 +48,6 @@ namespace game
         return true;
     }
 
-    void CollisionHandlerComponent::onLevelLoaded()
-    {
-        _playerClimbingTerrainRefCount = 0;
-        _playerSwimmingRefCount = 0;
-        _waitForPhysicsCleanup = true;
-        std::vector<EnemyComponent *> enemyComponents;
-        getParent()->getComponentsInChildren(enemyComponents);
-
-        _player = getParent()->getComponentInChildren<PlayerComponent>();
-        _player->addRef();
-        gameplay::Node * playerCharacterNode = _player->getCharacterNode();
-
-        playerCharacterNode->addRef();
-        _playerCharacterNodes.insert(playerCharacterNode);
-
-        for(EnemyComponent * enemy  : enemyComponents)
-        {
-            enemy->addRef();
-            gameplay::Node * enemyNode = enemy->getTriggerNode();
-            enemyNode->addRef();
-            gameplay::PhysicsCollisionObject * enemyPhysics = enemyNode->getCollisionObject();
-            _enemies[enemyPhysics] = enemy;
-        }
-
-        addPlayerCollisionListeners(playerCharacterNode->getCollisionObject());
-    }
-
     void addOrRemoveCollisionListener(CollisionType::Enum collisionType,
                                       gameplay::PhysicsRigidBody::CollisionListener * listener,
                                       LevelLoaderComponent * level,
@@ -94,6 +68,44 @@ namespace game
         });
     }
 
+    void CollisionHandlerComponent::onLevelLoaded()
+    {
+        _playerClimbingTerrainRefCount = 0;
+        _playerSwimmingRefCount = 0;
+        _waitForPhysicsCleanup = true;
+        std::vector<EnemyComponent *> enemyComponents;
+        getParent()->getComponentsInChildren(enemyComponents);
+
+        _player = getParent()->getComponentInChildren<PlayerComponent>();
+        _player->addRef();
+        _playerPhysicsNode = _player->getPhysicsNode();
+        _playerPhysicsNode->addRef();
+        _playerTriggerNode = _player->getTriggerNode();
+        _playerTriggerNode->addRef();
+
+        for(EnemyComponent * enemy  : enemyComponents)
+        {
+            enemy->addRef();
+            gameplay::Node * enemyNode = enemy->getTriggerNode();
+            enemyNode->addRef();
+            gameplay::PhysicsCollisionObject * enemyPhysics = enemyNode->getCollisionObject();
+            _enemies[enemyPhysics] = enemy;
+        }
+
+        LevelLoaderComponent * level = getParent()->getComponent<LevelLoaderComponent>();
+        addOrRemoveCollisionListener(CollisionType::LADDER, _playerCollisionListener, level, _playerTriggerNode->getCollisionObject(), true);
+        addOrRemoveCollisionListener(CollisionType::RESET, _playerCollisionListener, level, _playerTriggerNode->getCollisionObject(), true);
+        addOrRemoveCollisionListener(CollisionType::COLLECTABLE, _playerCollisionListener, level, _playerTriggerNode->getCollisionObject(), true);
+        addOrRemoveCollisionListener(CollisionType::WATER, _playerCollisionListener, level, _playerPhysicsNode->getCollisionObject(), true);
+        addOrRemoveCollisionListener(CollisionType::KINEMATIC, _playerCollisionListener, level, _playerPhysicsNode->getCollisionObject(), true);
+
+        for (auto & enemyPair : _enemies)
+        {
+            EnemyComponent * enemyComponent = enemyPair.second;
+            enemyComponent->getTriggerNode()->getCollisionObject()->addCollisionListener(_enemyCollisionListener, _playerTriggerNode->getCollisionObject());
+        }
+    }
+
     void CollisionHandlerComponent::onLevelUnloaded()
     {
         LevelLoaderComponent * level = getParent()->getComponent<LevelLoaderComponent>();
@@ -104,10 +116,7 @@ namespace game
             gameplay::PhysicsCollisionObject * enemyPhysics = enemyPair.first;
             gameplay::Node * enemyNode = enemyPhysics->getNode();
 
-            for (gameplay::Node * node : _playerCharacterNodes)
-            {
-                node->getCollisionObject()->removeCollisionListener(this, node->getCollisionObject());
-            }
+            _playerTriggerNode->getCollisionObject()->removeCollisionListener(_enemyCollisionListener, _playerTriggerNode->getCollisionObject());
 
             SAFE_RELEASE(enemyNode);
             SAFE_RELEASE(enemyComponent);
@@ -115,37 +124,18 @@ namespace game
 
         _enemies.clear();
 
-        for(gameplay::Node * node : _playerCharacterNodes)
+        if(_playerPhysicsNode)
         {
-            gameplay::PhysicsCollisionObject * playerCollisionObject = node->getCollisionObject();
-            addOrRemoveCollisionListener(CollisionType::LADDER, this, level, playerCollisionObject, false);
-            addOrRemoveCollisionListener(CollisionType::RESET, this, level, playerCollisionObject, false);
-            addOrRemoveCollisionListener(CollisionType::COLLECTABLE, this, level, playerCollisionObject, false);
-            addOrRemoveCollisionListener(CollisionType::WATER, this, level, playerCollisionObject, false);
-            addOrRemoveCollisionListener(CollisionType::KINEMATIC, this, level, playerCollisionObject, false);
-
-            SAFE_RELEASE(node);
+            addOrRemoveCollisionListener(CollisionType::LADDER, _playerCollisionListener, level, _playerTriggerNode->getCollisionObject(), false);
+            addOrRemoveCollisionListener(CollisionType::RESET, _playerCollisionListener, level, _playerTriggerNode->getCollisionObject(), false);
+            addOrRemoveCollisionListener(CollisionType::COLLECTABLE, _playerCollisionListener, level, _playerTriggerNode->getCollisionObject(), false);
+            addOrRemoveCollisionListener(CollisionType::WATER, _playerCollisionListener, level, _playerPhysicsNode->getCollisionObject(), false);
+            addOrRemoveCollisionListener(CollisionType::KINEMATIC, _playerCollisionListener, level, _playerPhysicsNode->getCollisionObject(), false);
         }
 
-        _playerCharacterNodes.clear();
-
+        SAFE_RELEASE(_playerPhysicsNode);
+        SAFE_RELEASE(_playerTriggerNode);
         SAFE_RELEASE(_player);
-    }
-
-    void CollisionHandlerComponent::addPlayerCollisionListeners(gameplay::PhysicsCollisionObject * playerCollisionObject)
-    {
-        LevelLoaderComponent * level = getParent()->getComponent<LevelLoaderComponent>();
-        addOrRemoveCollisionListener(CollisionType::LADDER, this, level, playerCollisionObject, true);
-        addOrRemoveCollisionListener(CollisionType::RESET, this, level, playerCollisionObject, true);
-        addOrRemoveCollisionListener(CollisionType::COLLECTABLE, this, level, playerCollisionObject, true);
-        addOrRemoveCollisionListener(CollisionType::WATER, this, level, playerCollisionObject, true);
-        addOrRemoveCollisionListener(CollisionType::KINEMATIC, this, level, playerCollisionObject, true);
-
-        for (auto & enemyPair : _enemies)
-        {
-            EnemyComponent * enemyComponent = enemyPair.second;
-            enemyComponent->getTriggerNode()->getCollisionObject()->addCollisionListener(this, playerCollisionObject);
-        }
     }
 
     void CollisionHandlerComponent::update(float elapsedTime)
@@ -166,6 +156,10 @@ namespace game
     {
         _forceHandOfGodMessage = PlayerForceHandOfGodResetMessage::create();
         _enemyKilledMessage = EnemyKilledMessage::create();
+        _playerCollisionListener = new PlayerCollisionListener();
+        _playerCollisionListener->_collisionHandler = this;
+        _enemyCollisionListener = new EnemyCollisionListener();
+        _enemyCollisionListener->_collisionHandler = this;
     }
 
     void CollisionHandlerComponent::finalize()
@@ -173,22 +167,31 @@ namespace game
         onLevelUnloaded();
         GAMEOBJECTS_DELETE_MESSAGE(_forceHandOfGodMessage);
         GAMEOBJECTS_DELETE_MESSAGE(_enemyKilledMessage);
+        SAFE_RELEASE(_playerCollisionListener);
+        SAFE_RELEASE(_enemyCollisionListener);
     }
 
-    void CollisionHandlerComponent::collisionEvent(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
+    void CollisionHandlerComponent::EnemyCollisionListener::collisionEvent(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
                         gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
                         gameplay::Vector3 const & contactPointA, gameplay::Vector3 const & contactPointB)
     {
-        if(!_waitForPhysicsCleanup)
+        if(!_collisionHandler->_waitForPhysicsCleanup)
         {
-            if(!onEnemyCollision(type, collisionPair, contactPointA, contactPointB))
-            {
-                onPlayerCollision(type, collisionPair, contactPointA, contactPointB);
-            }
+            _collisionHandler->onEnemyCollision(type, collisionPair, contactPointA, contactPointB);
         }
     }
 
-    bool CollisionHandlerComponent::onEnemyCollision(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
+    void CollisionHandlerComponent::PlayerCollisionListener::collisionEvent(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
+                        gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
+                        gameplay::Vector3 const & contactPointA, gameplay::Vector3 const & contactPointB)
+    {
+        if(!_collisionHandler->_waitForPhysicsCleanup)
+        {
+            _collisionHandler->onPlayerCollision(type, collisionPair, contactPointA, contactPointB);
+        }
+    }
+
+    void CollisionHandlerComponent::onEnemyCollision(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
                                                      gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
                                                      gameplay::Vector3 const &, gameplay::Vector3 const &)
     {
@@ -196,38 +199,40 @@ namespace game
         {
             switch(collisionPair.objectB->getType())
             {
-            case gameplay::PhysicsCollisionObject::Type::CHARACTER:
+            case gameplay::PhysicsCollisionObject::Type::GHOST_OBJECT:
                 {
                     EnemyComponent * enemy = gameobjects::GameObject::getGameObject(collisionPair.objectA->getNode()->getParent())->getComponent<EnemyComponent>();
-
                     if(enemy->getState() != EnemyComponent::State::Dead)
                     {
                         float const height = std::min(collisionPair.objectA->getNode()->getScaleY(), collisionPair.objectB->getNode()->getScaleY()) * 0.5f;
-                        gameplay::Rectangle playerBottom(_player->getPosition().x - ( collisionPair.objectB->getNode()->getScaleX() / 2),
-                                                         _player->getPosition().y - (collisionPair.objectB->getNode()->getScaleY() / 2),
+                        gameplay::Rectangle const playerBottom(_player->getRenderPosition().x - ( collisionPair.objectB->getNode()->getScaleX() / 2),
+                                                         _player->getRenderPosition().y - (collisionPair.objectB->getNode()->getScaleY() / 2),
                                                          collisionPair.objectB->getNode()->getScaleX(), height);
 
-                        gameplay::Rectangle enemyTop(enemy->getPosition().x -  (( collisionPair.objectA->getNode()->getScaleX()) / 2),
+                        gameplay::Rectangle const enemyTop(enemy->getPosition().x -  (( collisionPair.objectA->getNode()->getScaleX()) / 2),
                                                          enemy->getPosition().y + (collisionPair.objectA->getNode()->getScaleY() / 2) - (collisionPair.objectA->getNode()->getScaleY() * 0.2f),
                                                          collisionPair.objectA->getNode()->getScaleX(), height);
 
                         if(playerBottom.intersects(enemyTop))
                         {
-                            enemy->kill();
-                            getRootParent()->broadcastMessage(_enemyKilledMessage);
-                            _player->jump(PlayerComponent::JumpSource::EnemyCollision);
+                            gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_player->getPhysicsNode()->getCollisionObject());
+
+                            if(character->getCurrentVelocity().y <= 0)
+                            {
+                                enemy->kill();
+                                getRootParent()->broadcastMessage(_enemyKilledMessage);
+                                _player->jump(PlayerComponent::JumpSource::EnemyCollision);
+                            }
                         }
                         else
                         {
                             getRootParent()->broadcastMessage(_forceHandOfGodMessage);
                         }
                     }
-
-                    return true;
                 }
                 break;
             case gameplay::PhysicsCollisionObject::Type::RIGID_BODY:
-            case gameplay::PhysicsCollisionObject::Type::GHOST_OBJECT:
+            case gameplay::PhysicsCollisionObject::Type::CHARACTER:
             case gameplay::PhysicsCollisionObject::Type::VEHICLE:
             case gameplay::PhysicsCollisionObject::Type::VEHICLE_WHEEL:
             case gameplay::PhysicsCollisionObject::Type::NONE:
@@ -235,75 +240,66 @@ namespace game
             default:
                 GAME_ASSERTFAIL("Unhandled PhysicsCollisionObject type %d", collisionPair.objectB->getType());
             }
-
-
         }
-
-        return false;
     }
 
-    bool CollisionHandlerComponent::onPlayerCollision(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
+    void CollisionHandlerComponent::onPlayerCollision(gameplay::PhysicsCollisionObject::CollisionListener::EventType type,
                         gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
                         gameplay::Vector3 const &, gameplay::Vector3 const &)
     {
-        if(collisionPair.objectA == _player->getCharacterNode()->getCollisionObject())
+        if(NodeCollisionInfo * NodeCollisionInfo = NodeCollisionInfo::getNodeCollisionInfo(collisionPair.objectB->getNode()))
         {
-            if(NodeCollisionInfo * NodeCollisionInfo = NodeCollisionInfo::getNodeCollisionInfo(collisionPair.objectB->getNode()))
+            bool const isColliding = type == gameplay::PhysicsCollisionObject::CollisionListener::EventType::COLLIDING;
+
+            switch (NodeCollisionInfo->_CollisionType)
             {
-                bool const isColliding = type == gameplay::PhysicsCollisionObject::CollisionListener::EventType::COLLIDING;
-
-                switch (NodeCollisionInfo->_CollisionType)
+                case CollisionType::LADDER:
                 {
-                    case CollisionType::LADDER:
+                    if (isColliding)
                     {
-                        if (isColliding)
-                        {
-                            _player->setLadderPosition(collisionPair.objectB->getNode()->getTranslation());
-                            ++_playerClimbingTerrainRefCount;
-                        }
-                        else
-                        {
-                            --_playerClimbingTerrainRefCount;
-                        }
+                        _player->setLadderPosition(collisionPair.objectB->getNode()->getTranslation());
+                        ++_playerClimbingTerrainRefCount;
+                    }
+                    else
+                    {
+                        --_playerClimbingTerrainRefCount;
+                    }
 
-                        GAME_ASSERT(_playerClimbingTerrainRefCount == MATH_CLAMP(_playerClimbingTerrainRefCount, 0, std::numeric_limits<int>::max()),
-                            "_playerClimbingTerrainRefCount invalid %d", _playerClimbingTerrainRefCount);
-                        _player->setClimbingEnabled(_playerClimbingTerrainRefCount > 0);
-                        return true;
-                    }
-                    case CollisionType::RESET:
-                    {
-                        if (isColliding)
-                        {
-                            getRootParent()->broadcastMessage(_forceHandOfGodMessage);
-                        }
-                        return true;
-                    }
-                    case CollisionType::COLLECTABLE:
-                    {
-                        LevelLoaderComponent * level = getParent()->getComponent<LevelLoaderComponent>();
-                        level->consumeCollectable(collisionPair.objectB->getNode());
-                        return true;
-                    }
-                    case CollisionType::WATER:
-                    {
-                        isColliding ? ++_playerSwimmingRefCount : --_playerSwimmingRefCount;
-                        _player->setSwimmingEnabled(_playerSwimmingRefCount > 0);
-                        GAME_ASSERT(_playerSwimmingRefCount == MATH_CLAMP(_playerSwimmingRefCount, 0, std::numeric_limits<int>::max()),
-                            "_playerSwimmingRefCount invalid %d", _playerSwimmingRefCount);
-                        break;
-                    }
-                    case CollisionType::KINEMATIC:
-                    {
-                        _player->setIntersectingKinematic(isColliding ? collisionPair.objectB->getNode() : nullptr);
-                        break;
-                    }
-                    default:
-                        GAME_ASSERTFAIL("Unhandled terrain collision type %d", NodeCollisionInfo->_CollisionType);
+                    GAME_ASSERT(_playerClimbingTerrainRefCount == MATH_CLAMP(_playerClimbingTerrainRefCount, 0, std::numeric_limits<int>::max()),
+                        "_playerClimbingTerrainRefCount invalid %d", _playerClimbingTerrainRefCount);
+                    _player->setClimbingEnabled(_playerClimbingTerrainRefCount > 0);
+                    break;
                 }
+                case CollisionType::RESET:
+                {
+                    if (isColliding)
+                    {
+                        getRootParent()->broadcastMessage(_forceHandOfGodMessage);
+                    }
+                    break;
+                }
+                case CollisionType::COLLECTABLE:
+                {
+                    LevelLoaderComponent * level = getParent()->getComponent<LevelLoaderComponent>();
+                    level->consumeCollectable(collisionPair.objectB->getNode());
+                    break;
+                }
+                case CollisionType::WATER:
+                {
+                    isColliding ? ++_playerSwimmingRefCount : --_playerSwimmingRefCount;
+                    _player->setSwimmingEnabled(_playerSwimmingRefCount > 0);
+                    GAME_ASSERT(_playerSwimmingRefCount == MATH_CLAMP(_playerSwimmingRefCount, 0, std::numeric_limits<int>::max()),
+                        "_playerSwimmingRefCount invalid %d", _playerSwimmingRefCount);
+                    break;
+                }
+                case CollisionType::KINEMATIC:
+                {
+                    _player->setIntersectingKinematic(isColliding ? collisionPair.objectB->getNode() : nullptr);
+                    break;
+                }
+                default:
+                    GAME_ASSERTFAIL("Unhandled terrain collision type %d", NodeCollisionInfo->_CollisionType);
             }
         }
-
-        return false;
     }
 }

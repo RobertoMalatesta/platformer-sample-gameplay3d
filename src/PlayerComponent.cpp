@@ -21,7 +21,7 @@ namespace game
         , _previousState(State::Idle)
         , _movementSpeed(5.0f)
         , _jumpHeight(1.0f)
-        , _characterNode(nullptr)
+        , _physicsNode(nullptr)
         , _horizontalMovementScale(0.0f)
         , _verticalMovementScale(0.0f)
         , _jumpMessage(nullptr)
@@ -47,10 +47,13 @@ namespace game
         _animations[State::Climbing] = getParent()->findComponent<SpriteAnimationComponent>(_climbingCharacterComponentId);
         _animations[State::Swimming] = getParent()->findComponent<SpriteAnimationComponent>(_swimmingCharacterComponentId);
 
-        _characterNode = getParent()->findComponent<CollisionObjectComponent>(_normalCharacterComponentId)->getNode();
-        _characterNode->addRef();
-        _characterNode->getParent()->removeChild(_characterNode);
-        getParent()->getNode()->addChild(_characterNode);
+        _physicsNode = getParent()->findComponent<CollisionObjectComponent>(_physicsComponentId)->getNode();
+        _physicsNode->addRef();
+        _physicsNode->getParent()->removeChild(_physicsNode);
+        getParent()->getNode()->addChild(_physicsNode);
+
+        _triggerNode = getParent()->findComponent<CollisionObjectComponent>(_triggerComponentId)->getNode();
+        _triggerNode->addRef();
 
         _jumpMessage = PlayerJumpMessage::create();
         _state = State::Idle;
@@ -71,7 +74,8 @@ namespace game
             SAFE_RELEASE(_kinematicNode);
         }
 
-        SAFE_RELEASE(_characterNode);
+        SAFE_RELEASE(_triggerNode);
+        SAFE_RELEASE(_physicsNode);
         SAFE_RELEASE(_playerHandOfGodComponent);
         SAFE_RELEASE(_playerInputComponent);
         GAMEOBJECTS_DELETE_MESSAGE(_jumpMessage);
@@ -88,7 +92,8 @@ namespace game
         _movementSpeed = properties.getFloat("speed");
         _swimSpeedScale = properties.getFloat("swim_speed_scale");
         _jumpHeight = properties.getFloat("jump_height");
-        _normalCharacterComponentId = properties.getString("normal_physics");
+        _physicsComponentId = properties.getString("physics");
+        _triggerComponentId = properties.getString("trigger");
     }
 
     PlayerComponent::State::Enum PlayerComponent::getState() const
@@ -98,13 +103,13 @@ namespace game
 
     gameplay::Vector2 PlayerComponent::getPosition() const
     {
-        return gameplay::Vector2(_characterNode->getTranslation().x + _characterNode->getParent()->getTranslation().x,
-                                 _characterNode->getTranslation().y + _characterNode->getParent()->getTranslation().y);
+        return gameplay::Vector2(_physicsNode->getTranslation().x + _physicsNode->getParent()->getTranslation().x,
+                                 _physicsNode->getTranslation().y + _physicsNode->getParent()->getTranslation().y);
     }
 
     gameplay::Vector2 PlayerComponent::getRenderPosition() const
     {
-        gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
+        gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_physicsNode->getCollisionObject());
         return gameplay::Vector2(character->getInterpolatedPosition().x, character->getInterpolatedPosition().y);
     }
 
@@ -126,13 +131,13 @@ namespace game
             _playerInputComponent->update();
         }
 
-        gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
+        gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_physicsNode->getCollisionObject());
         gameplay::Vector3 velocity = character->getCurrentVelocity();
         float const minVerticalScaleToInitiateClimb = 0.35f;
-        float const minDistToLadderCentre = _characterNode->getScaleX() * 0.15f;
-        gameplay::Vector2 const ladderVeritcallyAlignedPosition = gameplay::Vector2(_ladderPosition.x, getPosition().y);
+        float const minDistToLadderCentre = _physicsNode->getScaleX() * 0.15f;
+        gameplay::Vector2 const ladderVeritcallyAlignedPosition = gameplay::Vector2(_ladderPosition.x, getRenderPosition().y);
         bool const isClimbRequested = fabs(_verticalMovementScale) > minVerticalScaleToInitiateClimb;
-        bool const isPlayerWithinLadderClimbingDistance = getPosition().distance(ladderVeritcallyAlignedPosition) <= minDistToLadderCentre;
+        bool const isPlayerWithinLadderClimbingDistance = getRenderPosition().distance(ladderVeritcallyAlignedPosition) <= minDistToLadderCentre;
 
         // Initiate climbing if possible
         if(_climbingEnabled && isClimbRequested && isPlayerWithinLadderClimbingDistance)
@@ -209,15 +214,15 @@ namespace game
             // Move the player along the ladder using the input vertical movement scale
             float const elapsedTimeMs = elapsedTime / 1000.0f;
             float const verticalMovementSpeed = _movementSpeed / 2.0f;
-            float const previousDistToLadder = _ladderPosition.distanceSquared(_characterNode->getTranslation());
-            gameplay::Vector3 const previousPosition = _characterNode->getTranslation();
-            _characterNode->translateY((_verticalMovementScale * verticalMovementSpeed) * elapsedTimeMs);
+            float const previousDistToLadder = _ladderPosition.distanceSquared(_physicsNode->getTranslation());
+            gameplay::Vector3 const previousPosition = _physicsNode->getTranslation();
+            _physicsNode->translateY((_verticalMovementScale * verticalMovementSpeed) * elapsedTimeMs);
 
             // If the player has moved away from the ladder but they are no longer intersecting it then restore their last position
             // and zero their movement, this will prevent them from climing beyond the top/bottom
-            if(!_climbingEnabled && previousDistToLadder < _characterNode->getTranslation().distanceSquared(_ladderPosition))
+            if(!_climbingEnabled && previousDistToLadder < _physicsNode->getTranslation().distanceSquared(_ladderPosition))
             {
-                _characterNode->setTranslation(previousPosition);
+                _physicsNode->setTranslation(previousPosition);
                 _verticalMovementScale = 0.0f;
             }
         }
@@ -235,7 +240,7 @@ namespace game
             getCurrentAnimation()->setSpeed(fabs(_state == State::Climbing ? _verticalMovementScale : _horizontalMovementScale));
         }
 
-        _characterNode->setTranslationZ(0);
+        _physicsNode->setTranslationZ(0);
 
         _previousState = _state;
 
@@ -247,6 +252,7 @@ namespace game
         }
 
         character->update(elapsedTime);
+        _triggerNode->setTranslation(getRenderPosition().x, getRenderPosition().y, 0);
     }
 
     SpriteAnimationComponent * PlayerComponent::getCurrentAnimation()
@@ -254,14 +260,19 @@ namespace game
         return _animations[_state];
     }
 
-    gameplay::Node * PlayerComponent::getCharacterNode() const
+    gameplay::Node * PlayerComponent::getPhysicsNode() const
     {
-        return _characterNode;
+        return _physicsNode;
+    }
+
+    gameplay::Node * PlayerComponent::getTriggerNode() const
+    {
+        return _triggerNode;
     }
 
     void PlayerComponent::setMovementEnabled(MovementDirection::Enum direction, bool enabled, float scale /* = 1.0f */)
     {
-        gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
+        gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_physicsNode->getCollisionObject());
 
         if(enabled)
         {
@@ -324,15 +335,15 @@ namespace game
 
     void PlayerComponent::attachToKinematic()
     {
-        _characterNode->setTranslation(_characterNode->getTranslation() - _kinematicNode->getParent()->getTranslation());
-        _kinematicNode->getParent()->addChild(_characterNode);
+        _physicsNode->setTranslation(_physicsNode->getTranslation() - _kinematicNode->getParent()->getTranslation());
+        _kinematicNode->getParent()->addChild(_physicsNode);
     }
 
     void PlayerComponent::detachFromKinematic()
     {
-        _characterNode->setTranslation(_characterNode->getTranslation() + _kinematicNode->getParent()->getTranslation());
-        _kinematicNode->getParent()->removeChild(_characterNode);
-        getParent()->getNode()->addChild(_characterNode);
+        _physicsNode->setTranslation(_physicsNode->getTranslation() + _kinematicNode->getParent()->getTranslation());
+        _kinematicNode->getParent()->removeChild(_physicsNode);
+        getParent()->getNode()->addChild(_physicsNode);
         SAFE_RELEASE(_kinematicNode);
     }
 
@@ -386,7 +397,7 @@ namespace game
 
     void PlayerComponent::jump(JumpSource::Enum source, float scale)
     {
-        gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
+        gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_physicsNode->getCollisionObject());
         gameplay::Vector3 const characterOriginalVelocity = character->getCurrentVelocity();
         gameplay::Vector3 preJumpVelocity;
         bool jumpAllowed = characterOriginalVelocity.y == 0;
@@ -415,7 +426,10 @@ namespace game
             }
             case JumpSource::EnemyCollision:
             {
-                preJumpVelocity.x = characterOriginalVelocity.x;
+                float const horizontalModifier = 0.5f;
+                float const verticalModifier = 1.5f;
+                preJumpVelocity.x = characterOriginalVelocity.x * horizontalModifier;
+                jumpHeight *= verticalModifier;
                 jumpAllowed = true;
                 break;
             }
@@ -453,8 +467,8 @@ namespace game
     {
         _state = State::Idle;
         _isLeftFacing = false;
-        gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_characterNode->getCollisionObject());
-        _characterNode->setTranslation(gameplay::Vector3(position.x, position.y, 0));
+        gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_physicsNode->getCollisionObject());
+        _physicsNode->setTranslation(gameplay::Vector3(position.x, position.y, 0));
         character->resetVelocityState();
         character->setPhysicsEnabled(true);
     }

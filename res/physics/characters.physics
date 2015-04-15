@@ -9,6 +9,11 @@ collisionObject player_normal
     maxSlopeAngle = 50
 }
 
+collisionObject player_trigger : player_normal
+{
+    type = GHOST_OBJECT
+}
+
 collisionObject enemy_trigger_base
 {
     type = GHOST_OBJECT

@@ -78,7 +78,8 @@ namespace game
         gameplay::Vector2 getPosition() const;
         gameplay::Vector2 getRenderPosition() const;
         SpriteAnimationComponent * getCurrentAnimation();
-        gameplay::Node * getCharacterNode() const;
+        gameplay::Node * getPhysicsNode() const;
+        gameplay::Node * getTriggerNode() const;
         void setIntersectingKinematic(gameplay::Node * node);
         void setSwimmingEnabled(bool enabled);
         void setClimbingEnabled(bool enabled);
@@ -95,7 +96,8 @@ namespace game
 
         PlayerInputComponent * _playerInputComponent;
         PlayerHandOfGodComponent * _playerHandOfGodComponent;
-        gameplay::Node * _characterNode;
+        gameplay::Node * _physicsNode;
+        gameplay::Node * _triggerNode;
         std::map<State::Enum, SpriteAnimationComponent*> _animations;
         State::Enum _state;
         bool _isLeftFacing;
@@ -116,7 +118,8 @@ namespace game
         std::string _walkAnimComponentId;
         std::string _cowerAnimComponentId;
         std::string _jumpAnimComponentId;
-        std::string _normalCharacterComponentId;
+        std::string _physicsComponentId;
+        std::string _triggerComponentId;
         std::string _climbingCharacterComponentId;
         std::string _swimmingCharacterComponentId;
 

@@ -9,7 +9,8 @@ player
     speed = 9.0
     swim_speed_scale = 0.5
     jump_height = 2.1
-    normal_physics = character_normal
+    physics = physics
+    trigger = trigger
 }
 
 player_input
@@ -20,9 +21,14 @@ player_hand_of_god
 {
 }
 
-collision_object character_normal
+collision_object physics
 {
     physics = res/physics/characters.physics#player_normal
+}
+
+collision_object trigger
+{
+    physics = res/physics/characters.physics#player_trigger
 }
 
 sprite_animation walk
