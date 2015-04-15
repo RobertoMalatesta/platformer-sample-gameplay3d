@@ -48,9 +48,9 @@ namespace game
         _animations[State::Swimming] = getParent()->findComponent<SpriteAnimationComponent>(_swimmingCharacterComponentId);
 
         _characterNode = getParent()->findComponent<CollisionObjectComponent>(_normalCharacterComponentId)->getNode();
+        _characterNode->addRef();
         _characterNode->getParent()->removeChild(_characterNode);
         getParent()->getNode()->addChild(_characterNode);
-        _characterNode->release();
 
         _jumpMessage = PlayerJumpMessage::create();
         _state = State::Idle;
