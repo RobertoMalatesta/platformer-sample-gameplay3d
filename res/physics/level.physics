@@ -21,6 +21,7 @@ collisionObject platform : world_collision
 {
     kinematic = true
     mass = 100
+    friction = 1000
 }
 
 collisionObject bridge : world_collision
