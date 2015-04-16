@@ -66,7 +66,7 @@ namespace game
         SAFE_RELEASE(_camera);
     }
 
-    void CameraControlComponent::update(gameplay::Vector2 const & target,float elapsedTime)
+    void CameraControlComponent::update(gameplay::Vector2 const & target, gameplay::Vector2 const & velocity, float elapsedTime)
     {
         if(_currentZoom != _targetZoom)
         {
@@ -82,7 +82,17 @@ namespace game
         }
 
         GAME_ASSERT(!isnan(target.x) && !isnan(target.y), "Camera target is NaN!");
-        _targetPosition = target;
+
+        // https://github.com/Andrea/SpringCamera2dXNA
+        float const damping = 2.9f;
+        float const springStiffness = 60;
+        float const mass = 0.5f;
+        gameplay::Vector2 const diff = _currentPosition - target;
+        gameplay::Vector2 const force = -springStiffness * diff - damping * velocity;
+        gameplay::Vector2 const acceleration = force / mass;
+        float const dt = elapsedTime / 1000;
+        _targetPosition += (velocity + (acceleration * dt)) * dt;
+
         gameplay::Game::getInstance()->getAudioListener()->setPosition(_targetPosition.x, _targetPosition.y, 0.0);
         float const offsetX = (gameplay::Game::getInstance()->getWidth() / 2) *  _currentZoom;
         _targetPosition.x = MATH_CLAMP(_targetPosition.x, _boundary.x + offsetX, _boundary.x + _boundary.width - offsetX);
@@ -96,6 +106,12 @@ namespace game
     void CameraControlComponent::setBoundary(gameplay::Rectangle boundary)
     {
         _boundary = boundary;
+    }
+
+    void CameraControlComponent::setPosition(gameplay::Vector2 const & position)
+    {
+        _currentPosition = position;
+        _camera->getNode()->setTranslation(gameplay::Vector3(_currentPosition.x, _currentPosition.y, 0));
     }
 
     float CameraControlComponent::getMinZoom() const

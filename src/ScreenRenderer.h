@@ -23,6 +23,7 @@ namespace game
         bool render();
         void renderImmediate();
         bool isVisible() const;
+        float getAlpha() const;
 
         void queueFadeToBlack(float duration = 1.0f);
         void queueFadeToLoadingScreen(float duration = 1.0f);

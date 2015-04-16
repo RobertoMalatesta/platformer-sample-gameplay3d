@@ -262,7 +262,7 @@ namespace game
         _levelLoaded = true;
         _levelLoadedOnce = true;
 
-        float const fadeOutDuration = 2.5f;
+        float const fadeOutDuration = 1.5f;
         ScreenRenderer::getInstance().queueFadeOut(fadeOutDuration);
     }
 
@@ -712,7 +712,17 @@ namespace game
             if(_levelLoaded)
             {
                 _player->update(elapsedTime);
-                _cameraControl->update(_player->getRenderPosition(), elapsedTime);
+                gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_player->getPhysicsNode()->getCollisionObject());
+
+                if(ScreenRenderer::getInstance().getAlpha() < 1)
+                {
+                    gameplay::Vector2 velocity(character->getCurrentVelocity().x, character->getCurrentVelocity().y);
+                    _cameraControl->update(_player->getRenderPosition(), velocity, elapsedTime);
+                }
+                else
+                {
+                    _cameraControl->setPosition(_player->getPosition());
+                }
             }
 
             _levelCollisionHandler->update(elapsedTime);

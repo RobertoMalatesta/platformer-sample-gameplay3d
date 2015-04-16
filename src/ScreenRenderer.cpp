@@ -268,4 +268,9 @@ namespace  game
     {
         return _alpha > 0.0f;
     }
+
+    float ScreenRenderer::getAlpha() const
+    {
+        return _alpha;
+    }
 }
