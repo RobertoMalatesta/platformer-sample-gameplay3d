@@ -145,6 +145,7 @@ namespace game
             _state = State::Climbing;
 
             // Physics will be disabled so that we can translate the player vertically along the ladder
+            _physicsNode->setTranslationX(_ladderPosition.x);
             character->resetVelocityState();
             character->setPhysicsEnabled(false);
         }
