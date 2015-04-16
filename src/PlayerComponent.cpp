@@ -427,9 +427,8 @@ namespace game
             }
             case JumpSource::EnemyCollision:
             {
-                float const horizontalModifier = 0.5f;
+                preJumpVelocity.x = characterOriginalVelocity.x;
                 float const verticalModifier = 1.5f;
-                preJumpVelocity.x = characterOriginalVelocity.x * horizontalModifier;
                 jumpHeight *= verticalModifier;
                 jumpAllowed = true;
                 break;
