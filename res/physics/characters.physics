@@ -7,6 +7,8 @@ collisionObject player_normal
     mass = 100
     maxStepHeight = 0
     maxSlopeAngle = 50
+    clamp_vertical_velocity_to_gravity = true
+    allow_horizontal_direction_correction_on_step_down = false
 }
 
 collisionObject player_trigger : player_normal
