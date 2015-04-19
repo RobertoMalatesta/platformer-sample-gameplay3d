@@ -56,7 +56,7 @@ namespace game
         };
 
         void getCollectables(std::vector<Collectable*> & collectablesOut);
-        void forEachCachedNode(CollisionType::Enum terrainType, std::function<void(gameplay::Node *)> func);
+        void forEachCachedNode(collision::Type::Enum terrainType, std::function<void(gameplay::Node *)> func);
     private:
         struct Tile
         {
@@ -69,7 +69,7 @@ namespace game
         void load();
         void loadTerrain(gameplay::Properties * layerNamespace);
         void loadCharacters(gameplay::Properties * layerNamespace);
-        void loadStaticCollision(gameplay::Properties * layerNamespace, CollisionType::Enum terrainType);
+        void loadStaticCollision(gameplay::Properties * layerNamespace, collision::Type::Enum terrainType);
         void loadDynamicCollision(gameplay::Properties * layerNamespace);
         void loadKinematicCollision(gameplay::Properties * layerNamespace);
         void loadCollectables(gameplay::Properties * layerNamespace);
@@ -77,7 +77,7 @@ namespace game
         void unload();
 
         gameplay::Rectangle getObjectBounds(gameplay::Properties * objectNamespace) const;
-        gameplay::Node * createCollisionObject(CollisionType::Enum collisionType, gameplay::Properties * collisionProperties, gameplay::Rectangle const & bounds, float rotationZ = 0.0f);
+        gameplay::Node * createCollisionObject(collision::Type::Enum collisionType, gameplay::Properties * collisionProperties, gameplay::Rectangle const & bounds, float rotationZ = 0.0f);
         void placeEnemies();
 
         std::string _level;
@@ -93,7 +93,7 @@ namespace game
         gameobjects::Message * _unloadedMessage;
         gameobjects::Message * _preUnloadedMessage;
         std::vector<gameobjects::GameObject*> _children;
-        std::map <CollisionType::Enum, std::vector<gameplay::Node*>> _collisionNodes;
+        std::map <collision::Type::Enum, std::vector<gameplay::Node*>> _collisionNodes;
         std::map<gameplay::Node *, Collectable> _collectables;
     };
 }

@@ -4,6 +4,7 @@
 #include "FileSystem.h"
 #include "Font.h"
 #include "Game.h"
+#include "LevelCollision.h"
 #include "PropertiesRef.h"
 #include "SpriteBatch.h"
 #include "SpriteSheet.h"
@@ -105,6 +106,13 @@ namespace game
         }
     }
 
+    std::string ToString(int number)
+    {
+        std::ostringstream stringStream;
+        stringStream << number;
+        return stringStream.str();
+    }
+
     void ResourceManager::initialize()
     {
         PERF_SCOPE("ResourceManager::initialize");
@@ -181,6 +189,31 @@ namespace game
         {
             STALL_SCOPE();
             cacheSpriteSheet(spriteSheetDirectory + "/" + fileName);
+        }
+
+        for(auto & propertyCachePair : _cachedProperties)
+        {
+            if(propertyCachePair.first.find("/physics/") != std::string::npos)
+            {
+                gameplay::Properties * ns = propertyCachePair.second->get();
+
+                while(char const * propertyName = ns->getNextProperty())
+                {
+                    if(strcmp(propertyName, "group") == 0 || strcmp(propertyName, "mask") == 0 && ns->getType(propertyName) != gameplay::Properties::Type::NUMBER)
+                    {
+                        std::stringstream ss(ns->getString());
+                        std::string value;
+                        int collisionValue = 0;
+                        while (std::getline(ss, value, '|'))
+                        {
+                            collisionValue |= collision::fromString(value);
+                        }
+                        ns->setString(propertyName, ToString(collisionValue).c_str());
+                    }
+                }
+
+                ns->rewind();
+            }
         }
     }
 

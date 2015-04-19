@@ -5,36 +5,46 @@
 
 namespace game
 {
-    /**
-     * The unique tile types that can be set per tile in a level.
-     *
-     * @script{ignore}
-    */
-    struct CollisionType
+    namespace collision
     {
-        enum Enum
+        /**
+         * The unique tile types that can be set per tile in a level.
+         *
+         * @script{ignore}
+        */
+        struct Type
         {
-            COLLISION_STATIC,
-            COLLISION_DYNAMIC,
-            LADDER,
-            RESET,
-            COLLECTABLE,
-            WATER,
-            BRIDGE,
-            KINEMATIC
+            enum Enum
+            {
+                STATIC = 1 << 0,
+                DYNAMIC = 1 << 1,
+                LADDER = 1 << 2,
+                RESET = 1 << 3,
+                COLLECTABLE = 1 << 4,
+                WATER = 1 << 5,
+                BRIDGE = 1 << 6,
+                KINEMATIC = 1 << 7,
+                PLAYER_PHYSICS = 1 << 8,
+                PLAYER_TRIGGER = 1 << 9,
+                ENEMY = 1 << 10,
+
+                ALL = -1
+            };
         };
-    };
 
-    /** @script{ignore} */
-    class NodeCollisionInfo : public gameobjects::INodeUserData
-    {
-    public:
-        static NodeCollisionInfo * getNodeCollisionInfo(gameplay::Node * node);
+        Type::Enum fromString(std::string const & value);
 
-        int getNodeUserDataId() const override;
+        /** @script{ignore} */
+        class NodeData : public gameobjects::INodeUserData
+        {
+        public:
+            static NodeData * get(gameplay::Node * node);
 
-        CollisionType::Enum _CollisionType;
-    };
+            int getNodeUserDataId() const override;
+
+            Type::Enum _type;
+        };
+    }
 }
 
 #endif

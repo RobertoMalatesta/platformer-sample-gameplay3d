@@ -196,7 +196,7 @@ namespace game
 
         _level->getCollectables(_collectables);
 
-        _level->forEachCachedNode(CollisionType::COLLISION_DYNAMIC, [this](gameplay::Node * node)
+        _level->forEachCachedNode(collision::Type::DYNAMIC, [this](gameplay::Node * node)
         {
             node->addRef();
             bool const isBoulder = node->getCollisionObject()->getShapeType() == gameplay::PhysicsCollisionShape::SHAPE_SPHERE;
@@ -204,7 +204,7 @@ namespace game
                 _interactablesSpritesheet->getSprite("crate")->_src));
         });
 
-        _level->forEachCachedNode(CollisionType::BRIDGE, [this](gameplay::Node * node)
+        _level->forEachCachedNode(collision::Type::BRIDGE, [this](gameplay::Node * node)
         {
             node->addRef();
             _dynamicCollisionNodes.emplace_back(node, _interactablesSpritesheet->getSprite("bridge")->_src);
@@ -214,7 +214,7 @@ namespace game
 
         int foregroundTileDrawCommandSize = 0;
 
-        _level->forEachCachedNode(CollisionType::WATER, [this, &foregroundTileDrawCommandSize](gameplay::Node * node)
+        _level->forEachCachedNode(collision::Type::WATER, [this, &foregroundTileDrawCommandSize](gameplay::Node * node)
         {
             float const submergeHeight = _player->getPhysicsNode()->getScaleY() / 2;
             gameplay::Rectangle bounds;

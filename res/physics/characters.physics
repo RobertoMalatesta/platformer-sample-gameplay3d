@@ -9,11 +9,15 @@ collisionObject player_normal
     maxSlopeAngle = 50
     clamp_vertical_velocity_to_gravity = true
     allow_horizontal_direction_correction_on_step_down = false
+    group = PLAYER_PHYSICS
+    mask = STATIC|DYNAMIC|BRIDGE|WATER
 }
 
 collisionObject player_trigger : player_normal
 {
     type = GHOST_OBJECT
+    group = PLAYER_TRIGGER
+    mask = COLLECTABLE|ENEMY|LADDER|RESET
 }
 
 collisionObject enemy_trigger_base
@@ -22,6 +26,8 @@ collisionObject enemy_trigger_base
     shape = BOX
     linearFactor = 1, 1, 0
     angularFactor = 0, 0, 1
+    group = ENEMY
+    mask = PLAYER_TRIGGER
 }
 
 collisionObject enemy_slime_trigger : enemy_trigger_base

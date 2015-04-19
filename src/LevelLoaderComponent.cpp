@@ -189,11 +189,11 @@ namespace game
         return rect;
     }
 
-    gameplay::Node * LevelLoaderComponent::createCollisionObject(CollisionType::Enum collisionType, gameplay::Properties * collisionProperties, gameplay::Rectangle const & bounds, float rotationZ)
+    gameplay::Node * LevelLoaderComponent::createCollisionObject(collision::Type::Enum collisionType, gameplay::Properties * collisionProperties, gameplay::Rectangle const & bounds, float rotationZ)
     {
         gameplay::Node * node = gameplay::Node::create();
-        NodeCollisionInfo * info = new NodeCollisionInfo();
-        info->_CollisionType = collisionType;
+        collision::NodeData * info = new collision::NodeData();
+        info->_type = collisionType;
         node->setUserObject(info);
         node->translate(bounds.x, bounds.y, 0);
         node->rotateZ(rotationZ);
@@ -232,7 +232,7 @@ namespace game
         bounds.width = start.distance(end);
     }
 
-    void LevelLoaderComponent::loadStaticCollision(gameplay::Properties * layerNamespace, CollisionType::Enum collisionType)
+    void LevelLoaderComponent::loadStaticCollision(gameplay::Properties * layerNamespace, collision::Type::Enum collisionType)
     {
         if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
         {
@@ -240,16 +240,16 @@ namespace game
 
             switch (collisionType)
             {
-            case CollisionType::COLLISION_STATIC:
+            case collision::Type::STATIC:
                 collisionId = "world_collision";
                 break;
-            case CollisionType::LADDER:
+            case collision::Type::LADDER:
                 collisionId = "ladder";
                 break;
-            case CollisionType::RESET:
+            case collision::Type::RESET:
                 collisionId = "reset";
                 break;
-            case CollisionType::WATER:
+            case collision::Type::WATER:
                 collisionId = "water";
                 break;
             default:
@@ -315,7 +315,7 @@ namespace game
                 }
 
                 collisionProperties->setString(dimensionsId.c_str(), &dimensionsBuffer[0]);
-                createCollisionObject(CollisionType::COLLISION_DYNAMIC, collisionProperties, bounds);
+                createCollisionObject(collision::Type::DYNAMIC, collisionProperties, bounds);
                 SAFE_RELEASE(collisionPropertiesRef);
             }
 
@@ -338,7 +338,7 @@ namespace game
                 bounds.y -= bounds.height / 2;
                 sprintf(&dimensionsBuffer[0], "%f, %f, 1", bounds.width, bounds.height);
                 collisionProperties->setString(dimensionsId.c_str(), &dimensionsBuffer[0]);
-                gameplay::Node * node = createCollisionObject(CollisionType::KINEMATIC, collisionProperties, bounds);
+                gameplay::Node * node = createCollisionObject(collision::Type::KINEMATIC, collisionProperties, bounds);
                 gameplay::Node * parent = gameplay::Node::create();
                 parent->setTranslation(node->getTranslation());
                 node->setTranslation(gameplay::Vector3::zero());
@@ -391,7 +391,7 @@ namespace game
                             sprintf(&radiusBuffer[0], "%f", collectableWidth / 2);
                             collisionProperties->setString("radius", &radiusBuffer[0]);
                             gameplay::Rectangle bounds(position.x, position.y, collectableWidth, collectableWidth);
-                            gameplay::Node * collectableNode = createCollisionObject(CollisionType::COLLECTABLE, collisionProperties, bounds);
+                            gameplay::Node * collectableNode = createCollisionObject(collision::Type::COLLECTABLE, collisionProperties, bounds);
                             collectableNode->addRef();
                             Collectable collectable;
                             collectable._src = sprite._src;
@@ -449,7 +449,7 @@ namespace game
                     std::vector<gameplay::Node *> segmentNodes;
                     for (int i = 0; i < numSegments; ++i)
                     {
-                        segmentNodes.push_back(createCollisionObject(CollisionType::BRIDGE, collisionProperties, bounds, rotationZ));
+                        segmentNodes.push_back(createCollisionObject(collision::Type::BRIDGE, collisionProperties, bounds, rotationZ));
                         bounds.x += bridgeDirection.x * bounds.width;
                         bounds.y -= bridgeDirection.y * bounds.width;
                     }
@@ -527,34 +527,34 @@ namespace game
                 }
                 else if (layerName.find("collision") != std::string::npos)
                 {
-                    CollisionType::Enum collisionType = CollisionType::COLLISION_STATIC;
+                    collision::Type::Enum collisionType = collision::Type::STATIC;
 
                     if (layerName == "collision_ladder")
                     {
-                        collisionType = CollisionType::LADDER;
+                        collisionType = collision::Type::LADDER;
                     }
                     else if (layerName == "collision_hand_of_god")
                     {
-                        collisionType = CollisionType::RESET;
+                        collisionType = collision::Type::RESET;
                     }
                     else if (layerName == "collision_water")
                     {
-                        collisionType = CollisionType::WATER;
+                        collisionType = collision::Type::WATER;
                     }
                     else if (layerName == "collision_bridge")
                     {
-                        collisionType = CollisionType::BRIDGE;
+                        collisionType = collision::Type::BRIDGE;
                     }
                     else if (layerName == "collision_kinematic")
                     {
-                        collisionType = CollisionType::KINEMATIC;
+                        collisionType = collision::Type::KINEMATIC;
                     }
 
-                    if (collisionType == CollisionType::BRIDGE)
+                    if (collisionType == collision::Type::BRIDGE)
                     {
                         loadBridges(layerNamespace);
                     }
-                    else if(collisionType == CollisionType::KINEMATIC)
+                    else if(collisionType == collision::Type::KINEMATIC)
                     {
                         loadKinematicCollision(layerNamespace);
                     }
@@ -597,7 +597,7 @@ namespace game
                 float nearestDistance = std::numeric_limits<float>::max();
                 gameplay::Vector3 const & enemyPosition = enemyComponent->getTriggerNode()->getTranslation();
 
-                CollisionType::Enum const collisionSearchType = strstr(enemyComponent->getTriggerNode()->getId(), "fish") ? CollisionType::WATER : CollisionType::COLLISION_STATIC;
+                collision::Type::Enum const collisionSearchType = strstr(enemyComponent->getTriggerNode()->getId(), "fish") ? collision::Type::WATER : collision::Type::STATIC;
 
                 forEachCachedNode(collisionSearchType, [&nearestCollisionNode, &nearestDistance, &enemyPosition](gameplay::Node * collisionNode)
                 {
@@ -644,7 +644,7 @@ namespace game
             for (gameplay::Node* node : listPair.second)
             {
                 STALL_SCOPE();
-                NodeCollisionInfo * info = NodeCollisionInfo::getNodeCollisionInfo(node);
+                collision::NodeData * info = collision::NodeData::get(node);
                 node->setUserObject(nullptr);
                 SAFE_RELEASE(info);
                 getParent()->getNode()->removeChild(node);
@@ -725,7 +725,7 @@ namespace game
         return _playerSpawnPosition;
     }
 
-    void LevelLoaderComponent::forEachCachedNode(CollisionType::Enum collisionType, std::function<void(gameplay::Node *)> func)
+    void LevelLoaderComponent::forEachCachedNode(collision::Type::Enum collisionType, std::function<void(gameplay::Node *)> func)
     {
         for (gameplay::Node * node : _collisionNodes[collisionType])
         {

@@ -48,7 +48,7 @@ namespace game
         return true;
     }
 
-    void addOrRemoveCollisionListener(CollisionType::Enum collisionType,
+    void addOrRemoveCollisionListener(collision::Type::Enum collisionType,
                                       gameplay::PhysicsRigidBody::CollisionListener * listener,
                                       LevelLoaderComponent * level,
                                       gameplay::PhysicsCollisionObject * collisionObject,
@@ -93,11 +93,11 @@ namespace game
         }
 
         LevelLoaderComponent * level = getParent()->getComponent<LevelLoaderComponent>();
-        addOrRemoveCollisionListener(CollisionType::LADDER, _playerCollisionListener, level, _playerTriggerNode->getCollisionObject(), true);
-        addOrRemoveCollisionListener(CollisionType::RESET, _playerCollisionListener, level, _playerTriggerNode->getCollisionObject(), true);
-        addOrRemoveCollisionListener(CollisionType::COLLECTABLE, _playerCollisionListener, level, _playerTriggerNode->getCollisionObject(), true);
-        addOrRemoveCollisionListener(CollisionType::WATER, _playerCollisionListener, level, _playerPhysicsNode->getCollisionObject(), true);
-        addOrRemoveCollisionListener(CollisionType::KINEMATIC, _playerCollisionListener, level, _playerPhysicsNode->getCollisionObject(), true);
+        addOrRemoveCollisionListener(collision::Type::LADDER, _playerCollisionListener, level, _playerTriggerNode->getCollisionObject(), true);
+        addOrRemoveCollisionListener(collision::Type::RESET, _playerCollisionListener, level, _playerTriggerNode->getCollisionObject(), true);
+        addOrRemoveCollisionListener(collision::Type::COLLECTABLE, _playerCollisionListener, level, _playerTriggerNode->getCollisionObject(), true);
+        addOrRemoveCollisionListener(collision::Type::WATER, _playerCollisionListener, level, _playerPhysicsNode->getCollisionObject(), true);
+        addOrRemoveCollisionListener(collision::Type::KINEMATIC, _playerCollisionListener, level, _playerPhysicsNode->getCollisionObject(), true);
 
         for (auto & enemyPair : _enemies)
         {
@@ -126,11 +126,11 @@ namespace game
 
         if(_playerPhysicsNode)
         {
-            addOrRemoveCollisionListener(CollisionType::LADDER, _playerCollisionListener, level, _playerTriggerNode->getCollisionObject(), false);
-            addOrRemoveCollisionListener(CollisionType::RESET, _playerCollisionListener, level, _playerTriggerNode->getCollisionObject(), false);
-            addOrRemoveCollisionListener(CollisionType::COLLECTABLE, _playerCollisionListener, level, _playerTriggerNode->getCollisionObject(), false);
-            addOrRemoveCollisionListener(CollisionType::WATER, _playerCollisionListener, level, _playerPhysicsNode->getCollisionObject(), false);
-            addOrRemoveCollisionListener(CollisionType::KINEMATIC, _playerCollisionListener, level, _playerPhysicsNode->getCollisionObject(), false);
+            addOrRemoveCollisionListener(collision::Type::LADDER, _playerCollisionListener, level, _playerTriggerNode->getCollisionObject(), false);
+            addOrRemoveCollisionListener(collision::Type::RESET, _playerCollisionListener, level, _playerTriggerNode->getCollisionObject(), false);
+            addOrRemoveCollisionListener(collision::Type::COLLECTABLE, _playerCollisionListener, level, _playerTriggerNode->getCollisionObject(), false);
+            addOrRemoveCollisionListener(collision::Type::WATER, _playerCollisionListener, level, _playerPhysicsNode->getCollisionObject(), false);
+            addOrRemoveCollisionListener(collision::Type::KINEMATIC, _playerCollisionListener, level, _playerPhysicsNode->getCollisionObject(), false);
         }
 
         SAFE_RELEASE(_playerPhysicsNode);
@@ -247,13 +247,13 @@ namespace game
                         gameplay::PhysicsCollisionObject::CollisionPair const & collisionPair,
                         gameplay::Vector3 const &, gameplay::Vector3 const &)
     {
-        if(NodeCollisionInfo * NodeCollisionInfo = NodeCollisionInfo::getNodeCollisionInfo(collisionPair.objectB->getNode()))
+        if(collision::NodeData * NodeCollisionInfo = collision::NodeData::get(collisionPair.objectB->getNode()))
         {
             bool const isColliding = type == gameplay::PhysicsCollisionObject::CollisionListener::EventType::COLLIDING;
 
-            switch (NodeCollisionInfo->_CollisionType)
+            switch (NodeCollisionInfo->_type)
             {
-                case CollisionType::LADDER:
+                case collision::Type::LADDER:
                 {
                     if (isColliding)
                     {
@@ -270,7 +270,7 @@ namespace game
                     _player->setClimbingEnabled(_playerClimbingTerrainRefCount > 0);
                     break;
                 }
-                case CollisionType::RESET:
+                case collision::Type::RESET:
                 {
                     if (isColliding)
                     {
@@ -278,13 +278,13 @@ namespace game
                     }
                     break;
                 }
-                case CollisionType::COLLECTABLE:
+                case collision::Type::COLLECTABLE:
                 {
                     LevelLoaderComponent * level = getParent()->getComponent<LevelLoaderComponent>();
                     level->consumeCollectable(collisionPair.objectB->getNode());
                     break;
                 }
-                case CollisionType::WATER:
+                case collision::Type::WATER:
                 {
                     isColliding ? ++_playerSwimmingRefCount : --_playerSwimmingRefCount;
                     _player->setSwimmingEnabled(_playerSwimmingRefCount > 0);
@@ -292,13 +292,13 @@ namespace game
                         "_playerSwimmingRefCount invalid %d", _playerSwimmingRefCount);
                     break;
                 }
-                case CollisionType::KINEMATIC:
+                case collision::Type::KINEMATIC:
                 {
                     _player->setIntersectingKinematic(isColliding ? collisionPair.objectB->getNode() : nullptr);
                     break;
                 }
                 default:
-                    GAME_ASSERTFAIL("Unhandled terrain collision type %d", NodeCollisionInfo->_CollisionType);
+                    GAME_ASSERTFAIL("Unhandled terrain collision type %d", NodeCollisionInfo->_type);
             }
         }
     }
