@@ -92,6 +92,7 @@ namespace game
         gameplay::Vector2 const acceleration = force / mass;
         float const dt = elapsedTime / 1000;
         _targetPosition += (velocity + (acceleration * dt)) * dt;
+        _targetPosition.y = target.y;
 
         gameplay::Game::getInstance()->getAudioListener()->setPosition(_targetPosition.x, _targetPosition.y, 0.0);
         float const offsetX = (gameplay::Game::getInstance()->getWidth() / 2) *  _currentZoom;
