@@ -33,6 +33,7 @@ namespace game
                 {"BRIDGE", Type::BRIDGE},
                 {"KINEMATIC", Type::KINEMATIC},
                 {"PLAYER_PHYSICS", Type::PLAYER_PHYSICS},
+                {"PLAYER_PHYSICS_DYNAMIC", Type::PLAYER_PHYSICS_DYNAMIC},
                 {"PLAYER_TRIGGER", Type::PLAYER_TRIGGER},
                 {"ENEMY", Type::ENEMY},
                 {"ALL", Type::ALL}
@@ -43,6 +44,10 @@ namespace game
             if(itr != lookup.end())
             {
                 type = itr->second;
+            }
+            else
+            {
+                GAME_ASSERTFAIL("Unknown type %s", value.c_str());
             }
 
             return type;

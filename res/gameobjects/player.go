@@ -10,6 +10,7 @@ player
     swim_speed_scale = 0.5
     jump_height = 2.1
     physics = physics
+    physics_dynamic = physics_dynamic
     trigger = trigger
 }
 
@@ -24,6 +25,11 @@ player_hand_of_god
 collision_object physics
 {
     physics = res/physics/characters.physics#player_normal
+}
+
+collision_object physics_dynamic
+{
+    physics = res/physics/characters.physics#player_dynamic
 }
 
 collision_object trigger

@@ -25,8 +25,9 @@ namespace game
                 BRIDGE = 1 << 6,
                 KINEMATIC = 1 << 7,
                 PLAYER_PHYSICS = 1 << 8,
-                PLAYER_TRIGGER = 1 << 9,
-                ENEMY = 1 << 10,
+                PLAYER_PHYSICS_DYNAMIC = 1 << 9,
+                PLAYER_TRIGGER = 1 << 10,
+                ENEMY = 1 << 11,
 
                 ALL = -1
             };

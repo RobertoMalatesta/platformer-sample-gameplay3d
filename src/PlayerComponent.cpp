@@ -4,6 +4,7 @@
 #include "CollisionObjectComponent.h"
 #include "Game.h"
 #include "GameObject.h"
+#include "LevelCollision.h"
 #include "Messages.h"
 #include "PlayerInputComponent.h"
 #include "PlayerHandOfGodComponent.h"
@@ -22,6 +23,8 @@ namespace game
         , _movementSpeed(5.0f)
         , _jumpHeight(1.0f)
         , _physicsNode(nullptr)
+        , _physicsDynamicNode(nullptr)
+        , _triggerNode(nullptr)
         , _horizontalMovementScale(0.0f)
         , _verticalMovementScale(0.0f)
         , _jumpMessage(nullptr)
@@ -55,6 +58,13 @@ namespace game
         gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_physicsNode->getCollisionObject());
         character->setClampVerticalVelocityToGravity(true);
         character->setAllowHorizontalCorrectionOnStepDown(false);
+        character->setApplyRigidBodyImpulseCallback([](gameplay::Node * node) -> bool
+        {
+            return collision::NodeData::get(node)->_type == collision::Type::BRIDGE;
+        });
+
+        _physicsDynamicNode = getParent()->findComponent<CollisionObjectComponent>(_physicsDynamicComponentId)->getNode();
+        _physicsDynamicNode->addRef();
 
         _triggerNode = getParent()->findComponent<CollisionObjectComponent>(_triggerComponentId)->getNode();
         _triggerNode->addRef();
@@ -80,6 +90,8 @@ namespace game
 
         SAFE_RELEASE(_triggerNode);
         SAFE_RELEASE(_physicsNode);
+        SAFE_RELEASE(_physicsDynamicNode);
+        SAFE_RELEASE(_physicsDynamicNode);
         SAFE_RELEASE(_playerHandOfGodComponent);
         SAFE_RELEASE(_playerInputComponent);
         GAMEOBJECTS_DELETE_MESSAGE(_jumpMessage);
@@ -97,6 +109,7 @@ namespace game
         _swimSpeedScale = properties.getFloat("swim_speed_scale");
         _jumpHeight = properties.getFloat("jump_height");
         _physicsComponentId = properties.getString("physics");
+        _physicsDynamicComponentId = properties.getString("physics_dynamic");
         _triggerComponentId = properties.getString("trigger");
     }
 
@@ -258,6 +271,18 @@ namespace game
 
         character->update(elapsedTime);
         _triggerNode->setTranslation(getRenderPosition().x, getRenderPosition().y, 0);
+
+        gameplay::Vector2 dynOffset;
+
+        if(velocity.x != 0)
+        {
+            float const characterDynOffsetX = _physicsNode->getScaleX() * 0.1f;
+            dynOffset.x = velocity.x > 0 ? characterDynOffsetX : -characterDynOffsetX;
+        }
+
+        gameplay::Vector3 const physicsDynPos = gameplay::Vector3(getPosition().x + dynOffset.x, getPosition().y, 0);
+        _physicsDynamicNode->setTranslation(physicsDynPos);
+        _physicsDynamicNode->getCollisionObject()->setPhysicsPosition(physicsDynPos);
     }
 
     SpriteAnimationComponent * PlayerComponent::getCurrentAnimation()

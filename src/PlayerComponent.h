@@ -97,6 +97,7 @@ namespace game
         PlayerInputComponent * _playerInputComponent;
         PlayerHandOfGodComponent * _playerHandOfGodComponent;
         gameplay::Node * _physicsNode;
+        gameplay::Node * _physicsDynamicNode;
         gameplay::Node * _triggerNode;
         std::map<State::Enum, SpriteAnimationComponent*> _animations;
         State::Enum _state;
@@ -119,6 +120,7 @@ namespace game
         std::string _cowerAnimComponentId;
         std::string _jumpAnimComponentId;
         std::string _physicsComponentId;
+        std::string _physicsDynamicComponentId;
         std::string _triggerComponentId;
         std::string _climbingCharacterComponentId;
         std::string _swimmingCharacterComponentId;

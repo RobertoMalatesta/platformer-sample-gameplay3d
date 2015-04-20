@@ -60,7 +60,7 @@ collisionObject dynamic : world_collision
     restitution = 0.1
     anisotropicFriction = 1, 1, 1
     group = DYNAMIC
-    mask = STATIC|DYNAMIC|BRIDGE|WATER|PLAYER_PHYSICS
+    mask = STATIC|DYNAMIC|BRIDGE|WATER|PLAYER_PHYSICS|PLAYER_PHYSICS_DYNAMIC
 }
 
 collisionObject boulder : dynamic

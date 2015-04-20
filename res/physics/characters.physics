@@ -11,6 +11,15 @@ collisionObject player_normal
     mask = STATIC|DYNAMIC|BRIDGE|WATER
 }
 
+collisionObject player_dynamic : player_normal
+{
+    mass = 10
+    type = RIGID_BODY
+    group = PLAYER_PHYSICS_DYNAMIC
+    mask = DYNAMIC
+    kinematic = true
+}
+
 collisionObject player_trigger : player_normal
 {
     type = GHOST_OBJECT
