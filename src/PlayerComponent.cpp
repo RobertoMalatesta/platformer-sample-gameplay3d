@@ -52,6 +52,10 @@ namespace game
         _physicsNode->getParent()->removeChild(_physicsNode);
         getParent()->getNode()->addChild(_physicsNode);
 
+        gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_physicsNode->getCollisionObject());
+        character->setClampVerticalVelocityToGravity(true);
+        character->setAllowHorizontalCorrectionOnStepDown(false);
+
         _triggerNode = getParent()->findComponent<CollisionObjectComponent>(_triggerComponentId)->getNode();
         _triggerNode->addRef();
 
