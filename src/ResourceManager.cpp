@@ -4,6 +4,7 @@
 #include "FileSystem.h"
 #include "Font.h"
 #include "Game.h"
+#include "GameObjectController.h"
 #include "LevelCollision.h"
 #include "PropertiesRef.h"
 #include "SpriteBatch.h"
@@ -113,6 +114,15 @@ namespace game
         return stringStream.str();
     }
 
+    class GameObjectCallback : public gameobjects::GameObjectCallbackHandler
+    {
+    public:
+        virtual gameplay::Properties * getProperties(const char * url) override
+        {
+            return ResourceManager::getInstance().getProperties(url)->get();
+        }
+    };
+
     void ResourceManager::initialize()
     {
         PERF_SCOPE("ResourceManager::initialize");
@@ -215,6 +225,8 @@ namespace game
                 ns->rewind();
             }
         }
+
+        gameobjects::GameObjectController::getInstance().registerCallbackHandler(new GameObjectCallback());
     }
 
     void ResourceManager::cacheTexture(std::string const & texturePath)
