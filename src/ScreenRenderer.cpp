@@ -158,7 +158,7 @@ namespace  game
                     PERF_SCOPE(&buffer[0]);
                 }
 #endif
-                bool const shouldRotate = elapsed >= spinnerDeltaMs;
+                bool const shouldRotate = elapsed >= spinnerDeltaMs || _previousAlpha == 0;
 
                 if(shouldRotate)
                 {

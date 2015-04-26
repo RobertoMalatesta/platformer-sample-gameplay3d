@@ -199,11 +199,7 @@ namespace game
         node->rotateZ(rotationZ);
         getParent()->getNode()->addChild(node);
         node->setScale(bounds.width, bounds.height, 1.0f);
-
-        {
-            STALL_SCOPE();
-            node->setCollisionObject(collisionProperties);
-        }
+        node->setCollisionObject(collisionProperties);
         _collisionNodes[collisionType].push_back(node);
         return node;
     }

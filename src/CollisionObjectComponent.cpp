@@ -21,11 +21,7 @@ namespace game
         PropertiesRef * physicsPropertiesRef = ResourceManager::getInstance().getProperties(_physics.c_str());
         gameplay::Properties * physicsProperties = physicsPropertiesRef->get();
         _node = gameplay::Node::create(getId().c_str());
-
-        {
-            STALL_SCOPE();
-            _node->setCollisionObject(physicsProperties);
-        }
+        _node->setCollisionObject(physicsProperties);
 
         if (physicsProperties->exists("extents"))
         {
