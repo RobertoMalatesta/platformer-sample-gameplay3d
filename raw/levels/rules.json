@@ -32,14 +32,14 @@
         "{LayerChildObjectChildNSPath}/dst",
         "{LayerChildObjectChildNSPath}/ellipse",
         "{LayerChildObjectChildNSPath}/polyline",
-        "{LayerChildObjectChildNSPath}/polyline/polyline_1",
-        "{LayerChildObjectChildNSPath}/polyline/polyline_1/{Members}"
+        "{LayerChildObjectChildNSPath}/polyline/polyline_[^0]",
+        "{LayerChildObjectChildNSPath}/polyline/polyline_[^0]/{Members}"
     ],
 
     "conversions" :
     [
         {"{LayerChildObjectChildNSPath}" : { "dst" : {"Vector4" : {"false" : ["x", "y", "width", "height"] } } } },
-        {"{LayerChildObjectChildNSPath}/polyline/polyline_1" : { "line" : {"Vector2" : {"true" : ["x", "y"] } } } },
+        {"{LayerChildObjectChildNSPath}/polyline/polyline_[^0]" : { "point" : {"Vector2" : {"true" : ["x", "y"] } } } },
         {"{LayerChildNSPath}/data" : { "data" : {"PackedIntArray" : {"false" : [] } } } }
     ]
 }

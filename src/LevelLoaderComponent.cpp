@@ -215,12 +215,11 @@ namespace game
     {
         gameplay::Vector2 const start(bounds.x, bounds.y);
         gameplay::Vector2 localEnd;
-        lineVectorNamespace->getVector2("line", &localEnd);
+        lineVectorNamespace->getVector2("point", &localEnd);
         localEnd *= GAME_UNIT_SCALAR;
         direction = localEnd;
         direction.normalize();
         rotationZ = -acos(direction.dot(gameplay::Vector2::unitX() * (direction.y > 0 ? 1.0f : -1.0f)));
-        float deg = MATH_RAD_TO_DEG(rotationZ);
         gameplay::Vector2 end(start.x + localEnd.x, start.y + localEnd.y);
         gameplay::Vector2 tranlsation = start - (start + end) / 2;
         bounds.x -= tranlsation.x;
@@ -368,7 +367,7 @@ namespace game
                 if (gameplay::Properties * lineVectorNamespace = objectNamespace->getNamespace("polyline", true))
                 {
                     gameplay::Vector2 line;
-                    lineVectorNamespace->getVector2("line", &line);
+                    lineVectorNamespace->getVector2("point", &line);
                     line *= GAME_UNIT_SCALAR;
                     line.y *= -1.0f;
                     float lineLength = line.length();
