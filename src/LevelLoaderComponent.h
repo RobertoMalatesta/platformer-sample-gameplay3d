@@ -57,6 +57,7 @@ namespace game
 
         void getCollectables(std::vector<Collectable*> & collectablesOut);
         void forEachCachedNode(collision::Type::Enum terrainType, std::function<void(gameplay::Node *)> func);
+        void forEachKinematicControlPoints(std::function<void(gameplay::Node *, std::vector<gameplay::Vector2> const & points)> func);
     private:
         struct Tile
         {
@@ -95,6 +96,7 @@ namespace game
         std::vector<gameobjects::GameObject*> _children;
         std::map <collision::Type::Enum, std::vector<gameplay::Node*>> _collisionNodes;
         std::map<gameplay::Node *, Collectable> _collectables;
+        std::map<gameplay::Node *, std::vector<gameplay::Vector2>> _kinematicControlPoints;
     };
 }
 

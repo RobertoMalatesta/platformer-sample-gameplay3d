@@ -8,7 +8,7 @@ collisionObject player_normal
     maxStepHeight = 0
     maxSlopeAngle = 50
     group = PLAYER_PHYSICS
-    mask = STATIC|DYNAMIC|BRIDGE|WATER
+    mask = STATIC|DYNAMIC|BRIDGE|WATER|KINEMATIC
 }
 
 collisionObject player_dynamic : player_normal
@@ -24,7 +24,7 @@ collisionObject player_trigger : player_normal
 {
     type = GHOST_OBJECT
     group = PLAYER_TRIGGER
-    mask = COLLECTABLE|ENEMY|LADDER|RESET
+    mask = COLLECTABLE|ENEMY|LADDER|RESET|KINEMATIC
 }
 
 collisionObject enemy_trigger_base

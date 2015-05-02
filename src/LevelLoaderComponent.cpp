@@ -322,23 +322,48 @@ namespace game
     {
         if (gameplay::Properties * objectsNamespace = layerNamespace->getNamespace("objects", true))
         {
+            gameplay::Node * node = nullptr;
+
             while (gameplay::Properties * objectNamespace = objectsNamespace->getNextNamespace())
             {
-                PropertiesRef * collisionPropertiesRef = ResourceManager::getInstance().getProperties("res/physics/level.physics#platform");
-                gameplay::Properties * collisionProperties = collisionPropertiesRef->get();
-                gameplay::Rectangle bounds = getObjectBounds(objectNamespace);
-                std::array<char, 255> dimensionsBuffer;
-                std::string dimensionsId = "extents";
-                bounds.x += bounds.width / 2;
-                bounds.y -= bounds.height / 2;
-                sprintf(&dimensionsBuffer[0], "%f, %f, 1", bounds.width, bounds.height);
-                collisionProperties->setString(dimensionsId.c_str(), &dimensionsBuffer[0]);
-                gameplay::Node * node = createCollisionObject(collision::Type::KINEMATIC, collisionProperties, bounds);
-                gameplay::Node * parent = gameplay::Node::create();
-                parent->setTranslation(node->getTranslation());
-                node->setTranslation(gameplay::Vector3::zero());
-                parent->addChild(node);
-                SAFE_RELEASE(collisionPropertiesRef);
+                gameplay::Properties * pointNamespace = objectNamespace->getNextNamespace();
+
+                if(!pointNamespace)
+                {
+                    PropertiesRef * collisionPropertiesRef = ResourceManager::getInstance().getProperties("res/physics/level.physics#platform");
+                    gameplay::Properties * collisionProperties = collisionPropertiesRef->get();
+                    gameplay::Rectangle bounds = getObjectBounds(objectNamespace);
+                    std::array<char, 255> dimensionsBuffer;
+                    std::string dimensionsId = "extents";
+                    bounds.x += bounds.width / 2;
+                    bounds.y -= bounds.height / 2;
+                    sprintf(&dimensionsBuffer[0], "%f, %f, 1", bounds.width, bounds.height);
+                    collisionProperties->setString(dimensionsId.c_str(), &dimensionsBuffer[0]);
+                    node = createCollisionObject(collision::Type::KINEMATIC, collisionProperties, bounds);
+                    gameplay::Node * parent = gameplay::Node::create();
+                    parent->setTranslation(node->getTranslation());
+                    node->setTranslation(gameplay::Vector3::zero());
+                    parent->addChild(node);
+                    SAFE_RELEASE(collisionPropertiesRef);
+                }
+                else
+                {
+                    gameplay::Rectangle bounds = getObjectBounds(objectNamespace);
+                    gameplay::Vector2 const startPos(bounds.x, bounds.y);
+                    _kinematicControlPoints[node].push_back(startPos);
+
+                    while(char const * pointName = pointNamespace->getNextProperty())
+                    {
+                        gameplay::Vector2 point;
+                        pointNamespace->getVector2(pointName, &point);
+                        point *= GAME_UNIT_SCALAR;
+                        point.y *= -1.0f;
+                        point += startPos;
+                        _kinematicControlPoints[node].push_back(point);
+                    }
+
+                    pointNamespace->rewind();
+                }
             }
 
             objectsNamespace->rewind();
@@ -725,6 +750,14 @@ namespace game
         for (gameplay::Node * node : _collisionNodes[collisionType])
         {
             func(node);
+        }
+    }
+
+    void LevelLoaderComponent::forEachKinematicControlPoints(std::function<void(gameplay::Node *, std::vector<gameplay::Vector2> const & points)> func)
+    {
+        for(auto & pair : _kinematicControlPoints)
+        {
+            func(pair.first, pair.second);
         }
     }
 

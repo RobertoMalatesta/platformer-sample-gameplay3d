@@ -60,9 +60,9 @@ namespace game
         void updateAndRender(float elapsedTime);
         void updateAndRenderCharacters(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport, float elapsedTime);
         void updateAndRenderBackground(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, float elapsedTime);
+        void updateAndRenderInteractables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, float elapsedTime);
         int renderBackgroundTiles(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
         void renderForegroundTiles(int tileCount);
-        void renderInteractables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport);
         void renderCollectables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport);
         void renderWater(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, float elapsedTime);
         float getWaterTimeUniform() const;
@@ -101,10 +101,13 @@ namespace game
         gameplay::Vector2 _parallaxOffset;
         std::vector<std::pair<gameplay::Node *, gameplay::Rectangle>> _dynamicCollisionNodes;
         std::vector<LevelLoaderComponent::Collectable *> _collectables;
+        std::map<gameplay::Node *, gameplay::Curve *> _kinematicPaths;
         std::vector<gameplay::Rectangle> _waterBounds;
         gameplay::FrameBuffer * _frameBuffer;
         gameplay::SpriteBatch * _pauseSpriteBatch;
         float _waterUniformTimer;
+        float _kinematicCurveTimer;
+        float _kinematicCurveTimerDirection;
     };
 }
 

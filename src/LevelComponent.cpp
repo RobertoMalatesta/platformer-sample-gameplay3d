@@ -34,6 +34,8 @@ namespace game
         , _waterSpritebatch(nullptr)
         , _frameBuffer(nullptr)
         , _waterUniformTimer(0.0f)
+        , _kinematicCurveTimer(0.0f)
+        , _kinematicCurveTimerDirection(1.0f)
     {
     }
 
@@ -210,6 +212,12 @@ namespace game
             _dynamicCollisionNodes.emplace_back(node, _interactablesSpritesheet->getSprite("bridge")->_src);
         });
 
+        _level->forEachCachedNode(collision::Type::KINEMATIC, [this](gameplay::Node * node)
+        {
+            node->addRef();
+            _dynamicCollisionNodes.emplace_back(node, _interactablesSpritesheet->getSprite("crate")->_src);
+        });
+
         _waterUniformTimer = 0.0f;
 
         int foregroundTileDrawCommandSize = 0;
@@ -250,6 +258,21 @@ namespace game
         });
 
         _foregroundTileDrawCommands.resize(foregroundTileDrawCommandSize);
+
+        _level->forEachKinematicControlPoints([this](gameplay::Node * node, std::vector<gameplay::Vector2> const & points)
+        {
+            gameplay::Curve * curve = gameplay::Curve::create(points.size(), 2);
+            float controlPoints[2];
+
+            for(int i = 0; i < points.size(); ++i)
+            {
+                controlPoints[0] = points[i].x;
+                controlPoints[1] = points[i].y;
+                curve->setPoint(i, (1.0f / (points.size() - 1)) * i, controlPoints, gameplay::Curve::FLAT);
+            }
+
+            _kinematicPaths[node] = curve;
+        });
 
         // The first call to draw will perform some lazy initialisation in Effect::Bind
         for (gameplay::SpriteBatch * spriteBatch : uninitialisedSpriteBatches)
@@ -296,11 +319,17 @@ namespace game
             SAFE_DELETE(spriteBatch);
         }
 
+        for (auto & nodePair : _kinematicPaths)
+        {
+            SAFE_RELEASE(nodePair.second);
+        }
+
         for (auto & nodePair : _dynamicCollisionNodes)
         {
             SAFE_RELEASE(nodePair.first);
         }
 
+        _kinematicPaths.clear();
         _dynamicCollisionNodes.clear();
         _playerAnimationBatches.clear();
         _enemyAnimationBatches.clear();
@@ -531,8 +560,10 @@ namespace game
         }
     }
 
-    void LevelComponent::renderInteractables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport)
+
+    void LevelComponent::updateAndRenderInteractables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, float elapsedTime)
     {
+
         bool interactableDrawn = false;
 
         // Draw dynamic collision (crates, boulders etc)
@@ -542,8 +573,20 @@ namespace game
             gameplay::Rectangle dst;
             dst.width = dynamicCollisionNode->getScaleX();
             dst.height = dynamicCollisionNode->getScaleY();
-            dst.x = dynamicCollisionNode->getTranslationX() - (dst.width / 2);
-            dst.y = dynamicCollisionNode->getTranslationY() - (dst.height / 2);
+            gameplay::Vector3 nodePosition = dynamicCollisionNode->getTranslation();
+
+            if(_kinematicPaths.find(dynamicCollisionNode) != _kinematicPaths.end())
+            {
+                gameplay::Curve * curve = _kinematicPaths[dynamicCollisionNode];
+                float kinematicPos[2];
+                curve->evaluate(_kinematicCurveTimer, kinematicPos);
+                dynamicCollisionNode->getParent()->setTranslationX(kinematicPos[0]);
+                dynamicCollisionNode->getParent()->setTranslationY(kinematicPos[1]);
+                nodePosition = dynamicCollisionNode->getCollisionObject()->getPhysicsPosition();
+            }
+
+            dst.x = nodePosition.x - (dst.width / 2);
+            dst.y = nodePosition.y - (dst.height / 2);
 
             gameplay::Rectangle maxBounds = dst;
 
@@ -552,8 +595,8 @@ namespace game
             {
                 maxBounds.width = gameplay::Vector2(dst.width, dst.height).length();
                 maxBounds.height = maxBounds.width;
-                maxBounds.x = dynamicCollisionNode->getTranslationX() - (maxBounds.width / 2);
-                maxBounds.y = dynamicCollisionNode->getTranslationY() - (maxBounds.height / 2);
+                maxBounds.x = nodePosition.x - (maxBounds.width / 2);
+                maxBounds.y = nodePosition.y - (maxBounds.height / 2);
             }
 
             if (maxBounds.intersects(viewport))
@@ -581,6 +624,19 @@ namespace game
         {
             _interactablesSpritebatch->finish();
         }
+
+        _kinematicCurveTimer += (elapsedTime / 2000.0f) * _kinematicCurveTimerDirection;
+
+        if(_kinematicCurveTimer > 1.0f)
+        {
+            _kinematicCurveTimerDirection = -1;
+        }
+        else if(_kinematicCurveTimer < 0.0f)
+        {
+            _kinematicCurveTimerDirection = 1;
+        }
+
+        _kinematicCurveTimer = MATH_CLAMP(_kinematicCurveTimer, 0.0f, 1.0f);
     }
 
     void LevelComponent::renderCollectables(gameplay::Matrix const & projection, gameplay::Rectangle const & viewport, gameplay::Rectangle const & triggerViewport)
@@ -770,7 +826,7 @@ namespace game
 
             updateAndRenderBackground(projection, viewport, elapsedTime);
             int const foregroundTileCount = renderBackgroundTiles(projection, viewport);
-            renderInteractables(projection, viewport);
+            updateAndRenderInteractables(projection, viewport, elapsedTime);
             renderCollectables(projection, viewport, triggerViewport);
             updateAndRenderCharacters(projection, viewport, triggerViewport, elapsedTime);
             renderWater(projection, viewport, elapsedTime);

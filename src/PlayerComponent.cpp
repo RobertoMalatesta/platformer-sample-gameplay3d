@@ -367,6 +367,8 @@ namespace game
     {
         _physicsNode->setTranslation(_physicsNode->getTranslation() - _kinematicNode->getParent()->getTranslation());
         _kinematicNode->getParent()->addChild(_physicsNode);
+        gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_physicsNode->getCollisionObject());
+        character->resetVelocityState();
     }
 
     void PlayerComponent::detachFromKinematic()
@@ -396,7 +398,11 @@ namespace game
         }
         else if(_kinematicNode)
         {
-            detachFromKinematic();
+            gameplay::PhysicsCharacter * character = static_cast<gameplay::PhysicsCharacter*>(_physicsNode->getCollisionObject());
+            if(!character->getCurrentVelocity().isZero())
+            {
+                detachFromKinematic();
+            }
         }
     }
 
@@ -469,6 +475,12 @@ namespace game
 
         if(jumpAllowed)
         {
+            if(_kinematicNode && character->getCurrentVelocity().isZero())
+            {
+                gameplay::PhysicsRigidBody * kinematic = static_cast<gameplay::PhysicsRigidBody *>(_kinematicNode->getCollisionObject());
+                preJumpVelocity.y = kinematic->getLinearVelocity().y;
+            }
+
             _state = State::Jumping;
             character->setPhysicsEnabled(true);
 
