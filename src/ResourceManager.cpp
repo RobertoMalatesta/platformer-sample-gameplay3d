@@ -286,6 +286,11 @@ namespace game
         for(auto pair : _cachedProperties)
         {
             releaseCacheRefs(pair.second);
+
+            if(pair.first.find("/gameobjects/") != std::string::npos)
+            {
+                pair.second->release();
+            }
         }
 
         for(auto pair : _cachedSpriteSheets)
